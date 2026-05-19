@@ -55,9 +55,7 @@ export function Hero() {
           <div className="relative mt-10 rounded-3xl p-6 sm:p-7 border border-white/15 bg-white/5 backdrop-blur-md overflow-hidden">
             <div className="absolute -top-px left-8 right-8 h-px" style={{ background: YELLOW, boxShadow: `0 0 24px ${YELLOW}` }} />
             <p className="text-base sm:text-lg text-white/90 leading-relaxed">
-              <span className="font-bold text-white">Raise a child who questions answers. Not just finds them.</span>{" "}
-              In a world where AI generates answers instantly, the most valuable skill is knowing how to evaluate,
-              verify, and reason — not memorise.
+              "\"The role-reversal moment, when my son teaches the robot, is where I've seen the biggest breakthroughs.\""
             </p>
           </div>
 
