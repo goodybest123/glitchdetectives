@@ -186,8 +186,29 @@ export function useContinuousSpeech(
   const [supported, setSupported] = useState(false);
   const recRef = useRef<SpeechRecWithInterim | null>(null);
   const wantOnRef = useRef(false);
+  const startedRef = useRef(false);
   const cbRef = useRef(onFinalChunk);
   cbRef.current = onFinalChunk;
+
+  const safeStart = useCallback(() => {
+    const r = recRef.current;
+    if (!r || startedRef.current) return;
+    try {
+      r.start();
+      startedRef.current = true;
+      setListening(true);
+    } catch {
+      // already started in another browser tab/state
+    }
+  }, []);
+
+  const safeStop = useCallback(() => {
+    const r = recRef.current;
+    if (!r) return;
+    try { r.stop(); } catch { /* */ }
+    startedRef.current = false;
+    setListening(false);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -222,11 +243,15 @@ export function useContinuousSpeech(
       }
     };
     r.onend = () => {
+      startedRef.current = false;
       setListening(false);
+      finalBuffer = "";
+      setInterim("");
       if (wantOnRef.current) {
         setTimeout(() => {
-          try { r.start(); setListening(true); } catch { /* */ }
-        }, 150);
+          if (!wantOnRef.current || startedRef.current) return;
+          try { r.start(); startedRef.current = true; setListening(true); } catch { /* */ }
+        }, 200);
       }
     };
     r.onerror = () => { /* onend will follow */ };
@@ -235,25 +260,21 @@ export function useContinuousSpeech(
     return () => {
       wantOnRef.current = false;
       try { r.abort(); } catch { /* */ }
+      startedRef.current = false;
       recRef.current = null;
     };
   }, []);
 
   const start = useCallback(() => {
-    const r = recRef.current;
-    if (!r) return;
     wantOnRef.current = true;
-    try { r.start(); setListening(true); } catch { /* already on */ }
-  }, []);
+    safeStart();
+  }, [safeStart]);
 
   const stop = useCallback(() => {
-    const r = recRef.current;
     wantOnRef.current = false;
-    if (!r) return;
-    try { r.stop(); } catch { /* */ }
-    setListening(false);
+    safeStop();
     setInterim("");
-  }, []);
+  }, [safeStop]);
 
   // Pause mic while TTS is speaking, resume when it stops
   useEffect(() => {
@@ -261,16 +282,15 @@ export function useContinuousSpeech(
     const synth = window.speechSynthesis;
     if (!synth) return;
     const id = setInterval(() => {
-      const r = recRef.current;
-      if (!r || !wantOnRef.current) return;
-      if (synth.speaking && listening) {
-        try { r.stop(); } catch { /* */ }
-      } else if (!synth.speaking && !listening) {
-        try { r.start(); setListening(true); } catch { /* */ }
+      if (!wantOnRef.current) return;
+      if (synth.speaking && startedRef.current) {
+        safeStop();
+      } else if (!synth.speaking && !startedRef.current) {
+        safeStart();
       }
     }, 300);
     return () => clearInterval(id);
-  }, [listening]);
+  }, [safeStart, safeStop]);
 
   return { listening, interim, supported, start, stop };
 }
