@@ -69,14 +69,14 @@ export const Route = createFileRoute("/api/evaluate")({
             .map((t) => `${t.role === "child" ? "TEACHER (child)" : "ZED-4 (you)"}: ${t.text}`)
             .join("\n");
 
-          const { object } = await generateObject({
+          const { experimental_output } = await generateText({
             model,
-            schema: ResultSchema,
             system: SYSTEM,
             prompt: `Mode: ${mode}\nShape context: ${shapeContext ?? "a shape divided into parts"}\n\nConversation so far:\n${transcript || "(none yet)"}\n\nThe teacher just said: """${text}"""\n\nReply as ZED-4 the curious learner. ALWAYS start with a short thank-you, then reflect ONE specific word or idea they just said, then ask exactly ONE tiny curious question (no more). Unless they clearly explained equal/same-size parts — then celebrate them as the teacher (no question needed). Keep it to 1-3 short sentences total.`,
+            experimental_output: Output.object({ schema: ResultSchema }),
           });
 
-          return Response.json(object);
+          return Response.json(experimental_output);
         } catch (err) {
           console.error("evaluate error", err);
           return new Response(JSON.stringify({
