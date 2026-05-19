@@ -132,8 +132,18 @@ function TopBar({ title, onBack, backLabel = "Hub" }: { title: string; onBack: (
 
 /* --------------------------------- Intro ---------------------------------- */
 
-function IntroView({ onBack, onContinue }: { onBack: () => void; onContinue: () => void }) {
+function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: () => void; onContinue: () => void }) {
   useAutoSpeak(`Level 1: Fraction Foundations. ${INTRO_TEXT}`);
+  useVoiceCommands(
+    {
+      "enter level": onContinue,
+      "access mission map": onContinue,
+      "continue": onContinue,
+      "back to hub": onBack,
+      "return to hub": onBack,
+    },
+    voiceOn,
+  );
   return (
     <>
       <TopBar title="Level 1: Fraction Foundations" onBack={onBack} />
