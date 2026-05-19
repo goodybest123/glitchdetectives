@@ -31,7 +31,7 @@ type Level = {
   missions: number;
   done: number;
   unlocked: boolean;
-  Icon: React.ComponentType<{ className?: string }>;
+  Icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
 };
 
 const LEVELS: Level[] = [
