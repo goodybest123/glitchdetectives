@@ -471,7 +471,8 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
               onStartScanner={() => setPhase("investigate")}
               onAnswerYes={() => setPhase("explainWrong")}
               onAnswerNo={() => setPhase("detect")}
-              onCorrectDetect={() => setPhase("repair")}
+              onCorrectDetect={() => setPhase("repairPrompt")}
+              onEnterRepair={() => setPhase("repair")}
               onRetryWrong={() => setPhase("investigate")}
               onCorrectTeach={() => setPhase("shapeDone")}
               onNextShape={() => {
