@@ -599,10 +599,17 @@ function ReasoningBox({
   const [typed, setTyped] = useState("");
   const correctRef = useRef(false);
   const logRef = useRef<HTMLDivElement>(null);
+  const lastZedRef = useRef<string>(seedZedLine ?? "");
+
+  // Defined later, but referenced inside sendToZed via refs
+  const startRef = useRef<() => void>(() => {});
+  const stopRef = useRef<() => void>(() => {});
 
   const sendToZed = useCallback(
     async (childText: string) => {
       if (!childText.trim() || correctRef.current) return;
+      // Pause mic immediately so we don't hear ZED's reply
+      try { stopRef.current(); } catch { /* */ }
       const newChild: Turn = { role: "child", text: childText.trim() };
       const history = [...turns, newChild];
       setTurns(history);
@@ -621,32 +628,52 @@ function ReasoningBox({
         const data = await res.json();
         const zedTurn: Turn = { role: "zed", text: data.feedbackText };
         setTurns((prev) => [...prev, zedTurn]);
+        lastZedRef.current = data.feedbackText;
+        const resume = () => {
+          if (!correctRef.current && autoStart) {
+            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
+          }
+        };
         if (data.isCorrect) {
           correctRef.current = true;
           speakText(data.feedbackText, () => setTimeout(onCorrect, 600));
         } else {
-          speakText(data.feedbackText);
+          speakText(data.feedbackText, resume);
         }
       } catch {
         const fallback = "Thanks teacher! My ears got a little fuzzy. Can you say that again?";
         setTurns((prev) => [...prev, { role: "zed", text: fallback }]);
-        speakText(fallback);
+        lastZedRef.current = fallback;
+        speakText(fallback, () => {
+          if (!correctRef.current && autoStart) {
+            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
+          }
+        });
       } finally {
         setPending(false);
       }
     },
-    [turns, mode, shapeContext, onCorrect],
+    [turns, mode, shapeContext, onCorrect, autoStart],
   );
 
   const handleFinal = useCallback(
     (t: string) => {
       if (correctRef.current || pending) return;
+      // Drop transcripts that echo ZED's most recent line (mic picked up TTS)
+      const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
+      const last = norm(lastZedRef.current);
+      const got = norm(t);
+      if (last && got && (last.startsWith(got.slice(0, 24)) || got.startsWith(last.slice(0, 24)))) {
+        return;
+      }
       void sendToZed(t);
     },
     [sendToZed, pending],
   );
 
   const { listening, interim, supported, start, stop } = useContinuousSpeech(handleFinal);
+  startRef.current = start;
+  stopRef.current = stop;
 
   // Auto-scroll log
   useEffect(() => {
