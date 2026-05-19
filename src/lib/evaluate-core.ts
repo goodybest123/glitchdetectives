@@ -59,7 +59,7 @@ export async function runEvaluate(input: z.infer<typeof EvaluateBodySchema>, opt
   const { text: rawText } = await generateText({
     model,
     system: SYSTEM,
-    prompt: `Mode: ${mode}\nShape context: ${shapeContext ?? "a shape divided into parts"}\n\nConversation so far:\n${transcript || "(none yet)"}\n\nThe teacher just said: """${text}"""\n\nReply as ZED-4. ALWAYS start with a short thank-you, reflect ONE specific word they said, then ask exactly ONE tiny curious question. Unless they clearly explained equal/same-size parts — then celebrate them (no question needed). Keep it to 1-3 short sentences.\n\nReturn ONLY a JSON object (no markdown) with EXACTLY:\n{\n  "feedbackText": "<your reply, 1-3 short sentences, starting with a thank-you>",\n  "isCorrect": <true if teacher clearly explained equal/same-size parts, else false>,\n  "reasoningScore": <1, 2, or 3>\n}`,
+    prompt: `Mode: ${mode}\nShape context: ${shapeContext ?? "a shape divided into parts"}\n\nConversation so far:\n${transcript || "(none yet)"}\n\nThe teacher just said: """${text}"""\n\nReply as ZED-4. ALWAYS start with a short thank-you. If you understand the teacher (isCorrect=true), celebrate in 1-2 short sentences and DO NOT ask any question — the game will move on. If you are still confused (isCorrect=false), reflect ONE word they said and ask exactly ONE tiny curious question.\n\nReturn ONLY a JSON object (no markdown) with EXACTLY:\n{\n  "feedbackText": "<your reply, 1-3 short sentences, starting with a thank-you>",\n  "isCorrect": <true as soon as the teacher's meaning shows equal/same-size/fair parts, even with simple kid words; false only if off-topic, garbled, vague, or contradicting>,\n  "reasoningScore": <1, 2, or 3>\n}`,
   });
 
   const cleaned = rawText.replace(/^```(?:json)?\s*|\s*```$/g, "").trim();
@@ -70,10 +70,10 @@ export async function runEvaluate(input: z.infer<typeof EvaluateBodySchema>, opt
   const feedbackText = String(
     parsed.feedbackText ?? parsed.botText ?? parsed.reply ?? parsed.text ?? rawText,
   ).trim();
-  let isCorrect = Boolean(parsed.isCorrect);
+  const isCorrect = Boolean(parsed.isCorrect);
   const reasoningScore = Math.max(1, Math.min(3, Number(parsed.reasoningScore) || 1));
-  // Teach phase: require deeper reasoning to count as correct
-  if (opts?.strictTeach && isCorrect && reasoningScore < 2) isCorrect = false;
+  // opts.strictTeach is intentionally no-op now — advance as soon as ZED understands.
+  void opts;
   return EvaluateResultSchema.parse({ feedbackText, isCorrect, reasoningScore });
 }
 
