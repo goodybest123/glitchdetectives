@@ -144,30 +144,52 @@ function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: 
     },
     voiceOn,
   );
+  const [muted, setMuted] = useState(false);
   return (
     <>
       <TopBar title="Level 1: Fraction Foundations" onBack={onBack} />
       <section className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono"
+            style={{ background: "color-mix(in oklab, #ef4444 18%, white)", color: "#7a1d1d" }}>
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            Glitching
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="label-eyebrow px-2.5 py-1 rounded-full" style={{ background: YELLOW, color: BLUE }}>
+              0 / 4 Missions Completed
+            </span>
+            <button
+              onClick={() => { setMuted((m) => !m); if (!muted) window.speechSynthesis?.cancel(); }}
+              aria-label={muted ? "Unmute voice" : "Mute voice"}
+              className="w-9 h-9 inline-flex items-center justify-center rounded-full border hover:bg-slate-50"
+              style={{ color: BLUE, borderColor: "color-mix(in oklab, var(--color-brand-blue) 25%, white)" }}
+            >
+              {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
         <motion.div
-          className="flex items-center gap-4 p-5 rounded-2xl border"
-          style={{ background: "white", borderColor: "color-mix(in oklab, var(--color-brand-yellow) 60%, white)" }}
+          className="flex flex-col items-center text-center gap-5 p-8 rounded-3xl border"
+          style={{ background: "white", borderColor: "color-mix(in oklab, #ef4444 35%, white)" }}
           initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
         >
           <motion.div
-            animate={{ scale: [1, 1.08, 1], opacity: [1, 0.85, 1] }}
+            animate={{ scale: [1, 1.12, 1] }}
             transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-            className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: YELLOW }}
+            className="w-24 h-24 rounded-full flex items-center justify-center shrink-0"
+            style={{ background: "color-mix(in oklab, #ef4444 22%, white)" }}
           >
-            <AlertTriangle className="w-7 h-7" style={{ color: BLUE }} />
+            <Zap className="w-12 h-12" fill="#ef4444" style={{ color: "#ef4444" }} />
           </motion.div>
           <div>
-            <p className="label-eyebrow" style={{ color: BLUE }}>System status</p>
-            <p className="text-xl font-bold" style={{ color: BLUE }}>System Failure Detected</p>
+            <p className="label-eyebrow" style={{ color: "#7a1d1d" }}>System status</p>
+            <h2 className="text-3xl sm:text-4xl font-bold mt-1" style={{ color: BLUE }}>System Failure Detected</h2>
           </div>
         </motion.div>
 
-        <article className="mt-8 bg-white rounded-2xl p-6 sm:p-8 border shadow-sm" style={{ borderColor: "color-mix(in oklab, var(--color-brand-blue) 12%, white)" }}>
+        <article className="mt-6 bg-white rounded-3xl p-6 sm:p-8 border shadow-sm" style={{ borderColor: "color-mix(in oklab, var(--color-brand-blue) 12%, white)" }}>
           <div className="flex items-center justify-between gap-3 mb-4">
             <p className="label-eyebrow" style={{ color: BLUE }}>Detective Briefing</p>
             <button
@@ -183,8 +205,8 @@ function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: 
           <div className="mt-8 flex justify-end">
             <button
               onClick={onContinue}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition-transform hover:scale-[1.02]"
-              style={{ background: BLUE, color: "white" }}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold transition-transform hover:scale-[1.02] shadow-md"
+              style={{ background: YELLOW, color: BLUE }}
             >
               Access Mission Map <ArrowRight className="w-4 h-4" />
             </button>
