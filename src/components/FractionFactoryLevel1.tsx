@@ -338,6 +338,7 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
       case "investigate": return shape.robotInvestigate;
       case "explainWrong": return shape.robotExplainWrong;
       case "detect": return shape.robotDetect;
+      case "repairPrompt": return "You spotted the glitch! I can't fix this alone — will you help me repair it?";
       case "repair": return shape.robotRepair;
       case "teach": return shape.robotExplain;
       case "shapeDone": return shape.robotSuccess;
