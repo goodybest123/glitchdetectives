@@ -6,6 +6,8 @@ import {
   Radio, ScanSearch,
 } from "lucide-react";
 import { GLITCHES, type Glitch } from "@/lib/glitches";
+import { MISSION_2_GLITCHES, MISSION_3_GLITCHES, MISSION_4_GLITCHES } from "@/lib/glitches-extra";
+import { DragSlider } from "@/components/mission2/DragSlider";
 import { speakText, useAutoSpeak, useContinuousSpeech, useVoiceCommands } from "@/lib/speech";
 
 const BLUE = "var(--color-brand-blue)";
@@ -15,7 +17,7 @@ const BG_LIGHT = "var(--color-bg-light)";
 const SKY = "color-mix(in oklab, var(--color-brand-blue) 12%, white)";
 
 
-type View = "intro" | "mission-select" | "mission-1-investigate";
+type View = "intro" | "mission-select" | "mission-play";
 type Phase =
   | "briefing"
   | "investigate"
@@ -38,16 +40,32 @@ const MISSION_1_SHAPES: Glitch[] = [
   GLITCHES.find((g) => g.id === "fuelrod")!,
 ];
 
-const MISSIONS = [
-  { id: 1, name: "Broken Partition Scanner", focus: "Detect unequal parts", unlocked: true, Icon: Zap },
-  { id: 2, name: "Half Repair Station", focus: "Understand halves", unlocked: false, Icon: Wrench },
-  { id: 3, name: "Quarter Core Reactor", focus: "Understand fourths", unlocked: false, Icon: Atom },
-  { id: 4, name: "Share Builder Challenge", focus: "Apply concepts", unlocked: false, Icon: Share2 },
+type MissionDef = {
+  id: number;
+  name: string;
+  focus: string;
+  unlocked: boolean;
+  Icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  glitches: Glitch[];
+};
+
+const MISSIONS: MissionDef[] = [
+  { id: 1, name: "Broken Partition Scanner", focus: "Detect unequal parts", unlocked: true, Icon: Zap, glitches: MISSION_1_SHAPES },
+  { id: 2, name: "Half Repair Station", focus: "Calibrate true halves", unlocked: true, Icon: Wrench, glitches: MISSION_2_GLITCHES },
+  { id: 3, name: "Quarter Core Reactor", focus: "Build equal fourths", unlocked: true, Icon: Atom, glitches: MISSION_3_GLITCHES },
+  { id: 4, name: "Share Builder Challenge", focus: "Mix halves & quarters", unlocked: true, Icon: Share2, glitches: MISSION_4_GLITCHES },
 ];
 
 export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: () => void }) {
   const [view, setView] = useState<View>("intro");
   const [voiceOn, setVoiceOn] = useState(false);
+  const [activeMissionId, setActiveMissionId] = useState<number>(1);
+  const activeMission = MISSIONS.find((m) => m.id === activeMissionId) ?? MISSIONS[0];
+
+  const startMission = (id: number) => {
+    setActiveMissionId(id);
+    setView("mission-play");
+  };
 
   return (
     <main className="min-h-screen" style={{ background: BG_LIGHT }}>
@@ -62,13 +80,14 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
             <MissionSelectView
               voiceOn={voiceOn}
               onBack={() => setView("intro")}
-              onStartMission1={() => setView("mission-1-investigate")}
+              onStartMission={startMission}
             />
           </motion.div>
         )}
-        {view === "mission-1-investigate" && (
-          <motion.div key="mission" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <Mission1View
+        {view === "mission-play" && (
+          <motion.div key={`mission-${activeMission.id}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <MissionView
+              mission={activeMission}
               voiceOn={voiceOn}
               onBack={() => setView("mission-select")}
               onFinish={() => setView("mission-select")}
@@ -222,15 +241,20 @@ function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: 
 
 /* ----------------------------- Mission Select ----------------------------- */
 
-function MissionSelectView({ voiceOn, onBack, onStartMission1 }: { voiceOn: boolean; onBack: () => void; onStartMission1: () => void }) {
+function MissionSelectView({ voiceOn, onBack, onStartMission }: { voiceOn: boolean; onBack: () => void; onStartMission: (id: number) => void }) {
   useAutoSpeak("Mission map online. Choose a mission, detective.");
   useVoiceCommands(
     {
-      "start mission": onStartMission1,
-      "first mission": onStartMission1,
-      "mission one": onStartMission1,
-      "enter mission": onStartMission1,
-      "broken partition": onStartMission1,
+      "start mission": () => onStartMission(1),
+      "first mission": () => onStartMission(1),
+      "mission one": () => onStartMission(1),
+      "mission two": () => onStartMission(2),
+      "mission three": () => onStartMission(3),
+      "mission four": () => onStartMission(4),
+      "broken partition": () => onStartMission(1),
+      "half repair": () => onStartMission(2),
+      "quarter core": () => onStartMission(3),
+      "share builder": () => onStartMission(4),
       "back to hub": onBack,
       "back to briefing": onBack,
       "go back": onBack,
@@ -244,13 +268,13 @@ function MissionSelectView({ voiceOn, onBack, onStartMission1 }: { voiceOn: bool
         <p className="label-eyebrow" style={{ color: BLUE }}>Level 1 / Mission Select</p>
         <h2 className="text-3xl sm:text-4xl font-bold mt-2" style={{ color: BLUE }}>Choose your mission</h2>
         <p className="text-sm mt-2 max-w-xl" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
-          Start with the Broken Partition Scanner to learn how to spot a glitch.
+          Four missions: spot glitches, repair halves, build quarters, and finish with a mixed challenge.
         </p>
 
         <ul className="mt-8 grid sm:grid-cols-2 gap-5">
           {MISSIONS.map((m) => {
             const Icon = m.Icon;
-            const onClick = m.unlocked && m.id === 1 ? onStartMission1 : undefined;
+            const onClick = m.unlocked ? () => onStartMission(m.id) : undefined;
             return (
               <motion.li
                 key={m.id}
@@ -288,20 +312,31 @@ function MissionSelectView({ voiceOn, onBack, onStartMission1 }: { voiceOn: bool
   );
 }
 
-/* -------------------------- Mission 1 Gameplay ---------------------------- */
+/* ---------------------------- Mission Gameplay ---------------------------- */
 
-function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boolean; onBack: () => void; onFinish: () => void; onExitToHub: () => void }) {
+function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub }: { mission: MissionDef; voiceOn: boolean; onBack: () => void; onFinish: () => void; onExitToHub: () => void }) {
+  const shapes = mission.glitches;
   const [shapeIdx, setShapeIdx] = useState(0);
   const [phase, setPhase] = useState<Phase>("briefing");
-  const shape = MISSION_1_SHAPES[shapeIdx];
+  const shape = shapes[shapeIdx];
   const [vals, setVals] = useState<number[]>(shape.initialVals);
   const [repaired, setRepaired] = useState(false);
   const [repairMsg, setRepairMsg] = useState<string | null>(null);
 
-  const isLast = shapeIdx === MISSION_1_SHAPES.length - 1;
+  const isLast = shapeIdx === shapes.length - 1;
+  const mechanic: "snap" | "range" = shape.mechanic ?? "range";
+
+  // Reset state when mission changes
+  useEffect(() => {
+    setShapeIdx(0);
+    setPhase("briefing");
+    setVals(shapes[0].initialVals);
+    setRepaired(false);
+    setRepairMsg(null);
+  }, [mission.id, shapes]);
 
   const goToShape = (idx: number) => {
-    const s = MISSION_1_SHAPES[idx];
+    const s = shapes[idx];
     setShapeIdx(idx);
     setVals(s.initialVals);
     setRepaired(false);
@@ -323,10 +358,12 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
       "start scanner": () => phase === "briefing" && setPhase("investigate"),
       "no glitch": () => phase === "investigate" && setPhase("explainWrong"),
       "robot is right": () => phase === "investigate" && setPhase("explainWrong"),
+      "machine is right": () => phase === "investigate" && setPhase("explainWrong"),
       "there is a glitch": () => phase === "investigate" && setPhase("detect"),
       "yes glitch": () => phase === "investigate" && setPhase("detect"),
       "next mission": nextShape,
       "next shape": nextShape,
+      "next item": nextShape,
       "finish mission": () => phase === "shapeDone" && isLast && setPhase("missionDone"),
       "return to missions": () => phase === "missionDone" && onFinish(),
     },
@@ -344,12 +381,19 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
       case "repair": return shape.robotRepair;
       case "teach": return shape.robotExplain;
       case "shapeDone": return shape.robotSuccess;
-      case "missionDone": return "Mission complete! You taught me so much about halves!";
+      case "missionDone": return "Mission complete! You taught me so much about fair shares!";
       default: return "";
     }
   }, [phase, shape]);
 
-  useAutoSpeak(robotLine, [phase, shapeIdx]);
+  useAutoSpeak(robotLine, [phase, shapeIdx, mission.id]);
+
+  const handleSnap = () => {
+    if (repaired) return;
+    setRepaired(true);
+    setRepairMsg(null);
+    setTimeout(() => setPhase("teach"), 700);
+  };
 
   const checkRepair = () => {
     const ok = shape.target.every((t, i) => Math.abs(vals[i] - t) <= shape.tolerance);
@@ -364,7 +408,7 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
 
   return (
     <>
-      <TopBar title={`Mission 1 — Shape ${shapeIdx + 1} of ${MISSION_1_SHAPES.length}`} onBack={onBack} backLabel="Missions" />
+      <TopBar title={`Mission ${mission.id} — ${mission.name} (${shapeIdx + 1}/${shapes.length})`} onBack={onBack} backLabel="Missions" />
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 grid lg:grid-cols-2 gap-6">
         {/* LEFT: Shape canvas */}
         <div className="bg-white rounded-2xl border p-6 shadow-sm flex flex-col" style={{ borderColor: "color-mix(in oklab, var(--color-brand-blue) 12%, white)" }}>
@@ -389,6 +433,22 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
                 </div>
                 <p className="label-eyebrow mt-4" style={{ color: BLUE }}>Target Area</p>
               </motion.div>
+            ) : phase === "repair" && mechanic === "snap" ? (
+              <motion.div
+                key={`${shape.id}-snap`}
+                initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                className="w-full max-w-md"
+              >
+                <DragSlider
+                  orientation={shape.orientation ?? "horizontal"}
+                  value={vals[0]}
+                  onChange={(v) => setVals([v])}
+                  onSnap={handleSnap}
+                  isRepaired={repaired}
+                >
+                  {shape.render(vals, repaired)}
+                </DragSlider>
+              </motion.div>
             ) : (
               <motion.div
                 key={`${shape.id}-${repaired}`}
@@ -400,7 +460,7 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
             )}
           </div>
 
-          {phase === "repair" && (
+          {phase === "repair" && mechanic === "range" && (
             <div className="mt-6 space-y-4">
               {vals.map((v, i) => (
                 <div key={i}>
@@ -430,6 +490,12 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
                 <Wrench className="w-4 h-4" /> Check Repair
               </button>
             </div>
+          )}
+
+          {phase === "repair" && mechanic === "snap" && (
+            <p className="mt-4 text-xs font-mono text-center" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
+              Drag the laser handle. It will snap when both pieces are equal.
+            </p>
           )}
         </div>
 
