@@ -155,13 +155,21 @@ export function useVoiceCommands(
 }
 
 
-type SpeechRecWithInterim = SpeechRec & {
+type SpeechRecWithInterim = {
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
   onresult:
     | ((e: {
         results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal?: boolean }>;
         resultIndex: number;
       }) => void)
     | null;
+  onend: (() => void) | null;
+  onerror: ((e: unknown) => void) | null;
 };
 
 /**
