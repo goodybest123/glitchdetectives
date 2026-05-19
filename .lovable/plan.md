@@ -1,61 +1,66 @@
-## Root cause
 
-The `/api/evaluate` server route is silently failing on every request, so ZED-4 always returns the catch-block fallback ("My audio sensors got a little fuzzy…"). The dev-server log shows the real error:
+## Goal
 
-```
-AI SDK Warning (lovable-ai-gateway.chat / google/gemini-2.5-flash):
-  The feature "responseFormat" is not supported.
-  JSON response format schema is only supported with structuredOutputs
-evaluate error NoObjectGeneratedError: No object generated: response did not match schema.
-```
+Bring Mission 1 in line with the State A–E spec. Most of the scaffolding already exists in `src/components/FractionFactoryLevel1.tsx` — this plan focuses on the deltas, not a rewrite.
 
-`generateObject({ model, schema })` on the OpenAI-compatible Lovable AI Gateway provider sends a `response_format: json_schema` request that the upstream Gemini route rejects, so no object is produced and we fall into the `catch` branch — which returns the fuzzy-sensor message.
+## What stays as-is
 
-It's also creating a feedback loop: the mic keeps re-transcribing ZED-4's own "audio sensors got fuzzy" reply and resending it as the child's next turn.
+- Split-screen layout (shape left, ZED dialogue right)
+- States `briefing`, `repair`, `teach`, `shapeDone`, `missionDone`
+- Sliders + `Check Repair` math
+- TTS on every robot line, framer-motion transitions, lucide icons
+- Continuous mic + echo-filter + auto-resume in `ReasoningBox`
+- Voice command map
 
-## Fix
+## Deltas
 
-### 1. `src/routes/api/evaluate.ts` — stop using `generateObject`
+### State A — Briefing
+No change. `Start Scanner` button already advances to `investigate`.
 
-Switch to `generateText` + the AI SDK `Output.object` API (the documented Lovable AI Gateway pattern for structured output). This sends the schema as a tool/output instruction the gateway actually supports, so Gemini returns the JSON we expect.
+### State B — Investigate (clean up)
+Currently the investigate phase renders **both** the Yes/No buttons **and** a `ReasoningBox`. Per spec, this state is buttons-only.
 
-```ts
-import { generateText, Output } from "ai";
+- Remove the `<ReasoningBox …mode="wrong" />` from the `investigate` branch in `PhaseControls`.
+- Keep: `Yes, the robot is right.` → `explainWrong`; `No, there is a glitch!` → `detect`.
+- Add a soft helper line under the buttons: "Look closely — are the parts really equal?"
 
-const { experimental_output: object } = await generateText({
-  model,
-  system: SYSTEM,
-  prompt: `…`,
-  experimental_output: Output.object({ schema: ResultSchema }),
-});
+### State C — Detect (Explain the Glitch)
+Already routes to `ReasoningBox` with `mode="detect"`. Add the two spec details:
 
-return Response.json(object);
-```
+- **Try Again button**: when ZED returns feedback marking the answer not-yet-correct, show a `Try Again` chip that clears the last child+zed turn pair so the child can retry without losing the seeded prompt. (Pure UI; no endpoint change.)
+- **Transcription fallback**: if `SpeechRecognition` is unsupported, surface a `MediaRecorder`-based fallback that POSTs the blob to a new `/api/transcribe` route (Lovable AI Gateway, Gemini audio). Text input remains as the simpler fallback.
 
-Keep `google/gemini-2.5-flash`, the prompt, and `ResultSchema` as-is. Keep the existing `try/catch` fallback as a true last-resort.
+### State D — Repair
+No change.
 
-### 2. `src/components/FractionFactoryLevel1.tsx` — break the echo loop
+### State E — Teach
+No change.
 
-When `sendToZed` runs, immediately call `stop()` on the continuous mic before awaiting the fetch and call `start()` again after ZED-4 finishes speaking (using `speakText`'s `onEnd` callback). This guarantees the recognizer is paused while TTS plays and avoids the case where the 300 ms polling pause in `useContinuousSpeech` misses the start of the utterance.
+### Explain Wrong (the "Yes, robot is right" branch)
+Keep as a short rethink loop using `ReasoningBox` `mode="wrong"`, including the existing "after 2 turns concede and advance to Repair" behavior.
 
-Concretely, plumb `stop`/`start` into `sendToZed` and:
-- call `stop()` right when a child turn is committed,
-- in the existing `speakText(data.feedbackText, …)` callback, call `start()` again (if `autoStart` was on and not yet `correctRef.current`).
+## Endpoint split (spec naming)
 
-Also guard `handleFinal` so it ignores any final transcript whose text closely matches the last `zed` turn (cheap defensive check: same first 30 chars, case-insensitive) — prevents residual echo from being treated as the child's reply.
+Currently one route `/api/evaluate` handles all modes. Split into:
+
+- `src/routes/api/evaluate-detect-reasoning.ts` — used for `mode: "detect"` and `mode: "wrong"` (both are "is this a glitch?" reasoning).
+- `src/routes/api/evaluate-reasoning.ts` — used for `mode: "explain"` (teach phase: deep conceptual understanding).
+- `src/routes/api/transcribe.ts` — POST audio blob → `{ text }` using Lovable AI Gateway (`google/gemini-2.5-flash` audio input).
+
+Both evaluate routes reuse the existing system prompt + `ResultSchema` + lenient JSON parsing + 429/402 error handling from today's `evaluate.ts`. The teach route gets a slightly stricter rubric (reasoningScore ≥ 2 required for `isCorrect`).
+
+The current `/api/evaluate` stays for one release as a thin shim that forwards to the correct new route, so nothing breaks mid-deploy.
+
+`ReasoningBox` picks the endpoint based on `mode`.
 
 ## Files touched
 
-- `src/routes/api/evaluate.ts` — swap `generateObject` for `generateText` + `Output.object`.
-- `src/components/FractionFactoryLevel1.tsx` — pause mic during round-trip + TTS, resume after; ignore transcripts that echo the last ZED line.
-
-## Verification
-
-- Hit `/api/evaluate` with curl after the change and confirm a real ZED reply (not the fuzzy fallback) comes back.
-- In the preview, say "the pieces are not equal" during the pizza investigate phase and confirm ZED-4 thanks, reflects, and asks one curious question — and that the mic does not immediately re-send ZED's own words.
+- `src/components/FractionFactoryLevel1.tsx` — investigate cleanup, Detect `Try Again` chip, endpoint routing, optional `MediaRecorder` fallback hook-up.
+- `src/routes/api/evaluate-detect-reasoning.ts` — new.
+- `src/routes/api/evaluate-reasoning.ts` — new (stricter teach rubric).
+- `src/routes/api/transcribe.ts` — new.
+- `src/routes/api/evaluate.ts` — becomes a thin forwarder (kept for safety).
 
 ## Out of scope
 
-- Persona / prompt changes.
-- Missions 2–4.
-- Voice command list.
+- Missions 2–4 unlocks, persona/prompt rewrites, the intro/mission-select screens.
