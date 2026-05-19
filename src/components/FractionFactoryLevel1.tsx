@@ -32,7 +32,9 @@ const INTRO_TEXT =
 
 const MISSION_1_SHAPES: Glitch[] = [
   GLITCHES.find((g) => g.id === "pizza")!,
+  GLITCHES.find((g) => g.id === "chocolate")!,
   GLITCHES.find((g) => g.id === "battery")!,
+  GLITCHES.find((g) => g.id === "solar")!,
   GLITCHES.find((g) => g.id === "fuelrod")!,
 ];
 
