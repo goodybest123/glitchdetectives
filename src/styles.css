@@ -36,20 +36,27 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Glitch Detectives brand palette */
+  --color-brand-blue: #1e293b;
+  --color-brand-yellow: #ffde59;
+  --color-brand-mint: #a5f5de;
+  --color-bg-light: #f8f9fa;
+  --color-bg-mint: #e8f9f5;
+
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 :root {
   --radius: 1rem;
-  /* Brand: Deep navy #002D5A */
-  --background: oklch(0.961 0.018 220);        /* #E8F4F8 mint */
-  --foreground: oklch(0.247 0.073 254);        /* #002D5A navy */
+  --background: oklch(0.961 0.018 220);
+  --foreground: oklch(0.247 0.073 254);
   --card: oklch(0.99 0.005 220);
   --card-foreground: oklch(0.247 0.073 254);
   --popover: oklch(0.99 0.005 220);
   --popover-foreground: oklch(0.247 0.073 254);
-  --primary: oklch(0.247 0.073 254);           /* navy */
+  --primary: oklch(0.247 0.073 254);
   --primary-foreground: oklch(0.98 0.01 220);
   --secondary: oklch(0.93 0.02 220);
   --secondary-foreground: oklch(0.247 0.073 254);
@@ -57,11 +64,11 @@
   --muted-foreground: oklch(0.5 0.04 240);
   --accent: oklch(0.9 0.04 220);
   --accent-foreground: oklch(0.247 0.073 254);
-  --energy: oklch(0.91 0.18 95);               /* #FFDE59 yellow */
+  --energy: oklch(0.91 0.18 95);
   --energy-foreground: oklch(0.247 0.073 254);
-  --glitch: oklch(0.65 0.24 27);               /* #EF4444 red */
+  --glitch: oklch(0.65 0.24 27);
   --glitch-foreground: oklch(0.99 0.01 0);
-  --success: oklch(0.7 0.17 162);              /* #10B981 green */
+  --success: oklch(0.7 0.17 162);
   --success-foreground: oklch(0.99 0.01 0);
   --destructive: oklch(0.65 0.24 27);
   --destructive-foreground: oklch(0.99 0.01 0);
@@ -82,6 +89,8 @@
   --muted: oklch(0.25 0.04 254);
   --muted-foreground: oklch(0.7 0.03 220);
 }
+
+html { scroll-behavior: smooth; }
 
 @layer base {
   * { border-color: var(--color-border); }
@@ -107,5 +116,14 @@
       linear-gradient(to right, color-mix(in oklab, var(--foreground) 6%, transparent) 1px, transparent 1px),
       linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 6%, transparent) 1px, transparent 1px);
     background-size: 32px 32px;
+  }
+  .dots-bg {
+    background-image: radial-gradient(rgba(255,255,255,0.08) 1.5px, transparent 1.5px);
+    background-size: 22px 22px;
+  }
+  .heading-black {
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
   }
 }
