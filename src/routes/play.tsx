@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, ArrowRight, Factory, Lock, Shield, Sparkles,
   Layers, Scissors, Ruler, Wrench, Calculator, FlaskConical,
 } from "lucide-react";
+import FractionFactoryLevel1 from "@/components/FractionFactoryLevel1";
 
 
 export const Route = createFileRoute("/play")({
@@ -44,10 +45,14 @@ const LEVELS: Level[] = [
 ];
 
 function Play() {
-  return <LevelSelect onStart={() => {}} />;
+  const [activeLevel, setActiveLevel] = useState<number | null>(null);
+  if (activeLevel === 1) {
+    return <FractionFactoryLevel1 onExitToHub={() => setActiveLevel(null)} />;
+  }
+  return <LevelSelect onStart={(n) => setActiveLevel(n)} />;
 }
 
-function LevelSelect({ onStart }: { onStart: () => void }) {
+function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
   return (
     <main className="min-h-screen" style={{ background: BG_LIGHT }}>
       {/* Hero header */}
@@ -128,7 +133,7 @@ function LevelSelect({ onStart }: { onStart: () => void }) {
   );
 }
 
-function LevelCard({ lvl, onStart }: { lvl: Level; onStart: () => void }) {
+function LevelCard({ lvl, onStart }: { lvl: Level; onStart: (n: number) => void }) {
   const Icon = lvl.Icon;
   const unlocked = lvl.unlocked;
   return (
@@ -190,7 +195,7 @@ function LevelCard({ lvl, onStart }: { lvl: Level; onStart: () => void }) {
         <div className="mt-6">
           {unlocked ? (
             <button
-              onClick={onStart}
+              onClick={() => onStart(lvl.n)}
               className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-transform hover:scale-[1.02]"
               style={{ background: BLUE, color: "white" }}
             >
