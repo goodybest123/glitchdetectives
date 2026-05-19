@@ -500,6 +500,7 @@ function PhaseControls(props: {
   onAnswerYes: () => void;
   onAnswerNo: () => void;
   onCorrectDetect: () => void;
+  onEnterRepair: () => void;
   onRetryWrong: () => void;
   onCorrectTeach: () => void;
   onNextShape: () => void;
