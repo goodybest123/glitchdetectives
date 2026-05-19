@@ -6,8 +6,11 @@ export function isSpeaking() {
   return speakingFlag || !!window.speechSynthesis?.speaking;
 }
 
-export function speakText(text: string) {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+export function speakText(text: string, onEnd?: () => void) {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+    onEnd?.();
+    return;
+  }
   try {
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
@@ -20,9 +23,13 @@ export function speakText(text: string) {
       voices.find((v) => /en-US/i.test(v.lang) && /female/i.test(v.name)) ||
       voices.find((v) => /en/i.test(v.lang));
     if (preferred) u.voice = preferred;
+    speakingFlag = true;
+    u.onend = () => { speakingFlag = false; onEnd?.(); };
+    u.onerror = () => { speakingFlag = false; onEnd?.(); };
     window.speechSynthesis.speak(u);
   } catch {
-    // ignore
+    speakingFlag = false;
+    onEnd?.();
   }
 }
 
