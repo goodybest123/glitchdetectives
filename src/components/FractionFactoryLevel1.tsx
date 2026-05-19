@@ -241,15 +241,20 @@ function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: 
 
 /* ----------------------------- Mission Select ----------------------------- */
 
-function MissionSelectView({ voiceOn, onBack, onStartMission1 }: { voiceOn: boolean; onBack: () => void; onStartMission1: () => void }) {
+function MissionSelectView({ voiceOn, onBack, onStartMission }: { voiceOn: boolean; onBack: () => void; onStartMission: (id: number) => void }) {
   useAutoSpeak("Mission map online. Choose a mission, detective.");
   useVoiceCommands(
     {
-      "start mission": onStartMission1,
-      "first mission": onStartMission1,
-      "mission one": onStartMission1,
-      "enter mission": onStartMission1,
-      "broken partition": onStartMission1,
+      "start mission": () => onStartMission(1),
+      "first mission": () => onStartMission(1),
+      "mission one": () => onStartMission(1),
+      "mission two": () => onStartMission(2),
+      "mission three": () => onStartMission(3),
+      "mission four": () => onStartMission(4),
+      "broken partition": () => onStartMission(1),
+      "half repair": () => onStartMission(2),
+      "quarter core": () => onStartMission(3),
+      "share builder": () => onStartMission(4),
       "back to hub": onBack,
       "back to briefing": onBack,
       "go back": onBack,
@@ -263,13 +268,13 @@ function MissionSelectView({ voiceOn, onBack, onStartMission1 }: { voiceOn: bool
         <p className="label-eyebrow" style={{ color: BLUE }}>Level 1 / Mission Select</p>
         <h2 className="text-3xl sm:text-4xl font-bold mt-2" style={{ color: BLUE }}>Choose your mission</h2>
         <p className="text-sm mt-2 max-w-xl" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
-          Start with the Broken Partition Scanner to learn how to spot a glitch.
+          Four missions: spot glitches, repair halves, build quarters, and finish with a mixed challenge.
         </p>
 
         <ul className="mt-8 grid sm:grid-cols-2 gap-5">
           {MISSIONS.map((m) => {
             const Icon = m.Icon;
-            const onClick = m.unlocked && m.id === 1 ? onStartMission1 : undefined;
+            const onClick = m.unlocked ? () => onStartMission(m.id) : undefined;
             return (
               <motion.li
                 key={m.id}
