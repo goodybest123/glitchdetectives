@@ -8,6 +8,10 @@ const BodySchema = z.object({
   text: z.string().min(1).max(2000),
   mode: z.enum(["detect", "wrong", "explain"]),
   shapeContext: z.string().max(500).optional(),
+  history: z
+    .array(z.object({ role: z.enum(["child", "zed"]), text: z.string().max(1000) }))
+    .max(12)
+    .optional(),
 });
 
 const ResultSchema = z.object({
