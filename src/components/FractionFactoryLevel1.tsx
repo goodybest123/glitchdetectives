@@ -656,6 +656,13 @@ function ReasoningBox({
   // Stop mic on unmount
   useEffect(() => () => { try { stop(); } catch { /* */ } }, [stop]);
 
+  // Auto-start mic shortly after mount (after seeded TTS settles)
+  useEffect(() => {
+    if (!autoStart || !supported) return;
+    const t = setTimeout(() => { try { start(); } catch { /* */ } }, 600);
+    return () => clearTimeout(t);
+  }, [autoStart, supported, start]);
+
   const submitTyped = () => {
     if (!typed.trim() || pending) return;
     const t = typed.trim();
