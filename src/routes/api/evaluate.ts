@@ -69,14 +69,26 @@ export const Route = createFileRoute("/api/evaluate")({
             .map((t) => `${t.role === "child" ? "TEACHER (child)" : "ZED-4 (you)"}: ${t.text}`)
             .join("\n");
 
-          const { experimental_output } = await generateText({
+          const { text: rawText } = await generateText({
             model,
             system: SYSTEM,
-            prompt: `Mode: ${mode}\nShape context: ${shapeContext ?? "a shape divided into parts"}\n\nConversation so far:\n${transcript || "(none yet)"}\n\nThe teacher just said: """${text}"""\n\nReply as ZED-4 the curious learner. ALWAYS start with a short thank-you, then reflect ONE specific word or idea they just said, then ask exactly ONE tiny curious question (no more). Unless they clearly explained equal/same-size parts — then celebrate them as the teacher (no question needed). Keep it to 1-3 short sentences total.`,
-            experimental_output: Output.object({ schema: ResultSchema }),
+            prompt: `Mode: ${mode}\nShape context: ${shapeContext ?? "a shape divided into parts"}\n\nConversation so far:\n${transcript || "(none yet)"}\n\nThe teacher just said: """${text}"""\n\nReply as ZED-4 the curious learner. ALWAYS start with a short thank-you, then reflect ONE specific word or idea they just said, then ask exactly ONE tiny curious question (no more). Unless they clearly explained equal/same-size parts — then celebrate them as the teacher (no question needed). Keep it to 1-3 short sentences total.\n\nReturn ONLY a JSON object (no markdown, no prose) with EXACTLY these keys:\n{\n  "feedbackText": "<your reply as ZED-4, 1-3 short sentences, starting with a thank-you>",\n  "isCorrect": <true if the teacher clearly explained equal/same-size parts, else false>,\n  "reasoningScore": <1, 2, or 3>\n}`,
           });
 
-          return Response.json(experimental_output);
+          // Strip code fences if present and parse leniently
+          const cleaned = rawText.replace(/^```(?:json)?\s*|\s*```$/g, "").trim();
+          const jsonStart = cleaned.indexOf("{");
+          const jsonEnd = cleaned.lastIndexOf("}");
+          const jsonStr = jsonStart >= 0 && jsonEnd >= 0 ? cleaned.slice(jsonStart, jsonEnd + 1) : cleaned;
+          const parsed = JSON.parse(jsonStr) as Record<string, unknown>;
+          const feedbackText = String(
+            parsed.feedbackText ?? parsed.botText ?? parsed.reply ?? parsed.text ?? rawText,
+          ).trim();
+          const isCorrect = Boolean(parsed.isCorrect);
+          const reasoningScore = Math.max(1, Math.min(3, Number(parsed.reasoningScore) || 1));
+          const out = ResultSchema.parse({ feedbackText, isCorrect, reasoningScore });
+
+          return Response.json(out);
         } catch (err: unknown) {
           console.error("evaluate error", err);
           const status = (err as { statusCode?: number; status?: number })?.statusCode
