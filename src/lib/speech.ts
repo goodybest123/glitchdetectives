@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+let speakingFlag = false;
+export function isSpeaking() {
+  if (typeof window === "undefined") return false;
+  return speakingFlag || !!window.speechSynthesis?.speaking;
+}
+
 export function speakText(text: string) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
   try {

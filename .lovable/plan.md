@@ -1,62 +1,74 @@
-# Plan: FractionFactoryLevel1 page
+# Plan: Real-time ZED-4 dialogue, confident robot, real pizza
 
-## Scope
-Build a new `FractionFactoryLevel1` component used when the user clicks "Enter Level" on Level 1 from the Fraction Factory hub (`/play`). Three views in one component, state-machine driven, with TTS, voice input, and AI-graded reasoning.
+## 1. Real-time conversation loop (continuous mic → AI reply)
 
-## File changes
-1. **New** `src/components/FractionFactoryLevel1.tsx` — the full component (intro → mission-select → mission-1 gameplay loop).
-2. **Edit** `src/routes/play.tsx` — re-introduce a small piece of state so clicking "Enter Level" on Level 1 mounts `FractionFactoryLevel1` instead of doing nothing. Removes the empty `onStart={() => {}}` no-op. Back button inside the level returns to the Hub.
-3. **Reuse existing infra** (no duplication):
-   - `speakText` + `useSpeechToText` from `src/lib/speech.ts`.
-   - `/api/evaluate` route (already wired to Lovable AI) for the two reasoning checks. Mode `detect` for "Why is it a glitch?" and mode `explain` for "Why did parts have to be equal?". No new endpoints (the brief mentions `/api/evaluate-detect-reasoning` and `/api/evaluate-reasoning`, but the project already has a single unified `/api/evaluate` doing exactly this — I'll use it. Flag below.)
-   - Mission 1 shapes: reuse the first 3 entries of `GLITCHES` from `src/lib/glitches.tsx` (pizza halves, then battery halves, then fuel-rod halves — all halves-focused for Mission 1). Avoids rebuilding SVG shape components.
+Goal: while the mic is open, every time the speech recognizer emits a final transcript chunk, automatically send it to ZED-4. ZED-4 thanks the child, reflects their words, and asks one tiny curious question — then keeps listening. No "Send" button press required.
 
-## View / state design
-Top-level state: `currentView: 'intro' | 'mission-select' | 'mission-1-investigate'`.
-Mission-1 sub-state: `phase: 'briefing' | 'investigate' | 'explainWrong' | 'detect' | 'repair' | 'teach' | 'shapeDone' | 'missionDone'` plus `shapeIdx` (0..2).
+**Changes**
+- `src/lib/speech.ts` → add `useContinuousSpeech(onFinalChunk, enabled)`:
+  - Uses `SpeechRecognition` with `continuous = true`, `interimResults = true`.
+  - Buffers interim text for live display; on each `final` result, fires `onFinalChunk(text)` and keeps listening.
+  - Auto-pauses while ZED-4 is speaking (check `window.speechSynthesis.speaking`) and resumes on `utterance.onend` so the robot doesn't hear itself.
+  - Returns `{ listening, interim, start, stop, supported }`.
+- `src/components/FractionFactoryLevel1.tsx` → rewrite `ReasoningBox`:
+  - Replace the textarea + Send flow with a **"Talk to ZED-4" conversation panel**:
+    - Big pulsing mic toggle (start/stop the live conversation).
+    - Live interim transcript shown in gray as the child speaks.
+    - Scrolling chat log of `[child message → ZED-4 reply]` turns.
+    - Keep a typed fallback (small input + send) for when mic is unsupported or the child prefers typing.
+  - State: `turns: { role: 'child'|'zed', text: string }[]`, `pending: boolean`.
+  - On each final chunk:
+    1. Append child turn.
+    2. POST to `/api/evaluate` with `{ text, mode, shapeContext, history }`.
+    3. Append ZED-4 turn; auto-speak via `speakText`.
+    4. If `isCorrect` → wait for the reply to finish speaking, stop mic, call `onCorrect`.
+- `src/routes/api/evaluate.ts`:
+  - Add optional `history: { role, text }[]` (max ~12) to `BodySchema`.
+  - Pass prior turns into the prompt so ZED-4 reflects the latest message in context.
+  - Keep the "always thank + one tiny question" SYSTEM prompt; tighten it to **always end with exactly one short question** unless `isCorrect`.
 
-### Intro view
-- Header: "Level 1: Fraction Foundations", back arrow → navigates to `/play` hub.
-- Pulsing `AlertTriangle` in a yellow square + "System Failure Detected" label.
-- Briefing card with the supplied copy + `Volume2` "Read Aloud" button calling `speakText`.
-- Primary CTA `Access Mission Map` → `mission-select`.
+## 2. Confident-wrong robot persona
 
-### Mission select view
-- 2×2 grid of 4 mission cards. Data:
-  1. Broken Partition Scanner — Detect unequal parts — unlocked → starts mission-1.
-  2. Half Repair Station — Understand halves — unlocked → starts mission-1 (same loop, scoped to halves shapes).
-  3. Quarter Core Reactor — Understand fourths — locked.
-  4. Share Builder Challenge — Apply concepts — locked.
-- Locked cards: grayscale + `Lock` icon, no hover. Unlocked: hover lift, blue/yellow accents.
-- Back arrow to intro.
+Goal: during `briefing` and `investigate`, ZED-4 sounds proudly certain that the broken shape is correct (so the child has to push back). The current pizza line "Did I cut it right?" already hints — we make it unmistakably confident.
 
-### Mission 1 gameplay loop (split-screen, lg:grid-cols-2)
-**Left panel** — shape canvas from `GLITCHES[shapeIdx].render(vals, repaired)`. In `repair` phase, render sliders from `MissionRunner`'s pattern (range inputs bound to `vals`, `Check Repair` button, tolerance check using existing `target`/`tolerance`).
+**Changes — `src/lib/glitches.tsx`** (rewrite briefing + investigate lines for all 3 Mission-1 shapes):
+- Pizza: 
+  - briefing: "Check it out! I sliced this pizza perfectly down the middle. Two equal halves — one for you, one for me. I nailed it!"
+  - investigate: "I'm 100% sure I cut this pizza right. Two fair halves, see? Tell me — am I right?"
+- Battery: "Easy! The line is in the middle. Top half charge, bottom half empty. I'm definitely right about this one."
+- Fuel rod: "Look at my fuel rod — two perfect halves of energy. I'm sure I got this right!"
 
-**Right panel** — ZED-4 dialogue card (Bot icon, blue chip) + phase-specific controls:
-- `briefing`: robot line + `Start Scanner` button → `investigate`.
-- `investigate`: two buttons "Yes, the robot is right" (→ `explainWrong`) / "No, there is a glitch!" (→ `detect`).
-- `detect` / `explainWrong` / `teach`: textarea + `Mic` button (uses `useSpeechToText`, falls back to a `MediaRecorder` POST to `/api/transcribe` if `SpeechRecognition` unsupported — see flag) + `Send`. On submit calls `/api/evaluate` with mode `detect` / `wrong` / `explain`. On `isCorrect: false` show feedback + `Try Again`. On `isCorrect: true` auto-advance.
-- `repair`: sliders + `Check Repair`. If within tolerance → `teach`, else gentle nudge.
-- `shapeDone`: success card with `Next Shape` or `Finish Mission` (last shape).
-- `missionDone`: completion card with `Return to Hub`.
+Update `robotExplainWrong` so when the child agrees, ZED-4 stays confident-but-curious: "See? I told you! …wait, you sure? Tell me what makes them halves."
 
-### Cross-cutting
-- TTS auto-trigger on every phase change and every new robot line via `useAutoSpeak(robotLine, [phase, shapeIdx])`.
-- Animations via `framer-motion` (`motion.div` fade + scale-in on phase change, AnimatePresence on dialogue swap, subtle bounce on success).
-- Icons only from `lucide-react`: `ArrowLeft, AlertTriangle, Volume2, Lock, Bot, Mic, MicOff, Send, CheckCircle2, Wrench, Sparkles, RefreshCcw, ArrowRight, Factory`.
+## 3. Realistic pizza shape
 
-## Design tokens
-Dark blue `--color-brand-blue`, sky blue tints via `color-mix`, yellow `--color-brand-yellow` accent only on CTAs/badges, white card surfaces on `--color-bg-light` page background. Generous spacing (`p-6`/`p-8`, `gap-6`), no gradients, no childish illustrations. Matches the existing `/play` hub language.
+Goal: the SVG should read as a pizza, not just a two-tone circle.
+
+**Changes — `src/lib/glitches.tsx` `PizzaShape`**:
+- Layered SVG:
+  - Outer **crust ring** (warm tan, `#d9a36a`) with a darker stroke.
+  - **Dough/sauce base** (tomato red `#c0392b`) inside the crust.
+  - **Cheese layer** (cream `#f5d76e`) slightly inset, with irregular blobby edge (a few `<circle>`s on the rim for the melted look).
+  - **Pepperoni**: ~7 small red-brown `<circle>`s scattered pseudo-randomly (fixed seed positions so it's stable).
+  - **Cut lines** drawn on top: first cut fixed at 12-o'clock, second cut at the user-controlled angle. Lines as dark crust color, slightly thicker.
+  - When `repaired` → add a subtle green glow ring + soft scale bounce (already animated by parent), keep pepperoni.
+- Keep the existing geometry math (`vals[0]` → angle) so the repair slider still works unchanged.
+- Other shapes (battery, fuel rod) untouched.
+
+## Technical notes
+
+- Auto-speak gating: `useContinuousSpeech` reads `speechSynthesis.speaking` each tick; we also call `recognition.stop()` right before `speakText` and `recognition.start()` on `utterance.onend` to be safe across browsers.
+- History size capped to last 12 turns to keep prompt small.
+- Voice commands (`useVoiceCommands`) and the live conversation use **separate** `SpeechRecognition` instances; we disable the global voice-command listener while the conversation mic is active to avoid two recognizers fighting (most browsers only allow one).
+- No DB / schema changes. No new dependencies.
+
+## Files touched
+- `src/lib/speech.ts` — add `useContinuousSpeech`.
+- `src/lib/glitches.tsx` — confident copy + new realistic `PizzaShape`.
+- `src/components/FractionFactoryLevel1.tsx` — new conversational `ReasoningBox` + disable global voice commands while talking.
+- `src/routes/api/evaluate.ts` — accept `history`, tighten prompt to always end with one question.
 
 ## Out of scope
-- Missions 2-4 (locked).
-- New AI endpoints (reuses `/api/evaluate`).
-- Changes to `MissionRunner.tsx` (not used here; can be deleted later if you confirm).
-- Backend `/api/transcribe` route (only used as fallback; will degrade gracefully if missing).
-
-## Flags / decisions to confirm
-1. **Endpoints**: brief lists `/api/evaluate-detect-reasoning` and `/api/evaluate-reasoning`. The project already has `/api/evaluate` covering both. I'll use that. Tell me if you want two separate routes instead.
-2. **`/api/transcribe` fallback**: native `SpeechRecognition` covers Chrome/Edge/Safari. I'll keep the mic button working there and hide it gracefully where unsupported, rather than building a server transcription endpoint now (would need an AI provider with audio support). OK?
-3. **Mission 1 shape set**: use 3 halves-focused shapes (`pizza`, `battery`, `fuelrod` from `GLITCHES`). OK, or do you want all 5?
-4. **`MissionRunner.tsx`**: currently unused after this change — delete it, or leave as-is?
+- Persisting conversations across sessions.
+- Server-side audio transcription fallback (browser STT only).
+- Missions 2–4.
