@@ -36,8 +36,8 @@ const MISSION_1_SHAPES: Glitch[] = [
 ];
 
 const MISSIONS = [
-  { id: 1, name: "Broken Partition Scanner", focus: "Detect unequal parts", unlocked: true, Icon: ScanSearch },
-  { id: 2, name: "Half Repair Station", focus: "Understand halves", unlocked: true, Icon: Wrench },
+  { id: 1, name: "Broken Partition Scanner", focus: "Detect unequal parts", unlocked: true, Icon: Zap },
+  { id: 2, name: "Half Repair Station", focus: "Understand halves", unlocked: false, Icon: Wrench },
   { id: 3, name: "Quarter Core Reactor", focus: "Understand fourths", unlocked: false, Icon: Atom },
   { id: 4, name: "Share Builder Challenge", focus: "Apply concepts", unlocked: false, Icon: Share2 },
 ];
