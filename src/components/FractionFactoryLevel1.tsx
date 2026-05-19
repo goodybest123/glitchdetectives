@@ -569,6 +569,25 @@ function PhaseControls(props: {
     );
   }
 
+  if (phase === "repairPrompt") {
+    return (
+      <div className="flex flex-col items-center gap-4 text-center">
+        <p className="text-sm" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
+          Let's head into the repair room and slide the dividers until the parts are fair.
+        </p>
+        <motion.button
+          onClick={props.onEnterRepair}
+          animate={{ scale: [1, 1.03, 1] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition-transform hover:scale-[1.02]"
+          style={{ background: YELLOW, color: BLUE }}
+        >
+          <Wrench className="w-4 h-4" /> Enter the Repair Room
+        </motion.button>
+      </div>
+    );
+  }
+
   if (phase === "shapeDone") {
     return (
       <motion.div initial={{ scale: 0.96 }} animate={{ scale: [0.96, 1.04, 1] }} className="flex flex-col items-center gap-4">
