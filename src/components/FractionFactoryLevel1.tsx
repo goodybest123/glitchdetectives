@@ -453,6 +453,7 @@ function PhaseControls(props: {
   phase: Phase;
   shapeId: string;
   shapeName: string;
+  robotLine: string;
   isLast: boolean;
   onStartScanner: () => void;
   onAnswerYes: () => void;
@@ -467,33 +468,51 @@ function PhaseControls(props: {
 
   if (phase === "briefing") {
     return (
-      <button
-        onClick={props.onStartScanner}
-        className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-transform hover:scale-[1.02]"
-        style={{ background: BLUE, color: "white" }}
-      >
-        <ScanSearch className="w-4 h-4" /> Start Scanner
-      </button>
+      <div className="space-y-3">
+        <p className="text-xs font-mono text-center" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
+          Tap Start Scanner so we can share it together.
+        </p>
+        <motion.button
+          onClick={props.onStartScanner}
+          animate={{ scale: [1, 1.03, 1] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold"
+          style={{ background: BLUE, color: "white" }}
+        >
+          <ScanSearch className="w-4 h-4" /> Start Scanner
+        </motion.button>
+      </div>
     );
   }
 
   if (phase === "investigate") {
     return (
-      <div className="grid sm:grid-cols-2 gap-3">
-        <button
-          onClick={props.onAnswerYes}
-          className="px-4 py-3 rounded-xl font-semibold border transition hover:bg-slate-50"
-          style={{ color: BLUE, borderColor: "color-mix(in oklab, var(--color-brand-blue) 25%, white)" }}
-        >
-          Yes, the robot is right.
-        </button>
-        <button
-          onClick={props.onAnswerNo}
-          className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-transform hover:scale-[1.02]"
-          style={{ background: YELLOW, color: BLUE }}
-        >
-          <AlertTriangle className="w-4 h-4" /> No, there is a glitch!
-        </button>
+      <div className="space-y-4">
+        <div className="grid sm:grid-cols-2 gap-3">
+          <button
+            onClick={props.onAnswerYes}
+            className="px-4 py-3 rounded-xl font-semibold border transition hover:bg-slate-50"
+            style={{ color: BLUE, borderColor: "color-mix(in oklab, var(--color-brand-blue) 25%, white)" }}
+          >
+            Yes, the robot is right.
+          </button>
+          <button
+            onClick={props.onAnswerNo}
+            className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-transform hover:scale-[1.02]"
+            style={{ background: YELLOW, color: BLUE }}
+          >
+            <AlertTriangle className="w-4 h-4" /> No, there is a glitch!
+          </button>
+        </div>
+        <ReasoningBox
+          key={"investigate-" + props.shapeId}
+          mode="wrong"
+          shapeContext={`${props.shapeName} (${props.shapeId})`}
+          seedZedLine={props.robotLine}
+          autoStart
+          onCorrect={props.onCorrectDetect}
+          secondaryAction={null}
+        />
       </div>
     );
   }
@@ -506,6 +525,8 @@ function PhaseControls(props: {
         key={phase + props.shapeId}
         mode={mode}
         shapeContext={`${props.shapeName} (${props.shapeId})`}
+        seedZedLine={props.robotLine}
+        autoStart
         onCorrect={phase === "teach" ? props.onCorrectTeach : phase === "detect" ? props.onCorrectDetect : props.onRetryWrong}
         secondaryAction={phase === "explainWrong" ? { label: "Take another look", run: props.onRetryWrong } : null}
       />
