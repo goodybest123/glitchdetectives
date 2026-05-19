@@ -265,7 +265,7 @@ function MissionSelectView({ voiceOn, onBack, onStartMission1 }: { voiceOn: bool
 
 /* -------------------------- Mission 1 Gameplay ---------------------------- */
 
-function Mission1View({ onBack, onFinish }: { onBack: () => void; onFinish: () => void }) {
+function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boolean; onBack: () => void; onFinish: () => void; onExitToHub: () => void }) {
   const [shapeIdx, setShapeIdx] = useState(0);
   const [phase, setPhase] = useState<Phase>("briefing");
   const shape = MISSION_1_SHAPES[shapeIdx];
@@ -283,6 +283,31 @@ function Mission1View({ onBack, onFinish }: { onBack: () => void; onFinish: () =
     setRepairMsg(null);
     setPhase("briefing");
   };
+
+  const nextShape = () => {
+    if (isLast) setPhase("missionDone");
+    else goToShape(shapeIdx + 1);
+  };
+
+  useVoiceCommands(
+    {
+      "back to hub": onExitToHub,
+      "return to hub": onExitToHub,
+      "back to missions": onBack,
+      "back to mission map": onBack,
+      "start scanner": () => phase === "briefing" && setPhase("investigate"),
+      "no glitch": () => phase === "investigate" && setPhase("explainWrong"),
+      "robot is right": () => phase === "investigate" && setPhase("explainWrong"),
+      "there is a glitch": () => phase === "investigate" && setPhase("detect"),
+      "yes glitch": () => phase === "investigate" && setPhase("detect"),
+      "next mission": nextShape,
+      "next shape": nextShape,
+      "finish mission": () => phase === "shapeDone" && isLast && setPhase("missionDone"),
+      "return to missions": () => phase === "missionDone" && onFinish(),
+    },
+    voiceOn,
+  );
+
 
   const robotLine = useMemo(() => {
     switch (phase) {
