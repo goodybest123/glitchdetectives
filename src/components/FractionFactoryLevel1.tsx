@@ -21,6 +21,7 @@ type Phase =
   | "investigate"
   | "explainWrong"
   | "detect"
+  | "repairPrompt"
   | "repair"
   | "teach"
   | "shapeDone"
@@ -337,6 +338,7 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
       case "investigate": return shape.robotInvestigate;
       case "explainWrong": return shape.robotExplainWrong;
       case "detect": return shape.robotDetect;
+      case "repairPrompt": return "You spotted the glitch! I can't fix this alone — will you help me repair it?";
       case "repair": return shape.robotRepair;
       case "teach": return shape.robotExplain;
       case "shapeDone": return shape.robotSuccess;
@@ -469,7 +471,8 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
               onStartScanner={() => setPhase("investigate")}
               onAnswerYes={() => setPhase("explainWrong")}
               onAnswerNo={() => setPhase("detect")}
-              onCorrectDetect={() => setPhase("repair")}
+              onCorrectDetect={() => setPhase("repairPrompt")}
+              onEnterRepair={() => setPhase("repair")}
               onRetryWrong={() => setPhase("investigate")}
               onCorrectTeach={() => setPhase("shapeDone")}
               onNextShape={() => {
@@ -497,6 +500,7 @@ function PhaseControls(props: {
   onAnswerYes: () => void;
   onAnswerNo: () => void;
   onCorrectDetect: () => void;
+  onEnterRepair: () => void;
   onRetryWrong: () => void;
   onCorrectTeach: () => void;
   onNextShape: () => void;
@@ -562,6 +566,25 @@ function PhaseControls(props: {
         onCorrect={phase === "teach" ? props.onCorrectTeach : phase === "detect" ? props.onCorrectDetect : props.onRetryWrong}
         secondaryAction={phase === "explainWrong" ? { label: "I changed my mind", run: props.onRetryWrong } : null}
       />
+    );
+  }
+
+  if (phase === "repairPrompt") {
+    return (
+      <div className="flex flex-col items-center gap-4 text-center">
+        <p className="text-sm" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
+          Let's head into the repair room and slide the dividers until the parts are fair.
+        </p>
+        <motion.button
+          onClick={props.onEnterRepair}
+          animate={{ scale: [1, 1.03, 1] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition-transform hover:scale-[1.02]"
+          style={{ background: YELLOW, color: BLUE }}
+        >
+          <Wrench className="w-4 h-4" /> Enter the Repair Room
+        </motion.button>
+      </div>
     );
   }
 
