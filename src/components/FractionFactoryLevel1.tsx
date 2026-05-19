@@ -44,18 +44,20 @@ const MISSIONS = [
 
 export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: () => void }) {
   const [view, setView] = useState<View>("intro");
+  const [voiceOn, setVoiceOn] = useState(false);
 
   return (
     <main className="min-h-screen" style={{ background: BG_LIGHT }}>
       <AnimatePresence mode="wait">
         {view === "intro" && (
           <motion.div key="intro" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <IntroView onBack={onExitToHub} onContinue={() => setView("mission-select")} />
+            <IntroView voiceOn={voiceOn} onBack={onExitToHub} onContinue={() => setView("mission-select")} />
           </motion.div>
         )}
         {view === "mission-select" && (
           <motion.div key="select" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <MissionSelectView
+              voiceOn={voiceOn}
               onBack={() => setView("intro")}
               onStartMission1={() => setView("mission-1-investigate")}
             />
@@ -64,13 +66,43 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
         {view === "mission-1-investigate" && (
           <motion.div key="mission" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <Mission1View
+              voiceOn={voiceOn}
               onBack={() => setView("mission-select")}
               onFinish={() => setView("mission-select")}
+              onExitToHub={onExitToHub}
             />
           </motion.div>
         )}
       </AnimatePresence>
+
+      <VoiceCommandToggle on={voiceOn} onToggle={() => setVoiceOn((v) => !v)} />
     </main>
+  );
+}
+
+function VoiceCommandToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
+  return (
+    <div className="fixed bottom-5 right-5 z-40 flex items-center gap-2">
+      {on && (
+        <span
+          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono shadow-sm border bg-white"
+          style={{ color: BLUE, borderColor: "color-mix(in oklab, var(--color-brand-blue) 20%, white)" }}
+        >
+          <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: YELLOW }} />
+          Listening: say "Enter Level", "Back to Hub", "Next Mission"
+        </span>
+      )}
+      <button
+        onClick={onToggle}
+        aria-pressed={on}
+        aria-label={on ? "Disable voice commands" : "Enable voice commands"}
+        title={on ? "Voice commands on" : "Voice commands off"}
+        className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105"
+        style={{ background: on ? YELLOW : BLUE, color: on ? BLUE : "white" }}
+      >
+        <Radio className={`w-5 h-5 ${on ? "animate-pulse" : ""}`} />
+      </button>
+    </div>
   );
 }
 
