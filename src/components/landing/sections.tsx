@@ -180,12 +180,12 @@ export function HowItWorks() {
 /* -------------------- WORLDS -------------------- */
 type World = { title: string; subtitle: string; img: string; active: boolean; href?: string };
 const WORLDS: World[] = [
-  { title: "Fraction Factory", subtitle: "Grade 1 — Repair mis-cut shapes and teach ZED-4 about equal parts.", img: imgFractions, active: true, href: "/play" },
-  { title: "Decimal District", subtitle: "Grade 4 — Investigate place value glitches in the decimal city.", img: imgDecimals, active: false },
-  { title: "Place Value Pavilion", subtitle: "Grade 2 — Stack and regroup ones, tens, hundreds.", img: imgPlaceValue, active: false },
-  { title: "Geometry Lab", subtitle: "Grade 3 — Test shape properties, angles, and symmetry.", img: imgGeometry, active: false },
-  { title: "Algebra Archives", subtitle: "Grade 5 — Unlock the meaning behind variables.", img: imgAlgebra, active: false },
-  { title: "AI Logic Lab", subtitle: "Grade 6 — Probe how the AI thinks — and where it fails.", img: imgAiLogic, active: false },
+  { title: "Fraction Factory", subtitle: "Repair mis-cut shapes and teach ZED-4 about equal parts.", img: imgFractions, active: true, href: "/play" },
+  { title: "Decimal District", subtitle: "Investigate place value glitches in the decimal city.", img: imgDecimals, active: false },
+  { title: "Place Value Pavilion", subtitle: "Stack and regroup ones, tens, hundreds.", img: imgPlaceValue, active: false },
+  { title: "Geometry Lab", subtitle: "Test shape properties, angles, and symmetry.", img: imgGeometry, active: false },
+  { title: "Algebra Archives", subtitle: "Unlock the meaning behind variables.", img: imgAlgebra, active: false },
+  { title: "AI Logic Lab", subtitle: "Probe how the AI thinks — and where it fails.", img: imgAiLogic, active: false },
 ];
 
 export function WorldsSection() {
