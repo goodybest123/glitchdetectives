@@ -24,24 +24,69 @@ export type Glitch = {
 // Render helpers ------------------------------------------------------------
 
 function PizzaShape({ vals, repaired }: { vals: number[]; repaired: boolean }) {
-  // vals[0] = angle 0-100 mapped to 0-360 for the second cut. First cut fixed at 0deg (top).
   const angle = (vals[0] / 100) * 360;
   const rad = (deg: number) => ((deg - 90) * Math.PI) / 180;
-  const r = 90;
+  const r = 88;
   const cx = 100, cy = 100;
   const p1 = { x: cx + r * Math.cos(rad(0)), y: cy + r * Math.sin(rad(0)) };
   const p2 = { x: cx + r * Math.cos(rad(angle)), y: cy + r * Math.sin(rad(angle)) };
   const largeArc1 = angle > 180 ? 1 : 0;
   const largeArc2 = angle > 180 ? 0 : 1;
-  const fillA = repaired ? "var(--color-success)" : "var(--color-glitch)";
-  const fillB = repaired ? "var(--color-energy)" : "var(--color-energy)";
+
+  // Stable pepperoni positions (polar coords inside the cheese)
+  const pepperoni = [
+    { a: 25, d: 38 }, { a: 95, d: 50 }, { a: 160, d: 32 },
+    { a: 210, d: 55 }, { a: 280, d: 40 }, { a: 330, d: 52 },
+    { a: 60, d: 18 },
+  ];
+
   return (
     <svg viewBox="0 0 200 200" className="w-full h-full">
-      <path d={`M${cx},${cy} L${p1.x},${p1.y} A${r},${r} 0 ${largeArc1} 1 ${p2.x},${p2.y} Z`} fill={fillA} opacity={0.85} />
-      <path d={`M${cx},${cy} L${p2.x},${p2.y} A${r},${r} 0 ${largeArc2} 1 ${p1.x},${p1.y} Z`} fill={fillB} opacity={0.85} />
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--color-primary)" strokeWidth="3" />
-      <line x1={cx} y1={cy} x2={p1.x} y2={p1.y} stroke="var(--color-primary)" strokeWidth="2.5" />
-      <line x1={cx} y1={cy} x2={p2.x} y2={p2.y} stroke="var(--color-primary)" strokeWidth="2.5" />
+      <defs>
+        <radialGradient id="crustGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="85%" stopColor="#e2b27a" />
+          <stop offset="100%" stopColor="#b8814a" />
+        </radialGradient>
+        <radialGradient id="cheeseGrad" cx="40%" cy="40%" r="65%">
+          <stop offset="0%" stopColor="#fde79a" />
+          <stop offset="100%" stopColor="#e9c46a" />
+        </radialGradient>
+        {repaired && (
+          <filter id="pizzaGlow"><feGaussianBlur stdDeviation="3" /></filter>
+        )}
+      </defs>
+      {/* Crust */}
+      <circle cx={cx} cy={cy} r={96} fill="url(#crustGrad)" stroke="#7a4f25" strokeWidth={2} />
+      {/* Sauce */}
+      <circle cx={cx} cy={cy} r={82} fill="#b9341f" />
+      {/* Cheese with melted blob edge */}
+      <circle cx={cx} cy={cy} r={76} fill="url(#cheeseGrad)" />
+      {[15, 70, 130, 195, 250, 310].map((a, i) => {
+        const x = cx + 76 * Math.cos(rad(a));
+        const y = cy + 76 * Math.sin(rad(a));
+        return <circle key={i} cx={x} cy={y} r={5} fill="url(#cheeseGrad)" />;
+      })}
+      {/* Pepperoni */}
+      {pepperoni.map((p, i) => {
+        const x = cx + p.d * Math.cos(rad(p.a));
+        const y = cy + p.d * Math.sin(rad(p.a));
+        return (
+          <g key={i}>
+            <circle cx={x} cy={y} r={8} fill="#a82a1f" stroke="#6b1810" strokeWidth={0.6} />
+            <circle cx={x - 2} cy={y - 2} r={1.2} fill="#6b1810" opacity={0.6} />
+            <circle cx={x + 2} cy={y + 1} r={0.9} fill="#6b1810" opacity={0.5} />
+          </g>
+        );
+      })}
+      {/* Slice wedge highlights to show the two pieces */}
+      <path d={`M${cx},${cy} L${p1.x},${p1.y} A${r},${r} 0 ${largeArc1} 1 ${p2.x},${p2.y} Z`}
+        fill={repaired ? "#ffffff" : "#ffffff"} opacity={repaired ? 0.05 : 0.08} />
+      {/* Cut lines */}
+      <line x1={cx} y1={cy} x2={p1.x} y2={p1.y} stroke="#3a1a08" strokeWidth={3} strokeLinecap="round" />
+      <line x1={cx} y1={cy} x2={p2.x} y2={p2.y} stroke="#3a1a08" strokeWidth={3} strokeLinecap="round" />
+      {repaired && (
+        <circle cx={cx} cy={cy} r={96} fill="none" stroke="var(--color-success)" strokeWidth={3} opacity={0.6} filter="url(#pizzaGlow)" />
+      )}
     </svg>
   );
 }
@@ -132,10 +177,10 @@ export const GLITCHES: Glitch[] = [
     name: "Level 1 Pizza",
     robotLabel: "2 PIZZA SLICES",
     parts: 2,
-    robotBriefing: "Look! I sliced this pizza for us. We both have a slice, so it's fair halves!",
-    robotInvestigate: "What do you notice about this pizza? Did I cut it right?",
-    robotDetect: "Why is this a glitch? Explain it so I can learn!",
-    robotExplainWrong: "Oh okay! Tell me why you think I cut it right. What makes it a fraction?",
+    robotBriefing: "Check it out! I sliced this pizza perfectly down the middle. Two equal halves — one for you, one for me. I totally nailed it!",
+    robotInvestigate: "I'm one hundred percent sure I cut this pizza right. Two fair halves, see? Tell me, am I right?",
+    robotDetect: "Wait, really? But I was SO sure I was right. Tell me what you're seeing so I can learn!",
+    robotExplainWrong: "See? I told you I cut it right! …Wait, you sure? Tell me what makes them halves.",
     robotExplain: "Wait... why did the pieces have to change? Tell me why!",
     robotRepair: "Help! Drag the slider to fix my pizza so it's actually halves.",
     robotSuccess: "Whoa! Now both slices look the same. You're a pizza genius!",
@@ -166,10 +211,10 @@ export const GLITCHES: Glitch[] = [
     name: "Power Battery",
     robotLabel: "BATTERY HALVES",
     parts: 2,
-    robotBriefing: "This battery is split in half! Top half is charge, bottom half is empty!",
-    robotInvestigate: "Is the top really HALF of the battery?",
-    robotDetect: "Why is this not really halves?",
-    robotExplainWrong: "Okay! Why is this halves?",
+    robotBriefing: "Easy! I split this battery right in the middle. Top half is charge, bottom half is empty. I'm definitely right about this one!",
+    robotInvestigate: "I'm sure the top is exactly half. Am I right?",
+    robotDetect: "Whaaat? But I was so confident! Help me see what's off.",
+    robotExplainWrong: "I knew it! …Or did I? Tell me what makes the top a real half.",
     robotExplain: "Why did the line need to be in the middle?",
     robotRepair: "Slide the line to make two equal halves.",
     robotSuccess: "Perfect halves! The battery is balanced now.",
@@ -200,10 +245,10 @@ export const GLITCHES: Glitch[] = [
     name: "Fuel Rod",
     robotLabel: "FUEL ROD HALVES",
     parts: 2,
-    robotBriefing: "My fuel rod is split into two halves of energy! Easy peasy!",
-    robotInvestigate: "Hmm... are those two parts the same size?",
-    robotDetect: "Why is this not really halves?",
-    robotExplainWrong: "Cool! Why do you think it's halves?",
+    robotBriefing: "Look at my fuel rod — two perfect halves of energy. I'm SURE I got this one right!",
+    robotInvestigate: "Two equal halves, right? I'm certain. Am I right?",
+    robotDetect: "But I was so sure! Tell me what you notice, teacher.",
+    robotExplainWrong: "Ha, told you! …Wait, really? Tell me what makes them halves.",
     robotExplain: "Why did the split have to be in the middle?",
     robotRepair: "Drag the divider to the middle to make true halves.",
     robotSuccess: "Two equal halves! Power restored!",

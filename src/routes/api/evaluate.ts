@@ -8,6 +8,10 @@ const BodySchema = z.object({
   text: z.string().min(1).max(2000),
   mode: z.enum(["detect", "wrong", "explain"]),
   shapeContext: z.string().max(500).optional(),
+  history: z
+    .array(z.object({ role: z.enum(["child", "zed"]), text: z.string().max(1000) }))
+    .max(12)
+    .optional(),
 });
 
 const ResultSchema = z.object({
@@ -54,18 +58,22 @@ export const Route = createFileRoute("/api/evaluate")({
       POST: async ({ request }: { request: Request }) => {
         try {
           const json = await request.json();
-          const { text, mode, shapeContext } = BodySchema.parse(json);
+          const { text, mode, shapeContext, history } = BodySchema.parse(json);
           const key = process.env.LOVABLE_API_KEY;
           if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
 
           const gateway = createLovableAiGatewayProvider(key);
           const model = gateway("google/gemini-2.5-flash");
 
+          const transcript = (history ?? [])
+            .map((t) => `${t.role === "child" ? "TEACHER (child)" : "ZED-4 (you)"}: ${t.text}`)
+            .join("\n");
+
           const { object } = await generateObject({
             model,
             schema: ResultSchema,
             system: SYSTEM,
-            prompt: `Mode: ${mode}\nShape context: ${shapeContext ?? "a shape divided into parts"}\nChild (the teacher) said: """${text}"""\n\nReply as ZED-4 the curious learner. Start with a thank-you, reflect their words, then ask ONE tiny curious question (unless they nailed the equal-parts idea — then celebrate).`,
+            prompt: `Mode: ${mode}\nShape context: ${shapeContext ?? "a shape divided into parts"}\n\nConversation so far:\n${transcript || "(none yet)"}\n\nThe teacher just said: """${text}"""\n\nReply as ZED-4 the curious learner. ALWAYS start with a short thank-you, then reflect ONE specific word or idea they just said, then ask exactly ONE tiny curious question (no more). Unless they clearly explained equal/same-size parts — then celebrate them as the teacher (no question needed). Keep it to 1-3 short sentences total.`,
           });
 
           return Response.json(object);

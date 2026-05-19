@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, ArrowRight, AlertTriangle, Volume2, Lock, Bot, Mic, MicOff,
@@ -6,7 +6,7 @@ import {
   Radio,
 } from "lucide-react";
 import { GLITCHES, type Glitch } from "@/lib/glitches";
-import { speakText, useAutoSpeak, useSpeechToText, useVoiceCommands } from "@/lib/speech";
+import { speakText, useAutoSpeak, useContinuousSpeech, useVoiceCommands } from "@/lib/speech";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
@@ -553,6 +553,8 @@ function PhaseControls(props: {
 
 /* ----------------------------- Reasoning Box ------------------------------ */
 
+type Turn = { role: "child" | "zed"; text: string };
+
 function ReasoningBox({
   mode,
   shapeContext,
@@ -564,106 +566,173 @@ function ReasoningBox({
   onCorrect: () => void;
   secondaryAction: { label: string; run: () => void } | null;
 }) {
-  const [text, setText] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [feedback, setFeedback] = useState<string | null>(null);
-  const onTranscript = useCallback((t: string) => setText((prev) => (prev ? prev + " " : "") + t), []);
-  const { listening, supported, start, stop } = useSpeechToText(onTranscript);
+  const [turns, setTurns] = useState<Turn[]>([]);
+  const [pending, setPending] = useState(false);
+  const [typed, setTyped] = useState("");
+  const correctRef = useRef(false);
+  const logRef = useRef<HTMLDivElement>(null);
 
-  const submit = async () => {
-    if (!text.trim() || submitting) return;
-    setSubmitting(true);
-    setFeedback(null);
-    try {
-      const res = await fetch("/api/evaluate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: text.trim(), mode, shapeContext }),
-      });
-      const data = await res.json();
-      if (data.isCorrect) {
-        setFeedback(data.feedbackText);
-        speakText(data.feedbackText);
-        setTimeout(onCorrect, 1400);
-      } else {
-        setFeedback(data.feedbackText);
-        speakText(data.feedbackText);
+  const sendToZed = useCallback(
+    async (childText: string) => {
+      if (!childText.trim() || correctRef.current) return;
+      const newChild: Turn = { role: "child", text: childText.trim() };
+      const history = [...turns, newChild];
+      setTurns(history);
+      setPending(true);
+      try {
+        const res = await fetch("/api/evaluate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: childText.trim(),
+            mode,
+            shapeContext,
+            history: turns.slice(-10),
+          }),
+        });
+        const data = await res.json();
+        const zedTurn: Turn = { role: "zed", text: data.feedbackText };
+        setTurns((prev) => [...prev, zedTurn]);
+        if (data.isCorrect) {
+          correctRef.current = true;
+          speakText(data.feedbackText, () => setTimeout(onCorrect, 600));
+        } else {
+          speakText(data.feedbackText);
+        }
+      } catch {
+        const fallback = "Thanks teacher! My ears got a little fuzzy. Can you say that again?";
+        setTurns((prev) => [...prev, { role: "zed", text: fallback }]);
+        speakText(fallback);
+      } finally {
+        setPending(false);
       }
-    } catch {
-      setFeedback("Oops, my circuits got tangled. Try again.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    },
+    [turns, mode, shapeContext, onCorrect],
+  );
 
-  const tryAgain = () => {
-    setFeedback(null);
-    setText("");
+  const handleFinal = useCallback(
+    (t: string) => {
+      if (correctRef.current || pending) return;
+      void sendToZed(t);
+    },
+    [sendToZed, pending],
+  );
+
+  const { listening, interim, supported, start, stop } = useContinuousSpeech(handleFinal);
+
+  // Auto-scroll log
+  useEffect(() => {
+    logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: "smooth" });
+  }, [turns, interim, pending]);
+
+  // Stop mic on unmount
+  useEffect(() => () => { try { stop(); } catch { /* */ } }, [stop]);
+
+  const submitTyped = () => {
+    if (!typed.trim() || pending) return;
+    const t = typed.trim();
+    setTyped("");
+    void sendToZed(t);
   };
 
   return (
     <div className="space-y-3">
-      <div className="relative">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Type your explanation, or tap the mic to talk."
-          rows={4}
-          className="w-full p-3 pr-12 rounded-xl border bg-white text-sm leading-relaxed focus:outline-none focus:ring-2"
-          style={{ color: BLUE, borderColor: "color-mix(in oklab, var(--color-brand-blue) 20%, white)" }}
-        />
-        {supported && (
-          <button
+      {/* Conversation log */}
+      <div
+        ref={logRef}
+        className="rounded-xl border bg-white p-3 max-h-64 overflow-y-auto space-y-2"
+        style={{ borderColor: "color-mix(in oklab, var(--color-brand-blue) 15%, white)" }}
+      >
+        {turns.length === 0 && !interim && !pending && (
+          <p className="text-xs font-mono text-gray-400 text-center py-4">
+            {supported ? "Tap the mic and start talking to ZED-4." : "Type your reply below to talk to ZED-4."}
+          </p>
+        )}
+        {turns.map((t, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+            className={`text-sm leading-snug px-3 py-2 rounded-xl max-w-[90%] ${t.role === "child" ? "ml-auto" : ""}`}
+            style={{
+              background: t.role === "child" ? SKY : "color-mix(in oklab, var(--color-brand-yellow) 25%, white)",
+              color: BLUE,
+            }}
+          >
+            <span className="label-eyebrow block mb-0.5 opacity-70">
+              {t.role === "child" ? "You" : "ZED-4"}
+            </span>
+            {t.text}
+          </motion.div>
+        ))}
+        {interim && (
+          <div className="text-sm italic text-gray-400 px-3 py-1 ml-auto max-w-[90%]">{interim}…</div>
+        )}
+        {pending && (
+          <div className="flex items-center gap-2 text-xs text-gray-500 px-3 py-1">
+            <Loader2 className="w-3 h-3 animate-spin" /> ZED-4 is thinking…
+          </div>
+        )}
+      </div>
+
+      {/* Mic toggle */}
+      {supported && (
+        <div className="flex items-center gap-3">
+          <motion.button
             onClick={listening ? stop : start}
-            className="absolute top-2 right-2 w-9 h-9 rounded-full flex items-center justify-center transition"
-            style={{ background: listening ? YELLOW : SKY, color: BLUE }}
-            aria-label={listening ? "Stop recording" : "Start recording"}
+            whileTap={{ scale: 0.95 }}
+            animate={listening ? { boxShadow: ["0 0 0 0 rgba(0,0,0,0)", "0 0 0 8px rgba(234,179,8,0.25)", "0 0 0 0 rgba(0,0,0,0)"] } : {}}
+            transition={listening ? { repeat: Infinity, duration: 1.4 } : {}}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold transition"
+            style={{
+              background: listening ? YELLOW : BLUE,
+              color: listening ? BLUE : "white",
+            }}
           >
             {listening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-          </button>
-        )}
-      </div>
+            {listening ? "Listening — tap to pause" : "Talk to ZED-4"}
+          </motion.button>
+          {secondaryAction && (
+            <button
+              onClick={secondaryAction.run}
+              className="ml-auto text-xs font-mono underline opacity-70 hover:opacity-100"
+              style={{ color: BLUE }}
+            >
+              {secondaryAction.label}
+            </button>
+          )}
+        </div>
+      )}
 
+      {/* Typed fallback */}
       <div className="flex items-center gap-2">
+        <input
+          value={typed}
+          onChange={(e) => setTyped(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") submitTyped(); }}
+          placeholder={supported ? "…or type instead" : "Type your reply to ZED-4"}
+          className="flex-1 px-3 py-2 rounded-xl border bg-white text-sm focus:outline-none focus:ring-2"
+          style={{ color: BLUE, borderColor: "color-mix(in oklab, var(--color-brand-blue) 20%, white)" }}
+        />
         <button
-          onClick={submit}
-          disabled={!text.trim() || submitting}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold transition-transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={submitTyped}
+          disabled={!typed.trim() || pending}
+          className="inline-flex items-center gap-1 px-3 py-2 rounded-xl font-semibold text-sm disabled:opacity-50"
           style={{ background: BLUE, color: "white" }}
         >
-          {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-          {submitting ? "Thinking..." : "Send to ZED-4"}
+          <Send className="w-3.5 h-3.5" /> Send
         </button>
-        {feedback && (
+        {turns.length > 0 && !correctRef.current && (
           <button
-            onClick={tryAgain}
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold border hover:bg-slate-50 transition"
+            onClick={() => { setTurns([]); }}
+            title="Reset conversation"
+            className="inline-flex items-center gap-1 px-2 py-2 rounded-xl text-xs border"
             style={{ color: BLUE, borderColor: "color-mix(in oklab, var(--color-brand-blue) 20%, white)" }}
           >
-            <RefreshCcw className="w-3.5 h-3.5" /> Try Again
-          </button>
-        )}
-        {secondaryAction && (
-          <button
-            onClick={secondaryAction.run}
-            className="ml-auto text-xs font-mono underline opacity-70 hover:opacity-100"
-            style={{ color: BLUE }}
-          >
-            {secondaryAction.label}
+            <RefreshCcw className="w-3.5 h-3.5" />
           </button>
         )}
       </div>
-
-      {feedback && (
-        <motion.div
-          initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-          className="p-3 rounded-xl border text-sm"
-          style={{ background: "white", borderColor: "color-mix(in oklab, var(--color-brand-yellow) 60%, white)", color: BLUE }}
-        >
-          <span className="label-eyebrow block mb-1" style={{ color: BLUE }}>ZED-4 says</span>
-          {feedback}
-        </motion.div>
-      )}
     </div>
   );
 }
+
