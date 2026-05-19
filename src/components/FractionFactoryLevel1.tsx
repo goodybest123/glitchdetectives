@@ -614,6 +614,10 @@ function ReasoningBox({
       const history = [...turns, newChild];
       setTurns(history);
       setPending(true);
+      // After 2 child explanations in "wrong" mode (investigate),
+      // ZED concedes and moves to the Repair phase so the child can fix it.
+      const childTurnsCount = history.filter((t) => t.role === "child").length;
+      const forceAdvance = mode === "wrong" && childTurnsCount >= 2;
       try {
         const res = await fetch("/api/evaluate", {
           method: "POST",
@@ -626,29 +630,39 @@ function ReasoningBox({
           }),
         });
         const data = await res.json();
-        const zedTurn: Turn = { role: "zed", text: data.feedbackText };
-        setTurns((prev) => [...prev, zedTurn]);
-        lastZedRef.current = data.feedbackText;
+        const replyText = forceAdvance
+          ? "Okay teacher, I think I see it now! Help me fix it — drag the slider so the parts are really equal."
+          : data.feedbackText;
+        setTurns((prev) => [...prev, { role: "zed", text: replyText }]);
+        lastZedRef.current = replyText;
         const resume = () => {
           if (!correctRef.current && autoStart) {
             setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
           }
         };
-        if (data.isCorrect) {
+        if (data.isCorrect || forceAdvance) {
           correctRef.current = true;
-          speakText(data.feedbackText, () => setTimeout(onCorrect, 600));
+          speakText(replyText, () => setTimeout(onCorrect, 600));
         } else {
-          speakText(data.feedbackText, resume);
+          speakText(replyText, resume);
         }
       } catch {
-        const fallback = "Thanks teacher! My ears got a little fuzzy. Can you say that again?";
-        setTurns((prev) => [...prev, { role: "zed", text: fallback }]);
-        lastZedRef.current = fallback;
-        speakText(fallback, () => {
-          if (!correctRef.current && autoStart) {
-            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
-          }
-        });
+        if (forceAdvance) {
+          const concede = "Okay teacher, I think I see it now! Help me fix it — drag the slider so the parts are really equal.";
+          setTurns((prev) => [...prev, { role: "zed", text: concede }]);
+          lastZedRef.current = concede;
+          correctRef.current = true;
+          speakText(concede, () => setTimeout(onCorrect, 600));
+        } else {
+          const fallback = "Thanks teacher! My ears got a little fuzzy. Can you say that again?";
+          setTurns((prev) => [...prev, { role: "zed", text: fallback }]);
+          lastZedRef.current = fallback;
+          speakText(fallback, () => {
+            if (!correctRef.current && autoStart) {
+              setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
+            }
+          });
+        }
       } finally {
         setPending(false);
       }
