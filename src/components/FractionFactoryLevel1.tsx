@@ -21,6 +21,7 @@ type Phase =
   | "investigate"
   | "explainWrong"
   | "detect"
+  | "repairPrompt"
   | "repair"
   | "teach"
   | "shapeDone"
