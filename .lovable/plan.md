@@ -1,54 +1,62 @@
-# Fraction Factory — Level Select Hub
+# Plan: FractionFactoryLevel1 page
 
-## Goal
-Clicking "Fraction Factory" from the landing Worlds section opens a new Level Select hub (instead of the current Intro/MissionMap screen). Also clean up the Worlds list copy by removing grade prefixes.
+## Scope
+Build a new `FractionFactoryLevel1` component used when the user clicks "Enter Level" on Level 1 from the Fraction Factory hub (`/play`). Three views in one component, state-machine driven, with TTS, voice input, and AI-graded reasoning.
 
-## Changes
+## File changes
+1. **New** `src/components/FractionFactoryLevel1.tsx` — the full component (intro → mission-select → mission-1 gameplay loop).
+2. **Edit** `src/routes/play.tsx` — re-introduce a small piece of state so clicking "Enter Level" on Level 1 mounts `FractionFactoryLevel1` instead of doing nothing. Removes the empty `onStart={() => {}}` no-op. Back button inside the level returns to the Hub.
+3. **Reuse existing infra** (no duplication):
+   - `speakText` + `useSpeechToText` from `src/lib/speech.ts`.
+   - `/api/evaluate` route (already wired to Lovable AI) for the two reasoning checks. Mode `detect` for "Why is it a glitch?" and mode `explain` for "Why did parts have to be equal?". No new endpoints (the brief mentions `/api/evaluate-detect-reasoning` and `/api/evaluate-reasoning`, but the project already has a single unified `/api/evaluate` doing exactly this — I'll use it. Flag below.)
+   - Mission 1 shapes: reuse the first 3 entries of `GLITCHES` from `src/lib/glitches.tsx` (pizza halves, then battery halves, then fuel-rod halves — all halves-focused for Mission 1). Avoids rebuilding SVG shape components.
 
-### 1. `src/components/landing/sections.tsx` — Worlds copy
-Strip the leading "Grade X — " from each `WORLDS` entry's `subtitle`. Example: `"Grade 1 — Repair mis-cut shapes…"` → `"Repair mis-cut shapes and teach ZED-4 about equal parts."` Apply to all 6 worlds. No layout changes.
+## View / state design
+Top-level state: `currentView: 'intro' | 'mission-select' | 'mission-1-investigate'`.
+Mission-1 sub-state: `phase: 'briefing' | 'investigate' | 'explainWrong' | 'detect' | 'repair' | 'teach' | 'shapeDone' | 'missionDone'` plus `shapeIdx` (0..2).
 
-### 2. `src/routes/play.tsx` — replace Intro with Level Select hub
-Remove the existing `Intro` view and the 4-card `MissionMap`. New `/play` default view = `LevelSelect`. Clicking the unlocked Level 1 card transitions to the existing `MissionRunner` (preserve that wiring + the "Back to Map" returning to Level Select). Keep imports of `MissionRunner` and `speakText`; drop `Bot`, `Cpu`, etc. unused after refactor.
+### Intro view
+- Header: "Level 1: Fraction Foundations", back arrow → navigates to `/play` hub.
+- Pulsing `AlertTriangle` in a yellow square + "System Failure Detected" label.
+- Briefing card with the supplied copy + `Volume2` "Read Aloud" button calling `speakText`.
+- Primary CTA `Access Mission Map` → `mission-select`.
 
-### 3. New component: `LevelSelect` (inside `play.tsx`, or split into `src/components/play/LevelSelect.tsx`)
+### Mission select view
+- 2×2 grid of 4 mission cards. Data:
+  1. Broken Partition Scanner — Detect unequal parts — unlocked → starts mission-1.
+  2. Half Repair Station — Understand halves — unlocked → starts mission-1 (same loop, scoped to halves shapes).
+  3. Quarter Core Reactor — Understand fourths — locked.
+  4. Share Builder Challenge — Apply concepts — locked.
+- Locked cards: grayscale + `Lock` icon, no hover. Unlocked: hover lift, blue/yellow accents.
+- Back arrow to intro.
 
-**Layout**
-- Page wrapper: `min-h-screen` with `background: var(--color-bg-light)`.
-- Hero header band: dark blue (`--color-brand-blue`), white text, rounded-b-3xl, padded.
-  - Top row: "← Return to Map" link (to `/#worlds`) on the left; "Detective Access Granted" pill badge (yellow bg, blue text, Shield icon) on the right.
-  - Center: tilted yellow square (`rotate-6`, `--color-brand-yellow` bg, rounded-2xl, shadow) containing a `Factory` lucide icon in brand blue. Subtle float animation (framer-motion `y: [0,-6,0]` loop).
-  - Headline: `Fraction Factory` (heading-black, uppercase, large).
-  - Subhead: `Central Control Hub` (label-eyebrow, mint color).
+### Mission 1 gameplay loop (split-screen, lg:grid-cols-2)
+**Left panel** — shape canvas from `GLITCHES[shapeIdx].render(vals, repaired)`. In `repair` phase, render sliders from `MissionRunner`'s pattern (range inputs bound to `vals`, `Check Repair` button, tolerance check using existing `target`/`tolerance`).
 
-**Timeline**
-- Container `max-w-5xl mx-auto px-4 py-16 relative`.
-- Vertical track: absolutely-positioned `div` — `left-4 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-px bg-[color-mix(in_oklab,var(--color-brand-blue)_15%,transparent)]`.
-- Levels rendered as a `space-y-16` list. Each item is a `flex` row; on `md+`, even-indexed items get `md:flex-row-reverse`. On mobile all items align left of the track.
-- Center node per level: small circular badge on the track (`w-5 h-5 rounded-full`), brand-blue if unlocked, gray-300 if locked, with white ring. Positioned absolutely at the track's x.
+**Right panel** — ZED-4 dialogue card (Bot icon, blue chip) + phase-specific controls:
+- `briefing`: robot line + `Start Scanner` button → `investigate`.
+- `investigate`: two buttons "Yes, the robot is right" (→ `explainWrong`) / "No, there is a glitch!" (→ `detect`).
+- `detect` / `explainWrong` / `teach`: textarea + `Mic` button (uses `useSpeechToText`, falls back to a `MediaRecorder` POST to `/api/transcribe` if `SpeechRecognition` unsupported — see flag) + `Send`. On submit calls `/api/evaluate` with mode `detect` / `wrong` / `explain`. On `isCorrect: false` show feedback + `Try Again`. On `isCorrect: true` auto-advance.
+- `repair`: sliders + `Check Repair`. If within tolerance → `teach`, else gentle nudge.
+- `shapeDone`: success card with `Next Shape` or `Finish Mission` (last shape).
+- `missionDone`: completion card with `Return to Hub`.
 
-**Level card** (each item)
-- `relative w-full md:w-[46%] bg-white rounded-2xl shadow-md p-6 overflow-hidden border`.
-- Unlocked: `border-[var(--color-brand-yellow)] hover:-translate-y-1 hover:shadow-xl transition`; locked: `border-gray-200 opacity-60 pointer-events-none`.
-- Decorative blurred circle: absolutely positioned top-right, `w-40 h-40 rounded-full blur-3xl opacity-30`, mint for unlocked, gray for locked.
-- Top row: colored square level icon (rounded-xl, 48px, brand-blue bg with yellow icon for unlocked / gray for locked) + status pill (`In Progress` yellow / `Locked` gray with `Lock` icon) + `0/N missions completed` tag (mono small).
-- Body: eyebrow `LEVEL X • GRADE Y` (mono uppercase), bold title (text-2xl), gray description in a `bg-gray-50 rounded-lg p-3` box, then `Focus Areas:` label + value line.
-- Bottom button: unlocked → "Enter Level" (brand-blue bg, white, ArrowRight) that triggers `onStart()` (only Level 1 wired to mission). Locked → disabled "Level Locked" (gray bg, Lock icon).
+### Cross-cutting
+- TTS auto-trigger on every phase change and every new robot line via `useAutoSpeak(robotLine, [phase, shapeIdx])`.
+- Animations via `framer-motion` (`motion.div` fade + scale-in on phase change, AnimatePresence on dialogue swap, subtle bounce on success).
+- Icons only from `lucide-react`: `ArrowLeft, AlertTriangle, Volume2, Lock, Bot, Mic, MicOff, Send, CheckCircle2, Wrench, Sparkles, RefreshCcw, ArrowRight, Factory`.
 
-**Level data** (constant array)
-```
-1  Fraction Foundations           Grade 1  Equal parts, halves            unlocked, 0/4 missions
-2  Fraction Discovery Zone        Grade 2  Thirds, fourths, naming        locked,  0/5
-3  Number Line & Equivalence …    Grade 3  Equivalence on a number line   locked,  0/5
-4  Fraction Repair Systems        Grade 4  Add/subtract like fractions    locked,  0/6
-5  Advanced Fraction Operations   Grade 5  Multiply, divide, mixed        locked,  0/6
-6  Fraction Mastery Lab           Grade 6  Ratios, proportional reasoning locked,  0/6
-```
-Each level also has a descriptive sentence used in the gray description box.
-
-### 4. Routing
-Worlds card for Fraction Factory already links to `/play`, so no route changes needed. `MissionRunner`'s `onExit` now returns to the Level Select view instead of the old map.
+## Design tokens
+Dark blue `--color-brand-blue`, sky blue tints via `color-mix`, yellow `--color-brand-yellow` accent only on CTAs/badges, white card surfaces on `--color-bg-light` page background. Generous spacing (`p-6`/`p-8`, `gap-6`), no gradients, no childish illustrations. Matches the existing `/play` hub language.
 
 ## Out of scope
-- No changes to `MissionRunner`, AI eval, or other landing sections.
-- No grade label removed from the level cards themselves — grades only removed from the landing Worlds copy.
+- Missions 2-4 (locked).
+- New AI endpoints (reuses `/api/evaluate`).
+- Changes to `MissionRunner.tsx` (not used here; can be deleted later if you confirm).
+- Backend `/api/transcribe` route (only used as fallback; will degrade gracefully if missing).
+
+## Flags / decisions to confirm
+1. **Endpoints**: brief lists `/api/evaluate-detect-reasoning` and `/api/evaluate-reasoning`. The project already has `/api/evaluate` covering both. I'll use that. Tell me if you want two separate routes instead.
+2. **`/api/transcribe` fallback**: native `SpeechRecognition` covers Chrome/Edge/Safari. I'll keep the mic button working there and hide it gracefully where unsupported, rather than building a server transcription endpoint now (would need an AI provider with audio support). OK?
+3. **Mission 1 shape set**: use 3 halves-focused shapes (`pizza`, `battery`, `fuelrod` from `GLITCHES`). OK, or do you want all 5?
+4. **`MissionRunner.tsx`**: currently unused after this change — delete it, or leave as-is?
