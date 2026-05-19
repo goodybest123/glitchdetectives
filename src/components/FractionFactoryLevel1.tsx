@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft, ArrowRight, AlertTriangle, Volume2, Lock, Bot, Mic, MicOff,
-  Send, CheckCircle2, Wrench, Sparkles, RefreshCcw, ScanSearch, Atom, Share2, Loader2,
-  Radio,
+  ArrowLeft, ArrowRight, AlertTriangle, Volume2, VolumeX, Lock, Bot, Mic, MicOff,
+  Send, CheckCircle2, Wrench, Sparkles, RefreshCcw, Zap, Atom, Share2, Loader2,
+  Radio, ScanSearch,
 } from "lucide-react";
 import { GLITCHES, type Glitch } from "@/lib/glitches";
 import { speakText, useAutoSpeak, useContinuousSpeech, useVoiceCommands } from "@/lib/speech";
