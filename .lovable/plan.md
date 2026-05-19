@@ -1,46 +1,27 @@
-## Problem
-
-Level 1, Mission 3 (Quarter Core Reactor) recycles only two shapes — `GridShape` (2x2 grid) and `BarShape` (horizontal strip) — across its four items, so Solar Array & Window look identical, and Chocolate Bar & Cargo Shelf look identical. Kids see the same visual twice in a row.
-
 ## Goal
 
-Give Mission 3 four visually distinct quarter shapes, and also de-duplicate Mission 4's quarter items so nothing repeats within a mission.
+Rewrite Level 2's hub card so it reads:
 
-## Approach
+- **Level 2 • Grade 2**
+- **Title:** Fraction Discovery Zone
+- **Description:** Children begin understanding how fractions are written and interpreted.
+- **Focus Areas:** Numerators, denominators, unit fractions
+- **Missions:** 0 / 15 completed
+- Still **locked** on the hub (Level 1 remains the only unlocked level).
 
-Add two new SVG shape components alongside the existing ones, then assign a unique render to each Mission 3 / Mission 4 item.
+## Scope of this change
 
-### New shapes (in `src/lib/glitches.tsx`)
-
-1. **`PizzaQuartersShape`** — circular pizza with 4 wedges driven by 3 angle sliders (`vals` are 3 cut angles 0–100 mapped to 0–360°). Target `[25, 50, 75]`. Used for a pizza-style quarter item.
-2. **`VerticalStackShape`** — tall rectangle split into 4 stacked horizontal bands (think "4-floor building" / stacked shelves) using 3 horizontal dividers. Target `[25, 50, 75]`.
-
-Both follow the existing semantic-token styling (`var(--color-...)`) and accept `(vals, repaired)`.
-
-### Mission 3 reassignment (`src/lib/glitches-extra.tsx`)
-
-| Item | New visual | Mechanic |
-|---|---|---|
-| Solar Array | `GridShape` (2x2 panels) — keep | range, 2 sliders |
-| Quarter Chocolate Bar | `BarShape` parts=4 — keep | range, 3 sliders |
-| Window Quadrants | `PizzaQuartersShape` (rebranded as "Round Window") OR keep grid but rename → swap to new `VerticalStackShape` reframed as "Stained-Glass Tower Window" | range, 3 sliders |
-| Cargo Shelf | `VerticalStackShape` (4 stacked shelves — natural fit) | range, 3 sliders |
-
-Final mapping: Grid, Bar, Pizza-quarters, Vertical-stack — four distinct visuals.
-
-We'll rename "Window Quadrants" → "Quarter Pie Sensor" (or similar) so the narrative matches the pizza-style wedge visual. Copy tweaks are minor and stay on-mission ("four equal quarters").
-
-### Mission 4 cleanup
-
-Mission 4 currently has `m4-solar-quarters` (GridShape) and `m4-chocolate-quarters` (BarShape parts=4). These are already distinct from each other and from the two halves items, so no shape changes needed — but we'll verify and adjust only if a duplicate sneaks in.
-
-### Out of scope
-
-- No changes to Mission 1, Mission 2, Level 2+, phase loop, AI endpoints, TTS, or repair mechanic logic.
-- No design-system token changes.
-- No new dependencies.
+Metadata-only edit to the Level 2 entry on the `/play` hub. No gameplay, routing, or component wiring is added in this turn — Level 2 stays locked, so no missions need to exist yet.
 
 ## Files touched
 
-- `src/lib/glitches.tsx` — add `PizzaQuartersShape` + `VerticalStackShape` helpers (no changes to existing GLITCHES entries).
-- `src/lib/glitches-extra.tsx` — update Mission 3 items to use the four distinct render functions; minor name/copy tweaks where the visual changes.
+- `src/routes/play.tsx` — update the `LEVELS[1]` object:
+  - `title: "Fraction Discovery Zone"`
+  - `desc: "Children begin understanding how fractions are written and interpreted."`
+  - `focus: "Numerators, denominators, unit fractions"`
+  - `missions: 15`, `done: 0`, `unlocked: false`
+  - Keep `Icon: Scissors` (or swap to a more "discovery" icon — happy to change if you have a preference).
+
+## Out of scope (flag for a follow-up)
+
+Actually building the 15 Level 2 missions (mission map, glitch content, repair widgets for unit fractions, AI prompts, etc.) is a much larger piece of work. Once you confirm the card copy, the next step would be to design the 15-mission breakdown — typically 3 stages of 5 missions (e.g. **Read the Fraction** → **Numerator vs Denominator** → **Unit Fractions in Action**). Let me know if you want me to draft that breakdown next.
