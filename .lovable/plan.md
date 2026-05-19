@@ -1,66 +1,65 @@
-
 ## Goal
 
-Bring Mission 1 in line with the State A–E spec. Most of the scaffolding already exists in `src/components/FractionFactoryLevel1.tsx` — this plan focuses on the deltas, not a rewrite.
+Rebuild Level 1 with a clean, calm, futuristic detective UI. Three views managed by a single `currentView` state: `intro`, `mission-select`, `mission-1-investigate`. Reuse the existing backend routes (`/api/evaluate-detect-reasoning`, `/api/evaluate-reasoning`, `/api/transcribe`, plus a new `/api/evaluate-wrong-reasoning`). Keep ZED-4 persona, TTS, and continuous-speech helpers from `src/lib/speech.ts`.
 
-## What stays as-is
+## Design tokens (added to `src/styles.css`)
 
-- Split-screen layout (shape left, ZED dialogue right)
-- States `briefing`, `repair`, `teach`, `shapeDone`, `missionDone`
-- Sliders + `Check Repair` math
-- TTS on every robot line, framer-motion transitions, lucide icons
-- Continuous mic + echo-filter + auto-resume in `ReasoningBox`
-- Voice command map
+- `--color-brand-blue` deep navy (`oklch(0.22 0.06 255)`)
+- `--color-brand-sky` (`oklch(0.78 0.10 235)`)
+- `--color-brand-yellow` `#FFDE59`
+- `--color-brand-red` soft alert red
+- Background: brand-blue gradient → near-black. Cards: glass/translucent navy with `rounded-3xl`, subtle sky-blue borders.
+- Typography: existing stack, large generous spacing. Never overstimulating — at most one animated accent per view.
 
-## Deltas
+## View 1 — Intro (`currentView === 'intro'`)
 
-### State A — Briefing
-No change. `Start Scanner` button already advances to `investigate`.
+- Centered card, rounded-3xl, glass surface.
+- Large pulsing `Zap` icon inside a light-red circle (Tailwind `animate-pulse`, framer-motion scale loop).
+- H1 "System Failure Detected" (yellow).
+- Paragraph: factory partition machines malfunctioning… "Can you repair the system?"
+- Status row: red "Glitching" dot + badge "0 / 4 Missions Completed".
+- Yellow CTA `Access Mission Map` → sets `currentView = 'mission-select'`.
+- Volume toggle button (top-right). When unmuted, auto-TTS reads title + paragraph on mount.
 
-### State B — Investigate (clean up)
-Currently the investigate phase renders **both** the Yes/No buttons **and** a `ReasoningBox`. Per spec, this state is buttons-only.
+## View 2 — Mission Select Map
 
-- Remove the `<ReasoningBox …mode="wrong" />` from the `investigate` branch in `PhaseControls`.
-- Keep: `Yes, the robot is right.` → `explainWrong`; `No, there is a glitch!` → `detect`.
-- Add a soft helper line under the buttons: "Look closely — are the parts really equal?"
+- Header: "Mission Map" + back arrow → intro.
+- 2×2 grid of mission cards (rounded-3xl).
+- Mission 1: yellow play button, `Zap` icon, label "Broken Partition Scanner". Click → `mission-1-investigate`, `missionState = 'briefing'`.
+- Missions 2–4: grayed, lock overlay (`Lock` icon), "Locked" text, not clickable.
+- TTS reads "Choose a mission to begin" on entry.
 
-### State C — Detect (Explain the Glitch)
-Already routes to `ReasoningBox` with `mode="detect"`. Add the two spec details:
+## View 3 — Mission 1 (split-screen, state machine)
 
-- **Try Again button**: when ZED returns feedback marking the answer not-yet-correct, show a `Try Again` chip that clears the last child+zed turn pair so the child can retry without losing the seeded prompt. (Pure UI; no endpoint change.)
-- **Transcription fallback**: if `SpeechRecognition` is unsupported, surface a `MediaRecorder`-based fallback that POSTs the blob to a new `/api/transcribe` route (Lovable AI Gateway, Gemini audio). Text input remains as the simpler fallback.
+Layout: header bar (back, mission title, volume); below it a 2-column grid (`lg:grid-cols-[1.1fr_1fr]`). Left = shape/puzzle. Right = ZED-4 dialogue bubble + interaction area. Framer-motion `AnimatePresence` per state with fade + small y-translate.
 
-### State D — Repair
-No change.
+State machine (`missionState`):
 
-### State E — Teach
-No change.
+1. **briefing** — Left: dashed empty circle "Target Area". Right: ZED-4 intro line for the current glitch. Button: `Start Scanner` → `investigate`. Auto-TTS.
+2. **investigate** — Left: shape rendered (e.g. unequal pizza). Right: ZED claim + helper "Look closely — are the parts really equal?". Two buttons: `Yes, robot is right` → `explainWrong`, `No, it's a glitch!` → `detect`.
+3. **detect** — Left: shape. Right: red-tinted action area. Textarea + mic button + `Submit Explanation`. POST `{text, mode:'detect', shapeContext, history}` to `/api/evaluate-detect-reasoning`. Render ZED reply. If `isCorrect` → show `Next` → `repair`. Else show `Try Again` (clears last child/zed pair). Mic: Web Speech API first, fallback to `MediaRecorder` → `/api/transcribe`.
+4. **explainWrong** — Right: "Hooray! I knew I was right!" then prompt child to prove it. POST to new `/api/evaluate-wrong-reasoning` (gentle challenge prompt; reuses `runEvaluate` with mode `wrong`). Button `I changed my mind` → back to `investigate`. After 2 child turns, auto-concede and route to `repair` (existing behavior preserved).
+5. **repair** — Left: shape with draggable slider/line (existing slider logic). Once parts are mathematically equal (within tolerance), enable green `Repair successful!` button → `explain`.
+6. **explain** — Left: fixed equal-parts shape. Right: ZED "Wait, why was it wrong?…". Action: mic/text → `/api/evaluate-reasoning` (`mode:'explain'`, strict rubric already in place). On correct → `glitchSuccess`.
+7. **glitchSuccess** — Left: green glow scale-in animation. Right: success copy + `Glitch Repaired!` → advances to next glitch in array (resets to `briefing`) or → `success` final state with "Mission Complete" card and "Back to Map" button.
 
-### Explain Wrong (the "Yes, robot is right" branch)
-Keep as a short rethink loop using `ReasoningBox` `mode="wrong"`, including the existing "after 2 turns concede and advance to Repair" behavior.
+Global per state: every ZED line auto-TTS via `speakText`. Continuous mic paused while TTS speaks (already handled in `useContinuousSpeech`). Always show a back arrow except during `repair` mini-game.
 
-## Endpoint split (spec naming)
+## Backend touches
 
-Currently one route `/api/evaluate` handles all modes. Split into:
+- **New** `src/routes/api/evaluate-wrong-reasoning.ts` — thin route, calls `runEvaluate` with `mode:'wrong'`. (Currently `/api/evaluate-detect-reasoning` also handles `wrong`; splitting per spec naming. The shared system prompt already covers the "wrong" mode behavior, so no prompt rewrite.)
+- Keep `/api/evaluate-detect-reasoning`, `/api/evaluate-reasoning`, `/api/transcribe`, `/api/evaluate` as-is.
 
-- `src/routes/api/evaluate-detect-reasoning.ts` — used for `mode: "detect"` and `mode: "wrong"` (both are "is this a glitch?" reasoning).
-- `src/routes/api/evaluate-reasoning.ts` — used for `mode: "explain"` (teach phase: deep conceptual understanding).
-- `src/routes/api/transcribe.ts` — POST audio blob → `{ text }` using Lovable AI Gateway (`google/gemini-2.5-flash` audio input).
+## Files
 
-Both evaluate routes reuse the existing system prompt + `ResultSchema` + lenient JSON parsing + 429/402 error handling from today's `evaluate.ts`. The teach route gets a slightly stricter rubric (reasoningScore ≥ 2 required for `isCorrect`).
-
-The current `/api/evaluate` stays for one release as a thin shim that forwards to the correct new route, so nothing breaks mid-deploy.
-
-`ReasoningBox` picks the endpoint based on `mode`.
-
-## Files touched
-
-- `src/components/FractionFactoryLevel1.tsx` — investigate cleanup, Detect `Try Again` chip, endpoint routing, optional `MediaRecorder` fallback hook-up.
-- `src/routes/api/evaluate-detect-reasoning.ts` — new.
-- `src/routes/api/evaluate-reasoning.ts` — new (stricter teach rubric).
-- `src/routes/api/transcribe.ts` — new.
-- `src/routes/api/evaluate.ts` — becomes a thin forwarder (kept for safety).
+- **Rewrite** `src/components/FractionFactoryLevel1.tsx` — clean 3-view structure, new visuals, state machine above. Split sub-components inline: `IntroView`, `MissionSelectView`, `Mission1View`, `ShapeStage`, `ZedBubble` (or reuse existing), `ActionPanel`, `RepairSlider`, `MicTextInput`.
+- **Edit** `src/styles.css` — add brand color tokens.
+- **New** `src/routes/api/evaluate-wrong-reasoning.ts`.
+- **Keep** `src/lib/speech.ts`, `src/lib/glitches.tsx`, `src/lib/evaluate-core.ts`, existing api routes.
+- **Edit** `src/routes/play.tsx` only if needed to render the new entry view (likely just continues to render `<FractionFactoryLevel1 />`).
 
 ## Out of scope
 
-- Missions 2–4 unlocks, persona/prompt rewrites, the intro/mission-select screens.
+- Missions 2–4 gameplay (just locked tiles).
+- Auth, persistence of progress (in-memory state only).
+- Changing ZED-4 system prompt or evaluation rubric.
