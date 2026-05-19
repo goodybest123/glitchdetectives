@@ -307,10 +307,10 @@ export function RoleReversal() {
 /* -------------------- PRINTABLES -------------------- */
 export function Printables() {
   const items = [
-    { t: "Glitch Detective Worksheets", img: imgWorksheets },
-    { t: "Tactile Activities", img: imgTactile },
-    { t: "Story-Based Adventures", img: imgStories },
-    { t: "Real-World Challenges", img: imgRealworld },
+    { t: "Glitch Detective Worksheets", d: "Find hidden errors in mathematical equations.", img: imgWorksheets },
+    { t: "Tactile Activities", d: "Hands-on learning through cutting and gluing.", img: imgTactile },
+    { t: "Story-Based Adventures", d: "Narrative missions that makes the math to make sense.", img: imgStories },
+    { t: "Real-World Challenges", d: "Applying math reasoning in real world scenarios.", img: imgRealworld },
   ];
   return (
     <section id="printables" style={{ backgroundColor: BG_MINT }}>
@@ -330,10 +330,12 @@ export function Printables() {
               <img src={it.img} alt={it.t} width={768} height={768} loading="lazy" className="w-full aspect-square object-cover" />
               <div className="p-5">
                 <h3 className="font-black uppercase text-[var(--color-brand-blue)] text-sm tracking-wide">{it.t}</h3>
+                <p className="mt-2 text-[var(--color-brand-blue)]/70 text-sm leading-relaxed">{it.d}</p>
               </div>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
