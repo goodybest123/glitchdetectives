@@ -312,20 +312,31 @@ function MissionSelectView({ voiceOn, onBack, onStartMission }: { voiceOn: boole
   );
 }
 
-/* -------------------------- Mission 1 Gameplay ---------------------------- */
+/* ---------------------------- Mission Gameplay ---------------------------- */
 
-function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boolean; onBack: () => void; onFinish: () => void; onExitToHub: () => void }) {
+function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub }: { mission: MissionDef; voiceOn: boolean; onBack: () => void; onFinish: () => void; onExitToHub: () => void }) {
+  const shapes = mission.glitches;
   const [shapeIdx, setShapeIdx] = useState(0);
   const [phase, setPhase] = useState<Phase>("briefing");
-  const shape = MISSION_1_SHAPES[shapeIdx];
+  const shape = shapes[shapeIdx];
   const [vals, setVals] = useState<number[]>(shape.initialVals);
   const [repaired, setRepaired] = useState(false);
   const [repairMsg, setRepairMsg] = useState<string | null>(null);
 
-  const isLast = shapeIdx === MISSION_1_SHAPES.length - 1;
+  const isLast = shapeIdx === shapes.length - 1;
+  const mechanic: "snap" | "range" = shape.mechanic ?? "range";
+
+  // Reset state when mission changes
+  useEffect(() => {
+    setShapeIdx(0);
+    setPhase("briefing");
+    setVals(shapes[0].initialVals);
+    setRepaired(false);
+    setRepairMsg(null);
+  }, [mission.id, shapes]);
 
   const goToShape = (idx: number) => {
-    const s = MISSION_1_SHAPES[idx];
+    const s = shapes[idx];
     setShapeIdx(idx);
     setVals(s.initialVals);
     setRepaired(false);
@@ -347,10 +358,12 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
       "start scanner": () => phase === "briefing" && setPhase("investigate"),
       "no glitch": () => phase === "investigate" && setPhase("explainWrong"),
       "robot is right": () => phase === "investigate" && setPhase("explainWrong"),
+      "machine is right": () => phase === "investigate" && setPhase("explainWrong"),
       "there is a glitch": () => phase === "investigate" && setPhase("detect"),
       "yes glitch": () => phase === "investigate" && setPhase("detect"),
       "next mission": nextShape,
       "next shape": nextShape,
+      "next item": nextShape,
       "finish mission": () => phase === "shapeDone" && isLast && setPhase("missionDone"),
       "return to missions": () => phase === "missionDone" && onFinish(),
     },
@@ -368,12 +381,19 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
       case "repair": return shape.robotRepair;
       case "teach": return shape.robotExplain;
       case "shapeDone": return shape.robotSuccess;
-      case "missionDone": return "Mission complete! You taught me so much about halves!";
+      case "missionDone": return "Mission complete! You taught me so much about fair shares!";
       default: return "";
     }
   }, [phase, shape]);
 
-  useAutoSpeak(robotLine, [phase, shapeIdx]);
+  useAutoSpeak(robotLine, [phase, shapeIdx, mission.id]);
+
+  const handleSnap = () => {
+    if (repaired) return;
+    setRepaired(true);
+    setRepairMsg(null);
+    setTimeout(() => setPhase("teach"), 700);
+  };
 
   const checkRepair = () => {
     const ok = shape.target.every((t, i) => Math.abs(vals[i] - t) <= shape.tolerance);
@@ -388,7 +408,7 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
 
   return (
     <>
-      <TopBar title={`Mission 1 — Shape ${shapeIdx + 1} of ${MISSION_1_SHAPES.length}`} onBack={onBack} backLabel="Missions" />
+      <TopBar title={`Mission ${mission.id} — ${mission.name} (${shapeIdx + 1}/${shapes.length})`} onBack={onBack} backLabel="Missions" />
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 grid lg:grid-cols-2 gap-6">
         {/* LEFT: Shape canvas */}
         <div className="bg-white rounded-2xl border p-6 shadow-sm flex flex-col" style={{ borderColor: "color-mix(in oklab, var(--color-brand-blue) 12%, white)" }}>
@@ -413,6 +433,22 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
                 </div>
                 <p className="label-eyebrow mt-4" style={{ color: BLUE }}>Target Area</p>
               </motion.div>
+            ) : phase === "repair" && mechanic === "snap" ? (
+              <motion.div
+                key={`${shape.id}-snap`}
+                initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                className="w-full max-w-md"
+              >
+                <DragSlider
+                  orientation={shape.orientation ?? "horizontal"}
+                  value={vals[0]}
+                  onChange={(v) => setVals([v])}
+                  onSnap={handleSnap}
+                  isRepaired={repaired}
+                >
+                  {shape.render(vals, repaired)}
+                </DragSlider>
+              </motion.div>
             ) : (
               <motion.div
                 key={`${shape.id}-${repaired}`}
@@ -424,7 +460,7 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
             )}
           </div>
 
-          {phase === "repair" && (
+          {phase === "repair" && mechanic === "range" && (
             <div className="mt-6 space-y-4">
               {vals.map((v, i) => (
                 <div key={i}>
@@ -454,6 +490,12 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
                 <Wrench className="w-4 h-4" /> Check Repair
               </button>
             </div>
+          )}
+
+          {phase === "repair" && mechanic === "snap" && (
+            <p className="mt-4 text-xs font-mono text-center" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
+              Drag the laser handle. It will snap when both pieces are equal.
+            </p>
           )}
         </div>
 
