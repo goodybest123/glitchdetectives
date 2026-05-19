@@ -110,8 +110,7 @@ export function ProblemSection() {
         <div className="grid lg:grid-cols-2 gap-12 mt-12 items-start">
           <div>
             <p className="text-lg text-[var(--color-brand-blue)]/80 leading-relaxed">
-              Generating an answer with AI isn't the same as understanding it. Children today need to evaluate
-              outputs, spot mistakes, and explain their thinking — the actual skills that survive the AI era.
+              Getting the right answer is great, but knowing why it's right is even better. The most important skills you can learn are how to spot mistakes, fix them, and teach someone else how you figured it out.
             </p>
             <blockquote
               className="mt-8 rounded-2xl border-l-4 p-6 italic text-[var(--color-brand-blue)] font-medium"
