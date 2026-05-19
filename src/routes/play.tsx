@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+
 import { motion } from "framer-motion";
 import {
   ArrowLeft, ArrowRight, Factory, Lock, Shield, Sparkles,
   Layers, Scissors, Ruler, Wrench, Calculator, FlaskConical,
 } from "lucide-react";
-import { MissionRunner } from "@/components/MissionRunner";
+
 
 export const Route = createFileRoute("/play")({
   head: () => ({
@@ -44,9 +44,7 @@ const LEVELS: Level[] = [
 ];
 
 function Play() {
-  const [inMission, setInMission] = useState(false);
-  if (inMission) return <MissionRunner onExit={() => setInMission(false)} />;
-  return <LevelSelect onStart={() => setInMission(true)} />;
+  return <LevelSelect onStart={() => {}} />;
 }
 
 function LevelSelect({ onStart }: { onStart: () => void }) {
