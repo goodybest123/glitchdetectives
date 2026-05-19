@@ -504,15 +504,9 @@ function PhaseControls(props: {
             <AlertTriangle className="w-4 h-4" /> No, there is a glitch!
           </button>
         </div>
-        <ReasoningBox
-          key={"investigate-" + props.shapeId}
-          mode="wrong"
-          shapeContext={`${props.shapeName} (${props.shapeId})`}
-          seedZedLine={props.robotLine}
-          autoStart
-          onCorrect={props.onCorrectDetect}
-          secondaryAction={null}
-        />
+        <p className="text-xs font-mono text-center" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
+          Look closely — are the parts really equal?
+        </p>
       </div>
     );
   }
