@@ -6,6 +6,8 @@ import {
   Radio, ScanSearch,
 } from "lucide-react";
 import { GLITCHES, type Glitch } from "@/lib/glitches";
+import { MISSION_2_GLITCHES, MISSION_3_GLITCHES, MISSION_4_GLITCHES } from "@/lib/glitches-extra";
+import { DragSlider } from "@/components/mission2/DragSlider";
 import { speakText, useAutoSpeak, useContinuousSpeech, useVoiceCommands } from "@/lib/speech";
 
 const BLUE = "var(--color-brand-blue)";
@@ -15,7 +17,7 @@ const BG_LIGHT = "var(--color-bg-light)";
 const SKY = "color-mix(in oklab, var(--color-brand-blue) 12%, white)";
 
 
-type View = "intro" | "mission-select" | "mission-1-investigate";
+type View = "intro" | "mission-select" | "mission-play";
 type Phase =
   | "briefing"
   | "investigate"
@@ -38,11 +40,20 @@ const MISSION_1_SHAPES: Glitch[] = [
   GLITCHES.find((g) => g.id === "fuelrod")!,
 ];
 
-const MISSIONS = [
-  { id: 1, name: "Broken Partition Scanner", focus: "Detect unequal parts", unlocked: true, Icon: Zap },
-  { id: 2, name: "Half Repair Station", focus: "Understand halves", unlocked: false, Icon: Wrench },
-  { id: 3, name: "Quarter Core Reactor", focus: "Understand fourths", unlocked: false, Icon: Atom },
-  { id: 4, name: "Share Builder Challenge", focus: "Apply concepts", unlocked: false, Icon: Share2 },
+type MissionDef = {
+  id: number;
+  name: string;
+  focus: string;
+  unlocked: boolean;
+  Icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  glitches: Glitch[];
+};
+
+const MISSIONS: MissionDef[] = [
+  { id: 1, name: "Broken Partition Scanner", focus: "Detect unequal parts", unlocked: true, Icon: Zap, glitches: MISSION_1_SHAPES },
+  { id: 2, name: "Half Repair Station", focus: "Calibrate true halves", unlocked: true, Icon: Wrench, glitches: MISSION_2_GLITCHES },
+  { id: 3, name: "Quarter Core Reactor", focus: "Build equal fourths", unlocked: true, Icon: Atom, glitches: MISSION_3_GLITCHES },
+  { id: 4, name: "Share Builder Challenge", focus: "Mix halves & quarters", unlocked: true, Icon: Share2, glitches: MISSION_4_GLITCHES },
 ];
 
 export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: () => void }) {
