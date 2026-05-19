@@ -1,33 +1,24 @@
 ## Goal
-Add two non-halves shapes to Mission 1 so kids practice repairing thirds and quarters (not only halves).
+ZED should advance as soon as it understands the child. Only ask a follow-up question when genuinely confused.
 
-## Current state
-Mission 1's lineup is halves-only: pizza, battery, fuelrod. The `GLITCHES` library already defines two non-halves shapes with full render + briefing/detect/repair copy:
-- `chocolate` — chocolate bar split into thirds (2 dividers, target 33.33 / 66.66)
-- `solar` — solar panel split into quarters (2 dividers, target 50 / 50 on a grid)
+## Problem
+Today the system + user prompt in `src/lib/evaluate-core.ts` instruct ZED to "ask exactly ONE tiny curious question" on every reply unless the child perfectly explained equal parts. Result: ZED keeps probing even when the child's meaning is clear, and `strictTeach` in explain mode further blocks advancement until reasoningScore ≥ 2.
 
-## Change
-Add both to Mission 1's shape rotation in `src/components/FractionFactoryLevel1.tsx`:
+## Change (single file: `src/lib/evaluate-core.ts`)
 
-```ts
-const MISSION_1_SHAPES: Glitch[] = [
-  GLITCHES.find((g) => g.id === "pizza")!,
-  GLITCHES.find((g) => g.id === "chocolate")!,   // new — thirds
-  GLITCHES.find((g) => g.id === "battery")!,
-  GLITCHES.find((g) => g.id === "solar")!,       // new — quarters
-  GLITCHES.find((g) => g.id === "fuelrod")!,
-];
-```
+1. Loosen the "isCorrect" bar in the SYSTEM prompt:
+   - Mark `isCorrect = true` whenever the child's meaning clearly conveys that parts must be equal / same / fair / even / same-size — even with simple kid words ("same", "even", "not fair", "bigger", "one is smaller").
+   - Only mark `isCorrect = false` when the child is off-topic, vague ("it's wrong", "I dunno"), garbled, or contradicts the equal-parts idea.
 
-Ordering interleaves halves and non-halves so difficulty escalates gently (half → thirds → half → quarters → half).
+2. Change reply rules in SYSTEM:
+   - When `isCorrect = true`: celebrate warmly, do NOT ask a question, end the turn so the game advances.
+   - When `isCorrect = false`: thank + reflect one word + ask ONE tiny question (current behavior).
 
-## Why this works without other code changes
-- The mission runner already iterates `MISSION_1_SHAPES` generically and reads `parts`, `initialVals`, `target`, `tolerance`, and `render` from each glitch.
-- The repair slider UI already supports multi-divider shapes (`chocolate` uses 2 sliders, `solar` uses 2 sliders) since `initialVals.length` drives the slider count.
-- All ZED dialogue lines (briefing / investigate / detect / explainWrong / repair / success) already exist on both glitches.
-- The "0/N Missions Completed" / per-mission progress counter reads from `MISSION_1_SHAPES.length`, so it updates automatically (3 → 5).
+3. Update the user-prompt template at the bottom of `runEvaluate` so it no longer forces a question on every reply. Instead: "If you understand the teacher (isCorrect=true), celebrate and do not ask a question. Only ask one tiny question if you are still confused."
+
+4. Drop the `strictTeach` upgrade gate (or relax to `reasoningScore >= 1`) so the explain phase advances as soon as ZED understands, matching the new behavior. Keep the `opts` argument for backwards compatibility but make it a no-op.
 
 ## Files
-- `src/components/FractionFactoryLevel1.tsx` — extend `MISSION_1_SHAPES` array (one edit).
+- `src/lib/evaluate-core.ts` — prompt + strictTeach tweak only.
 
-No backend, no styling, no new components.
+No UI, route, or component changes. The three `/api/evaluate-*` endpoints automatically inherit the new behavior.
