@@ -774,6 +774,26 @@ function ReasoningBox({
         </div>
       )}
 
+      {/* Try Again — clears last exchange so the child can rephrase */}
+      {!pending && !correctRef.current && turns.some((t) => t.role === "child") &&
+        turns[turns.length - 1]?.role === "zed" && (
+          <button
+            onClick={() => {
+              setTurns((prev) => {
+                // Drop trailing zed + preceding child to undo the last exchange
+                const next = [...prev];
+                if (next[next.length - 1]?.role === "zed") next.pop();
+                if (next[next.length - 1]?.role === "child") next.pop();
+                return next;
+              });
+            }}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border hover:bg-slate-50 transition"
+            style={{ color: BLUE, borderColor: "color-mix(in oklab, var(--color-brand-blue) 25%, white)" }}
+          >
+            <RefreshCcw className="w-3.5 h-3.5" /> Try Again
+          </button>
+        )}
+
       {/* Typed fallback */}
       <div className="flex items-center gap-2">
         <input
