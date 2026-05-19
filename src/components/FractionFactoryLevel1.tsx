@@ -3,15 +3,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, ArrowRight, AlertTriangle, Volume2, Lock, Bot, Mic, MicOff,
   Send, CheckCircle2, Wrench, Sparkles, RefreshCcw, ScanSearch, Atom, Share2, Loader2,
+  Radio,
 } from "lucide-react";
 import { GLITCHES, type Glitch } from "@/lib/glitches";
-import { speakText, useAutoSpeak, useSpeechToText } from "@/lib/speech";
+import { speakText, useAutoSpeak, useSpeechToText, useVoiceCommands } from "@/lib/speech";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
 const MINT = "var(--color-brand-mint)";
 const BG_LIGHT = "var(--color-bg-light)";
 const SKY = "color-mix(in oklab, var(--color-brand-blue) 12%, white)";
+
 
 type View = "intro" | "mission-select" | "mission-1-investigate";
 type Phase =
@@ -42,18 +44,20 @@ const MISSIONS = [
 
 export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: () => void }) {
   const [view, setView] = useState<View>("intro");
+  const [voiceOn, setVoiceOn] = useState(false);
 
   return (
     <main className="min-h-screen" style={{ background: BG_LIGHT }}>
       <AnimatePresence mode="wait">
         {view === "intro" && (
           <motion.div key="intro" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <IntroView onBack={onExitToHub} onContinue={() => setView("mission-select")} />
+            <IntroView voiceOn={voiceOn} onBack={onExitToHub} onContinue={() => setView("mission-select")} />
           </motion.div>
         )}
         {view === "mission-select" && (
           <motion.div key="select" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <MissionSelectView
+              voiceOn={voiceOn}
               onBack={() => setView("intro")}
               onStartMission1={() => setView("mission-1-investigate")}
             />
@@ -62,13 +66,43 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
         {view === "mission-1-investigate" && (
           <motion.div key="mission" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
             <Mission1View
+              voiceOn={voiceOn}
               onBack={() => setView("mission-select")}
               onFinish={() => setView("mission-select")}
+              onExitToHub={onExitToHub}
             />
           </motion.div>
         )}
       </AnimatePresence>
+
+      <VoiceCommandToggle on={voiceOn} onToggle={() => setVoiceOn((v) => !v)} />
     </main>
+  );
+}
+
+function VoiceCommandToggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
+  return (
+    <div className="fixed bottom-5 right-5 z-40 flex items-center gap-2">
+      {on && (
+        <span
+          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono shadow-sm border bg-white"
+          style={{ color: BLUE, borderColor: "color-mix(in oklab, var(--color-brand-blue) 20%, white)" }}
+        >
+          <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: YELLOW }} />
+          Listening: say "Enter Level", "Back to Hub", "Next Mission"
+        </span>
+      )}
+      <button
+        onClick={onToggle}
+        aria-pressed={on}
+        aria-label={on ? "Disable voice commands" : "Enable voice commands"}
+        title={on ? "Voice commands on" : "Voice commands off"}
+        className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105"
+        style={{ background: on ? YELLOW : BLUE, color: on ? BLUE : "white" }}
+      >
+        <Radio className={`w-5 h-5 ${on ? "animate-pulse" : ""}`} />
+      </button>
+    </div>
   );
 }
 
@@ -98,8 +132,18 @@ function TopBar({ title, onBack, backLabel = "Hub" }: { title: string; onBack: (
 
 /* --------------------------------- Intro ---------------------------------- */
 
-function IntroView({ onBack, onContinue }: { onBack: () => void; onContinue: () => void }) {
+function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: () => void; onContinue: () => void }) {
   useAutoSpeak(`Level 1: Fraction Foundations. ${INTRO_TEXT}`);
+  useVoiceCommands(
+    {
+      "enter level": onContinue,
+      "access mission map": onContinue,
+      "continue": onContinue,
+      "back to hub": onBack,
+      "return to hub": onBack,
+    },
+    voiceOn,
+  );
   return (
     <>
       <TopBar title="Level 1: Fraction Foundations" onBack={onBack} />
@@ -153,8 +197,21 @@ function IntroView({ onBack, onContinue }: { onBack: () => void; onContinue: () 
 
 /* ----------------------------- Mission Select ----------------------------- */
 
-function MissionSelectView({ onBack, onStartMission1 }: { onBack: () => void; onStartMission1: () => void }) {
+function MissionSelectView({ voiceOn, onBack, onStartMission1 }: { voiceOn: boolean; onBack: () => void; onStartMission1: () => void }) {
   useAutoSpeak("Mission map online. Choose a mission, detective.");
+  useVoiceCommands(
+    {
+      "start mission": onStartMission1,
+      "first mission": onStartMission1,
+      "mission one": onStartMission1,
+      "enter mission": onStartMission1,
+      "broken partition": onStartMission1,
+      "back to hub": onBack,
+      "back to briefing": onBack,
+      "go back": onBack,
+    },
+    voiceOn,
+  );
   return (
     <>
       <TopBar title="Mission Map" onBack={onBack} backLabel="Briefing" />
@@ -208,7 +265,7 @@ function MissionSelectView({ onBack, onStartMission1 }: { onBack: () => void; on
 
 /* -------------------------- Mission 1 Gameplay ---------------------------- */
 
-function Mission1View({ onBack, onFinish }: { onBack: () => void; onFinish: () => void }) {
+function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boolean; onBack: () => void; onFinish: () => void; onExitToHub: () => void }) {
   const [shapeIdx, setShapeIdx] = useState(0);
   const [phase, setPhase] = useState<Phase>("briefing");
   const shape = MISSION_1_SHAPES[shapeIdx];
@@ -226,6 +283,31 @@ function Mission1View({ onBack, onFinish }: { onBack: () => void; onFinish: () =
     setRepairMsg(null);
     setPhase("briefing");
   };
+
+  const nextShape = () => {
+    if (isLast) setPhase("missionDone");
+    else goToShape(shapeIdx + 1);
+  };
+
+  useVoiceCommands(
+    {
+      "back to hub": onExitToHub,
+      "return to hub": onExitToHub,
+      "back to missions": onBack,
+      "back to mission map": onBack,
+      "start scanner": () => phase === "briefing" && setPhase("investigate"),
+      "no glitch": () => phase === "investigate" && setPhase("explainWrong"),
+      "robot is right": () => phase === "investigate" && setPhase("explainWrong"),
+      "there is a glitch": () => phase === "investigate" && setPhase("detect"),
+      "yes glitch": () => phase === "investigate" && setPhase("detect"),
+      "next mission": nextShape,
+      "next shape": nextShape,
+      "finish mission": () => phase === "shapeDone" && isLast && setPhase("missionDone"),
+      "return to missions": () => phase === "missionDone" && onFinish(),
+    },
+    voiceOn,
+  );
+
 
   const robotLine = useMemo(() => {
     switch (phase) {
