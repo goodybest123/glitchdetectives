@@ -6,7 +6,7 @@ import {
   Layers, Scissors, Ruler, Wrench, Calculator, FlaskConical,
 } from "lucide-react";
 import FractionFactoryLevel1 from "@/components/FractionFactoryLevel1";
-import Mission2HalfRepairStation from "@/components/Mission2HalfRepairStation";
+import FractionFactoryLevel2 from "@/components/FractionFactoryLevel2";
 
 
 export const Route = createFileRoute("/play")({
@@ -51,7 +51,7 @@ function Play() {
     return <FractionFactoryLevel1 onExitToHub={() => setActiveLevel(null)} />;
   }
   if (activeLevel === 2) {
-    return <Mission2HalfRepairStation onExit={() => setActiveLevel(null)} />;
+    return <FractionFactoryLevel2 onExitToHub={() => setActiveLevel(null)} />;
   }
   return <LevelSelect onStart={(n) => setActiveLevel(n)} />;
 }
