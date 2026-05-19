@@ -580,15 +580,21 @@ type Turn = { role: "child" | "zed"; text: string };
 function ReasoningBox({
   mode,
   shapeContext,
+  seedZedLine,
+  autoStart,
   onCorrect,
   secondaryAction,
 }: {
   mode: "detect" | "wrong" | "explain";
   shapeContext: string;
+  seedZedLine?: string;
+  autoStart?: boolean;
   onCorrect: () => void;
   secondaryAction: { label: string; run: () => void } | null;
 }) {
-  const [turns, setTurns] = useState<Turn[]>([]);
+  const [turns, setTurns] = useState<Turn[]>(
+    seedZedLine ? [{ role: "zed", text: seedZedLine }] : [],
+  );
   const [pending, setPending] = useState(false);
   const [typed, setTyped] = useState("");
   const correctRef = useRef(false);
