@@ -150,7 +150,7 @@ export function HowItWorks() {
     <section id="how-it-works" style={{ backgroundColor: BG_LIGHT }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="label-eyebrow text-[var(--color-brand-blue)]/60">The Loop</span>
+          <span className="label-eyebrow text-lg">The Loop</span>
           <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
             How Glitch Detectives Works
           </h2>
@@ -195,7 +195,7 @@ export function WorldsSection() {
     <section id="worlds" className="bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="label-eyebrow text-[var(--color-brand-blue)]/60">The Map</span>
+          <span className="label-eyebrow text-lg">The Map</span>
           <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
             Explore Detective Worlds
           </h2>
@@ -316,7 +316,7 @@ export function Printables() {
     <section id="printables" style={{ backgroundColor: BG_MINT }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="label-eyebrow text-[var(--color-brand-blue)]/60">Off-Screen</span>
+          <span className="label-eyebrow text-lg">Off-Screen</span>
           <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
             Explore Printables
           </h2>
@@ -385,7 +385,7 @@ export function Benefits() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <span className="label-eyebrow text-[var(--color-brand-blue)]/60">Beyond the Answer</span>
+            <span className="label-eyebrow text-lg">Beyond the Answer</span>
             <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
               Skills that survive the AI era
             </h2>
@@ -442,7 +442,7 @@ export function Testimonials() {
     <section style={{ backgroundColor: BG_MINT }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="label-eyebrow text-[var(--color-brand-blue)]/60">Voices</span>
+          <span className="label-eyebrow text-lg">Voices</span>
           <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">Trusted by Learners</h2>
         </div>
         <div className="grid lg:grid-cols-3 gap-6">
