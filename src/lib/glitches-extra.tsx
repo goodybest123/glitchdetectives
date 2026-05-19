@@ -169,51 +169,54 @@ export const MISSION_3_GLITCHES: Glitch[] = [
   },
   {
     ...solar,
-    id: "m3-window",
-    name: "Window Quadrants",
-    robotLabel: "GLASS QUARTERS",
+    id: "m3-pie-sensor",
+    name: "Quarter Pie Sensor",
+    robotLabel: "4 PIE WEDGES",
+    parts: 4,
     robotBriefing:
-      "These windowpanes ship as four equal quarters. The machine sliced unevenly. Tap Start Scanner.",
+      "This round sensor reads sunlight from four wedge quarters. The cutter sliced them all crooked. Tap Start Scanner.",
     robotInvestigate:
-      "Four panes — is each one a true quarter of the whole window?",
+      "Four wedges around the dial. Is every wedge really a quarter of the circle?",
     robotDetect:
-      "Right! Tell me why uneven panes can't be called quarters.",
+      "Right! Tell me why uneven wedges can't be called quarters.",
     robotExplainWrong:
-      "Look again — these panes are clearly different sizes. What does 'quarter' actually mean?",
+      "Look again — one wedge is huge and another tiny. What does 'quarter' actually mean?",
     robotExplain:
-      "All four panes match! Why must each quarter be exactly the same? Teach me.",
+      "Four matching wedges! Why must each quarter be exactly the same? Teach me.",
     robotRepair:
-      "Drag both sliders to make all four panes equal, then Check Repair.",
-    robotSuccess: "Four equal panes — perfect quarters!",
-    initialVals: [70, 30],
-    target: [50, 50],
+      "Drag the three cut lines so all four wedges match, then Check Repair.",
+    robotSuccess: "Four equal wedges — the sensor reads true!",
+    initialVals: [15, 40, 80],
+    target: [25, 50, 75],
     tolerance: 5,
+    render: (vals, repaired) => <PizzaQuartersShape vals={vals} repaired={repaired} />,
   },
   {
     ...chocolate,
     id: "m3-shelf",
-    name: "Cargo Shelf",
-    robotLabel: "4 SHELF SECTIONS",
+    name: "Cargo Tower",
+    robotLabel: "4 STACKED SHELVES",
     parts: 4,
     robotBriefing:
-      "The cargo shelf needs four equal slots. The dividers slipped! Tap Start Scanner.",
+      "This cargo tower needs four equal shelves stacked top to bottom. The dividers slipped! Tap Start Scanner.",
     robotInvestigate:
-      "Four slots, four crates. But are all four slots really quarters?",
+      "Four shelves, four crates. But are all four shelves really quarters of the tower?",
     robotDetect:
       "Exactly — uneven. Tell me what's wrong with calling these quarters.",
     robotExplainWrong:
-      "Hmm — those widths are way off. Tell me again what 'quarter' really means.",
+      "Hmm — those heights are way off. Tell me again what 'quarter' really means.",
     robotExplain:
-      "Four matching slots! Teach me — why must each slot be the same size?",
+      "Four matching shelves! Teach me — why must each shelf be the same size?",
     robotRepair:
-      "Adjust the three dividers until all four slots are equal, then Check Repair.",
-    robotSuccess: "Four equal slots — cargo balanced!",
+      "Adjust the three dividers until all four shelves are equal, then Check Repair.",
+    robotSuccess: "Four equal shelves — cargo balanced!",
     initialVals: [40, 60, 85],
     target: [25, 50, 75],
     tolerance: 5,
-    render: chocolate.render,
+    render: (vals, repaired) => <VerticalStackShape vals={vals} repaired={repaired} />,
   },
 ];
+
 
 /* ---------------- MISSION 4 — Share Builder Challenge (mix of halves + quarters) ---------------- */
 
