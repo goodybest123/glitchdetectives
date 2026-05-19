@@ -426,6 +426,7 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
               phase={phase}
               shapeId={shape.id}
               shapeName={shape.name}
+              robotLine={robotLine}
               isLast={isLast}
               onStartScanner={() => setPhase("investigate")}
               onAnswerYes={() => setPhase("explainWrong")}
