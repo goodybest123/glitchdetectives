@@ -1,131 +1,213 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Bot, Cpu, Lock, ScanSearch, Sparkles, Wrench } from "lucide-react";
+import {
+  ArrowLeft, ArrowRight, Factory, Lock, Shield, Sparkles,
+  Layers, Scissors, Ruler, Wrench, Calculator, FlaskConical,
+} from "lucide-react";
 import { MissionRunner } from "@/components/MissionRunner";
-import { speakText } from "@/lib/speech";
 
 export const Route = createFileRoute("/play")({
   head: () => ({
     meta: [
-      { title: "Play — Glitch Detectives: Fraction Factory" },
-      { name: "description", content: "Investigate AI mistakes, repair fractions, and teach ZED-4 why." },
+      { title: "Fraction Factory — Level Select" },
+      { name: "description", content: "Central control hub for the Fraction Factory world." },
     ],
   }),
   component: Play,
 });
 
-type View = "intro" | "map" | "mission";
+const BLUE = "var(--color-brand-blue)";
+const YELLOW = "var(--color-brand-yellow)";
+const MINT = "var(--color-brand-mint)";
+const BG_LIGHT = "var(--color-bg-light)";
+
+type Level = {
+  n: number;
+  grade: number;
+  title: string;
+  desc: string;
+  focus: string;
+  missions: number;
+  done: number;
+  unlocked: boolean;
+  Icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+};
+
+const LEVELS: Level[] = [
+  { n: 1, grade: 1, title: "Fraction Foundations", desc: "Discover what makes parts equal and meet the very first fractions.", focus: "Equal parts, halves", missions: 4, done: 1, unlocked: true, Icon: Layers },
+  { n: 2, grade: 2, title: "Fraction Discovery Zone", desc: "Name and compare thirds, fourths, and the family of unit fractions.", focus: "Thirds, fourths, naming fractions", missions: 5, done: 0, unlocked: false, Icon: Scissors },
+  { n: 3, grade: 3, title: "Number Line & Equivalence Sector", desc: "Plot fractions on number lines and uncover equivalent forms.", focus: "Equivalence on the number line", missions: 5, done: 0, unlocked: false, Icon: Ruler },
+  { n: 4, grade: 4, title: "Fraction Repair Systems", desc: "Diagnose and fix broken addition and subtraction of fractions.", focus: "Add & subtract like fractions", missions: 6, done: 0, unlocked: false, Icon: Wrench },
+  { n: 5, grade: 5, title: "Advanced Fraction Operations", desc: "Multiply, divide, and reason with mixed numbers.", focus: "Multiply, divide, mixed numbers", missions: 6, done: 0, unlocked: false, Icon: Calculator },
+  { n: 6, grade: 6, title: "Fraction Mastery Lab", desc: "Stress-test ratios, rates, and proportional reasoning.", focus: "Ratios & proportional reasoning", missions: 6, done: 0, unlocked: false, Icon: FlaskConical },
+];
 
 function Play() {
-  const [view, setView] = useState<View>("intro");
-  if (view === "mission") return <MissionRunner onExit={() => setView("map")} />;
-  if (view === "map") return <MissionMap onStart={() => setView("mission")} onBack={() => setView("intro")} />;
-  return <Intro onContinue={() => setView("map")} />;
+  const [inMission, setInMission] = useState(false);
+  if (inMission) return <MissionRunner onExit={() => setInMission(false)} />;
+  return <LevelSelect onStart={() => setInMission(true)} />;
 }
 
-function Intro({ onContinue }: { onContinue: () => void }) {
+function LevelSelect({ onStart }: { onStart: () => void }) {
   return (
-    <main className="min-h-screen grid-bg flex items-center justify-center px-4 py-12">
-      <div className="max-w-3xl w-full">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <Link to="/" className="label-eyebrow text-muted-foreground hover:text-primary mb-6 inline-block">← BACK TO HOME</Link>
-          <div className="flex items-center gap-2 label-eyebrow text-muted-foreground mb-6 mt-4">
-            <Cpu className="w-3.5 h-3.5" /> FACTORY OS // BUILD 4.0
-          </div>
-          <h1 className="text-5xl sm:text-7xl font-bold tracking-tight text-primary mb-2">Glitch<br />Detectives.</h1>
-          <p className="label-eyebrow text-energy-foreground bg-energy inline-block px-3 py-1.5 rounded-full mt-2">FRACTION FACTORY</p>
-          <p className="text-lg sm:text-xl text-foreground/80 mt-8 max-w-2xl leading-relaxed">
-            The factory's partition machines are malfunctioning. Shapes are being divided incorrectly,
-            and our robot <strong>ZED-4</strong> can't figure out why. Can you investigate, repair the system,
-            and teach the robot what it got wrong?
-          </p>
-          <div className="grid sm:grid-cols-3 gap-3 mt-10">
-            {[
-              { icon: ScanSearch, label: "Investigate" },
-              { icon: Wrench, label: "Repair" },
-              { icon: Bot, label: "Teach ZED-4" },
-            ].map((s) => (
-              <div key={s.label} className="rounded-2xl border border-border bg-card p-4 flex items-center gap-3">
-                <s.icon className="w-5 h-5 text-primary" />
-                <span className="font-medium">{s.label}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-10 flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={() => { speakText("Welcome detective. Tap continue to enter the mission map."); onContinue(); }}
-              className="px-6 py-4 rounded-2xl bg-primary text-primary-foreground font-semibold inline-flex items-center justify-center gap-2 hover:opacity-90 transition shadow-lg"
+    <main className="min-h-screen" style={{ background: BG_LIGHT }}>
+      {/* Hero header */}
+      <header
+        className="relative overflow-hidden rounded-b-3xl"
+        style={{ background: BLUE, color: "white" }}
+      >
+        <div className="pointer-events-none absolute -top-24 -left-16 w-80 h-80 rounded-full blur-3xl opacity-25" style={{ background: MINT }} />
+        <div className="pointer-events-none absolute -bottom-24 -right-16 w-80 h-80 rounded-full blur-3xl opacity-20" style={{ background: YELLOW }} />
+
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-16">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <Link
+              to="/"
+              hash="worlds"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium bg-white/10 hover:bg-white/20 transition"
             >
-              Enter Mission Map <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => speakText("The factory's partition machines are malfunctioning. Shapes are being divided incorrectly. Can you repair the system?")}
-              className="px-6 py-4 rounded-2xl border border-border bg-card font-medium hover:border-primary transition"
+              <ArrowLeft className="w-4 h-4" /> Return to Map
+            </Link>
+            <span
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
+              style={{ background: YELLOW, color: BLUE }}
             >
-              🔊 Hear briefing
-            </button>
+              <Shield className="w-3.5 h-3.5" /> Detective Access Granted
+            </span>
           </div>
-        </motion.div>
-      </div>
+
+          <div className="flex flex-col items-center text-center mt-10">
+            <motion.div
+              animate={{ y: [0, -8, 0], rotate: [6, 10, 6] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-2xl"
+              style={{ background: YELLOW }}
+            >
+              <Factory className="w-10 h-10" style={{ color: BLUE }} />
+            </motion.div>
+            <h1 className="heading-black uppercase text-5xl sm:text-6xl mt-6">Fraction Factory</h1>
+            <p className="label-eyebrow mt-3" style={{ color: MINT }}>Central Control Hub</p>
+            <p className="text-sm text-white/70 mt-4 max-w-xl inline-flex items-center gap-2 justify-center">
+              <Sparkles className="w-4 h-4" style={{ color: YELLOW }} />
+              Six levels of fraction missions. Repair the glitches, teach ZED-4.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      {/* Timeline */}
+      <section className="relative max-w-5xl mx-auto px-4 sm:px-6 py-16">
+        {/* Vertical track */}
+        <div
+          aria-hidden
+          className="absolute top-0 bottom-0 w-px left-6 md:left-1/2 md:-translate-x-1/2"
+          style={{ background: "color-mix(in oklab, var(--color-brand-blue) 18%, transparent)" }}
+        />
+
+        <ul className="space-y-12 md:space-y-20">
+          {LEVELS.map((lvl, i) => {
+            const reverse = i % 2 === 1;
+            return (
+              <li key={lvl.n} className="relative">
+                {/* center node */}
+                <div
+                  className="absolute z-10 w-5 h-5 rounded-full ring-4 ring-[var(--color-bg-light)] left-6 md:left-1/2 md:-translate-x-1/2 top-6"
+                  style={{ background: lvl.unlocked ? BLUE : "#cbd5e1" }}
+                />
+                <div className={`flex ${reverse ? "md:flex-row-reverse" : "md:flex-row"} flex-row pl-16 md:pl-0`}>
+                  <LevelCard lvl={lvl} onStart={onStart} />
+                  {/* spacer for the other side */}
+                  <div className="hidden md:block md:w-[8%]" />
+                  <div className="hidden md:block md:w-[46%]" />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
     </main>
   );
 }
 
-const MISSIONS = [
-  { id: 1, title: "Broken Partition Scanner", subtitle: "Repair 5 mis-cut shapes", unlocked: true },
-  { id: 2, title: "Fraction Bakery", subtitle: "Equal slices for every robot", unlocked: false },
-  { id: 3, title: "Equivalent Engine Room", subtitle: "Match the matching fractions", unlocked: false },
-  { id: 4, title: "Comparison Control Tower", subtitle: "Bigger, smaller, or same?", unlocked: false },
-];
-
-function MissionMap({ onStart, onBack }: { onStart: () => void; onBack: () => void }) {
+function LevelCard({ lvl, onStart }: { lvl: Level; onStart: () => void }) {
+  const Icon = lvl.Icon;
+  const unlocked = lvl.unlocked;
   return (
-    <main className="min-h-screen grid-bg px-4 sm:px-6 py-10">
-      <div className="max-w-5xl mx-auto">
-        <button onClick={onBack} className="label-eyebrow text-muted-foreground hover:text-primary mb-6">← INTRO</button>
-        <div className="flex items-end justify-between flex-wrap gap-3 mb-8">
-          <div>
-            <span className="label-eyebrow text-muted-foreground">MISSION MAP</span>
-            <h2 className="text-4xl sm:text-5xl font-bold text-primary mt-1">Pick a mission, detective.</h2>
+    <motion.div
+      whileHover={unlocked ? { y: -4 } : undefined}
+      className={`relative w-full md:w-[46%] bg-white rounded-2xl p-6 overflow-hidden border shadow-md transition-all ${
+        unlocked
+          ? "hover:shadow-xl"
+          : "opacity-60 pointer-events-none"
+      }`}
+      style={{
+        borderColor: unlocked ? YELLOW : "#e5e7eb",
+      }}
+    >
+      {/* Decorative blurred circle */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-10 -right-10 w-44 h-44 rounded-full blur-3xl opacity-40"
+        style={{ background: unlocked ? MINT : "#e5e7eb" }}
+      />
+
+      <div className="relative">
+        {/* Top row */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm shrink-0"
+            style={{ background: unlocked ? BLUE : "#94a3b8" }}
+          >
+            <Icon className={`w-6 h-6`} style={{ color: unlocked ? YELLOW : "white" }} />
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Sparkles className="w-4 h-4 text-energy-foreground" />
-            <span>1 mission unlocked</span>
-          </div>
+          {unlocked ? (
+            <span className="label-eyebrow px-2.5 py-1 rounded-full" style={{ background: YELLOW, color: BLUE }}>
+              In Progress
+            </span>
+          ) : (
+            <span className="label-eyebrow px-2.5 py-1 rounded-full inline-flex items-center gap-1 bg-gray-200 text-gray-600">
+              <Lock className="w-3 h-3" /> Locked
+            </span>
+          )}
+          <span className="ml-auto text-xs font-mono text-gray-500">
+            {lvl.done}/{lvl.missions} missions completed
+          </span>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-4">
-          {MISSIONS.map((m) => (
-            <motion.button
-              key={m.id}
-              whileHover={m.unlocked ? { y: -2 } : {}}
-              onClick={() => m.unlocked && onStart()}
-              disabled={!m.unlocked}
-              className={`text-left rounded-3xl border p-6 transition relative overflow-hidden ${
-                m.unlocked
-                  ? "border-border bg-card hover:border-primary shadow-sm cursor-pointer"
-                  : "border-border/60 bg-card/50 opacity-60 cursor-not-allowed"
-              }`}
+
+        {/* Body */}
+        <p className="label-eyebrow mt-5 text-gray-500">Level {lvl.n} • Grade {lvl.grade}</p>
+        <h3 className="text-2xl font-bold mt-1" style={{ color: BLUE }}>{lvl.title}</h3>
+
+        <div className="mt-3 bg-gray-50 rounded-lg p-3 text-sm text-gray-600 border border-gray-100">
+          {lvl.desc}
+        </div>
+
+        <p className="mt-4 text-sm">
+          <span className="font-semibold" style={{ color: BLUE }}>Focus Areas: </span>
+          <span className="text-gray-600">{lvl.focus}</span>
+        </p>
+
+        {/* Bottom */}
+        <div className="mt-6">
+          {unlocked ? (
+            <button
+              onClick={onStart}
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-transform hover:scale-[1.02]"
+              style={{ background: BLUE, color: "white" }}
             >
-              <div className="flex items-center justify-between mb-4">
-                <span className="label-eyebrow text-muted-foreground">MISSION 0{m.id}</span>
-                {m.unlocked ? (
-                  <span className="label-eyebrow px-2 py-1 rounded-full bg-energy text-energy-foreground">READY</span>
-                ) : (
-                  <Lock className="w-4 h-4 text-muted-foreground" />
-                )}
-              </div>
-              <h3 className="text-2xl font-bold text-foreground mb-1">{m.title}</h3>
-              <p className="text-muted-foreground">{m.subtitle}</p>
-              {m.unlocked && (
-                <div className="mt-6 inline-flex items-center gap-2 text-primary font-semibold">
-                  Begin <ArrowRight className="w-4 h-4" />
-                </div>
-              )}
-            </motion.button>
-          ))}
+              Enter Level <ArrowRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              disabled
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold bg-gray-200 text-gray-500 cursor-not-allowed"
+            >
+              <Lock className="w-4 h-4" /> Level Locked
+            </button>
+          )}
         </div>
       </div>
-    </main>
+    </motion.div>
   );
 }
