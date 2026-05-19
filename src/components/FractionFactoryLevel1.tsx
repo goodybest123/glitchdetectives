@@ -59,6 +59,13 @@ const MISSIONS: MissionDef[] = [
 export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: () => void }) {
   const [view, setView] = useState<View>("intro");
   const [voiceOn, setVoiceOn] = useState(false);
+  const [activeMissionId, setActiveMissionId] = useState<number>(1);
+  const activeMission = MISSIONS.find((m) => m.id === activeMissionId) ?? MISSIONS[0];
+
+  const startMission = (id: number) => {
+    setActiveMissionId(id);
+    setView("mission-play");
+  };
 
   return (
     <main className="min-h-screen" style={{ background: BG_LIGHT }}>
@@ -73,13 +80,14 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
             <MissionSelectView
               voiceOn={voiceOn}
               onBack={() => setView("intro")}
-              onStartMission1={() => setView("mission-1-investigate")}
+              onStartMission={startMission}
             />
           </motion.div>
         )}
-        {view === "mission-1-investigate" && (
-          <motion.div key="mission" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <Mission1View
+        {view === "mission-play" && (
+          <motion.div key={`mission-${activeMission.id}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <MissionView
+              mission={activeMission}
               voiceOn={voiceOn}
               onBack={() => setView("mission-select")}
               onFinish={() => setView("mission-select")}
