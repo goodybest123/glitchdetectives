@@ -560,7 +560,7 @@ function PhaseControls(props: {
         seedZedLine={props.robotLine}
         autoStart
         onCorrect={phase === "teach" ? props.onCorrectTeach : phase === "detect" ? props.onCorrectDetect : props.onRetryWrong}
-        secondaryAction={phase === "explainWrong" ? { label: "Take another look", run: props.onRetryWrong } : null}
+        secondaryAction={phase === "explainWrong" ? { label: "I changed my mind", run: props.onRetryWrong } : null}
       />
     );
   }
