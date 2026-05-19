@@ -3,15 +3,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, ArrowRight, AlertTriangle, Volume2, Lock, Bot, Mic, MicOff,
   Send, CheckCircle2, Wrench, Sparkles, RefreshCcw, ScanSearch, Atom, Share2, Loader2,
+  Radio,
 } from "lucide-react";
 import { GLITCHES, type Glitch } from "@/lib/glitches";
-import { speakText, useAutoSpeak, useSpeechToText } from "@/lib/speech";
+import { speakText, useAutoSpeak, useSpeechToText, useVoiceCommands } from "@/lib/speech";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
 const MINT = "var(--color-brand-mint)";
 const BG_LIGHT = "var(--color-bg-light)";
 const SKY = "color-mix(in oklab, var(--color-brand-blue) 12%, white)";
+
 
 type View = "intro" | "mission-select" | "mission-1-investigate";
 type Phase =
