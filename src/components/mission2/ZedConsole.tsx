@@ -1,17 +1,22 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Bot, AlertTriangle, CheckCircle2, Volume2 } from "lucide-react";
+import { speakText } from "@/lib/speech";
 
 export function ZedConsole({
   dialogue,
   dialogueKey,
   repaired,
   itemName,
+  muted,
+  children,
 }: {
   dialogue: string;
   dialogueKey: string;
   repaired: boolean;
   itemName: string;
+  muted?: boolean;
+  children?: ReactNode;
 }) {
   const [typed, setTyped] = useState("");
 
@@ -28,7 +33,7 @@ export function ZedConsole({
 
   return (
     <div
-      className="rounded-2xl p-6 h-full flex flex-col gap-5 text-white shadow-xl"
+      className="rounded-2xl p-6 flex flex-col gap-5 text-white shadow-xl"
       style={{ background: "linear-gradient(180deg, #0f172a 0%, #1e293b 100%)" }}
     >
       <div className="flex items-center gap-3">
@@ -40,10 +45,19 @@ export function ZedConsole({
         >
           <Bot className="w-7 h-7" style={{ color: "#1e293b" }} />
         </motion.div>
-        <div>
+        <div className="flex-1">
           <div className="text-xs uppercase tracking-widest text-sky-300/80">AI Console</div>
           <div className="font-bold">ZED-4 · {itemName}</div>
         </div>
+        {!muted && (
+          <button
+            onClick={() => speakText(dialogue)}
+            aria-label="Read ZED-4's line aloud"
+            className="w-9 h-9 inline-flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition"
+          >
+            <Volume2 className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       <AnimatePresence mode="wait">
@@ -65,7 +79,7 @@ export function ZedConsole({
       </AnimatePresence>
 
       <div
-        className="rounded-xl p-4 font-mono text-sm leading-relaxed min-h-[140px] flex-1"
+        className="rounded-xl p-4 font-mono text-sm leading-relaxed min-h-[140px]"
         style={{ background: "rgba(15,23,42,0.6)", border: "1px solid rgba(148,163,184,0.2)" }}
       >
         <span className="text-sky-300">ZED-4 &gt; </span>
@@ -77,6 +91,8 @@ export function ZedConsole({
           style={{ background: "#a5f5de" }}
         />
       </div>
+
+      {children}
     </div>
   );
 }

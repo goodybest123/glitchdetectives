@@ -1,89 +1,59 @@
-## Mission 2: Half Repair Station
+## Mission 2: Voice, TTS & ZED-4 Evaluation
 
-Build a new self-contained mission focused on the concept of **halves = equal parts**, using a custom pointer-driven SVG slider (no `<input type="range">`).
+Bring Mission 2 up to parity with Mission 1 by adding spoken dialogue, an explain-your-reasoning input, and ZED-4 evaluation — while keeping the existing repair-slider mechanic intact.
 
-### Files to create
+### 1. Auto Text-to-Speech for ZED-4
 
-**`src/components/Mission2HalfRepairStation.tsx`** — main component
-- Props: `onExit: () => void`
-- State: `currentIdx`, `splitPct` (0–100), `isDragging`, `isRepaired`, `dialogueKey`
-- Manages the list of broken objects, ZED-4 dialogue per phase (intro → repairing → repaired), and progression with a "Next Object" button that fades in on success.
+In `src/components/Mission2HalfRepairStation.tsx`:
+- Use `useAutoSpeak(dialogue, [dialogueKey])` so every ZED-4 line (intro + success) plays automatically when it changes.
+- Use `useAutoSpeak(item.repairHint, [item.id])` when not yet repaired, so the hint is read aloud on each new object.
+- Replace the current local typewriter-only `ZedConsole` with one that also exposes a "Read Aloud" button (Volume2 icon) calling `speakText(dialogue)`, mirroring Level 1.
+- Add a global mute toggle in the top bar (Volume2/VolumeX) that calls `window.speechSynthesis?.cancel()` and short-circuits future speaks (track `muted` state, pass into a thin wrapper or guard the `useAutoSpeak` text with `muted ? "" : dialogue`).
 
-**`src/components/mission2/DragSlider.tsx`** — reusable pointer-based slider
-- Props: `shape: "bar" | "disc" | "cell"`, `value: number`, `onChange(v)`, `isRepaired`, `locked`
-- Uses `useRef` for the container, `getBoundingClientRect()` re-read on each pointer event (resilient to resize)
-- `onPointerDown` → `setPointerCapture`, `onPointerMove` → compute pct from clientX/clientY relative to ref, `onPointerUp` → release
-- Snapping: if `48 ≤ pct ≤ 52` on pointer up (and during move within ±1.5%), snap to 50, set `isRepaired=true`, fire `onChange(50)`
-- Updates SVG geometry directly via state (single state var → cheap re-render)
-- Thick draggable handle with `GripVertical` / `GripHorizontal` lucide icon, larger hit area, `touch-action: none`, `cursor-ew-resize`/`ns-resize`
+### 2. Explain Input + ZED-4 Evaluation
 
-**`src/components/mission2/shapes.tsx`** — three SVG render functions
-- `EnergyBarShape({ pct, repaired })` — horizontal rectangle, vertical partition line
-- `ReactorDiscShape({ pct, repaired })` — circle split into two arcs by a chord/wedge; pct controls wedge angle
-- `PowerCellShape({ pct, repaired })` — vertical pill / battery, horizontal partition line
-- Warning tint (soft amber) when `!repaired`, neon green/blue glow + pulse when `repaired`
+Reuse the existing `src/components/ExplainInput.tsx` (text area + mic STT + Send button) inside the right-hand console column, shown ONLY after the slider snaps to 50% (`repaired === true`) and BEFORE the "Next Object" button.
 
-**`src/components/mission2/ZedConsole.tsx`** — right-side dark console
-- Dark blue panel, ZED-4 avatar (reuse a lucide `Bot` icon styled), status chip ("Error: Unequal Shares" → "Fixed: Equal Halves"), dialogue with a small typewriter effect (char-by-char via `useEffect` + interval, keyed by dialogue id)
+Flow per object:
+1. Child drags slider → snaps to equal halves → `repaired = true`.
+2. ZED-4 success line speaks. A new prompt appears: *"Tell ZED-4 — why are these two pieces equal halves?"*
+3. `ExplainInput` collects text or voice; on submit, POST to `/api/evaluate` (the existing route used by Level 1).
+4. Show a loading state, then render ZED-4's reply in the console (also auto-spoken). Reply includes `isCorrect` + short feedback per the existing `evaluate-core` contract.
+5. If `isCorrect`: enable the "Next Object" / "Return to Map" button.
+6. If not: keep the input open, ZED-4 asks one short follow-up question; the child can retry.
 
-### Files to edit
+Add new local state:
+- `explainPhase: "idle" | "asking" | "thinking" | "done"`
+- `zedReply: string | null`
+- `attempts: number`
 
-**`src/routes/play.tsx`**
-- Mark Level 2 as `unlocked: true` and `done: 0`
-- Add `Mission2HalfRepairStation` render branch: `if (activeLevel === 2) return <Mission2HalfRepairStation onExit={() => setActiveLevel(null)} />`
+The evaluation request mirrors Level 1's payload (item context: "two halves of a [name] — equal split"). Keep it client-side fetch; no new server route needed.
 
-### Types
+### 3. Voice Commands (Level 1 parity)
 
-```ts
-type BrokenItem = {
-  id: string;
-  name: string;            // "Energy Bar"
-  shape: "bar" | "disc" | "cell";
-  initialPct: number;      // e.g. 20 or 78
-  intro: string;           // ZED's wrong claim
-  repairHint: string;      // "Drag the thick line..."
-  successLine: string;     // ZED's "aha" moment
-};
-```
+- Add the same floating `VoiceCommandToggle` component (radio button bottom-right) and `useVoiceCommands` hook from Level 1.
+- Commands for Mission 2:
+  - "next object" / "next item" → `nextItem()` (only when `repaired && isCorrect`)
+  - "return to map" / "back to map" → `onExit()`
+  - "replay" / "restart" → `restart()`
+  - "read again" → re-speak current dialogue
+- Voice toggle state lives in `Mission2HalfRepairStation` (or lifted into `play.tsx` if cleaner).
 
-4 items: Energy Bar (bar, 22), Reactor Core (disc, 78), Software Disk (disc, 30), Power Cell (cell, 70).
+### 4. Small polish carried from Level 1
 
-### Layout
+- Per-item "Read Aloud" button on the repair hint paragraph.
+- Status chip on console shows "Listening…" while STT is active (already handled by `ExplainInput`).
+- When advancing to a new object, cancel any in-flight speech (`window.speechSynthesis.cancel()`).
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│ ← Map | Mission 2: Half Repair Station    Item 1 / 4    │
-├──────────────────────────────┬──────────────────────────┤
-│  WORKSHOP (white card,       │  ZED-4 CONSOLE           │
-│  blueprint grid bg)          │  (dark blue panel)       │
-│                              │                          │
-│     [ SVG shape +            │   [avatar]               │
-│       draggable line ]       │   status chip            │
-│                              │   typewriter dialogue    │
-│                              │   [Next Object →]        │
-└──────────────────────────────┴──────────────────────────┘
-```
+### Files
 
-- Blueprint grid: subtle CSS `background-image: linear-gradient(...)` in light blue on white
-- Tailwind for layout, brand tokens from `src/styles.css` (`--color-brand-blue`, `--color-brand-yellow`, `--color-brand-mint`, `--color-bg-light`)
-- Framer Motion for: shape entrance, status-chip flip, success glow pulse, Next button fade-in
-
-### Drag behavior (technical details)
-
-- `pointerdown` on handle → `e.currentTarget.setPointerCapture(e.pointerId)`, `setDragging(true)`
-- `pointermove` while dragging → `rect = containerRef.current.getBoundingClientRect()`; for bar/disc-horizontal: `pct = clamp(((e.clientX - rect.left) / rect.width) * 100, 5, 95)`; for cell (vertical): use clientY/rect.height
-- For disc: convert pct → wedge angle (`angle = (pct/100)*360`), render two SVG paths sharing a chord
-- `pointerup` → release capture; if `Math.abs(pct - 50) <= 2`, snap to 50, set repaired, lock
-- All updates flow through one `setSplitPct` call; no rAF needed (React batches and SVG repaint is cheap)
-
-### Success flow per item
-
-1. User snaps to 50 → glow pulse + status flips to "Fixed: Equal Halves" + dialogue swaps to `successLine`
-2. After ~600ms, "Next Object" button fades in (motion `initial={{opacity:0,y:8}} animate={{opacity:1,y:0}}`)
-3. On final item, button becomes "Return to Map" → calls `onExit`
+- **Edit** `src/components/Mission2HalfRepairStation.tsx` — wire `useAutoSpeak`, mute toggle, explain phase, evaluation fetch, voice commands, gate Next button on `isCorrect`.
+- **Edit** `src/components/mission2/ZedConsole.tsx` — add Read-Aloud button + slot for child content (explain input + reply).
+- **No new routes** — reuse `/api/evaluate` and `src/components/ExplainInput.tsx` as-is.
+- **No changes** to slider, shapes, Mission 1, or `evaluate-core.ts`.
 
 ### Out of scope
 
-- No backend / no `/api/evaluate*` calls (Mission 2 is pure manipulation; no free-text reasoning input)
-- No changes to Mission 1 or shared `evaluate-core.ts`
-- No new routes (rendered inside `/play` like Mission 1)
+- New evaluation prompts/tuning (use existing behavior).
+- Backend changes, new DB tables, or new server functions.
+- Mission 3/4 work.
