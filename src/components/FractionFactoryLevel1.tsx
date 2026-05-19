@@ -197,8 +197,21 @@ function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: 
 
 /* ----------------------------- Mission Select ----------------------------- */
 
-function MissionSelectView({ onBack, onStartMission1 }: { onBack: () => void; onStartMission1: () => void }) {
+function MissionSelectView({ voiceOn, onBack, onStartMission1 }: { voiceOn: boolean; onBack: () => void; onStartMission1: () => void }) {
   useAutoSpeak("Mission map online. Choose a mission, detective.");
+  useVoiceCommands(
+    {
+      "start mission": onStartMission1,
+      "first mission": onStartMission1,
+      "mission one": onStartMission1,
+      "enter mission": onStartMission1,
+      "broken partition": onStartMission1,
+      "back to hub": onBack,
+      "back to briefing": onBack,
+      "go back": onBack,
+    },
+    voiceOn,
+  );
   return (
     <>
       <TopBar title="Mission Map" onBack={onBack} backLabel="Briefing" />
