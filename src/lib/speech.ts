@@ -154,3 +154,115 @@ export function useVoiceCommands(
   }, [enabled]);
 }
 
+
+type SpeechRecWithInterim = SpeechRec & {
+  onresult:
+    | ((e: {
+        results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal?: boolean }>;
+        resultIndex: number;
+      }) => void)
+    | null;
+};
+
+/**
+ * Continuous live conversation listener. Keeps the mic open and fires
+ * `onFinalChunk` every time the recognizer commits a final transcript
+ * segment. Pauses while the page is speaking (TTS) so the robot doesn't
+ * hear itself.
+ */
+export function useContinuousSpeech(
+  onFinalChunk: (text: string) => void,
+) {
+  const [listening, setListening] = useState(false);
+  const [interim, setInterim] = useState("");
+  const [supported, setSupported] = useState(false);
+  const recRef = useRef<SpeechRecWithInterim | null>(null);
+  const wantOnRef = useRef(false);
+  const cbRef = useRef(onFinalChunk);
+  cbRef.current = onFinalChunk;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const w = window as unknown as {
+      SpeechRecognition?: new () => SpeechRecWithInterim;
+      webkitSpeechRecognition?: new () => SpeechRecWithInterim;
+    };
+    const SR = w.SpeechRecognition || w.webkitSpeechRecognition;
+    if (!SR) return;
+    setSupported(true);
+    const r = new SR();
+    r.continuous = true;
+    r.interimResults = true;
+    r.lang = "en-US";
+
+    let finalBuffer = "";
+    r.onresult = (e) => {
+      let interimText = "";
+      const results = e.results as ArrayLike<ArrayLike<{ transcript: string }> & { isFinal?: boolean }>;
+      for (let i = e.resultIndex; i < (results as ArrayLike<unknown>).length; i++) {
+        const res = results[i];
+        const t = res[0]?.transcript ?? "";
+        if (res.isFinal) finalBuffer += t + " ";
+        else interimText += t;
+      }
+      setInterim(interimText);
+      if (finalBuffer.trim() && !isSpeaking()) {
+        const text = finalBuffer.trim();
+        finalBuffer = "";
+        setInterim("");
+        cbRef.current(text);
+      }
+    };
+    r.onend = () => {
+      setListening(false);
+      if (wantOnRef.current) {
+        setTimeout(() => {
+          try { r.start(); setListening(true); } catch { /* */ }
+        }, 150);
+      }
+    };
+    r.onerror = () => { /* onend will follow */ };
+
+    recRef.current = r;
+    return () => {
+      wantOnRef.current = false;
+      try { r.abort(); } catch { /* */ }
+      recRef.current = null;
+    };
+  }, []);
+
+  const start = useCallback(() => {
+    const r = recRef.current;
+    if (!r) return;
+    wantOnRef.current = true;
+    try { r.start(); setListening(true); } catch { /* already on */ }
+  }, []);
+
+  const stop = useCallback(() => {
+    const r = recRef.current;
+    wantOnRef.current = false;
+    if (!r) return;
+    try { r.stop(); } catch { /* */ }
+    setListening(false);
+    setInterim("");
+  }, []);
+
+  // Pause mic while TTS is speaking, resume when it stops
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    const id = setInterval(() => {
+      const r = recRef.current;
+      if (!r || !wantOnRef.current) return;
+      if (synth.speaking && listening) {
+        try { r.stop(); } catch { /* */ }
+      } else if (!synth.speaking && !listening) {
+        try { r.start(); setListening(true); } catch { /* */ }
+      }
+    }, 300);
+    return () => clearInterval(id);
+  }, [listening]);
+
+  return { listening, interim, supported, start, stop };
+}
