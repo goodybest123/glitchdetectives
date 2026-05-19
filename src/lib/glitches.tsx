@@ -171,7 +171,60 @@ function PillShape({ vals, repaired }: { vals: number[]; repaired: boolean }) {
   );
 }
 
+export function PizzaQuartersShape({ vals, repaired }: { vals: number[]; repaired: boolean }) {
+  const cx = 100, cy = 100, r = 88;
+  const rad = (deg: number) => ((deg - 90) * Math.PI) / 180;
+  const angles = [0, ...vals.map((v) => (v / 100) * 360), 360];
+  const wedgeColors = repaired
+    ? ["var(--color-success)", "var(--color-energy)", "var(--color-success)", "var(--color-energy)"]
+    : ["var(--color-glitch)", "var(--color-energy)", "var(--color-primary)", "var(--color-success)"];
+  return (
+    <svg viewBox="0 0 200 200" className="w-full h-full">
+      <circle cx={cx} cy={cy} r={r + 8} fill="#b8814a" />
+      <circle cx={cx} cy={cy} r={r} fill="#b9341f" />
+      {angles.slice(0, -1).map((a, i) => {
+        const next = angles[i + 1];
+        const p1 = { x: cx + r * Math.cos(rad(a)), y: cy + r * Math.sin(rad(a)) };
+        const p2 = { x: cx + r * Math.cos(rad(next)), y: cy + r * Math.sin(rad(next)) };
+        const large = next - a > 180 ? 1 : 0;
+        return (
+          <path key={i} d={`M${cx},${cy} L${p1.x},${p1.y} A${r},${r} 0 ${large} 1 ${p2.x},${p2.y} Z`}
+            fill={wedgeColors[i % 4]} opacity={0.85} />
+        );
+      })}
+      {vals.map((v, i) => {
+        const a = (v / 100) * 360;
+        const p = { x: cx + r * Math.cos(rad(a)), y: cy + r * Math.sin(rad(a)) };
+        return <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="var(--color-primary)" strokeWidth={3} strokeLinecap="round" />;
+      })}
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--color-primary)" strokeWidth={3} />
+    </svg>
+  );
+}
+
+export function VerticalStackShape({ vals, repaired }: { vals: number[]; repaired: boolean }) {
+  const positions = [0, ...vals, 100];
+  const colors = repaired
+    ? ["var(--color-success)", "var(--color-energy)", "var(--color-success)", "var(--color-energy)"]
+    : ["var(--color-glitch)", "var(--color-energy)", "var(--color-primary)", "var(--color-success)"];
+  return (
+    <svg viewBox="0 0 160 320" className="w-full h-full">
+      <rect x={20} y={10} width={120} height={300} rx={10} fill="var(--color-card)" stroke="var(--color-primary)" strokeWidth={3} />
+      {positions.slice(0, -1).map((p, i) => {
+        const y = 10 + (p / 100) * 300;
+        const h = ((positions[i + 1] - p) / 100) * 300;
+        return <rect key={i} x={20} y={y} width={120} height={h} fill={colors[i % 4]} opacity={0.85} />;
+      })}
+      {vals.map((v, i) => (
+        <line key={i} x1={20} y1={10 + (v / 100) * 300} x2={140} y2={10 + (v / 100) * 300} stroke="var(--color-primary)" strokeWidth={3} />
+      ))}
+      <rect x={20} y={10} width={120} height={300} rx={10} fill="none" stroke="var(--color-primary)" strokeWidth={3} />
+    </svg>
+  );
+}
+
 // Glitches ------------------------------------------------------------------
+
 
 export const GLITCHES: Glitch[] = [
   {
