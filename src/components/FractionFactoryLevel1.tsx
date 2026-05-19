@@ -651,7 +651,10 @@ function ReasoningBox({
       const childTurnsCount = history.filter((t) => t.role === "child").length;
       const forceAdvance = mode === "wrong" && childTurnsCount >= 2;
       try {
-        const endpoint = mode === "explain" ? "/api/evaluate-reasoning" : "/api/evaluate-detect-reasoning";
+        const endpoint =
+          mode === "explain" ? "/api/evaluate-reasoning"
+          : mode === "wrong" ? "/api/evaluate-wrong-reasoning"
+          : "/api/evaluate-detect-reasoning";
         const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
