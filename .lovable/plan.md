@@ -1,21 +1,33 @@
 ## Goal
-Add a transition step before the Repair mini-game where ZED-4 asks the child for help, with an "Enter the Repair Room" button that reveals the repair UI.
+Add two non-halves shapes to Mission 1 so kids practice repairing thirds and quarters (not only halves).
+
+## Current state
+Mission 1's lineup is halves-only: pizza, battery, fuelrod. The `GLITCHES` library already defines two non-halves shapes with full render + briefing/detect/repair copy:
+- `chocolate` — chocolate bar split into thirds (2 dividers, target 33.33 / 66.66)
+- `solar` — solar panel split into quarters (2 dividers, target 50 / 50 on a grid)
 
 ## Change
-Insert a new phase `repairPrompt` between the current detect/explainWrong success and `repair` in `src/components/FractionFactoryLevel1.tsx`.
+Add both to Mission 1's shape rotation in `src/components/FractionFactoryLevel1.tsx`:
 
-### Flow update
-- `detect` → on correct answer → `repairPrompt` (was `repair`)
-- `explainWrong` → on auto-concede after 2 turns → `repairPrompt` (was `repair`)
-- `repairPrompt` → user clicks "Enter the Repair Room" → `repair`
+```ts
+const MISSION_1_SHAPES: Glitch[] = [
+  GLITCHES.find((g) => g.id === "pizza")!,
+  GLITCHES.find((g) => g.id === "chocolate")!,   // new — thirds
+  GLITCHES.find((g) => g.id === "battery")!,
+  GLITCHES.find((g) => g.id === "solar")!,       // new — quarters
+  GLITCHES.find((g) => g.id === "fuelrod")!,
+];
+```
 
-### `repairPrompt` UI
-- **Left panel**: keep the broken shape on display (same as `detect`), no slider yet.
-- **Right panel (ZED bubble)**: short plea, e.g. "You spotted the glitch! I can't fix this alone — will you help me repair it?" (auto-TTS).
-- **Action**: single yellow CTA button `Enter the Repair Room` with `Wrench` icon (lucide-react) → `setPhase("repair")`.
-- Back arrow remains available (only `repair` itself hides it).
+Ordering interleaves halves and non-halves so difficulty escalates gently (half → thirds → half → quarters → half).
 
-### Files
-- `src/components/FractionFactoryLevel1.tsx` — add `"repairPrompt"` to `Phase`, add a new ZED line per shape (fallback to a generic string if shape doesn't define one), branch in the render switch, update `onCorrectDetect` and the explainWrong concede handler to set `repairPrompt` instead of `repair`.
+## Why this works without other code changes
+- The mission runner already iterates `MISSION_1_SHAPES` generically and reads `parts`, `initialVals`, `target`, `tolerance`, and `render` from each glitch.
+- The repair slider UI already supports multi-divider shapes (`chocolate` uses 2 sliders, `solar` uses 2 sliders) since `initialVals.length` drives the slider count.
+- All ZED dialogue lines (briefing / investigate / detect / explainWrong / repair / success) already exist on both glitches.
+- The "0/N Missions Completed" / per-mission progress counter reads from `MISSION_1_SHAPES.length`, so it updates automatically (3 → 5).
 
-No backend, no styling system, no other view changes.
+## Files
+- `src/components/FractionFactoryLevel1.tsx` — extend `MISSION_1_SHAPES` array (one edit).
+
+No backend, no styling, no new components.
