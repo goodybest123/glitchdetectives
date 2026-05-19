@@ -15,6 +15,8 @@ export type Glitch = {
   initialVals: number[]; // 0-100, divider positions
   target: number[]; // correct positions
   tolerance: number;
+  mechanic?: "snap" | "range"; // default: range
+  orientation?: "horizontal" | "vertical"; // for snap mechanic
   render: (
     vals: number[],
     isRepaired: boolean,
