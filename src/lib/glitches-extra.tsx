@@ -1,10 +1,11 @@
 import type { Glitch } from "@/lib/glitches";
-import { GLITCHES } from "@/lib/glitches";
+import { GLITCHES, PizzaQuartersShape, VerticalStackShape } from "@/lib/glitches";
 import {
   EnergyBarShape,
   ReactorDiscShape,
   PowerCellShape,
 } from "@/components/mission2/shapes";
+
 
 const pizza = GLITCHES.find((g) => g.id === "pizza")!;
 const chocolate = GLITCHES.find((g) => g.id === "chocolate")!;
