@@ -77,11 +77,18 @@ export const Route = createFileRoute("/api/evaluate")({
           });
 
           return Response.json(experimental_output);
-        } catch (err) {
+        } catch (err: unknown) {
           console.error("evaluate error", err);
+          const status = (err as { statusCode?: number; status?: number })?.statusCode
+            ?? (err as { status?: number })?.status;
+          const feedbackText = status === 429
+            ? "Whoa — my brain is busy talking to lots of other kids right now. Give me a few seconds and tell me again, teacher!"
+            : status === 402
+              ? "Uh oh — my learning credits ran out. Please ask a grown-up to top up the AI credits so I can keep learning!"
+              : "Thank you for talking to me, teacher! My ears glitched for a second. Can you say that one more time?";
           return new Response(JSON.stringify({
             isCorrect: false,
-            feedbackText: "Thank you for talking to me, teacher! My audio sensors got a little fuzzy. Can you say that one more time?",
+            feedbackText,
             reasoningScore: 1,
           }), { status: 200, headers: { "Content-Type": "application/json" } });
         }
