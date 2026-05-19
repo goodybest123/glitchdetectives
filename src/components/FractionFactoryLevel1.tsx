@@ -371,13 +371,29 @@ function Mission1View({ voiceOn, onBack, onFinish, onExitToHub }: { voiceOn: boo
             </span>
           </div>
           <div className="flex-1 flex items-center justify-center min-h-[280px] mt-4">
-            <motion.div
-              key={`${shape.id}-${repaired}`}
-              initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-              className="w-full max-w-md aspect-square"
-            >
-              {shape.render(vals, repaired)}
-            </motion.div>
+            {phase === "briefing" ? (
+              <motion.div
+                key="target-area"
+                initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                className="w-full max-w-md aspect-square flex flex-col items-center justify-center"
+              >
+                <div
+                  className="w-56 h-56 sm:w-64 sm:h-64 rounded-full border-4 border-dashed flex items-center justify-center"
+                  style={{ borderColor: "color-mix(in oklab, var(--color-brand-blue) 30%, white)" }}
+                >
+                  <ScanSearch className="w-12 h-12 opacity-40" style={{ color: BLUE }} />
+                </div>
+                <p className="label-eyebrow mt-4" style={{ color: BLUE }}>Target Area</p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={`${shape.id}-${repaired}`}
+                initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                className="w-full max-w-md aspect-square"
+              >
+                {shape.render(vals, repaired)}
+              </motion.div>
+            )}
           </div>
 
           {phase === "repair" && (
