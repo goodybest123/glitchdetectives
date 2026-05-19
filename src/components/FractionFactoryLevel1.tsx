@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, ArrowRight, AlertTriangle, Volume2, Lock, Bot, Mic, MicOff,
@@ -6,7 +6,7 @@ import {
   Radio,
 } from "lucide-react";
 import { GLITCHES, type Glitch } from "@/lib/glitches";
-import { speakText, useAutoSpeak, useSpeechToText, useVoiceCommands } from "@/lib/speech";
+import { speakText, useAutoSpeak, useContinuousSpeech, useVoiceCommands } from "@/lib/speech";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
