@@ -504,15 +504,9 @@ function PhaseControls(props: {
             <AlertTriangle className="w-4 h-4" /> No, there is a glitch!
           </button>
         </div>
-        <ReasoningBox
-          key={"investigate-" + props.shapeId}
-          mode="wrong"
-          shapeContext={`${props.shapeName} (${props.shapeId})`}
-          seedZedLine={props.robotLine}
-          autoStart
-          onCorrect={props.onCorrectDetect}
-          secondaryAction={null}
-        />
+        <p className="text-xs font-mono text-center" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
+          Look closely — are the parts really equal?
+        </p>
       </div>
     );
   }
@@ -619,7 +613,8 @@ function ReasoningBox({
       const childTurnsCount = history.filter((t) => t.role === "child").length;
       const forceAdvance = mode === "wrong" && childTurnsCount >= 2;
       try {
-        const res = await fetch("/api/evaluate", {
+        const endpoint = mode === "explain" ? "/api/evaluate-reasoning" : "/api/evaluate-detect-reasoning";
+        const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -778,6 +773,26 @@ function ReasoningBox({
           )}
         </div>
       )}
+
+      {/* Try Again — clears last exchange so the child can rephrase */}
+      {!pending && !correctRef.current && turns.some((t) => t.role === "child") &&
+        turns[turns.length - 1]?.role === "zed" && (
+          <button
+            onClick={() => {
+              setTurns((prev) => {
+                // Drop trailing zed + preceding child to undo the last exchange
+                const next = [...prev];
+                if (next[next.length - 1]?.role === "zed") next.pop();
+                if (next[next.length - 1]?.role === "child") next.pop();
+                return next;
+              });
+            }}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border hover:bg-slate-50 transition"
+            style={{ color: BLUE, borderColor: "color-mix(in oklab, var(--color-brand-blue) 25%, white)" }}
+          >
+            <RefreshCcw className="w-3.5 h-3.5" /> Try Again
+          </button>
+        )}
 
       {/* Typed fallback */}
       <div className="flex items-center gap-2">

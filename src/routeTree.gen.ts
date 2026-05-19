@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiTranscribeRouteImport } from './routes/api/transcribe'
+import { Route as ApiEvaluateReasoningRouteImport } from './routes/api/evaluate-reasoning'
+import { Route as ApiEvaluateDetectReasoningRouteImport } from './routes/api/evaluate-detect-reasoning'
 import { Route as ApiEvaluateRouteImport } from './routes/api/evaluate'
 
 const PlayRoute = PlayRouteImport.update({
@@ -23,6 +26,22 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiTranscribeRoute = ApiTranscribeRouteImport.update({
+  id: '/api/transcribe',
+  path: '/api/transcribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiEvaluateReasoningRoute = ApiEvaluateReasoningRouteImport.update({
+  id: '/api/evaluate-reasoning',
+  path: '/api/evaluate-reasoning',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiEvaluateDetectReasoningRoute =
+  ApiEvaluateDetectReasoningRouteImport.update({
+    id: '/api/evaluate-detect-reasoning',
+    path: '/api/evaluate-detect-reasoning',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiEvaluateRoute = ApiEvaluateRouteImport.update({
   id: '/api/evaluate',
   path: '/api/evaluate',
@@ -33,30 +52,61 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/play': typeof PlayRoute
   '/api/evaluate': typeof ApiEvaluateRoute
+  '/api/evaluate-detect-reasoning': typeof ApiEvaluateDetectReasoningRoute
+  '/api/evaluate-reasoning': typeof ApiEvaluateReasoningRoute
+  '/api/transcribe': typeof ApiTranscribeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/play': typeof PlayRoute
   '/api/evaluate': typeof ApiEvaluateRoute
+  '/api/evaluate-detect-reasoning': typeof ApiEvaluateDetectReasoningRoute
+  '/api/evaluate-reasoning': typeof ApiEvaluateReasoningRoute
+  '/api/transcribe': typeof ApiTranscribeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/play': typeof PlayRoute
   '/api/evaluate': typeof ApiEvaluateRoute
+  '/api/evaluate-detect-reasoning': typeof ApiEvaluateDetectReasoningRoute
+  '/api/evaluate-reasoning': typeof ApiEvaluateReasoningRoute
+  '/api/transcribe': typeof ApiTranscribeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/play' | '/api/evaluate'
+  fullPaths:
+    | '/'
+    | '/play'
+    | '/api/evaluate'
+    | '/api/evaluate-detect-reasoning'
+    | '/api/evaluate-reasoning'
+    | '/api/transcribe'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/play' | '/api/evaluate'
-  id: '__root__' | '/' | '/play' | '/api/evaluate'
+  to:
+    | '/'
+    | '/play'
+    | '/api/evaluate'
+    | '/api/evaluate-detect-reasoning'
+    | '/api/evaluate-reasoning'
+    | '/api/transcribe'
+  id:
+    | '__root__'
+    | '/'
+    | '/play'
+    | '/api/evaluate'
+    | '/api/evaluate-detect-reasoning'
+    | '/api/evaluate-reasoning'
+    | '/api/transcribe'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PlayRoute: typeof PlayRoute
   ApiEvaluateRoute: typeof ApiEvaluateRoute
+  ApiEvaluateDetectReasoningRoute: typeof ApiEvaluateDetectReasoningRoute
+  ApiEvaluateReasoningRoute: typeof ApiEvaluateReasoningRoute
+  ApiTranscribeRoute: typeof ApiTranscribeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,6 +125,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/transcribe': {
+      id: '/api/transcribe'
+      path: '/api/transcribe'
+      fullPath: '/api/transcribe'
+      preLoaderRoute: typeof ApiTranscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/evaluate-reasoning': {
+      id: '/api/evaluate-reasoning'
+      path: '/api/evaluate-reasoning'
+      fullPath: '/api/evaluate-reasoning'
+      preLoaderRoute: typeof ApiEvaluateReasoningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/evaluate-detect-reasoning': {
+      id: '/api/evaluate-detect-reasoning'
+      path: '/api/evaluate-detect-reasoning'
+      fullPath: '/api/evaluate-detect-reasoning'
+      preLoaderRoute: typeof ApiEvaluateDetectReasoningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/evaluate': {
       id: '/api/evaluate'
       path: '/api/evaluate'
@@ -89,6 +160,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PlayRoute: PlayRoute,
   ApiEvaluateRoute: ApiEvaluateRoute,
+  ApiEvaluateDetectReasoningRoute: ApiEvaluateDetectReasoningRoute,
+  ApiEvaluateReasoningRoute: ApiEvaluateReasoningRoute,
+  ApiTranscribeRoute: ApiTranscribeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -2,16 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import "@tanstack/react-start";
 import { EvaluateBodySchema, runEvaluate, evaluateErrorResponse } from "@/lib/evaluate-core";
 
-// Legacy endpoint — kept as a thin shim so older clients keep working.
-// New code should call /api/evaluate-detect-reasoning or /api/evaluate-reasoning.
-export const Route = createFileRoute("/api/evaluate")({
+export const Route = createFileRoute("/api/evaluate-detect-reasoning")({
   server: {
     handlers: {
       POST: async ({ request }: { request: Request }) => {
         try {
           const json = await request.json();
           const input = EvaluateBodySchema.parse(json);
-          const out = await runEvaluate(input, { strictTeach: input.mode === "explain" });
+          const out = await runEvaluate(input);
           return Response.json(out);
         } catch (err) {
           return evaluateErrorResponse(err);
