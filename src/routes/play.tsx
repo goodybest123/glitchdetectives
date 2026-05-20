@@ -6,6 +6,7 @@ import {
   Layers, Scissors, Ruler, Wrench, Calculator, FlaskConical,
 } from "lucide-react";
 import FractionFactoryLevel1 from "@/components/FractionFactoryLevel1";
+import { useLevelProgress } from "@/lib/mission-progress";
 
 
 
@@ -54,6 +55,11 @@ function Play() {
 }
 
 function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
+  const level1 = useLevelProgress(1);
+  const levels = LEVELS.map((l) =>
+    l.n === 1 ? { ...l, done: level1.completedCount } : l,
+  );
+
   return (
     <main className="min-h-screen" style={{ background: BG_LIGHT }}>
       {/* Hero header */}
@@ -110,7 +116,7 @@ function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
         />
 
         <ul className="space-y-12 md:space-y-20">
-          {LEVELS.map((lvl, i) => {
+          {levels.map((lvl, i) => {
             const reverse = i % 2 === 1;
             return (
               <li key={lvl.n} className="relative">
