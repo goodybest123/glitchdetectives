@@ -29,7 +29,9 @@ type Phase =
   | "repairPrompt"
   | "repair"
   | "teach"
+  | "label"
   | "shapeDone"
+
   | "missionDone";
 
 const INTRO_TEXT =
