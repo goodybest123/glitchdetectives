@@ -287,31 +287,37 @@ function MissionSelectView({ voiceOn, onBack, onStartMission, isUnlocked, isComp
         <ul className="mt-8 grid sm:grid-cols-2 gap-5">
           {MISSIONS.map((m) => {
             const Icon = m.Icon;
-            const onClick = m.unlocked ? () => onStartMission(m.id) : undefined;
+            const unlocked = isUnlocked(m.id);
+            const complete = isComplete(m.id);
+            const onClick = unlocked ? () => onStartMission(m.id) : undefined;
             return (
               <motion.li
                 key={m.id}
-                whileHover={m.unlocked ? { y: -3 } : undefined}
-                className={`relative rounded-2xl border bg-white p-5 transition ${m.unlocked ? "shadow-sm hover:shadow-md cursor-pointer" : "opacity-60"}`}
-                style={{ borderColor: m.unlocked ? "color-mix(in oklab, var(--color-brand-yellow) 70%, white)" : "#e5e7eb" }}
+                whileHover={unlocked ? { y: -3 } : undefined}
+                className={`relative rounded-2xl border bg-white p-5 transition ${unlocked ? "shadow-sm hover:shadow-md cursor-pointer" : "opacity-60"}`}
+                style={{ borderColor: unlocked ? "color-mix(in oklab, var(--color-brand-yellow) 70%, white)" : "#e5e7eb" }}
                 onClick={onClick}
               >
                 <div className="flex items-center gap-4">
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: m.unlocked ? BLUE : "#94a3b8" }}
+                    style={{ background: unlocked ? BLUE : "#94a3b8" }}
                   >
-                    <Icon className="w-6 h-6" style={{ color: m.unlocked ? YELLOW : "white" }} />
+                    <Icon className="w-6 h-6" style={{ color: unlocked ? YELLOW : "white" }} />
                   </div>
                   <div className="min-w-0">
                     <p className="label-eyebrow text-gray-500">Mission {m.id}</p>
                     <h3 className="text-lg font-bold truncate" style={{ color: BLUE }}>{m.name}</h3>
                   </div>
-                  {!m.unlocked && (
+                  {complete ? (
+                    <span className="ml-auto inline-flex items-center gap-1 text-xs font-mono px-2 py-1 rounded-full" style={{ background: "color-mix(in oklab, var(--color-brand-mint) 50%, white)", color: BLUE }}>
+                      <CheckCircle2 className="w-3 h-3" /> Done
+                    </span>
+                  ) : !unlocked ? (
                     <span className="ml-auto inline-flex items-center gap-1 text-xs font-mono px-2 py-1 rounded-full bg-gray-100 text-gray-500">
                       <Lock className="w-3 h-3" /> Locked
                     </span>
-                  )}
+                  ) : null}
                 </div>
                 <p className="mt-4 text-sm" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
                   <span className="font-semibold" style={{ color: BLUE }}>Focus: </span>{m.focus}
