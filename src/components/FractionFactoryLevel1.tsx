@@ -812,9 +812,15 @@ function ReasoningBox({
           }),
         });
         const data = await res.json();
+        // Local guard: stop vague one-word answers from auto-passing.
+        const overrideFalse =
+          mode !== "wrong" && data.isCorrect && shouldOverrideToFalse(childText);
+        const effectiveCorrect = !overrideFalse && (data.isCorrect || forceAdvance);
         const replyText = forceAdvance
           ? "Okay teacher, I think I see it now! Help me fix it — drag the slider so the parts are really equal."
-          : data.feedbackText;
+          : overrideFalse
+            ? "Thanks teacher! Can you say a bit more? Try using a size word like equal, same, or fair."
+            : data.feedbackText;
         setTurns((prev) => [...prev, { role: "zed", text: replyText }]);
         lastZedRef.current = replyText;
         const resume = () => {
@@ -822,12 +828,15 @@ function ReasoningBox({
             setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
           }
         };
-        if (data.isCorrect || forceAdvance) {
+        if (effectiveCorrect) {
           correctRef.current = true;
           speakText(replyText, () => setTimeout(onCorrect, 600));
         } else {
+          setFailCount((c) => c + 1);
+          setHintDismissed(false);
           speakText(replyText, resume);
         }
+
       } catch {
         if (forceAdvance) {
           const concede = "Okay teacher, I think I see it now! Help me fix it — drag the slider so the parts are really equal.";
