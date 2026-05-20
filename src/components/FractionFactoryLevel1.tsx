@@ -333,7 +333,8 @@ function MissionSelectView({ voiceOn, onBack, onStartMission, isUnlocked, isComp
 
 /* ---------------------------- Mission Gameplay ---------------------------- */
 
-function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub }: { mission: MissionDef; voiceOn: boolean; onBack: () => void; onFinish: () => void; onExitToHub: () => void }) {
+function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissionComplete }: { mission: MissionDef; voiceOn: boolean; onBack: () => void; onFinish: () => void; onExitToHub: () => void; onMissionComplete?: (stats: { reasoningScore: number; repairAttempts: number; hintsUsed: number }) => void }) {
+  const firedCompleteRef = useRef(false);
   const shapes = mission.glitches;
   const [shapeIdx, setShapeIdx] = useState(0);
   const [phase, setPhase] = useState<Phase>("briefing");
@@ -353,6 +354,13 @@ function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub }: { miss
     setRepaired(false);
     setRepairMsg(null);
   }, [mission.id, shapes]);
+
+  useEffect(() => {
+    if (phase === "missionDone" && !firedCompleteRef.current) {
+      firedCompleteRef.current = true;
+      onMissionComplete?.({ reasoningScore: 3, repairAttempts: shapes.length, hintsUsed: 0 });
+    }
+  }, [phase, shapes.length, onMissionComplete]);
 
   const goToShape = (idx: number) => {
     const s = shapes[idx];
