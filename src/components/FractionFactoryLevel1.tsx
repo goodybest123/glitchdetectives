@@ -192,7 +192,7 @@ function IntroView({ voiceOn, onBack, onContinue, completedCount, totalMissions 
           </div>
           <div className="flex items-center gap-2">
             <span className="label-eyebrow px-2.5 py-1 rounded-full" style={{ background: YELLOW, color: BLUE }}>
-              0 / 4 Missions Completed
+              {completedCount} / {totalMissions} Missions Completed
             </span>
             <button
               onClick={() => { setMuted((m) => !m); if (!muted) window.speechSynthesis?.cancel(); }}
