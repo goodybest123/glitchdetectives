@@ -167,7 +167,7 @@ function TopBar({ title, onBack, backLabel = "Hub" }: { title: string; onBack: (
 
 /* --------------------------------- Intro ---------------------------------- */
 
-function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: () => void; onContinue: () => void }) {
+function IntroView({ voiceOn, onBack, onContinue, completedCount, totalMissions }: { voiceOn: boolean; onBack: () => void; onContinue: () => void; completedCount: number; totalMissions: number }) {
   useAutoSpeak(`Level 1: Fraction Foundations. ${INTRO_TEXT}`);
   useVoiceCommands(
     {
