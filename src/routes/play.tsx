@@ -55,6 +55,11 @@ function Play() {
 }
 
 function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
+  const level1 = useLevelProgress(1);
+  const levels = LEVELS.map((l) =>
+    l.n === 1 ? { ...l, done: level1.completedCount } : l,
+  );
+
   return (
     <main className="min-h-screen" style={{ background: BG_LIGHT }}>
       {/* Hero header */}
