@@ -574,7 +574,11 @@ function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissio
               onCorrectDetect={() => setPhase("repairPrompt")}
               onEnterRepair={() => setPhase("repair")}
               onRetryWrong={() => setPhase("investigate")}
-              onCorrectTeach={() => setPhase("shapeDone")}
+              onCorrectTeach={() => setPhase(mission.id === 4 ? "label" : "shapeDone")}
+              onLabelCorrect={() => setPhase("shapeDone")}
+              mission={mission}
+              shape={shape}
+
               onNextShape={() => {
                 if (isLast) setPhase("missionDone");
                 else goToShape(shapeIdx + 1);
