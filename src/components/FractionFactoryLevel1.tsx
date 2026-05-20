@@ -772,9 +772,12 @@ function ReasoningBox({
   );
   const [pending, setPending] = useState(false);
   const [typed, setTyped] = useState("");
+  const [failCount, setFailCount] = useState(0);
+  const [hintDismissed, setHintDismissed] = useState(false);
   const correctRef = useRef(false);
   const logRef = useRef<HTMLDivElement>(null);
   const lastZedRef = useRef<string>(seedZedLine ?? "");
+
 
   // Defined later, but referenced inside sendToZed via refs
   const startRef = useRef<() => void>(() => {});
