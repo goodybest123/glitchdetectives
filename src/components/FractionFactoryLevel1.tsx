@@ -610,7 +610,11 @@ function PhaseControls(props: {
   onCorrectTeach: () => void;
   onNextShape: () => void;
   onFinishMission: () => void;
+  onLabelCorrect: () => void;
+  mission: MissionDef;
+  shape: Glitch;
   conceptSymbol?: { label: string; symbol: string };
+
 }) {
 
   const { phase } = props;
