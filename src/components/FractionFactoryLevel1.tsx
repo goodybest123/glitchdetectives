@@ -9,6 +9,7 @@ import { GLITCHES, type Glitch } from "@/lib/glitches";
 import { MISSION_2_GLITCHES, MISSION_3_GLITCHES, MISSION_4_GLITCHES } from "@/lib/glitches-extra";
 import { DragSlider } from "@/components/mission2/DragSlider";
 import { speakText, useAutoSpeak, useContinuousSpeech, useVoiceCommands } from "@/lib/speech";
+import { useLevelProgress } from "@/lib/mission-progress";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
@@ -44,16 +45,17 @@ type MissionDef = {
   id: number;
   name: string;
   focus: string;
-  unlocked: boolean;
   Icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   glitches: Glitch[];
+  /** Concept for symbolic notation reveal at end of mission. */
+  conceptSymbol?: { label: string; symbol: string };
 };
 
 const MISSIONS: MissionDef[] = [
-  { id: 1, name: "Broken Partition Scanner", focus: "Detect unequal parts", unlocked: true, Icon: Zap, glitches: MISSION_1_SHAPES },
-  { id: 2, name: "Half Repair Station", focus: "Calibrate true halves", unlocked: true, Icon: Wrench, glitches: MISSION_2_GLITCHES },
-  { id: 3, name: "Quarter Core Reactor", focus: "Build equal fourths", unlocked: true, Icon: Atom, glitches: MISSION_3_GLITCHES },
-  { id: 4, name: "Share Builder Challenge", focus: "Mix halves & quarters", unlocked: true, Icon: Share2, glitches: MISSION_4_GLITCHES },
+  { id: 1, name: "Broken Partition Scanner", focus: "Detect unequal parts", Icon: Zap, glitches: MISSION_1_SHAPES },
+  { id: 2, name: "Half Repair Station", focus: "Calibrate true halves", Icon: Wrench, glitches: MISSION_2_GLITCHES, conceptSymbol: { label: "one-half", symbol: "1/2" } },
+  { id: 3, name: "Quarter Core Reactor", focus: "Build equal fourths", Icon: Atom, glitches: MISSION_3_GLITCHES, conceptSymbol: { label: "one-quarter", symbol: "1/4" } },
+  { id: 4, name: "Share Builder Challenge", focus: "Mix halves & quarters", Icon: Share2, glitches: MISSION_4_GLITCHES, conceptSymbol: { label: "halves & quarters", symbol: "1/2 · 1/4" } },
 ];
 
 export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: () => void }) {
@@ -61,8 +63,10 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
   const [voiceOn, setVoiceOn] = useState(false);
   const [activeMissionId, setActiveMissionId] = useState<number>(1);
   const activeMission = MISSIONS.find((m) => m.id === activeMissionId) ?? MISSIONS[0];
+  const progress = useLevelProgress(1);
 
   const startMission = (id: number) => {
+    if (!progress.isMissionUnlocked(id)) return;
     setActiveMissionId(id);
     setView("mission-play");
   };
@@ -72,7 +76,13 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
       <AnimatePresence mode="wait">
         {view === "intro" && (
           <motion.div key="intro" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <IntroView voiceOn={voiceOn} onBack={onExitToHub} onContinue={() => setView("mission-select")} />
+            <IntroView
+              voiceOn={voiceOn}
+              onBack={onExitToHub}
+              onContinue={() => setView("mission-select")}
+              completedCount={progress.completedCount}
+              totalMissions={MISSIONS.length}
+            />
           </motion.div>
         )}
         {view === "mission-select" && (
@@ -81,6 +91,8 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
               voiceOn={voiceOn}
               onBack={() => setView("intro")}
               onStartMission={startMission}
+              isUnlocked={progress.isMissionUnlocked}
+              isComplete={progress.isMissionComplete}
             />
           </motion.div>
         )}
@@ -92,6 +104,7 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
               onBack={() => setView("mission-select")}
               onFinish={() => setView("mission-select")}
               onExitToHub={onExitToHub}
+              onMissionComplete={(stats) => progress.markComplete(activeMission.id, stats)}
             />
           </motion.div>
         )}
@@ -154,7 +167,7 @@ function TopBar({ title, onBack, backLabel = "Hub" }: { title: string; onBack: (
 
 /* --------------------------------- Intro ---------------------------------- */
 
-function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: () => void; onContinue: () => void }) {
+function IntroView({ voiceOn, onBack, onContinue, completedCount, totalMissions }: { voiceOn: boolean; onBack: () => void; onContinue: () => void; completedCount: number; totalMissions: number }) {
   useAutoSpeak(`Level 1: Fraction Foundations. ${INTRO_TEXT}`);
   useVoiceCommands(
     {
@@ -179,7 +192,7 @@ function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: 
           </div>
           <div className="flex items-center gap-2">
             <span className="label-eyebrow px-2.5 py-1 rounded-full" style={{ background: YELLOW, color: BLUE }}>
-              0 / 4 Missions Completed
+              {completedCount} / {totalMissions} Missions Completed
             </span>
             <button
               onClick={() => { setMuted((m) => !m); if (!muted) window.speechSynthesis?.cancel(); }}
@@ -241,7 +254,7 @@ function IntroView({ voiceOn, onBack, onContinue }: { voiceOn: boolean; onBack: 
 
 /* ----------------------------- Mission Select ----------------------------- */
 
-function MissionSelectView({ voiceOn, onBack, onStartMission }: { voiceOn: boolean; onBack: () => void; onStartMission: (id: number) => void }) {
+function MissionSelectView({ voiceOn, onBack, onStartMission, isUnlocked, isComplete }: { voiceOn: boolean; onBack: () => void; onStartMission: (id: number) => void; isUnlocked: (id: number) => boolean; isComplete: (id: number) => boolean }) {
   useAutoSpeak("Mission map online. Choose a mission, detective.");
   useVoiceCommands(
     {
@@ -274,31 +287,37 @@ function MissionSelectView({ voiceOn, onBack, onStartMission }: { voiceOn: boole
         <ul className="mt-8 grid sm:grid-cols-2 gap-5">
           {MISSIONS.map((m) => {
             const Icon = m.Icon;
-            const onClick = m.unlocked ? () => onStartMission(m.id) : undefined;
+            const unlocked = isUnlocked(m.id);
+            const complete = isComplete(m.id);
+            const onClick = unlocked ? () => onStartMission(m.id) : undefined;
             return (
               <motion.li
                 key={m.id}
-                whileHover={m.unlocked ? { y: -3 } : undefined}
-                className={`relative rounded-2xl border bg-white p-5 transition ${m.unlocked ? "shadow-sm hover:shadow-md cursor-pointer" : "opacity-60"}`}
-                style={{ borderColor: m.unlocked ? "color-mix(in oklab, var(--color-brand-yellow) 70%, white)" : "#e5e7eb" }}
+                whileHover={unlocked ? { y: -3 } : undefined}
+                className={`relative rounded-2xl border bg-white p-5 transition ${unlocked ? "shadow-sm hover:shadow-md cursor-pointer" : "opacity-60"}`}
+                style={{ borderColor: unlocked ? "color-mix(in oklab, var(--color-brand-yellow) 70%, white)" : "#e5e7eb" }}
                 onClick={onClick}
               >
                 <div className="flex items-center gap-4">
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: m.unlocked ? BLUE : "#94a3b8" }}
+                    style={{ background: unlocked ? BLUE : "#94a3b8" }}
                   >
-                    <Icon className="w-6 h-6" style={{ color: m.unlocked ? YELLOW : "white" }} />
+                    <Icon className="w-6 h-6" style={{ color: unlocked ? YELLOW : "white" }} />
                   </div>
                   <div className="min-w-0">
                     <p className="label-eyebrow text-gray-500">Mission {m.id}</p>
                     <h3 className="text-lg font-bold truncate" style={{ color: BLUE }}>{m.name}</h3>
                   </div>
-                  {!m.unlocked && (
+                  {complete ? (
+                    <span className="ml-auto inline-flex items-center gap-1 text-xs font-mono px-2 py-1 rounded-full" style={{ background: "color-mix(in oklab, var(--color-brand-mint) 50%, white)", color: BLUE }}>
+                      <CheckCircle2 className="w-3 h-3" /> Done
+                    </span>
+                  ) : !unlocked ? (
                     <span className="ml-auto inline-flex items-center gap-1 text-xs font-mono px-2 py-1 rounded-full bg-gray-100 text-gray-500">
                       <Lock className="w-3 h-3" /> Locked
                     </span>
-                  )}
+                  ) : null}
                 </div>
                 <p className="mt-4 text-sm" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
                   <span className="font-semibold" style={{ color: BLUE }}>Focus: </span>{m.focus}
