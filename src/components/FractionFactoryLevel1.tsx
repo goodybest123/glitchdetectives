@@ -10,6 +10,8 @@ import { MISSION_2_GLITCHES, MISSION_3_GLITCHES, MISSION_4_GLITCHES } from "@/li
 import { DragSlider } from "@/components/mission2/DragSlider";
 import { speakText, useAutoSpeak, useContinuousSpeech, useVoiceCommands } from "@/lib/speech";
 import { useLevelProgress } from "@/lib/mission-progress";
+import { shouldOverrideToFalse, hintForAttempt } from "@/lib/reasoning-evaluator";
+
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
@@ -770,9 +772,12 @@ function ReasoningBox({
   );
   const [pending, setPending] = useState(false);
   const [typed, setTyped] = useState("");
+  const [failCount, setFailCount] = useState(0);
+  const [hintDismissed, setHintDismissed] = useState(false);
   const correctRef = useRef(false);
   const logRef = useRef<HTMLDivElement>(null);
   const lastZedRef = useRef<string>(seedZedLine ?? "");
+
 
   // Defined later, but referenced inside sendToZed via refs
   const startRef = useRef<() => void>(() => {});
@@ -807,9 +812,15 @@ function ReasoningBox({
           }),
         });
         const data = await res.json();
+        // Local guard: stop vague one-word answers from auto-passing.
+        const overrideFalse =
+          mode !== "wrong" && data.isCorrect && shouldOverrideToFalse(childText);
+        const effectiveCorrect = !overrideFalse && (data.isCorrect || forceAdvance);
         const replyText = forceAdvance
           ? "Okay teacher, I think I see it now! Help me fix it — drag the slider so the parts are really equal."
-          : data.feedbackText;
+          : overrideFalse
+            ? "Thanks teacher! Can you say a bit more? Try using a size word like equal, same, or fair."
+            : data.feedbackText;
         setTurns((prev) => [...prev, { role: "zed", text: replyText }]);
         lastZedRef.current = replyText;
         const resume = () => {
@@ -817,12 +828,15 @@ function ReasoningBox({
             setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
           }
         };
-        if (data.isCorrect || forceAdvance) {
+        if (effectiveCorrect) {
           correctRef.current = true;
           speakText(replyText, () => setTimeout(onCorrect, 600));
         } else {
+          setFailCount((c) => c + 1);
+          setHintDismissed(false);
           speakText(replyText, resume);
         }
+
       } catch {
         if (forceAdvance) {
           const concede = "Okay teacher, I think I see it now! Help me fix it — drag the slider so the parts are really equal.";
@@ -955,6 +969,36 @@ function ReasoningBox({
           )}
         </div>
       )}
+
+      {/* Adaptive hint — surfaces gentle nudges after repeated misses */}
+      {!correctRef.current && !pending && !hintDismissed && failCount >= 1 && (() => {
+        const hint = hintForAttempt(failCount, mode);
+        if (!hint) return null;
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
+            className="flex items-start gap-2 rounded-xl border px-3 py-2 text-sm"
+            style={{
+              background: "color-mix(in oklab, var(--color-brand-mint) 18%, white)",
+              borderColor: "color-mix(in oklab, var(--color-brand-blue) 18%, white)",
+              color: BLUE,
+            }}
+            role="status"
+            aria-live="polite"
+          >
+            <Sparkles className="w-4 h-4 mt-0.5 shrink-0" style={{ color: YELLOW }} />
+            <span className="flex-1 leading-snug"><span className="label-eyebrow block opacity-70">Hint {failCount}</span>{hint}</span>
+            <button
+              onClick={() => setHintDismissed(true)}
+              aria-label="Dismiss hint"
+              className="text-xs font-mono opacity-60 hover:opacity-100"
+            >
+              ✕
+            </button>
+          </motion.div>
+        );
+      })()}
+
 
       {/* Try Again — clears last exchange so the child can rephrase */}
       {!pending && !correctRef.current && turns.some((t) => t.role === "child") &&
