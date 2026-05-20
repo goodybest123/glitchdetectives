@@ -699,7 +699,18 @@ function PhaseControls(props: {
     );
   }
 
+  if (phase === "label") {
+    const correctSymbol = props.shape.parts === 2 ? "1/2" : props.shape.parts === 4 ? "1/4" : null;
+    if (!correctSymbol) {
+      // Safety fallback — shouldn't happen in M4 data, but never block progress.
+      props.onLabelCorrect();
+      return null;
+    }
+    return <LabelStep correctSymbol={correctSymbol} onCorrect={props.onLabelCorrect} />;
+  }
+
   if (phase === "shapeDone") {
+
     return (
       <motion.div initial={{ scale: 0.96 }} animate={{ scale: [0.96, 1.04, 1] }} className="flex flex-col items-center gap-4">
         <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: YELLOW }}>
