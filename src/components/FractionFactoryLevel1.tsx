@@ -29,7 +29,9 @@ type Phase =
   | "repairPrompt"
   | "repair"
   | "teach"
+  | "label"
   | "shapeDone"
+
   | "missionDone";
 
 const INTRO_TEXT =
@@ -409,7 +411,11 @@ function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissio
       case "repairPrompt": return "You spotted the glitch! I can't fix this alone — will you help me repair it?";
       case "repair": return shape.robotRepair;
       case "teach": return shape.robotExplain;
+      case "label": return shape.parts === 2
+        ? "Now help me name it, teacher! Which symbol means one-half?"
+        : "Now help me name it! Which symbol means one-quarter?";
       case "shapeDone": return shape.robotSuccess;
+
       case "missionDone": return "Mission complete! You taught me so much about fair shares!";
       default: return "";
     }
@@ -572,7 +578,11 @@ function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissio
               onCorrectDetect={() => setPhase("repairPrompt")}
               onEnterRepair={() => setPhase("repair")}
               onRetryWrong={() => setPhase("investigate")}
-              onCorrectTeach={() => setPhase("shapeDone")}
+              onCorrectTeach={() => setPhase(mission.id === 4 ? "label" : "shapeDone")}
+              onLabelCorrect={() => setPhase("shapeDone")}
+              mission={mission}
+              shape={shape}
+
               onNextShape={() => {
                 if (isLast) setPhase("missionDone");
                 else goToShape(shapeIdx + 1);
@@ -604,7 +614,11 @@ function PhaseControls(props: {
   onCorrectTeach: () => void;
   onNextShape: () => void;
   onFinishMission: () => void;
+  onLabelCorrect: () => void;
+  mission: MissionDef;
+  shape: Glitch;
   conceptSymbol?: { label: string; symbol: string };
+
 }) {
 
   const { phase } = props;
@@ -689,7 +703,18 @@ function PhaseControls(props: {
     );
   }
 
+  if (phase === "label") {
+    const correctSymbol = props.shape.parts === 2 ? "1/2" : props.shape.parts === 4 ? "1/4" : null;
+    if (!correctSymbol) {
+      // Safety fallback — shouldn't happen in M4 data, but never block progress.
+      props.onLabelCorrect();
+      return null;
+    }
+    return <LabelStep correctSymbol={correctSymbol} onCorrect={props.onLabelCorrect} />;
+  }
+
   if (phase === "shapeDone") {
+
     return (
       <motion.div initial={{ scale: 0.96 }} animate={{ scale: [0.96, 1.04, 1] }} className="flex flex-col items-center gap-4">
         <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: YELLOW }}>
@@ -748,7 +773,92 @@ function PhaseControls(props: {
   return null;
 }
 
+/* --------------------------- Symbolic Label Step -------------------------- */
+
+function LabelStep({ correctSymbol, onCorrect }: { correctSymbol: "1/2" | "1/4"; onCorrect: () => void }) {
+  const [picked, setPicked] = useState<string | null>(null);
+  const [wrongTry, setWrongTry] = useState(false);
+  const options = ["1/2", "1/4", "1/3"] as const;
+
+  const handlePick = (sym: string) => {
+    if (picked === correctSymbol) return;
+    if (sym === correctSymbol) {
+      setPicked(sym);
+      setWrongTry(false);
+      setTimeout(onCorrect, 900);
+    } else {
+      setPicked(sym);
+      setWrongTry(true);
+      setTimeout(() => setPicked(null), 700);
+    }
+  };
+
+  const label = correctSymbol === "1/2" ? "one-half" : "one-quarter";
+
+  return (
+    <div className="space-y-4">
+      <div
+        className="rounded-xl border px-3 py-2.5 text-sm"
+        style={{
+          background: "color-mix(in oklab, var(--color-brand-yellow) 22%, white)",
+          borderColor: "color-mix(in oklab, var(--color-brand-blue) 15%, white)",
+          color: BLUE,
+        }}
+      >
+        <span className="label-eyebrow block opacity-70">Name the fraction</span>
+        Tap the symbol that names what you just repaired ({label}).
+      </div>
+
+      <div className="grid grid-cols-3 gap-3">
+        {options.map((sym) => {
+          const isPicked = picked === sym;
+          const isCorrect = picked === correctSymbol && sym === correctSymbol;
+          const isWrong = wrongTry && isPicked && sym !== correctSymbol;
+          return (
+            <motion.button
+              key={sym}
+              onClick={() => handlePick(sym)}
+              whileTap={{ scale: 0.94 }}
+              animate={isWrong ? { x: [-4, 4, -3, 3, 0] } : isCorrect ? { scale: [1, 1.08, 1] } : {}}
+              transition={{ duration: 0.35 }}
+              className="aspect-square rounded-2xl border-2 font-mono text-3xl font-bold flex items-center justify-center transition-colors min-h-[88px]"
+              style={{
+                background: isCorrect
+                  ? YELLOW
+                  : isWrong
+                    ? "color-mix(in oklab, #ef4444 18%, white)"
+                    : "white",
+                borderColor: isCorrect
+                  ? BLUE
+                  : isWrong
+                    ? "#ef4444"
+                    : "color-mix(in oklab, var(--color-brand-blue) 20%, white)",
+                color: BLUE,
+              }}
+              aria-label={`Pick ${sym}`}
+            >
+              {sym}
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {wrongTry && (
+        <p className="text-xs text-center font-mono" style={{ color: "#7a1d1d" }}>
+          Not quite — count the equal parts and try again.
+        </p>
+      )}
+      {picked === correctSymbol && (
+        <p className="text-sm text-center font-semibold" style={{ color: BLUE }}>
+          Yes! {correctSymbol} means {label}.
+        </p>
+      )}
+    </div>
+  );
+}
+
 /* ----------------------------- Reasoning Box ------------------------------ */
+
 
 type Turn = { role: "child" | "zed"; text: string };
 
