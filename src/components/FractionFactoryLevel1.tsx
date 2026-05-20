@@ -9,6 +9,7 @@ import { GLITCHES, type Glitch } from "@/lib/glitches";
 import { MISSION_2_GLITCHES, MISSION_3_GLITCHES, MISSION_4_GLITCHES } from "@/lib/glitches-extra";
 import { DragSlider } from "@/components/mission2/DragSlider";
 import { speakText, useAutoSpeak, useContinuousSpeech, useVoiceCommands } from "@/lib/speech";
+import { useLevelProgress } from "@/lib/mission-progress";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
