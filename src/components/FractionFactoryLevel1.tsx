@@ -563,6 +563,7 @@ function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissio
               shapeName={shape.name}
               robotLine={robotLine}
               isLast={isLast}
+              conceptSymbol={mission.conceptSymbol}
               onStartScanner={() => setPhase("investigate")}
               onAnswerYes={() => setPhase("explainWrong")}
               onAnswerNo={() => setPhase("detect")}
@@ -576,6 +577,7 @@ function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissio
               }}
               onFinishMission={onFinish}
             />
+
           </div>
         </div>
       </section>
@@ -600,7 +602,9 @@ function PhaseControls(props: {
   onCorrectTeach: () => void;
   onNextShape: () => void;
   onFinishMission: () => void;
+  conceptSymbol?: { label: string; symbol: string };
 }) {
+
   const { phase } = props;
 
   if (phase === "briefing") {
@@ -709,6 +713,24 @@ function PhaseControls(props: {
         <p className="text-sm" style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, white)" }}>
           You repaired every shape and taught ZED-4 what fair sharing means.
         </p>
+        {props.conceptSymbol && (
+          <div
+            className="rounded-xl border px-4 py-3 mt-1"
+            style={{
+              background: "color-mix(in oklab, var(--color-brand-yellow) 22%, white)",
+              borderColor: "color-mix(in oklab, var(--color-brand-blue) 15%, white)",
+              color: BLUE,
+            }}
+          >
+            <p className="text-xs font-mono uppercase tracking-widest opacity-70">New symbol unlocked</p>
+            <p className="font-bold text-lg mt-1">
+              {props.conceptSymbol.label}{" "}
+              <span className="font-mono px-2 py-0.5 rounded-md" style={{ background: "white" }}>
+                {props.conceptSymbol.symbol}
+              </span>
+            </p>
+          </div>
+        )}
         <button
           onClick={props.onFinishMission}
           className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition-transform hover:scale-[1.02]"
@@ -719,6 +741,7 @@ function PhaseControls(props: {
       </div>
     );
   }
+
 
   return null;
 }
