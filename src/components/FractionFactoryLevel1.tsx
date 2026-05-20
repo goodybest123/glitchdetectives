@@ -602,7 +602,9 @@ function PhaseControls(props: {
   onCorrectTeach: () => void;
   onNextShape: () => void;
   onFinishMission: () => void;
+  conceptSymbol?: { label: string; symbol: string };
 }) {
+
   const { phase } = props;
 
   if (phase === "briefing") {
