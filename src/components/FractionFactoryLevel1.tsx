@@ -411,7 +411,11 @@ function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissio
       case "repairPrompt": return "You spotted the glitch! I can't fix this alone — will you help me repair it?";
       case "repair": return shape.robotRepair;
       case "teach": return shape.robotExplain;
+      case "label": return shape.parts === 2
+        ? "Now help me name it, teacher! Which symbol means one-half?"
+        : "Now help me name it! Which symbol means one-quarter?";
       case "shapeDone": return shape.robotSuccess;
+
       case "missionDone": return "Mission complete! You taught me so much about fair shares!";
       default: return "";
     }
