@@ -355,6 +355,13 @@ function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissio
     setRepairMsg(null);
   }, [mission.id, shapes]);
 
+  useEffect(() => {
+    if (phase === "missionDone" && !firedCompleteRef.current) {
+      firedCompleteRef.current = true;
+      onMissionComplete?.({ reasoningScore: 3, repairAttempts: shapes.length, hintsUsed: 0 });
+    }
+  }, [phase, shapes.length, onMissionComplete]);
+
   const goToShape = (idx: number) => {
     const s = shapes[idx];
     setShapeIdx(idx);
