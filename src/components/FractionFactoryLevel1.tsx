@@ -63,8 +63,10 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
   const [voiceOn, setVoiceOn] = useState(false);
   const [activeMissionId, setActiveMissionId] = useState<number>(1);
   const activeMission = MISSIONS.find((m) => m.id === activeMissionId) ?? MISSIONS[0];
+  const progress = useLevelProgress(1);
 
   const startMission = (id: number) => {
+    if (!progress.isMissionUnlocked(id)) return;
     setActiveMissionId(id);
     setView("mission-play");
   };
@@ -74,7 +76,13 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
       <AnimatePresence mode="wait">
         {view === "intro" && (
           <motion.div key="intro" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <IntroView voiceOn={voiceOn} onBack={onExitToHub} onContinue={() => setView("mission-select")} />
+            <IntroView
+              voiceOn={voiceOn}
+              onBack={onExitToHub}
+              onContinue={() => setView("mission-select")}
+              completedCount={progress.completedCount}
+              totalMissions={MISSIONS.length}
+            />
           </motion.div>
         )}
         {view === "mission-select" && (
@@ -83,6 +91,8 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
               voiceOn={voiceOn}
               onBack={() => setView("intro")}
               onStartMission={startMission}
+              isUnlocked={progress.isMissionUnlocked}
+              isComplete={progress.isMissionComplete}
             />
           </motion.div>
         )}
@@ -94,6 +104,7 @@ export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: ()
               onBack={() => setView("mission-select")}
               onFinish={() => setView("mission-select")}
               onExitToHub={onExitToHub}
+              onMissionComplete={(stats) => progress.markComplete(activeMission.id, stats)}
             />
           </motion.div>
         )}
