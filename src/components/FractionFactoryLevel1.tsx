@@ -773,7 +773,92 @@ function PhaseControls(props: {
   return null;
 }
 
+/* --------------------------- Symbolic Label Step -------------------------- */
+
+function LabelStep({ correctSymbol, onCorrect }: { correctSymbol: "1/2" | "1/4"; onCorrect: () => void }) {
+  const [picked, setPicked] = useState<string | null>(null);
+  const [wrongTry, setWrongTry] = useState(false);
+  const options = ["1/2", "1/4", "1/3"] as const;
+
+  const handlePick = (sym: string) => {
+    if (picked === correctSymbol) return;
+    if (sym === correctSymbol) {
+      setPicked(sym);
+      setWrongTry(false);
+      setTimeout(onCorrect, 900);
+    } else {
+      setPicked(sym);
+      setWrongTry(true);
+      setTimeout(() => setPicked(null), 700);
+    }
+  };
+
+  const label = correctSymbol === "1/2" ? "one-half" : "one-quarter";
+
+  return (
+    <div className="space-y-4">
+      <div
+        className="rounded-xl border px-3 py-2.5 text-sm"
+        style={{
+          background: "color-mix(in oklab, var(--color-brand-yellow) 22%, white)",
+          borderColor: "color-mix(in oklab, var(--color-brand-blue) 15%, white)",
+          color: BLUE,
+        }}
+      >
+        <span className="label-eyebrow block opacity-70">Name the fraction</span>
+        Tap the symbol that names what you just repaired ({label}).
+      </div>
+
+      <div className="grid grid-cols-3 gap-3">
+        {options.map((sym) => {
+          const isPicked = picked === sym;
+          const isCorrect = picked === correctSymbol && sym === correctSymbol;
+          const isWrong = wrongTry && isPicked && sym !== correctSymbol;
+          return (
+            <motion.button
+              key={sym}
+              onClick={() => handlePick(sym)}
+              whileTap={{ scale: 0.94 }}
+              animate={isWrong ? { x: [-4, 4, -3, 3, 0] } : isCorrect ? { scale: [1, 1.08, 1] } : {}}
+              transition={{ duration: 0.35 }}
+              className="aspect-square rounded-2xl border-2 font-mono text-3xl font-bold flex items-center justify-center transition-colors min-h-[88px]"
+              style={{
+                background: isCorrect
+                  ? YELLOW
+                  : isWrong
+                    ? "color-mix(in oklab, #ef4444 18%, white)"
+                    : "white",
+                borderColor: isCorrect
+                  ? BLUE
+                  : isWrong
+                    ? "#ef4444"
+                    : "color-mix(in oklab, var(--color-brand-blue) 20%, white)",
+                color: BLUE,
+              }}
+              aria-label={`Pick ${sym}`}
+            >
+              {sym}
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {wrongTry && (
+        <p className="text-xs text-center font-mono" style={{ color: "#7a1d1d" }}>
+          Not quite — count the equal parts and try again.
+        </p>
+      )}
+      {picked === correctSymbol && (
+        <p className="text-sm text-center font-semibold" style={{ color: BLUE }}>
+          Yes! {correctSymbol} means {label}.
+        </p>
+      )}
+    </div>
+  );
+}
+
 /* ----------------------------- Reasoning Box ------------------------------ */
+
 
 type Turn = { role: "child" | "zed"; text: string };
 
