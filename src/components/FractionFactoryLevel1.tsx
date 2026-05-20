@@ -254,7 +254,7 @@ function IntroView({ voiceOn, onBack, onContinue, completedCount, totalMissions 
 
 /* ----------------------------- Mission Select ----------------------------- */
 
-function MissionSelectView({ voiceOn, onBack, onStartMission }: { voiceOn: boolean; onBack: () => void; onStartMission: (id: number) => void }) {
+function MissionSelectView({ voiceOn, onBack, onStartMission, isUnlocked, isComplete }: { voiceOn: boolean; onBack: () => void; onStartMission: (id: number) => void; isUnlocked: (id: number) => boolean; isComplete: (id: number) => boolean }) {
   useAutoSpeak("Mission map online. Choose a mission, detective.");
   useVoiceCommands(
     {
