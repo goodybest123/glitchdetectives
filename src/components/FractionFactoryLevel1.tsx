@@ -10,6 +10,8 @@ import { MISSION_2_GLITCHES, MISSION_3_GLITCHES, MISSION_4_GLITCHES } from "@/li
 import { DragSlider } from "@/components/mission2/DragSlider";
 import { speakText, useAutoSpeak, useContinuousSpeech, useVoiceCommands } from "@/lib/speech";
 import { useLevelProgress } from "@/lib/mission-progress";
+import { shouldOverrideToFalse, hintForAttempt } from "@/lib/reasoning-evaluator";
+
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
