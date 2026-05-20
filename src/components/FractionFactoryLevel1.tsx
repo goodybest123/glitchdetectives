@@ -45,16 +45,17 @@ type MissionDef = {
   id: number;
   name: string;
   focus: string;
-  unlocked: boolean;
   Icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   glitches: Glitch[];
+  /** Concept for symbolic notation reveal at end of mission. */
+  conceptSymbol?: { label: string; symbol: string };
 };
 
 const MISSIONS: MissionDef[] = [
-  { id: 1, name: "Broken Partition Scanner", focus: "Detect unequal parts", unlocked: true, Icon: Zap, glitches: MISSION_1_SHAPES },
-  { id: 2, name: "Half Repair Station", focus: "Calibrate true halves", unlocked: true, Icon: Wrench, glitches: MISSION_2_GLITCHES },
-  { id: 3, name: "Quarter Core Reactor", focus: "Build equal fourths", unlocked: true, Icon: Atom, glitches: MISSION_3_GLITCHES },
-  { id: 4, name: "Share Builder Challenge", focus: "Mix halves & quarters", unlocked: true, Icon: Share2, glitches: MISSION_4_GLITCHES },
+  { id: 1, name: "Broken Partition Scanner", focus: "Detect unequal parts", Icon: Zap, glitches: MISSION_1_SHAPES },
+  { id: 2, name: "Half Repair Station", focus: "Calibrate true halves", Icon: Wrench, glitches: MISSION_2_GLITCHES, conceptSymbol: { label: "one-half", symbol: "1/2" } },
+  { id: 3, name: "Quarter Core Reactor", focus: "Build equal fourths", Icon: Atom, glitches: MISSION_3_GLITCHES, conceptSymbol: { label: "one-quarter", symbol: "1/4" } },
+  { id: 4, name: "Share Builder Challenge", focus: "Mix halves & quarters", Icon: Share2, glitches: MISSION_4_GLITCHES, conceptSymbol: { label: "halves & quarters", symbol: "1/2 · 1/4" } },
 ];
 
 export default function FractionFactoryLevel1({ onExitToHub }: { onExitToHub: () => void }) {
