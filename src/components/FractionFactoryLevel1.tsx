@@ -333,7 +333,8 @@ function MissionSelectView({ voiceOn, onBack, onStartMission, isUnlocked, isComp
 
 /* ---------------------------- Mission Gameplay ---------------------------- */
 
-function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub }: { mission: MissionDef; voiceOn: boolean; onBack: () => void; onFinish: () => void; onExitToHub: () => void }) {
+function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissionComplete }: { mission: MissionDef; voiceOn: boolean; onBack: () => void; onFinish: () => void; onExitToHub: () => void; onMissionComplete?: (stats: { reasoningScore: number; repairAttempts: number; hintsUsed: number }) => void }) {
+  const firedCompleteRef = useRef(false);
   const shapes = mission.glitches;
   const [shapeIdx, setShapeIdx] = useState(0);
   const [phase, setPhase] = useState<Phase>("briefing");
