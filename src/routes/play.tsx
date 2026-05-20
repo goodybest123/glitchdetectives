@@ -6,6 +6,7 @@ import {
   Layers, Scissors, Ruler, Wrench, Calculator, FlaskConical,
 } from "lucide-react";
 import FractionFactoryLevel1 from "@/components/FractionFactoryLevel1";
+import { useLevelProgress } from "@/lib/mission-progress";
 
 
 
