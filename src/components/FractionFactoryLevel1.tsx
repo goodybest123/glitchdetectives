@@ -563,6 +563,7 @@ function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissio
               shapeName={shape.name}
               robotLine={robotLine}
               isLast={isLast}
+              conceptSymbol={mission.conceptSymbol}
               onStartScanner={() => setPhase("investigate")}
               onAnswerYes={() => setPhase("explainWrong")}
               onAnswerNo={() => setPhase("detect")}
@@ -576,6 +577,7 @@ function MissionView({ mission, voiceOn, onBack, onFinish, onExitToHub, onMissio
               }}
               onFinishMission={onFinish}
             />
+
           </div>
         </div>
       </section>
