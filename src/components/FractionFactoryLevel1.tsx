@@ -955,7 +955,7 @@ function ReasoningBox({
         lastZedRef.current = fallback;
         speakText(fallback, () => {
           if (!correctRef.current && autoStart) {
-            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
+            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 900);
           }
         });
       } finally {
