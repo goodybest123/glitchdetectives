@@ -1,5 +1,5 @@
-import { ArrowLeft, Settings2, Volume2, VolumeX } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import { VoiceSettingsButton } from "./VoiceSettingsButton";
 
 /**
  * Persistent top bar across all Level 2 screens.
@@ -24,7 +24,6 @@ export function L2TopBar({
   backLabel?: string;
   rightSlot?: React.ReactNode;
 }) {
-  const [muted, setMuted] = useState(false);
   return (
     <header
       className="border-b"
@@ -63,24 +62,7 @@ export function L2TopBar({
             </span>
           )}
           {rightSlot}
-          <button
-            type="button"
-            onClick={() => {
-              setMuted((m) => !m);
-              if (!muted) window.speechSynthesis?.cancel();
-            }}
-            aria-label={muted ? "Unmute audio" : "Mute audio"}
-            className="w-9 h-9 inline-flex items-center justify-center rounded-full text-cyan-100 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
-          >
-            {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </button>
-          <button
-            type="button"
-            aria-label="Settings"
-            className="w-9 h-9 inline-flex items-center justify-center rounded-full text-cyan-100 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
-          >
-            <Settings2 className="w-4 h-4" />
-          </button>
+          <VoiceSettingsButton />
         </div>
       </div>
     </header>

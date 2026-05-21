@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { getVoiceSettings } from "./voice-settings";
 
 let speakingFlag = false;
 export function isSpeaking() {
@@ -6,17 +7,24 @@ export function isSpeaking() {
   return speakingFlag || !!window.speechSynthesis?.speaking;
 }
 
-export function speakText(text: string, onEnd?: () => void) {
+/**
+ * Speak text using the user's global voice settings. Respects mute.
+ * Pass `force: true` to bypass the autoSpeak gate (e.g. tap-to-replay).
+ */
+export function speakText(text: string, onEnd?: () => void, opts?: { force?: boolean }) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) {
     onEnd?.();
     return;
   }
+  const s = getVoiceSettings();
+  if (s.muted) { onEnd?.(); return; }
+  if (!opts?.force && !s.autoSpeak) { onEnd?.(); return; }
   try {
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.95;
-    u.pitch = 1.1;
-    u.volume = 1;
+    u.rate = s.rate;
+    u.pitch = s.pitch;
+    u.volume = s.volume;
     const voices = window.speechSynthesis.getVoices();
     const preferred =
       voices.find((v) => /Google US English/i.test(v.name)) ||
@@ -36,6 +44,8 @@ export function speakText(text: string, onEnd?: () => void) {
 export function useAutoSpeak(text: string, deps: unknown[] = []) {
   useEffect(() => {
     if (!text) return;
+    const s = getVoiceSettings();
+    if (s.muted || !s.autoSpeak) return;
     const t = setTimeout(() => speakText(text), 150);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
