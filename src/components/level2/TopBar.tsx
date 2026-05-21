@@ -1,5 +1,5 @@
-import { ArrowLeft, Settings2, Volume2, VolumeX } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import { VoiceSettingsButton } from "./VoiceSettingsButton";
 
 /**
  * Persistent top bar across all Level 2 screens.
