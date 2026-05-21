@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight, Atom, CheckCircle2, FlaskConical, Layers,
-  Lock, RefreshCcw, Scan, ScanLine, Sparkles,
+  Lock, Scan, Sparkles,
 } from "lucide-react";
 import { useLevelProgress } from "@/lib/mission-progress";
 import { LEVEL_2_MISSIONS } from "@/lib/level2/missions";
 import type { CaseDef, CasePhase, FractionPair, Mission2Def } from "@/lib/level2/types";
+import { useAutoSpeak } from "@/lib/speech";
 import { InvestigationLayout } from "./level2/InvestigationLayout";
 import { L2TopBar } from "./level2/TopBar";
 import { CaseFile } from "./level2/CaseFile";
