@@ -49,6 +49,7 @@ export type Mission2Def = {
 
 export type CasePhase =
   | "briefing"
+  | "glitch-check"
   | "detect"
   | "repair"
   | "explain"
