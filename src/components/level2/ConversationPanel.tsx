@@ -110,7 +110,7 @@ export function ConversationPanel({
           speakText(reply, () =>
             setTimeout(
               () => onComplete({ reasoningScore: score, explanation: childText.trim() }),
-              600,
+              1200,
             ),
           );
           return;
@@ -135,7 +135,7 @@ export function ConversationPanel({
         lastZedRef.current = reply;
         speakText(reply, () => {
           if (!lockedRef.current) {
-            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
+            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 900);
           }
         });
       } catch {
@@ -153,10 +153,19 @@ export function ConversationPanel({
   const handleFinal = useCallback(
     (t: string) => {
       if (lockedRef.current || pending) return;
+      // Drop a transcript only if it's near-identical to ZED's last line
+      // (mic picked up TTS). Require ~90% char overlap so kids re-using
+      // ZED's words aren't dropped.
       const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
       const last = norm(lastZedRef.current);
       const got = norm(t);
-      if (last && got && (last.startsWith(got.slice(0, 24)) || got.startsWith(last.slice(0, 24)))) return;
+      if (last && got && got.length >= 12) {
+        const shorter = Math.min(last.length, got.length);
+        const longer = Math.max(last.length, got.length);
+        if (longer > 0 && shorter / longer >= 0.9 && last.includes(got.slice(0, shorter))) {
+          return;
+        }
+      }
       void sendToZed(t);
     },
     [sendToZed, pending],
