@@ -40,7 +40,7 @@ type Level = {
 
 const LEVELS: Level[] = [
   { n: 1, grade: 1, title: "Fraction Foundations", desc: "Spot unequal parts, repair halves, build quarters, and master mixed shares.", focus: "Halves & quarters", missions: 4, done: 0, unlocked: true, Icon: Layers },
-  { n: 2, grade: 2, title: "Fraction Discovery Zone", desc: "Children begin understanding how fractions are written and interpreted.", focus: "Numerators, denominators, unit fractions", missions: 15, done: 0, unlocked: false, Icon: Scissors },
+  { n: 2, grade: 2, title: "Fraction Discovery Zone", desc: "Children begin understanding how fractions are written and interpreted.", focus: "Numerators, denominators, unit fractions", missions: 4, done: 0, unlocked: false, Icon: Scissors },
   { n: 3, grade: 3, title: "Number Line & Equivalence Sector", desc: "Plot fractions on number lines and uncover equivalent forms.", focus: "Equivalence on the number line", missions: 5, done: 0, unlocked: false, Icon: Ruler },
   { n: 4, grade: 4, title: "Fraction Repair Systems", desc: "Diagnose and fix broken addition and subtraction of fractions.", focus: "Add & subtract like fractions", missions: 6, done: 0, unlocked: false, Icon: Wrench },
   { n: 5, grade: 5, title: "Advanced Fraction Operations", desc: "Multiply, divide, and reason with mixed numbers.", focus: "Multiply, divide, mixed numbers", missions: 6, done: 0, unlocked: false, Icon: Calculator },
@@ -52,14 +52,22 @@ function Play() {
   if (activeLevel === 1) {
     return <FractionFactoryLevel1 onExitToHub={() => setActiveLevel(null)} />;
   }
+  if (activeLevel === 2) {
+    return <FractionFactoryLevel2 onExitToHub={() => setActiveLevel(null)} />;
+  }
   return <LevelSelect onStart={(n) => setActiveLevel(n)} />;
 }
 
 function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
   const level1 = useLevelProgress(1);
-  const levels = LEVELS.map((l) =>
-    l.n === 1 ? { ...l, done: level1.completedCount } : l,
-  );
+  const level2 = useLevelProgress(2);
+  const level2Unlocked = level1.completedCount >= LEVELS[0].missions;
+  const levels = LEVELS.map((l) => {
+    if (l.n === 1) return { ...l, done: level1.completedCount };
+    if (l.n === 2) return { ...l, done: level2.completedCount, unlocked: level2Unlocked };
+    return l;
+  });
+
 
   return (
     <main className="min-h-screen" style={{ background: BG_LIGHT }}>
