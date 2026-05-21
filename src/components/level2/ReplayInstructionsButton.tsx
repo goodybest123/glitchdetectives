@@ -17,7 +17,7 @@ export function ReplayInstructionsButton({
   return (
     <button
       type="button"
-      onClick={() => speakText(text)}
+      onClick={() => speakText(text, undefined, { force: true })}
       aria-label={label}
       className={`inline-flex items-center gap-2 rounded-full border font-semibold transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 ${
         compact ? "px-3 py-1.5 text-xs" : "px-4 py-2 text-sm"
