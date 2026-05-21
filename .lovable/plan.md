@@ -1,151 +1,103 @@
 
-# Level 2 — Fraction Discovery Zone
+# Voice-first reasoning + investigation polish
 
-Build a brand-new, mechanically distinct Level 2 with a persistent two-pane "investigation workspace" layout. Reuse the data + progression patterns from Level 1, but introduce a fresh mission engine — none of Level 1's slider/partition mechanics are reused.
+Two big shifts:
+1. **Investigation feel** — remove all "mismatch detected" warnings, hint trays, and exposed truth scaffolding. The child investigates and decides.
+2. **Conversation feel** — ZED-4 auto-speaks every prompt and every reply, the mic is always one tap away, and a real back-and-forth LLM chat decides when the child "gets it." After 3 misses the robot gently teaches.
 
-## 1. Information architecture
+## Scope
 
-```text
-src/components/FractionFactoryLevel2.tsx        # Level shell (intro → mission-select → mission-play)
-src/components/level2/
-  InvestigationLayout.tsx                       # Persistent left "case file" + dynamic right workspace
-  CaseFile.tsx                                  # Left pane: claim, visual, glitch markers, evidence trail
-  TopBar.tsx                                    # Progress, replay-instructions, audio, hints, settings
-  DialogueDock.tsx                              # Bottom ZED-4 dialogue with captions
-  ReplayInstructionsButton.tsx                  # 🔊 "Read Instructions Again"
-  HintTray.tsx                                  # Adaptive 3-step hint ladder
-  EvidenceTrail.tsx                             # Persists glitch + repair + explanation side-by-side
-  fractions/FractionVisual.tsx                  # Holographic shaded shape (bar / circle / grid)
-  fractions/FractionNotation.tsx                # Numerator / denominator chip with corrupted-state styling
-  fractions/SetVisual.tsx                       # Grouped objects (crystals, gears, batteries)
-  workspaces/
-    NumeratorScanner.tsx                        # Mission 1 interaction
-    DenominatorRepair.tsx                       # Mission 2 interaction
-    UnitFractionSorter.tsx                      # Mission 3 interaction
-    CollectionVault.tsx                         # Mission 4 interaction
-src/lib/level2/
-  missions.ts                                   # Data-driven mission + case definitions
-  types.ts                                      # Shared types (Case, MissionDef, RepairResult)
-  evaluator.ts                                  # Local pre-checks + adaptive hint copy per concept
-```
+- Level 2 (full rework of voice + reasoning + visuals + tone).
+- Level 1 (swap the keyword/hint evaluator for the same LLM-conversational reasoning panel used in Level 2). All other Level 1 mechanics stay.
 
-Routing: `src/routes/play.tsx` already gates Level 2 by `useLevelProgress(1).completedCount === 4`. Unlock Level 2, set `unlocked: true` when Level 1 is complete, and mount `<FractionFactoryLevel2 />` when `activeLevel === 2`.
+## Changes
 
-## 2. Persistent investigation workspace (the critical UX rule)
+### 1. Strip "investigation spoilers" (Level 2)
 
-A single `<InvestigationLayout>` is used by all 4 missions. The glitch never disappears — phase changes only swap the right pane.
+- **`CaseFile.tsx`**: remove the red `AlertTriangle` "warning" pill entirely. The case file just shows the visual + ZED's spoken claim — no "Numerator mismatch detected" banner.
+- **`missions.ts`**: drop the `warning` strings from the case data (or keep field optional and unused). Soften `zedBriefing` lines so ZED sounds unsure ("I think this is one-fourth… but I'm not sure, teacher"), never accusatory.
+- **`types.ts`**: make `warning` optional and `hints` optional (still typed but unused).
+- **`HintTray.tsx`**: stop rendering it in `ExplainPanel`. Keep the file but remove the import/usage. No hints surface to the child during reasoning.
 
-```text
-┌───────────────────────────────────────────────────────────────┐
-│ TopBar: M2 ▸ Mission 1/4  •  🔊 Replay  •  💡 Hint  •  ⚙   │
-├──────────────────────────────┬────────────────────────────────┤
-│ LEFT: Case File (persistent) │ RIGHT: Workspace (phase)       │
-│  • CASE FILE #204            │  Detect → Repair → Explain →   │
-│  • ZED-4 claim chip          │   Feedback                     │
-│  • Visual fraction model     │  (interaction tools change)    │
-│  • Corrupted notation badge  │                                │
-│  • System warnings           │  Evidence Trail (after repair):│
-│  • Evidence pins added       │   ❌ Glitch  ✅ Repair  💬 You │
-│    as the child works        │                                │
-├──────────────────────────────┴────────────────────────────────┤
-│ DialogueDock: ZED-4 line + captions + voice replay            │
-└───────────────────────────────────────────────────────────────┘
-```
+### 2. Clearer fractions + familiar objects
 
-State machine (per case): `briefing → detect → repair → explain → feedback → caseDone`. The left pane re-renders on every phase but never unmounts; on `repair` success, the original glitch is shown as a smaller "before" card so the child can compare original ↔ repaired ↔ their explanation.
+- **`FractionVisual.tsx`**: bump partition stroke width (bar/circle/grid dividers) ~3× and use a high-contrast color (white at higher alpha + subtle outer glow) so divisions read instantly. Add a subtle "lit" glow on selected parts.
+- **New visual kind: `pizza`** in `FractionVisualSpec` (a circle styled as a pizza with crust + simple toppings on lit slices). Use it for Mission 1 case 1 and Mission 2 case 1 so the child starts with something familiar before abstract bars/grids.
+- Mission 2 case 1 already uses a circle — rebrand a couple of opening cases as pizza/chocolate-bar for warmth.
 
-## 3. Mission designs (mechanically distinct)
+### 3. Auto voice guidance at every step (Level 2)
 
-Each mission ships 4 cases. All share the layout above; only the right workspace changes.
+- Add `useAutoSpeak(zedLine)` (already exists in `src/lib/speech.ts`) inside `MissionPlay` so every ZED line auto-plays, including:
+  - case briefing (`zedBriefing`)
+  - the explain prompt when phase flips to `explain`
+  - every conversation reply
+  - case-done celebration
+- `DialogueDock` keeps the tap-to-replay button.
+- `BriefingPanel` reads the briefing line on mount.
 
-**Mission 1 — Numerator Control Room** (`NumeratorScanner`)
-- Visual: shaded fraction model (e.g. 3 of 4 cells lit).
-- Detect: tap the lit/selected parts to confirm count.
-- Repair: drag numeric tiles (1–6) onto the numerator slot of `?/4`.
-- Explain: short reasoning prompt — "How did you know the top number?"
-- Mechanic theme: holographic scanner sweep over selected cells.
+### 4. Conversational LLM reasoning (replaces single-shot evaluator)
 
-**Mission 2 — Denominator Repair Station** (`DenominatorRepair`)
-- Visual: full shape with all equal parts outlined.
-- Detect: tap each equal part to count the whole.
-- Repair: drag a tile onto the denominator slot of `2/?`.
-- Explain: "Why count every part, even unshaded ones?"
-- Mechanic theme: structural grid scanner; parts flash as counted.
+New component `src/components/level2/ConversationPanel.tsx` replacing `ExplainPanel`'s body:
 
-**Mission 3 — Unit Fraction Scanner** (`UnitFractionSorter`)
-- Visual: 6 holographic fraction cards on a conveyor (`1/2, 2/3, 1/8, 3/4, 1/5, 5/6`).
-- Mechanic: drag each card into one of two chambers: **UNIT** (numerator = 1) or **NON-UNIT**.
-- Repair: ZED-4 pre-sorts incorrectly; child fixes mis-sorted cards.
-- Explain: "What makes a fraction a unit fraction?"
+- Holds a `messages: {role:'zed'|'child', text}[]` transcript.
+- Renders as a small chat: ZED bubbles + child bubbles, autoscroll.
+- Persistent input row: textarea + **mic button** (always visible, using existing `useSpeechToText`) + Send. Transcribed speech populates the input and the child can edit/send.
+- Each child submission POSTs `{ text, mode: 'explain', shapeContext, history }` to `/api/evaluate` — the endpoint and `runEvaluate` already accept `history`.
+- On reply: append ZED message, auto-speak it.
+  - If `isCorrect === true` → show a "Great job!" affirm bubble for ~1.5s then call `onComplete`.
+  - If `isCorrect === false` → just stay in the chat. Increment `attempts`. No hints shown.
+- **After 3 unsuccessful child turns**: surface a "ZED can help" message — append a friendly teacher line built server-side (see §5) that gives the answer in kid words, then unlock a **"I get it now ✓"** button that finalizes the case (counts as taught-by-ZED, lower reasoning score).
+- Reasoning score: 3 if solved in 1 turn, 2 in 2, 1 in 3+ or ZED-assisted.
 
-**Mission 4 — Fraction Collection Vault** (`CollectionVault`)
-- Visual: a grid of 6–10 objects (crystals/gears/batteries), some glowing.
-- Detect: tap glowing items to confirm the selected subset.
-- Repair: build the fraction via two number-wheels (numerator / denominator).
-- Explain: "Why does the denominator equal the total objects?"
+### 5. Server: kid-friendly conversational ZED + helper turn
 
-## 4. Mission engine (data-driven)
+Update `src/lib/evaluate-core.ts` SYSTEM prompt for Level 2's concept range:
 
-`src/lib/level2/missions.ts` exports `LEVEL_2_MISSIONS: MissionDef[]`. A `Case` describes everything the engine needs:
+- ZED is a Grade 2 learner — short sentences, no jargon ("numerator", "denominator" only if the child uses them first; otherwise "top number"/"bottom number").
+- Never confusing or multi-part questions. At most ONE tiny question per reply.
+- Accept generous correctness: any clear statement that maps the top number → lit/selected parts (or bottom → total equal parts, or unit → "just one piece on top", or set → "out of all of them") counts as `isCorrect=true`.
+- Pass `conceptKey` through the request so the system prompt can adapt the rubric. Extend `EvaluateBodySchema` with optional `conceptKey`.
+- Add an explicit "helper" mode: when client posts `mode: 'help'`, ZED returns a 1–2 sentence kid-friendly explanation of the answer (uses `shapeContext` truth) — used after attempt 3.
 
-```ts
-type Case = {
-  id: string;                          // "m1-c2"
-  caseNumber: string;                  // "CASE FILE #204"
-  visual: { kind: "bar"|"circle"|"grid"|"set"; total: number; selected: number[] };
-  zedClaim: { numerator: number; denominator: number };
-  truth:    { numerator: number; denominator: number };
-  corruptedField: "numerator"|"denominator"|"both"|"sort"|"set";
-  explainPrompt: string;
-  hints: [string, string, string];     // 3-step ladder
-  voiceInstructions: string;           // for 🔊 replay
-};
-```
+### 6. Level 1 — swap to the same conversation
 
-`MissionView` consumes a `MissionDef` + the workspace component for that mission. Adding a new case is a data edit — no new component code.
+- In `FractionFactoryLevel1.tsx`, replace the existing single-shot `teach`/`explainWrong` flows (which currently use `shouldOverrideToFalse` + `hintForAttempt`) with the new `ConversationPanel` (made generic, takes `{ shapeContext, conceptKey: 'equal-parts', onComplete, onHelp }`).
+- Remove `hintForAttempt` usage; keep `reasoning-evaluator.ts` file untouched for now (other code may import it).
+- Auto-speech behavior in Level 1 already exists via `useAutoSpeak`; just make sure the conversation's ZED replies also auto-speak (the panel handles it).
 
-## 5. AI evaluation + hints
+### 7. Tone cleanup
 
-- Reuse `/api/evaluate` for the Explain phase. Add an `overrideFalse` pre-check that requires at least one concept keyword (`numerator`, `denominator`, `selected`, `total`, `equal parts`, `unit`, etc.). Extend `src/lib/reasoning-evaluator.ts` with a `LEVEL_2_CONCEPT_KEYWORDS` set and a `hintForLevel2(attempt, conceptKey)` helper.
-- Feedback panel shows three lines: ✅ what was correct, 💡 what to improve, 🧠 a model reasoning example.
-- ZED-4 voice evolves: now struggles with **language**, not fairness. Lines authored per mission (e.g. "Ohhh… the denominator counts ALL equal parts.").
+- Replace "Numerator mismatch detected.", "Denominator under-count.", etc. with — nothing visible. Internally these strings stop rendering.
+- Rename the L2 left-pane heading from `"Numerator corruption detected"` to neutral `"ZED's reading"` so the child investigates rather than being told there's an error.
+- BriefingPanel: drop the "Detect / Repair / Explain" step list and the word "corruption". Replace with a one-line: "Listen to ZED. Look at the picture. Help ZED get it right."
 
-## 6. Voice + accessibility
+### 8. Quietly fix the hydration warning
 
-- `ReplayInstructionsButton` reads `case.voiceInstructions` via existing `speakText()`.
-- Every phase exposes the replay button; nothing auto-plays.
-- Captions for ZED-4 dialogue always visible in `DialogueDock`.
-- Speech-to-text falls back to typing with a clear message if unsupported (already handled by `ExplainInput`).
-- Tap targets ≥ 44×44. Focus rings via design tokens. Glitch state encoded by icon + label + outline, never color alone.
-- Reduced-motion friendly: scanner sweeps gated by `prefers-reduced-motion`.
+The runtime-errors snapshot shows a `0 → 1` text mismatch from `LevelCard` (completed-mission count). Wrap the `completedCount` read in a `useEffect`/client-only state or render `null` until mounted to keep SSR markup deterministic. Single targeted fix in `src/routes/play.tsx`.
 
-## 7. Progression + persistence
+## Files
 
-- `useLevelProgress(2)` (already generic) tracks 4 missions.
-- After each case: `markComplete(missionId, { reasoningScore, repairAttempts, hintsUsed })`.
-- Mission unlock rule mirrors L1: M_n requires M_{n-1} complete.
-- Level 2 unlock rule on `play.tsx`: requires Level 1 `completedCount === 4`.
+**Edit**
+- `src/components/FractionFactoryLevel2.tsx` — auto-speak wiring, swap `ExplainPanel` for `ConversationPanel`, briefing copy, drop scaffolded "detect/repair/explain" lingo.
+- `src/components/level2/CaseFile.tsx` — remove warning pill + heading wording.
+- `src/components/level2/ExplainPanel.tsx` — slimmed: title + `<ConversationPanel/>`, no `HintTray`.
+- `src/components/level2/fractions/FractionVisual.tsx` — thicker dividers, add `pizza` kind.
+- `src/lib/level2/types.ts` — `warning?`, `hints?` optional, `pizza` kind, optional `conceptKey` passthrough.
+- `src/lib/level2/missions.ts` — soften `zedBriefing`, drop `warning` strings, switch opening cases to `pizza`.
+- `src/lib/evaluate-core.ts` — Grade 2 voice, conceptKey-aware rubric, new `help` mode.
+- `src/lib/evaluate-core.ts`-paired `EvaluateBodySchema` — add `conceptKey?`, expand `mode` enum to include `'help'`.
+- `src/components/FractionFactoryLevel1.tsx` — replace `ExplainInput`+keyword-override teach flow with `ConversationPanel`.
+- `src/routes/play.tsx` — fix SSR hydration mismatch for completed count.
 
-## 8. Visual design direction
+**Create**
+- `src/components/level2/ConversationPanel.tsx` — the chat surface (transcript, mic, send, autoplay, 3-strike helper, onComplete).
 
-- Palette: existing `--color-brand-blue` (deep) + a new `--color-brand-cyan` glow token in `src/styles.css`.
-- Left pane: dark "case board" surface (`oklch` near brand-blue 20%), holographic cyan stroke, monospaced eyebrow labels.
-- Right pane: lighter workstation surface with subtle grid bg.
-- Atmosphere: calm, investigative, futuristic — no celebratory confetti before reasoning is captured.
+**Untouched**
+- Workspace components (NumeratorScanner / DenominatorRepair / UnitFractionSorter / CollectionVault) — they remain the investigation/repair phase, which already requires the child to figure out the glitch with no hints.
+- `mission-progress.ts`, route tree, Supabase wiring.
 
-## 9. Build order
+## Out of scope
 
-1. Scaffold types + missions data (`src/lib/level2/*`) and design tokens.
-2. Build `InvestigationLayout`, `CaseFile`, `TopBar`, `DialogueDock`, `HintTray`, `ReplayInstructionsButton`, `EvidenceTrail`.
-3. Build `FractionVisual`, `FractionNotation`, `SetVisual`.
-4. Build 4 workspace components + the mission engine in `FractionFactoryLevel2.tsx`.
-5. Wire into `src/routes/play.tsx`: unlock when L1 done; mount L2 when selected.
-6. Extend `reasoning-evaluator.ts` with L2 keyword + hint sets; verify `/api/evaluate` prompt covers numerator/denominator concepts.
-7. QA each mission flow against the persistence rule (glitch always visible) and the voice replay rule.
-
-## Technical notes
-
-- No new npm packages required (framer-motion, lucide-react, existing speech helpers cover it).
-- Mission data is pure TS — no DB migration.
-- Re-use `useLevelProgress` (already supports any level number).
-- Keep `FractionFactoryLevel1.tsx` untouched; Level 2 is a sibling component.
+- New mission content or new sectors.
+- Visual redesign of the workspaces.
+- Persisting conversation transcripts to the database.
