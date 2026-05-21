@@ -965,12 +965,18 @@ function ReasoningBox({
   const handleFinal = useCallback(
     (t: string) => {
       if (correctRef.current || pending) return;
-      // Drop transcripts that echo ZED's most recent line (mic picked up TTS)
+      // Drop a transcript only if it is near-identical to ZED's last line
+      // (mic picked up TTS). Children often re-use ZED's words, so a simple
+      // prefix check is too aggressive — require ~90% character overlap.
       const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
       const last = norm(lastZedRef.current);
       const got = norm(t);
-      if (last && got && (last.startsWith(got.slice(0, 24)) || got.startsWith(last.slice(0, 24)))) {
-        return;
+      if (last && got && got.length >= 12) {
+        const shorter = Math.min(last.length, got.length);
+        const longer = Math.max(last.length, got.length);
+        if (longer > 0 && shorter / longer >= 0.9 && last.includes(got.slice(0, shorter))) {
+          return;
+        }
       }
       void sendToZed(t);
     },
