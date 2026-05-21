@@ -1,103 +1,61 @@
+## Goal
 
-# Voice-first reasoning + investigation polish
+Fix the Level 1 robot conversation so ZED-4 behaves as a gentle, patient learner: slower voice, listens fully, and on a correct explanation gives a clear, warm appreciation **before** advancing to the next stage.
 
-Two big shifts:
-1. **Investigation feel** — remove all "mismatch detected" warnings, hint trays, and exposed truth scaffolding. The child investigates and decides.
-2. **Conversation feel** — ZED-4 auto-speaks every prompt and every reply, the mic is always one tap away, and a real back-and-forth LLM chat decides when the child "gets it." After 3 misses the robot gently teaches.
+## What's wrong today
 
-## Scope
-
-- Level 2 (full rework of voice + reasoning + visuals + tone).
-- Level 1 (swap the keyword/hint evaluator for the same LLM-conversational reasoning panel used in Level 2). All other Level 1 mechanics stay.
+1. **Voice is too fast.** Default rate is `0.95` in `voice-settings.ts` — fine for an adult, too fast for a Grade 1–2 child.
+2. **ZED forces the child forward.** In `ReasoningBox` (Level 1, `FractionFactoryLevel1.tsx`), after just **2 child turns** in the investigate ("wrong") phase, `forceAdvance` flips ZED into "Okay teacher, I think I see it now…" and skips the rest of the conversation. That's why it feels unwilling to listen.
+3. **Celebration feels rushed.** When `isCorrect=true`, ZED's reply is whatever the LLM returned (often a single short sentence), then we wait only `600ms` after TTS ends before calling `onCorrect()` and advancing. There's no consistent "appreciate first, then move on" beat.
+4. **Echo guard can swallow real child speech.** The current rule (first 24 chars of last ZED line vs child transcript) sometimes drops valid answers when the child repeats a word ZED said.
+5. **System prompt** is good but doesn't emphasize *patience* (waiting for the child) or a clear *appreciation* pattern when correct.
 
 ## Changes
 
-### 1. Strip "investigation spoilers" (Level 2)
+### 1. Slow the default voice (`src/lib/voice-settings.ts`)
+- Lower default `rate` from `0.95` → `0.78`.
+- Lower default `pitch` from `1.1` → `1.05` (warmer, less chirpy).
+- These are defaults only; the Voice Settings popover still lets the user override.
 
-- **`CaseFile.tsx`**: remove the red `AlertTriangle` "warning" pill entirely. The case file just shows the visual + ZED's spoken claim — no "Numerator mismatch detected" banner.
-- **`missions.ts`**: drop the `warning` strings from the case data (or keep field optional and unused). Soften `zedBriefing` lines so ZED sounds unsure ("I think this is one-fourth… but I'm not sure, teacher"), never accusatory.
-- **`types.ts`**: make `warning` optional and `hints` optional (still typed but unused).
-- **`HintTray.tsx`**: stop rendering it in `ExplainPanel`. Keep the file but remove the import/usage. No hints surface to the child during reasoning.
+### 2. Make ZED genuinely patient in Level 1 (`src/components/FractionFactoryLevel1.tsx`, `ReasoningBox`)
+- **Remove `forceAdvance` after 2 turns** in `mode === "wrong"`. Let the child explain as many times as they want; only advance when the LLM marks `isCorrect=true`.
+- **Soften the echo guard**: only drop a transcript if it is ≥ 90% identical to the last ZED line (not just shares a 24-char prefix). Children often re-use ZED's words; we should still hear them.
+- **Lengthen the post-celebration pause** from `600ms` → `1200ms` so the child hears the full appreciation before the screen changes.
+- Disable the auto-advance "concede" branch in the `catch` block as well — on network failure, just ask the child to try again instead of skipping ahead.
 
-### 2. Clearer fractions + familiar objects
+### 3. Appreciate-then-advance pattern (server side, `src/lib/evaluate-core.ts`)
+Update the `SYSTEM` prompt and the JSON-shape instruction so that **when `isCorrect=true`**, ZED's `feedbackText` must:
+- start with a warm, specific appreciation ("Wow, teacher — you really helped me see it!"),
+- reflect back ONE thing the child said,
+- end with a tiny send-off ("Let's keep going!" / "I'm ready for the next one!"),
+- be 2–3 short sentences (not 1), so the celebration is clearly heard.
 
-- **`FractionVisual.tsx`**: bump partition stroke width (bar/circle/grid dividers) ~3× and use a high-contrast color (white at higher alpha + subtle outer glow) so divisions read instantly. Add a subtle "lit" glow on selected parts.
-- **New visual kind: `pizza`** in `FractionVisualSpec` (a circle styled as a pizza with crust + simple toppings on lit slices). Use it for Mission 1 case 1 and Mission 2 case 1 so the child starts with something familiar before abstract bars/grids.
-- Mission 2 case 1 already uses a circle — rebrand a couple of opening cases as pizza/chocolate-bar for warmth.
+Also add patience rules to the prompt:
+- Never rush the child. Never say "let's move on" while `isCorrect=false`.
+- If the child's answer is partially right, ask ONE tiny follow-up — don't grade them correct yet, but don't sound disappointed.
+- Keep the 1st–2nd-grade reading level rule already in place.
 
-### 3. Auto voice guidance at every step (Level 2)
+No schema/API changes — `EvaluateBodySchema` / `EvaluateResultSchema` stay the same.
 
-- Add `useAutoSpeak(zedLine)` (already exists in `src/lib/speech.ts`) inside `MissionPlay` so every ZED line auto-plays, including:
-  - case briefing (`zedBriefing`)
-  - the explain prompt when phase flips to `explain`
-  - every conversation reply
-  - case-done celebration
-- `DialogueDock` keeps the tap-to-replay button.
-- `BriefingPanel` reads the briefing line on mount.
+### 4. (No UI redesign) 
+Keep the existing chat layout, mic button, and hint panel as-is. This is a behavior/tone fix, not a visual one.
 
-### 4. Conversational LLM reasoning (replaces single-shot evaluator)
+## Files touched
 
-New component `src/components/level2/ConversationPanel.tsx` replacing `ExplainPanel`'s body:
-
-- Holds a `messages: {role:'zed'|'child', text}[]` transcript.
-- Renders as a small chat: ZED bubbles + child bubbles, autoscroll.
-- Persistent input row: textarea + **mic button** (always visible, using existing `useSpeechToText`) + Send. Transcribed speech populates the input and the child can edit/send.
-- Each child submission POSTs `{ text, mode: 'explain', shapeContext, history }` to `/api/evaluate` — the endpoint and `runEvaluate` already accept `history`.
-- On reply: append ZED message, auto-speak it.
-  - If `isCorrect === true` → show a "Great job!" affirm bubble for ~1.5s then call `onComplete`.
-  - If `isCorrect === false` → just stay in the chat. Increment `attempts`. No hints shown.
-- **After 3 unsuccessful child turns**: surface a "ZED can help" message — append a friendly teacher line built server-side (see §5) that gives the answer in kid words, then unlock a **"I get it now ✓"** button that finalizes the case (counts as taught-by-ZED, lower reasoning score).
-- Reasoning score: 3 if solved in 1 turn, 2 in 2, 1 in 3+ or ZED-assisted.
-
-### 5. Server: kid-friendly conversational ZED + helper turn
-
-Update `src/lib/evaluate-core.ts` SYSTEM prompt for Level 2's concept range:
-
-- ZED is a Grade 2 learner — short sentences, no jargon ("numerator", "denominator" only if the child uses them first; otherwise "top number"/"bottom number").
-- Never confusing or multi-part questions. At most ONE tiny question per reply.
-- Accept generous correctness: any clear statement that maps the top number → lit/selected parts (or bottom → total equal parts, or unit → "just one piece on top", or set → "out of all of them") counts as `isCorrect=true`.
-- Pass `conceptKey` through the request so the system prompt can adapt the rubric. Extend `EvaluateBodySchema` with optional `conceptKey`.
-- Add an explicit "helper" mode: when client posts `mode: 'help'`, ZED returns a 1–2 sentence kid-friendly explanation of the answer (uses `shapeContext` truth) — used after attempt 3.
-
-### 6. Level 1 — swap to the same conversation
-
-- In `FractionFactoryLevel1.tsx`, replace the existing single-shot `teach`/`explainWrong` flows (which currently use `shouldOverrideToFalse` + `hintForAttempt`) with the new `ConversationPanel` (made generic, takes `{ shapeContext, conceptKey: 'equal-parts', onComplete, onHelp }`).
-- Remove `hintForAttempt` usage; keep `reasoning-evaluator.ts` file untouched for now (other code may import it).
-- Auto-speech behavior in Level 1 already exists via `useAutoSpeak`; just make sure the conversation's ZED replies also auto-speak (the panel handles it).
-
-### 7. Tone cleanup
-
-- Replace "Numerator mismatch detected.", "Denominator under-count.", etc. with — nothing visible. Internally these strings stop rendering.
-- Rename the L2 left-pane heading from `"Numerator corruption detected"` to neutral `"ZED's reading"` so the child investigates rather than being told there's an error.
-- BriefingPanel: drop the "Detect / Repair / Explain" step list and the word "corruption". Replace with a one-line: "Listen to ZED. Look at the picture. Help ZED get it right."
-
-### 8. Quietly fix the hydration warning
-
-The runtime-errors snapshot shows a `0 → 1` text mismatch from `LevelCard` (completed-mission count). Wrap the `completedCount` read in a `useEffect`/client-only state or render `null` until mounted to keep SSR markup deterministic. Single targeted fix in `src/routes/play.tsx`.
-
-## Files
-
-**Edit**
-- `src/components/FractionFactoryLevel2.tsx` — auto-speak wiring, swap `ExplainPanel` for `ConversationPanel`, briefing copy, drop scaffolded "detect/repair/explain" lingo.
-- `src/components/level2/CaseFile.tsx` — remove warning pill + heading wording.
-- `src/components/level2/ExplainPanel.tsx` — slimmed: title + `<ConversationPanel/>`, no `HintTray`.
-- `src/components/level2/fractions/FractionVisual.tsx` — thicker dividers, add `pizza` kind.
-- `src/lib/level2/types.ts` — `warning?`, `hints?` optional, `pizza` kind, optional `conceptKey` passthrough.
-- `src/lib/level2/missions.ts` — soften `zedBriefing`, drop `warning` strings, switch opening cases to `pizza`.
-- `src/lib/evaluate-core.ts` — Grade 2 voice, conceptKey-aware rubric, new `help` mode.
-- `src/lib/evaluate-core.ts`-paired `EvaluateBodySchema` — add `conceptKey?`, expand `mode` enum to include `'help'`.
-- `src/components/FractionFactoryLevel1.tsx` — replace `ExplainInput`+keyword-override teach flow with `ConversationPanel`.
-- `src/routes/play.tsx` — fix SSR hydration mismatch for completed count.
-
-**Create**
-- `src/components/level2/ConversationPanel.tsx` — the chat surface (transcript, mic, send, autoplay, 3-strike helper, onComplete).
-
-**Untouched**
-- Workspace components (NumeratorScanner / DenominatorRepair / UnitFractionSorter / CollectionVault) — they remain the investigation/repair phase, which already requires the child to figure out the glitch with no hints.
-- `mission-progress.ts`, route tree, Supabase wiring.
+- `src/lib/voice-settings.ts` — slower default rate & pitch.
+- `src/components/FractionFactoryLevel1.tsx` — remove `forceAdvance`, soften echo guard, longer celebration pause.
+- `src/lib/evaluate-core.ts` — patience + appreciate-then-advance prompt rules.
 
 ## Out of scope
 
-- New mission content or new sectors.
-- Visual redesign of the workspaces.
-- Persisting conversation transcripts to the database.
+- Level 2 conversation (already uses `ConversationPanel` with the same evaluator; the prompt change in `evaluate-core.ts` benefits it too, but no Level-2 component edits).
+- Voice Settings panel UI — already shipped last turn.
+- Any new API routes, DB changes, or auth work.
+
+## Verification
+
+1. Open Level 1 → Mission 1 → first glitch.
+2. Confirm ZED's voice is noticeably slower out of the box.
+3. Tap "There is a glitch" → give a vague answer twice → confirm ZED keeps gently asking instead of forcing you into the repair room.
+4. Give a clear answer ("the parts are not equal") → confirm ZED says a 2–3-sentence appreciation, the child hears it fully, then the screen advances.
+5. Open Voice Settings → confirm sliders still override the new defaults.

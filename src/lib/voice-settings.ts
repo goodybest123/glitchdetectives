@@ -10,9 +10,9 @@ export type VoiceSettings = {
 
 const DEFAULTS: VoiceSettings = {
   autoSpeak: true,
-  rate: 0.95,
+  rate: 0.78,
   volume: 1,
-  pitch: 1.1,
+  pitch: 1.05,
   muted: false,
 };
 
