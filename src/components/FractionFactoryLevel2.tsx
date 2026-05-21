@@ -326,7 +326,8 @@ function MissionPlay({
     }
   }, [isMissionDone, onMissionComplete]);
 
-  const startCase = () => setPhase("repair"); // we collapse detect+repair into workspace
+  const startCase = () => setPhase("glitch-check");
+  const handleGlitchResolved = () => setPhase("repair");
   const handleRepairComplete = (truth: FractionPair) => {
     setRepairedNotation(truth);
     setPhase("explain");
@@ -390,6 +391,12 @@ function MissionPlay({
       workspace={
         phase === "briefing" ? (
           <BriefingPanel caseDef={caseDef} onContinue={startCase} />
+        ) : phase === "glitch-check" ? (
+          <GlitchCheckPanel
+            caseDef={caseDef}
+            onZedSpeak={setZedLine}
+            onResolved={handleGlitchResolved}
+          />
         ) : phase === "repair" ? (
           <Workspace
             caseDef={caseDef}
