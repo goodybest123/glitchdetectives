@@ -200,6 +200,37 @@ export function useContinuousSpeech(
   const cbRef = useRef(onFinalChunk);
   cbRef.current = onFinalChunk;
 
+  // Buffered final text + quiet-window timer. We wait ~1.4s of silence
+  // after the last speech result before firing onFinalChunk, so a Grade-2
+  // child can pause to think mid-sentence without being interrupted.
+  const bufferRef = useRef<string>("");
+  const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSentRef = useRef<string>("");
+  const QUIET_MS = 1400;
+  const MIN_CHARS = 3;
+
+  const clearFlush = () => {
+    if (flushTimerRef.current) {
+      clearTimeout(flushTimerRef.current);
+      flushTimerRef.current = null;
+    }
+  };
+
+  const scheduleFlush = useCallback(() => {
+    clearFlush();
+    flushTimerRef.current = setTimeout(() => {
+      const text = bufferRef.current.trim();
+      bufferRef.current = "";
+      setInterim("");
+      if (!text || text.length < MIN_CHARS) return;
+      if (isSpeaking()) return; // don't fire while ZED is talking
+      const norm = text.toLowerCase().replace(/\s+/g, " ").trim();
+      if (norm === lastSentRef.current) return; // de-dupe identical chunks
+      lastSentRef.current = norm;
+      cbRef.current(text);
+    }, QUIET_MS);
+  }, []);
+
   const safeStart = useCallback(() => {
     const r = recRef.current;
     if (!r || startedRef.current) return;
@@ -208,7 +239,7 @@ export function useContinuousSpeech(
       startedRef.current = true;
       setListening(true);
     } catch {
-      // already started in another browser tab/state
+      // already started
     }
   }, []);
 
@@ -234,29 +265,31 @@ export function useContinuousSpeech(
     r.interimResults = true;
     r.lang = "en-US";
 
-    let finalBuffer = "";
     r.onresult = (e) => {
       let interimText = "";
       const results = e.results as ArrayLike<ArrayLike<{ transcript: string }> & { isFinal?: boolean }>;
       for (let i = e.resultIndex; i < (results as ArrayLike<unknown>).length; i++) {
         const res = results[i];
         const t = res[0]?.transcript ?? "";
-        if (res.isFinal) finalBuffer += t + " ";
-        else interimText += t;
+        if (res.isFinal) {
+          bufferRef.current = (bufferRef.current + " " + t).replace(/\s+/g, " ").trim();
+        } else {
+          interimText += t;
+        }
       }
-      setInterim(interimText);
-      if (finalBuffer.trim() && !isSpeaking()) {
-        const text = finalBuffer.trim();
-        finalBuffer = "";
-        setInterim("");
-        cbRef.current(text);
-      }
+      // Show interim alongside whatever's already buffered so the child sees
+      // their full sentence while they keep talking.
+      const shown = (bufferRef.current + " " + interimText).trim();
+      setInterim(shown);
+      // Any new audio resets the quiet-window timer; we only fire after the
+      // child stops talking for QUIET_MS.
+      scheduleFlush();
     };
     r.onend = () => {
       startedRef.current = false;
       setListening(false);
-      finalBuffer = "";
-      setInterim("");
+      // Don't clear bufferRef — the browser sometimes ends/restarts a session
+      // mid-sentence; we want the next chunk to append, not replace.
       if (wantOnRef.current) {
         setTimeout(() => {
           if (!wantOnRef.current || startedRef.current) return;
@@ -269,11 +302,12 @@ export function useContinuousSpeech(
     recRef.current = r;
     return () => {
       wantOnRef.current = false;
+      clearFlush();
       try { r.abort(); } catch { /* */ }
       startedRef.current = false;
       recRef.current = null;
     };
-  }, []);
+  }, [scheduleFlush]);
 
   const start = useCallback(() => {
     wantOnRef.current = true;
@@ -282,6 +316,8 @@ export function useContinuousSpeech(
 
   const stop = useCallback(() => {
     wantOnRef.current = false;
+    clearFlush();
+    bufferRef.current = "";
     safeStop();
     setInterim("");
   }, [safeStop]);
@@ -294,6 +330,11 @@ export function useContinuousSpeech(
     const id = setInterval(() => {
       if (!wantOnRef.current) return;
       if (synth.speaking && startedRef.current) {
+        // ZED started talking — pause mic and clear pending flush so we
+        // don't send anything that overlapped with TTS.
+        clearFlush();
+        bufferRef.current = "";
+        setInterim("");
         safeStop();
       } else if (!synth.speaking && !startedRef.current) {
         safeStart();
@@ -304,3 +345,4 @@ export function useContinuousSpeech(
 
   return { listening, interim, supported, start, stop };
 }
+

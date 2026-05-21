@@ -931,7 +931,10 @@ function ReasoningBox({
         lastZedRef.current = replyText;
         const resume = () => {
           if (!correctRef.current && autoStart) {
-            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
+            // Longer pause so ZED's voice fully fades before the mic opens
+            // again — prevents the child from being "interrupted" by an
+            // immediately-hot microphone.
+            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 900);
           }
         };
         if (effectiveCorrect) {
@@ -952,7 +955,7 @@ function ReasoningBox({
         lastZedRef.current = fallback;
         speakText(fallback, () => {
           if (!correctRef.current && autoStart) {
-            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
+            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 900);
           }
         });
       } finally {
