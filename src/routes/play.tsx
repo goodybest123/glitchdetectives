@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, ArrowRight, Factory, Lock, Shield, Sparkles,
@@ -61,8 +61,11 @@ function Play() {
 function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
   const level1 = useLevelProgress(1);
   const level2 = useLevelProgress(2);
-  const level2Unlocked = true; // Unlocked for testing
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const level2Unlocked = true;
   const levels = LEVELS.map((l) => {
+    if (!mounted) return l; // SSR + first paint use defaults to avoid hydration mismatch
     if (l.n === 1) return { ...l, done: level1.completedCount };
     if (l.n === 2) return { ...l, done: level2.completedCount, unlocked: level2Unlocked };
     return l;

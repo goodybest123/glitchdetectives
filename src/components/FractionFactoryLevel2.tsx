@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight, Atom, CheckCircle2, FlaskConical, Layers,
-  Lock, RefreshCcw, Scan, ScanLine, Sparkles,
+  Lock, Scan, Sparkles,
 } from "lucide-react";
 import { useLevelProgress } from "@/lib/mission-progress";
 import { LEVEL_2_MISSIONS } from "@/lib/level2/missions";
 import type { CaseDef, CasePhase, FractionPair, Mission2Def } from "@/lib/level2/types";
+import { useAutoSpeak } from "@/lib/speech";
 import { InvestigationLayout } from "./level2/InvestigationLayout";
 import { L2TopBar } from "./level2/TopBar";
 import { CaseFile } from "./level2/CaseFile";
@@ -297,6 +298,9 @@ function MissionPlay({
     setChildExplanation(undefined);
   }, [caseDef.id, caseDef.zedBriefing]);
 
+  // Auto-speak every ZED line as it changes
+  useAutoSpeak(zedLine, [zedLine]);
+
   // Fire mission-complete once
   useEffect(() => {
     if (isMissionDone && !firedRef.current) {
@@ -413,33 +417,19 @@ function BriefingPanel({
   caseDef: CaseDef;
   onContinue: () => void;
 }) {
+  useAutoSpeak(caseDef.zedBriefing, [caseDef.id]);
   return (
     <div className="flex flex-col gap-5">
       <header>
         <p className="label-eyebrow text-cyan-300/80">{caseDef.caseNumber}</p>
         <h3 className="text-xl font-bold text-cyan-50 mt-1">
-          Investigation briefing
+          Help ZED-4 read this fraction
         </h3>
       </header>
       <p className="text-cyan-100/90 leading-relaxed">
-        Review the case file on the left. ZED-4 has logged a faulty
-        interpretation. Your task: scan the visual, repair the notation, then
-        teach ZED-4 the reasoning behind it.
+        Listen to ZED-4. Look at the picture. Is ZED right? Tap the picture to
+        help fix it, then tell ZED what you noticed.
       </p>
-      <ol className="space-y-2 text-sm text-cyan-100/90">
-        <li className="inline-flex items-start gap-2">
-          <ScanLine className="w-4 h-4 mt-0.5 text-cyan-300 shrink-0" />
-          Detect: scan the parts that matter.
-        </li>
-        <li className="inline-flex items-start gap-2">
-          <RefreshCcw className="w-4 h-4 mt-0.5 text-cyan-300 shrink-0" />
-          Repair: dial in the correct number.
-        </li>
-        <li className="inline-flex items-start gap-2">
-          <Sparkles className="w-4 h-4 mt-0.5 text-cyan-300 shrink-0" />
-          Explain: teach ZED-4 the reason.
-        </li>
-      </ol>
       <button
         type="button"
         onClick={onContinue}
@@ -450,7 +440,7 @@ function BriefingPanel({
           boxShadow: "0 0 20px rgba(95,208,255,0.4)",
         }}
       >
-        Begin investigation <ArrowRight className="w-4 h-4" />
+        Let's look <ArrowRight className="w-4 h-4" />
       </button>
     </div>
   );
