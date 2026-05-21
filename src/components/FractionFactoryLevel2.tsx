@@ -8,11 +8,13 @@ import { useLevelProgress } from "@/lib/mission-progress";
 import { LEVEL_2_MISSIONS } from "@/lib/level2/missions";
 import type { CaseDef, CasePhase, FractionPair, Mission2Def } from "@/lib/level2/types";
 import { useAutoSpeak } from "@/lib/speech";
+import { useNarrate } from "@/lib/narrate";
 import { InvestigationLayout } from "./level2/InvestigationLayout";
 import { L2TopBar } from "./level2/TopBar";
 import { CaseFile } from "./level2/CaseFile";
 import { DialogueDock } from "./level2/DialogueDock";
 import { ExplainPanel } from "./level2/ExplainPanel";
+import { GlitchCheckPanel } from "./level2/GlitchCheckPanel";
 import { NumeratorScanner } from "./level2/workspaces/NumeratorScanner";
 import { DenominatorRepair } from "./level2/workspaces/DenominatorRepair";
 import { UnitFractionSorter } from "./level2/workspaces/UnitFractionSorter";
@@ -102,6 +104,9 @@ export default function FractionFactoryLevel2({
 /* --------------------------------- Intro ---------------------------------- */
 
 function Intro({ onBack, onContinue }: { onBack: () => void; onContinue: () => void }) {
+  useNarrate(
+    `Level 2. The Naming Systems Are Corrupted. ${INTRO} When you're ready, tap Enter Analysis Lab.`,
+  );
   return (
     <>
       <L2TopBar
@@ -172,6 +177,7 @@ function MissionSelect({
   isUnlocked: (id: number) => boolean;
   isComplete: (id: number) => boolean;
 }) {
+  useNarrate("Sector Map. Pick a mission to begin, analyst.");
   return (
     <>
       <L2TopBar
@@ -320,7 +326,8 @@ function MissionPlay({
     }
   }, [isMissionDone, onMissionComplete]);
 
-  const startCase = () => setPhase("repair"); // we collapse detect+repair into workspace
+  const startCase = () => setPhase("glitch-check");
+  const handleGlitchResolved = () => setPhase("repair");
   const handleRepairComplete = (truth: FractionPair) => {
     setRepairedNotation(truth);
     setPhase("explain");
@@ -384,6 +391,12 @@ function MissionPlay({
       workspace={
         phase === "briefing" ? (
           <BriefingPanel caseDef={caseDef} onContinue={startCase} />
+        ) : phase === "glitch-check" ? (
+          <GlitchCheckPanel
+            caseDef={caseDef}
+            onZedSpeak={setZedLine}
+            onResolved={handleGlitchResolved}
+          />
         ) : phase === "repair" ? (
           <Workspace
             caseDef={caseDef}
