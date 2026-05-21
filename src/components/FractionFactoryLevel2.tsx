@@ -104,6 +104,9 @@ export default function FractionFactoryLevel2({
 /* --------------------------------- Intro ---------------------------------- */
 
 function Intro({ onBack, onContinue }: { onBack: () => void; onContinue: () => void }) {
+  useNarrate(
+    `Level 2. The Naming Systems Are Corrupted. ${INTRO} When you're ready, tap Enter Analysis Lab.`,
+  );
   return (
     <>
       <L2TopBar
@@ -174,6 +177,7 @@ function MissionSelect({
   isUnlocked: (id: number) => boolean;
   isComplete: (id: number) => boolean;
 }) {
+  useNarrate("Sector Map. Pick a mission to begin, analyst.");
   return (
     <>
       <L2TopBar
