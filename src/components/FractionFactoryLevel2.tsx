@@ -298,6 +298,9 @@ function MissionPlay({
     setChildExplanation(undefined);
   }, [caseDef.id, caseDef.zedBriefing]);
 
+  // Auto-speak every ZED line as it changes
+  useAutoSpeak(zedLine, [zedLine]);
+
   // Fire mission-complete once
   useEffect(() => {
     if (isMissionDone && !firedRef.current) {
