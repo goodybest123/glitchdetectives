@@ -902,10 +902,8 @@ function ReasoningBox({
       const history = [...turns, newChild];
       setTurns(history);
       setPending(true);
-      // After 2 child explanations in "wrong" mode (investigate),
-      // ZED concedes and moves to the Repair phase so the child can fix it.
-      const childTurnsCount = history.filter((t) => t.role === "child").length;
-      const forceAdvance = mode === "wrong" && childTurnsCount >= 2;
+      // ZED is patient — we no longer force-advance after N child turns.
+      // Only the LLM marking isCorrect=true ends the conversation.
       try {
         const endpoint =
           mode === "explain" ? "/api/evaluate-reasoning"
@@ -925,12 +923,10 @@ function ReasoningBox({
         // Local guard: stop vague one-word answers from auto-passing.
         const overrideFalse =
           mode !== "wrong" && data.isCorrect && shouldOverrideToFalse(childText);
-        const effectiveCorrect = !overrideFalse && (data.isCorrect || forceAdvance);
-        const replyText = forceAdvance
-          ? "Okay teacher, I think I see it now! Help me fix it — drag the slider so the parts are really equal."
-          : overrideFalse
-            ? "Thanks teacher! Can you say a bit more? Try using a size word like equal, same, or fair."
-            : data.feedbackText;
+        const effectiveCorrect = !overrideFalse && data.isCorrect;
+        const replyText = overrideFalse
+          ? "Thanks teacher! Can you say a bit more? Try using a size word like equal, same, or fair."
+          : data.feedbackText;
         setTurns((prev) => [...prev, { role: "zed", text: replyText }]);
         lastZedRef.current = replyText;
         const resume = () => {
@@ -940,7 +936,9 @@ function ReasoningBox({
         };
         if (effectiveCorrect) {
           correctRef.current = true;
-          speakText(replyText, () => setTimeout(onCorrect, 600));
+          // Longer pause so the child fully hears the appreciation before
+          // the screen changes.
+          speakText(replyText, () => setTimeout(onCorrect, 1200));
         } else {
           setFailCount((c) => c + 1);
           setHintDismissed(false);
@@ -948,22 +946,15 @@ function ReasoningBox({
         }
 
       } catch {
-        if (forceAdvance) {
-          const concede = "Okay teacher, I think I see it now! Help me fix it — drag the slider so the parts are really equal.";
-          setTurns((prev) => [...prev, { role: "zed", text: concede }]);
-          lastZedRef.current = concede;
-          correctRef.current = true;
-          speakText(concede, () => setTimeout(onCorrect, 600));
-        } else {
-          const fallback = "Thanks teacher! My ears got a little fuzzy. Can you say that again?";
-          setTurns((prev) => [...prev, { role: "zed", text: fallback }]);
-          lastZedRef.current = fallback;
-          speakText(fallback, () => {
-            if (!correctRef.current && autoStart) {
-              setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
-            }
-          });
-        }
+        // Never auto-advance on network failure — just ask the child to try again.
+        const fallback = "Thanks teacher! My ears got a little fuzzy. Can you say that again?";
+        setTurns((prev) => [...prev, { role: "zed", text: fallback }]);
+        lastZedRef.current = fallback;
+        speakText(fallback, () => {
+          if (!correctRef.current && autoStart) {
+            setTimeout(() => { try { startRef.current(); } catch { /* */ } }, 250);
+          }
+        });
       } finally {
         setPending(false);
       }
