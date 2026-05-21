@@ -1080,34 +1080,7 @@ function ReasoningBox({
         </div>
       )}
 
-      {/* Adaptive hint — surfaces gentle nudges after repeated misses */}
-      {!correctRef.current && !pending && !hintDismissed && failCount >= 1 && (() => {
-        const hint = hintForAttempt(failCount, mode);
-        if (!hint) return null;
-        return (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
-            className="flex items-start gap-2 rounded-xl border px-3 py-2 text-sm"
-            style={{
-              background: "color-mix(in oklab, var(--color-brand-mint) 18%, white)",
-              borderColor: "color-mix(in oklab, var(--color-brand-blue) 18%, white)",
-              color: BLUE,
-            }}
-            role="status"
-            aria-live="polite"
-          >
-            <Sparkles className="w-4 h-4 mt-0.5 shrink-0" style={{ color: YELLOW }} />
-            <span className="flex-1 leading-snug"><span className="label-eyebrow block opacity-70">Hint {failCount}</span>{hint}</span>
-            <button
-              onClick={() => setHintDismissed(true)}
-              aria-label="Dismiss hint"
-              className="text-xs font-mono opacity-60 hover:opacity-100"
-            >
-              ✕
-            </button>
-          </motion.div>
-        );
-      })()}
+      {/* Hints intentionally removed — the child must reason on their own. */}
 
 
       {/* Try Again — clears last exchange so the child can rephrase */}
