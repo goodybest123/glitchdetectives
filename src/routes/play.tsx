@@ -52,14 +52,22 @@ function Play() {
   if (activeLevel === 1) {
     return <FractionFactoryLevel1 onExitToHub={() => setActiveLevel(null)} />;
   }
+  if (activeLevel === 2) {
+    return <FractionFactoryLevel2 onExitToHub={() => setActiveLevel(null)} />;
+  }
   return <LevelSelect onStart={(n) => setActiveLevel(n)} />;
 }
 
 function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
   const level1 = useLevelProgress(1);
-  const levels = LEVELS.map((l) =>
-    l.n === 1 ? { ...l, done: level1.completedCount } : l,
-  );
+  const level2 = useLevelProgress(2);
+  const level2Unlocked = level1.completedCount >= LEVELS[0].missions;
+  const levels = LEVELS.map((l) => {
+    if (l.n === 1) return { ...l, done: level1.completedCount };
+    if (l.n === 2) return { ...l, done: level2.completedCount, unlocked: level2Unlocked };
+    return l;
+  });
+
 
   return (
     <main className="min-h-screen" style={{ background: BG_LIGHT }}>
