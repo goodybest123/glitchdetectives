@@ -77,7 +77,7 @@ export function GlitchCheckPanel({
           <p className="label-eyebrow text-cyan-300/80">
             Glitch report · Tell ZED what's wrong
           </p>
-          <h3 className="text-xl font-bold text-cyan-50 mt-1">
+          <h3 className="text-2xl font-bold text-cyan-50 mt-1">
             Explain the glitch to ZED-4
           </h3>
         </header>
