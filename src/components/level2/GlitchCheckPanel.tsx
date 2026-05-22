@@ -7,6 +7,7 @@ import { speakText } from "@/lib/speech";
 import { FractionVisual } from "./fractions/FractionVisual";
 import { FractionNotation } from "./fractions/FractionNotation";
 import { ConversationPanel } from "./ConversationPanel";
+import { ReplayInstructionsButton } from "./ReplayInstructionsButton";
 
 /**
  * Glitch Check — sits between the case briefing and the repair workspace.
