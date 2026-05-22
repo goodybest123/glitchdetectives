@@ -131,7 +131,7 @@ function Intro({ onBack, onContinue }: { onBack: () => void; onContinue: () => v
           <h1 className="text-3xl sm:text-4xl font-bold text-cyan-50">
             The Naming Systems Are Corrupted
           </h1>
-          <p className="text-base sm:text-lg text-cyan-100/90 leading-relaxed">
+          <p className="text-lg sm:text-xl text-cyan-100/90 leading-relaxed">
             {INTRO}
           </p>
           <div
