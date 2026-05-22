@@ -221,7 +221,7 @@ function MissionSelect({
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="label-eyebrow text-cyan-300/80">Mission {m.id}</p>
-                    <h3 className="text-lg font-bold text-cyan-50 truncate">
+                    <h3 className="text-xl font-bold text-cyan-50 truncate">
                       {m.name}
                     </h3>
                   </div>
@@ -238,11 +238,11 @@ function MissionSelect({
                     </span>
                   ) : null}
                 </div>
-                <p className="text-sm text-cyan-100/80 mt-3">
+                <p className="text-base text-cyan-100/80 mt-3">
                   <span className="font-semibold text-cyan-100">Focus: </span>
                   {m.focus}
                 </p>
-                <p className="text-xs text-cyan-200/60 mt-1">{m.sector}</p>
+                <p className="text-sm text-cyan-200/60 mt-1">{m.sector}</p>
               </motion.li>
             );
           })}
