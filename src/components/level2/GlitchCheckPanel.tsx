@@ -74,13 +74,16 @@ export function GlitchCheckPanel({
       "Oh no — what did I get wrong, teacher? Tell me about the glitch you found.";
     return (
       <div className="flex flex-col gap-4">
-        <header>
-          <p className="label-eyebrow text-cyan-300/80">
-            Glitch report · Tell ZED what's wrong
-          </p>
-          <h3 className="text-2xl font-bold text-cyan-50 mt-1">
-            Explain the glitch to ZED-4
-          </h3>
+        <header className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <p className="label-eyebrow text-cyan-300/80">
+              Glitch report · Tell ZED what's wrong
+            </p>
+            <h3 className="text-2xl font-bold text-cyan-50 mt-1">
+              Explain the glitch to ZED-4
+            </h3>
+          </div>
+          <ReplayInstructionsButton text={seed} />
         </header>
         <ConversationPanel
           key={`glitch-${caseDef.id}`}
