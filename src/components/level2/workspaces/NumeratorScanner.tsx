@@ -5,6 +5,7 @@ import type { CaseDef, FractionPair } from "@/lib/level2/types";
 import { useNarrate } from "@/lib/narrate";
 import { NumberTilePicker, TapToCountVisual } from "./shared";
 import { FractionNotation } from "../fractions/FractionNotation";
+import { ReplayInstructionsButton } from "../ReplayInstructionsButton";
 
 /**
  * Mission 1 — Numerator Control Room workspace.
@@ -52,15 +53,18 @@ export function NumeratorScanner({
 
   return (
     <div className="flex flex-col gap-5">
-      <header>
-        <p className="label-eyebrow text-cyan-300/80">
-          {step === "detect" ? "Phase 1 · Scan selected parts" : "Phase 2 · Repair numerator"}
-        </p>
-        <h3 className="text-2xl font-bold text-cyan-50 mt-1">
-          {step === "detect"
-            ? "Tap each LIT part to register a scan."
-            : "Choose the correct numerator."}
-        </h3>
+      <header className="flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <p className="label-eyebrow text-cyan-300/80">
+            {step === "detect" ? "Phase 1 · Scan selected parts" : "Phase 2 · Repair numerator"}
+          </p>
+          <h3 className="text-2xl font-bold text-cyan-50 mt-1">
+            {step === "detect"
+              ? "Tap each LIT part to register a scan."
+              : "Choose the correct numerator."}
+          </h3>
+        </div>
+        <ReplayInstructionsButton text={narration} />
       </header>
 
       {step === "detect" ? (

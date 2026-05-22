@@ -4,6 +4,7 @@ import { CheckCircle2, Layers } from "lucide-react";
 import type { CaseDef, FractionPair, SortCard } from "@/lib/level2/types";
 import { useNarrate } from "@/lib/narrate";
 import { MISSION_3_CARDS } from "@/lib/level2/missions";
+import { ReplayInstructionsButton } from "../ReplayInstructionsButton";
 
 type Bucket = "unit" | "non-unit";
 
@@ -51,23 +52,25 @@ export function UnitFractionSorter({
     onRepairComplete({ numerator: 1, denominator: 1 }); // placeholder; not shown for sort
   };
 
-  useNarrate(
-    "Classification chamber. Sort fractions. Move each card into the correct chamber. Tap a card to send it to the other chamber.",
-    [caseDef.id],
-  );
+  const narration =
+    "Classification chamber. Sort fractions. Move each card into the correct chamber. Tap a card to send it to the other chamber.";
+  useNarrate(narration, [caseDef.id]);
 
   return (
     <div className="flex flex-col gap-5">
-      <header>
-        <p className="label-eyebrow text-cyan-300/80">
-          Classification chamber · Sort fractions
-        </p>
-        <h3 className="text-2xl font-bold text-cyan-50 mt-1">
-          Move each card into the correct chamber.
-        </h3>
-        <p className="text-base text-cyan-100/80 mt-1">
-          Tap a card to send it to the other chamber.
-        </p>
+      <header className="flex items-start justify-between gap-3 flex-wrap">
+        <div>
+          <p className="label-eyebrow text-cyan-300/80">
+            Classification chamber · Sort fractions
+          </p>
+          <h3 className="text-2xl font-bold text-cyan-50 mt-1">
+            Move each card into the correct chamber.
+          </h3>
+          <p className="text-base text-cyan-100/80 mt-1">
+            Tap a card to send it to the other chamber.
+          </p>
+        </div>
+        <ReplayInstructionsButton text={narration} />
       </header>
 
       <div className="grid grid-cols-2 gap-4">

@@ -1,61 +1,52 @@
-## Goal
+# Fix Level 2 right-side voice narration
 
-Make every right-side panel in Level 2 read its own text aloud, bump font sizes for readability, and unlock all missions in both Level 1 and Level 2.
+## Root cause
 
-## 1. Narrate the workspace right side
+The right side (workspace) *does* call `useNarrate(...)`, but the speech is being silently cancelled before it ever plays:
 
-Use the existing `useNarrate(text, deps)` helper so the spoken text always matches what's on screen and respects the user's mute / auto-speak settings.
+1. **`speakText()` always calls `speechSynthesis.cancel()`** then immediately `speak()`. In Chrome (and most desktop browsers) this cancel→speak race drops the new utterance ~50% of the time, especially right after a phase transition.
+2. **Multiple `useNarrate` / `useAutoSpeak` fire in the same tick.** `BriefingPanel` calls both `useAutoSpeak(zedBriefing, 150ms)` and `useNarrate(instructions, 200ms)` — the second cancels the first. When the user clicks "Begin investigation", `GlitchCheckPanel` mounts and narrates, cancelling again. When they advance to repair, the workspace's `useNarrate` fires, but the still-queued speech from glitch-check (or the dock state update) cancels it.
+3. **Only one global narrator** with no queue → whichever component mounts last "wins", and if the browser drops it, nothing plays at all.
 
-Add `useNarrate(...)` calls in:
+End result: the workspace heading ("Phase 1 · Scan selected parts. Tap each lit part…") is requested but never spoken.
 
-- `src/components/level2/workspaces/NumeratorScanner.tsx` — narrate the current phase heading + instruction, re-firing when `step` changes:
-  - detect: "Phase 1. Scan selected parts. Tap each lit part to register a scan."
-  - repair: "Phase 2. Repair numerator. Choose the correct numerator."
-- `src/components/level2/workspaces/DenominatorRepair.tsx` — same pattern:
-  - detect: "Phase 1. Inspect the whole. Tap every part — lit or dark — to map the whole."
-  - repair: "Phase 2. Repair denominator. Choose the correct denominator."
-- `src/components/level2/workspaces/UnitFractionSorter.tsx` — narrate once on mount: "Classification chamber. Sort fractions. Move each card into the correct chamber. Tap a card to send it to the other chamber."
-- `src/components/level2/workspaces/CollectionVault.tsx` — same step-aware pattern:
-  - detect: "Phase 1. Inventory glowing items. Tap each glowing item to inventory it."
-  - repair: "Phase 2. Lock in the fraction. Dial the numerator (active) and denominator (total)."
+## Fix (all UI / frontend only)
 
-In `src/components/FractionFactoryLevel2.tsx`:
+### 1. Make speech reliable — `src/lib/speech.ts`
+Replace the immediate `cancel()` + `speak()` with a serialized queue:
+- Keep a module-level `queue: string[]` and `speaking` flag.
+- `speakText(text)` pushes onto the queue and starts the runner if idle.
+- The runner: `cancel()` → `setTimeout(50ms)` → `new SpeechSynthesisUtterance` → on `end`/`error` shift queue and run next. The 50ms gap avoids the Chrome cancel→speak race.
+- `speakText(text, onEnd, { force: true })` still bypasses the autoSpeak gate but goes through the queue.
+- Add `speakText(text, onEnd, { interrupt: true })` for the ZED conversation flows that need to cut in.
 
-- `BriefingPanel` — already auto-speaks ZED's briefing; also `useNarrate` the on-screen heading + paragraph ("Help ZED-4 read this fraction. Listen to ZED-4. Look at the picture…") so the visible instructions are read.
-- `CaseDonePanel` — `useNarrate` the success text: "Case resolved. Glitch repaired. ZED-4 logged your reasoning. The factory's naming systems are coming back online." (swap "Glitch repaired" for "Mission complete!" when `isLast`.)
+### 2. Stagger Briefing narration — `src/components/FractionFactoryLevel2.tsx`
+In `BriefingPanel`, remove the duplicate `useAutoSpeak` + `useNarrate`. Compose a single combined narration string ("`{zedBriefing}` … Help ZED-4 read this fraction. Listen, look, and tap when you spot a glitch.") and call `useNarrate` once. With the queue in place this single string will reliably play.
 
-## 2. Increase font sizes
+### 3. Re-narrate on every phase entry — workspaces
+The 4 workspaces already use `useNarrate(narration, [step, caseDef.id])`. With the queue, those calls will actually play. No change needed beyond verifying the dep arrays. Also bump the initial delay in `useNarrate` from 200ms → 350ms so the workspace mount has time to settle after the phase swap.
 
-Bump the readable copy across Level 2 (kept proportional, mobile-safe):
+### 4. Add a big "🔊 Read this aloud" button on every workspace header
+Kids should never be stuck waiting for autoplay. In each of `NumeratorScanner`, `DenominatorRepair`, `UnitFractionSorter`, `CollectionVault`, and `GlitchCheckPanel`, add a prominent `ReplayInstructionsButton` next to the `h3`, reading the same narration string that `useNarrate` uses. Use the non-compact (larger) variant so it's tap-friendly for kids.
 
-- Workspace headers in all 4 workspaces: `text-xl` → `text-2xl`, eyebrow lines from `label-eyebrow` (small caps) keep size but the helper paragraphs go from `text-sm` → `text-base`.
-- `CaseDonePanel` heading `text-2xl` → `text-3xl`, body `text-sm` → `text-base`.
-- `BriefingPanel` heading `text-xl` → `text-2xl`, body paragraph to `text-lg`.
-- `Intro` body already `text-base sm:text-lg`; bump to `text-lg sm:text-xl`.
-- `MissionSelect` card title `text-lg` → `text-xl`, focus line `text-sm` → `text-base`.
-- `GlitchCheckPanel` headings / buttons: nudge headings up one step and button labels to `text-lg` for tap clarity.
-
-No design-token changes; just Tailwind class bumps so the theme stays consistent.
-
-## 3. Unlock every mission in Level 1 and Level 2
-
-Currently `useLevelProgress` gates missions behind `id === 1 || prior complete`. Change unlock behavior so all missions are immediately playable while keeping completion tracking intact:
-
-- `src/lib/mission-progress.ts` — change `isMissionUnlocked` to always return `true`. Completion state (`isMissionComplete`, `markComplete`, counts) is unchanged, so the "Done" chip and progress counters keep working.
-
-This automatically unlocks every mission in both Level 1's `MissionSelect` and Level 2's `MissionSelect` (and the level cards on `/play` that rely on unlock state for the level itself remain unaffected — Level 2 is already force-unlocked via `level2Unlocked = true`).
+### 5. CaseDonePanel
+It already uses `useNarrate`; just confirm it's queued (no code change beyond what step 1 enables).
 
 ## Files touched
 
-- `src/components/level2/workspaces/NumeratorScanner.tsx`
-- `src/components/level2/workspaces/DenominatorRepair.tsx`
-- `src/components/level2/workspaces/UnitFractionSorter.tsx`
-- `src/components/level2/workspaces/CollectionVault.tsx`
-- `src/components/FractionFactoryLevel2.tsx` (BriefingPanel + CaseDonePanel narration, font bumps, Intro/MissionSelect font bumps)
-- `src/components/level2/GlitchCheckPanel.tsx` (font bumps only)
-- `src/lib/mission-progress.ts` (unlock-all)
+- `src/lib/speech.ts` — add queue runner; small refactor of `speakText`.
+- `src/lib/narrate.ts` — bump delay 200 → 350ms.
+- `src/components/FractionFactoryLevel2.tsx` — collapse Briefing's two narration hooks into one.
+- `src/components/level2/workspaces/NumeratorScanner.tsx` — add visible read-aloud button.
+- `src/components/level2/workspaces/DenominatorRepair.tsx` — add visible read-aloud button.
+- `src/components/level2/workspaces/UnitFractionSorter.tsx` — add visible read-aloud button.
+- `src/components/level2/workspaces/CollectionVault.tsx` — add visible read-aloud button.
+- `src/components/level2/GlitchCheckPanel.tsx` — add visible read-aloud button on both stages.
 
 ## Out of scope
 
-- No changes to `speech.ts`, evaluation logic, or mission content.
-- No changes to Level 1 mission flow other than the unlock-all behavior inherited from `mission-progress.ts`.
+- No backend, no Lovable AI calls — browser `speechSynthesis` only.
+- No changes to mission content, glitch-check logic, or font sizes (those are already in place).
+- Level 1 voice is unchanged.
+
+After approval I'll implement and verify by walking through Mission 1 in the preview: confirm the briefing speaks, the glitch-check speaks, and the workspace heading speaks on entering the repair phase.

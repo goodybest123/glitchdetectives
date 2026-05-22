@@ -7,11 +7,69 @@ export function isSpeaking() {
   return speakingFlag || !!window.speechSynthesis?.speaking;
 }
 
+type QueueItem = { text: string; onEnd?: () => void };
+const queue: QueueItem[] = [];
+let running = false;
+
+function pickVoice(): SpeechSynthesisVoice | undefined {
+  const voices = window.speechSynthesis.getVoices();
+  return (
+    voices.find((v) => /Google US English/i.test(v.name)) ||
+    voices.find((v) => /en-US/i.test(v.lang) && /female/i.test(v.name)) ||
+    voices.find((v) => /en/i.test(v.lang))
+  );
+}
+
+function runNext() {
+  if (running) return;
+  const item = queue.shift();
+  if (!item) {
+    speakingFlag = false;
+    return;
+  }
+  running = true;
+  speakingFlag = true;
+  const s = getVoiceSettings();
+  // Small gap avoids the Chrome cancel→speak race that silently drops utterances.
+  setTimeout(() => {
+    try {
+      const u = new SpeechSynthesisUtterance(item.text);
+      u.rate = s.rate;
+      u.pitch = s.pitch;
+      u.volume = s.volume;
+      const v = pickVoice();
+      if (v) u.voice = v;
+      const finish = () => {
+        running = false;
+        item.onEnd?.();
+        if (queue.length === 0) speakingFlag = false;
+        runNext();
+      };
+      u.onend = finish;
+      u.onerror = finish;
+      window.speechSynthesis.speak(u);
+    } catch {
+      running = false;
+      item.onEnd?.();
+      runNext();
+    }
+  }, 60);
+}
+
 /**
  * Speak text using the user's global voice settings. Respects mute.
- * Pass `force: true` to bypass the autoSpeak gate (e.g. tap-to-replay).
+ * Queues utterances so back-to-back calls play in order instead of
+ * cancelling each other.
+ *
+ * Options:
+ * - `force`: bypass the autoSpeak gate (e.g. tap-to-replay).
+ * - `interrupt`: clear the queue and any in-flight speech before speaking.
  */
-export function speakText(text: string, onEnd?: () => void, opts?: { force?: boolean }) {
+export function speakText(
+  text: string,
+  onEnd?: () => void,
+  opts?: { force?: boolean; interrupt?: boolean },
+) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) {
     onEnd?.();
     return;
@@ -19,26 +77,14 @@ export function speakText(text: string, onEnd?: () => void, opts?: { force?: boo
   const s = getVoiceSettings();
   if (s.muted) { onEnd?.(); return; }
   if (!opts?.force && !s.autoSpeak) { onEnd?.(); return; }
-  try {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = s.rate;
-    u.pitch = s.pitch;
-    u.volume = s.volume;
-    const voices = window.speechSynthesis.getVoices();
-    const preferred =
-      voices.find((v) => /Google US English/i.test(v.name)) ||
-      voices.find((v) => /en-US/i.test(v.lang) && /female/i.test(v.name)) ||
-      voices.find((v) => /en/i.test(v.lang));
-    if (preferred) u.voice = preferred;
-    speakingFlag = true;
-    u.onend = () => { speakingFlag = false; onEnd?.(); };
-    u.onerror = () => { speakingFlag = false; onEnd?.(); };
-    window.speechSynthesis.speak(u);
-  } catch {
-    speakingFlag = false;
-    onEnd?.();
+  if (!text || !text.trim()) { onEnd?.(); return; }
+  if (opts?.interrupt) {
+    queue.length = 0;
+    try { window.speechSynthesis.cancel(); } catch { /* */ }
+    running = false;
   }
+  queue.push({ text, onEnd });
+  runNext();
 }
 
 export function useAutoSpeak(text: string, deps: unknown[] = []) {

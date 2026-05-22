@@ -7,6 +7,7 @@ import { speakText } from "@/lib/speech";
 import { FractionVisual } from "./fractions/FractionVisual";
 import { FractionNotation } from "./fractions/FractionNotation";
 import { ConversationPanel } from "./ConversationPanel";
+import { ReplayInstructionsButton } from "./ReplayInstructionsButton";
 
 /**
  * Glitch Check — sits between the case briefing and the repair workspace.
@@ -73,13 +74,16 @@ export function GlitchCheckPanel({
       "Oh no — what did I get wrong, teacher? Tell me about the glitch you found.";
     return (
       <div className="flex flex-col gap-4">
-        <header>
-          <p className="label-eyebrow text-cyan-300/80">
-            Glitch report · Tell ZED what's wrong
-          </p>
-          <h3 className="text-2xl font-bold text-cyan-50 mt-1">
-            Explain the glitch to ZED-4
-          </h3>
+        <header className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <p className="label-eyebrow text-cyan-300/80">
+              Glitch report · Tell ZED what's wrong
+            </p>
+            <h3 className="text-2xl font-bold text-cyan-50 mt-1">
+              Explain the glitch to ZED-4
+            </h3>
+          </div>
+          <ReplayInstructionsButton text={seed} />
         </header>
         <ConversationPanel
           key={`glitch-${caseDef.id}`}
@@ -93,16 +97,19 @@ export function GlitchCheckPanel({
 
   return (
     <div className="flex flex-col gap-5">
-      <header>
-        <p className="label-eyebrow text-cyan-300/80">
-          Glitch check · Phase 0
-        </p>
-        <h3 className="text-2xl font-bold text-cyan-50 mt-1">
-          Is ZED right, or is there a glitch?
-        </h3>
-        <p className="text-base text-cyan-100/85 mt-2 leading-relaxed">
-          {PROMPT}
-        </p>
+      <header className="flex items-start justify-between gap-3 flex-wrap">
+        <div className="flex-1 min-w-[200px]">
+          <p className="label-eyebrow text-cyan-300/80">
+            Glitch check · Phase 0
+          </p>
+          <h3 className="text-2xl font-bold text-cyan-50 mt-1">
+            Is ZED right, or is there a glitch?
+          </h3>
+          <p className="text-base text-cyan-100/85 mt-2 leading-relaxed">
+            {PROMPT}
+          </p>
+        </div>
+        <ReplayInstructionsButton text={PROMPT} />
       </header>
 
       <div className="flex items-center justify-center gap-6 flex-wrap">
