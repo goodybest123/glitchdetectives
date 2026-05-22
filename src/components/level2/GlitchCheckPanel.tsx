@@ -120,7 +120,7 @@ export function GlitchCheckPanel({
         <motion.button
           whileTap={{ scale: 0.97 }}
           onClick={handleSayRight}
-          className="inline-flex items-center justify-center gap-2 px-4 py-4 rounded-2xl font-bold text-base"
+          className="inline-flex items-center justify-center gap-2 px-4 py-4 rounded-2xl font-bold text-lg"
           style={{
             background: "linear-gradient(135deg, #7df4c6, #2bb789)",
             color: "#04162e",
@@ -132,7 +132,7 @@ export function GlitchCheckPanel({
         <motion.button
           whileTap={{ scale: 0.97 }}
           onClick={handleSayGlitch}
-          className="inline-flex items-center justify-center gap-2 px-4 py-4 rounded-2xl font-bold text-base"
+          className="inline-flex items-center justify-center gap-2 px-4 py-4 rounded-2xl font-bold text-lg"
           style={{
             background: "linear-gradient(135deg, #ffb38a, #e85d3a)",
             color: "#04162e",
