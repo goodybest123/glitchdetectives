@@ -430,9 +430,8 @@ function BriefingPanel({
   caseDef: CaseDef;
   onContinue: () => void;
 }) {
-  useAutoSpeak(caseDef.zedBriefing, [caseDef.id]);
   useNarrate(
-    "Help ZED-4 read this fraction. Listen to ZED-4. Look at the picture. Is ZED right? Tap the picture to help fix it, then tell ZED what you noticed.",
+    `${caseDef.zedBriefing} … Help ZED-4 read this fraction. Listen to ZED-4. Look at the picture. Is ZED right? Tap the picture to help fix it, then tell ZED what you noticed.`,
     [caseDef.id],
   );
   return (
