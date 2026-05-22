@@ -5,6 +5,7 @@ import type { CaseDef, FractionPair } from "@/lib/level2/types";
 import { useNarrate } from "@/lib/narrate";
 import { NumberWheel, TapToCountVisual } from "./shared";
 import { FractionNotation } from "../fractions/FractionNotation";
+import { ReplayInstructionsButton } from "../ReplayInstructionsButton";
 
 /**
  * Mission 4 — Fraction Collection Vault.
