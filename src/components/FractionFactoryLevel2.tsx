@@ -472,6 +472,12 @@ function CaseDonePanel({
   onNext: () => void;
   onFinish: () => void;
 }) {
+  useNarrate(
+    isLast
+      ? "Case resolved. Mission complete! ZED-4 logged your reasoning. The factory's naming systems are coming back online."
+      : "Case resolved. Glitch repaired. ZED-4 logged your reasoning. The factory's naming systems are coming back online.",
+    [isLast],
+  );
   return (
     <motion.div
       initial={{ scale: 0.96, opacity: 0 }}
@@ -484,10 +490,10 @@ function CaseDonePanel({
     >
       <Sparkles className="w-10 h-10 mx-auto text-emerald-300" />
       <p className="label-eyebrow text-emerald-200">Case resolved</p>
-      <h3 className="text-2xl font-bold text-cyan-50">
+      <h3 className="text-3xl font-bold text-cyan-50">
         {isLast ? "Mission complete!" : "Glitch repaired."}
       </h3>
-      <p className="text-sm text-cyan-100/90">
+      <p className="text-base text-cyan-100/90">
         ZED-4 logged your reasoning. The factory's naming systems are coming
         back online.
       </p>
