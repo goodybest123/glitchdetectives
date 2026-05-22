@@ -431,15 +431,19 @@ function BriefingPanel({
   onContinue: () => void;
 }) {
   useAutoSpeak(caseDef.zedBriefing, [caseDef.id]);
+  useNarrate(
+    "Help ZED-4 read this fraction. Listen to ZED-4. Look at the picture. Is ZED right? Tap the picture to help fix it, then tell ZED what you noticed.",
+    [caseDef.id],
+  );
   return (
     <div className="flex flex-col gap-5">
       <header>
         <p className="label-eyebrow text-cyan-300/80">{caseDef.caseNumber}</p>
-        <h3 className="text-xl font-bold text-cyan-50 mt-1">
+        <h3 className="text-2xl font-bold text-cyan-50 mt-1">
           Help ZED-4 read this fraction
         </h3>
       </header>
-      <p className="text-cyan-100/90 leading-relaxed">
+      <p className="text-lg text-cyan-100/90 leading-relaxed">
         Listen to ZED-4. Look at the picture. Is ZED right? Tap the picture to
         help fix it, then tell ZED what you noticed.
       </p>
