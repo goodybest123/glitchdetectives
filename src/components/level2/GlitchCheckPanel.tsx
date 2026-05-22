@@ -77,7 +77,7 @@ export function GlitchCheckPanel({
           <p className="label-eyebrow text-cyan-300/80">
             Glitch report · Tell ZED what's wrong
           </p>
-          <h3 className="text-xl font-bold text-cyan-50 mt-1">
+          <h3 className="text-2xl font-bold text-cyan-50 mt-1">
             Explain the glitch to ZED-4
           </h3>
         </header>
@@ -97,10 +97,10 @@ export function GlitchCheckPanel({
         <p className="label-eyebrow text-cyan-300/80">
           Glitch check · Phase 0
         </p>
-        <h3 className="text-xl font-bold text-cyan-50 mt-1">
+        <h3 className="text-2xl font-bold text-cyan-50 mt-1">
           Is ZED right, or is there a glitch?
         </h3>
-        <p className="text-sm text-cyan-100/85 mt-2 leading-relaxed">
+        <p className="text-base text-cyan-100/85 mt-2 leading-relaxed">
           {PROMPT}
         </p>
       </header>
@@ -120,7 +120,7 @@ export function GlitchCheckPanel({
         <motion.button
           whileTap={{ scale: 0.97 }}
           onClick={handleSayRight}
-          className="inline-flex items-center justify-center gap-2 px-4 py-4 rounded-2xl font-bold text-base"
+          className="inline-flex items-center justify-center gap-2 px-4 py-4 rounded-2xl font-bold text-lg"
           style={{
             background: "linear-gradient(135deg, #7df4c6, #2bb789)",
             color: "#04162e",
@@ -132,7 +132,7 @@ export function GlitchCheckPanel({
         <motion.button
           whileTap={{ scale: 0.97 }}
           onClick={handleSayGlitch}
-          className="inline-flex items-center justify-center gap-2 px-4 py-4 rounded-2xl font-bold text-base"
+          className="inline-flex items-center justify-center gap-2 px-4 py-4 rounded-2xl font-bold text-lg"
           style={{
             background: "linear-gradient(135deg, #ffb38a, #e85d3a)",
             color: "#04162e",

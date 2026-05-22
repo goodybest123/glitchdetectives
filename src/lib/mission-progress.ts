@@ -93,8 +93,8 @@ export function useLevelProgress(level: number) {
   const completedIds = Object.keys(progress.completed).map(Number).sort();
   const completedCount = completedIds.length;
   const isMissionComplete = (id: number) => Boolean(progress.completed[id]);
-  /** Mission N unlocked when N=1 OR mission N-1 is complete. */
-  const isMissionUnlocked = (id: number) => id === 1 || isMissionComplete(id - 1);
+  /** All missions are unlocked. */
+  const isMissionUnlocked = (_id: number) => true;
 
   return {
     progress,

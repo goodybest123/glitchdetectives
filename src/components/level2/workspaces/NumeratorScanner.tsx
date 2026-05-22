@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ScanLine, Wrench } from "lucide-react";
 import type { CaseDef, FractionPair } from "@/lib/level2/types";
+import { useNarrate } from "@/lib/narrate";
 import { NumberTilePicker, TapToCountVisual } from "./shared";
 import { FractionNotation } from "../fractions/FractionNotation";
 
@@ -43,13 +44,19 @@ export function NumeratorScanner({
     }
   };
 
+  const narration =
+    step === "detect"
+      ? "Phase 1. Scan selected parts. Tap each lit part to register a scan."
+      : "Phase 2. Repair numerator. Choose the correct numerator.";
+  useNarrate(narration, [step, caseDef.id]);
+
   return (
     <div className="flex flex-col gap-5">
       <header>
         <p className="label-eyebrow text-cyan-300/80">
           {step === "detect" ? "Phase 1 · Scan selected parts" : "Phase 2 · Repair numerator"}
         </p>
-        <h3 className="text-xl font-bold text-cyan-50 mt-1">
+        <h3 className="text-2xl font-bold text-cyan-50 mt-1">
           {step === "detect"
             ? "Tap each LIT part to register a scan."
             : "Choose the correct numerator."}
