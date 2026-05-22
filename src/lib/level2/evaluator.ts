@@ -18,6 +18,19 @@ const KEYWORDS: Record<ConceptKey, string[]> = {
     "total", "all", "objects", "group", "set", "out of", "selected",
     "glowing", "active", "every",
   ],
+  "number-line": [
+    "halfway", "middle", "between", "closer", "near", "before", "after",
+    "left", "right", "1/2", "half", "quarter", "tick", "mark", "spot", "position", "checkpoint",
+  ],
+  equivalence: [
+    "same", "equal", "match", "amount", "size", "half", "double", "same amount", "the same",
+  ],
+  comparison: [
+    "bigger", "smaller", "more", "less", "larger", "fewer", "greater", "than", "shaded", "filled",
+  ],
+  "whole-as-fraction": [
+    "whole", "all", "complete", "one whole", "full", "every part", "every piece", "all of it",
+  ],
 };
 
 export function hasConceptKeywordL2(text: string, concept: ConceptKey): boolean {
