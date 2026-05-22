@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ScanLine, Wrench } from "lucide-react";
 import type { CaseDef, FractionPair } from "@/lib/level2/types";
+import { useNarrate } from "@/lib/narrate";
 import { NumberTilePicker, TapToCountVisual } from "./shared";
 import { FractionNotation } from "../fractions/FractionNotation";
 
