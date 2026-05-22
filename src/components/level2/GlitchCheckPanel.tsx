@@ -97,16 +97,19 @@ export function GlitchCheckPanel({
 
   return (
     <div className="flex flex-col gap-5">
-      <header>
-        <p className="label-eyebrow text-cyan-300/80">
-          Glitch check · Phase 0
-        </p>
-        <h3 className="text-2xl font-bold text-cyan-50 mt-1">
-          Is ZED right, or is there a glitch?
-        </h3>
-        <p className="text-base text-cyan-100/85 mt-2 leading-relaxed">
-          {PROMPT}
-        </p>
+      <header className="flex items-start justify-between gap-3 flex-wrap">
+        <div className="flex-1 min-w-[200px]">
+          <p className="label-eyebrow text-cyan-300/80">
+            Glitch check · Phase 0
+          </p>
+          <h3 className="text-2xl font-bold text-cyan-50 mt-1">
+            Is ZED right, or is there a glitch?
+          </h3>
+          <p className="text-base text-cyan-100/85 mt-2 leading-relaxed">
+            {PROMPT}
+          </p>
+        </div>
+        <ReplayInstructionsButton text={PROMPT} />
       </header>
 
       <div className="flex items-center justify-center gap-6 flex-wrap">
