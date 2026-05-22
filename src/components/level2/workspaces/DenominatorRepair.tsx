@@ -47,13 +47,19 @@ export function DenominatorRepair({
     }
   };
 
+  const narration =
+    step === "detect"
+      ? "Phase 1. Inspect the whole. Tap every part, lit or dark, to map the whole."
+      : "Phase 2. Repair denominator. Choose the correct denominator.";
+  useNarrate(narration, [step, caseDef.id]);
+
   return (
     <div className="flex flex-col gap-5">
       <header>
         <p className="label-eyebrow text-cyan-300/80">
           {step === "detect" ? "Phase 1 · Inspect the whole" : "Phase 2 · Repair denominator"}
         </p>
-        <h3 className="text-xl font-bold text-cyan-50 mt-1">
+        <h3 className="text-2xl font-bold text-cyan-50 mt-1">
           {step === "detect"
             ? "Tap EVERY part — lit or dark — to map the whole."
             : "Choose the correct denominator."}
