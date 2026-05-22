@@ -4,6 +4,7 @@ import { CheckCircle2, Layers } from "lucide-react";
 import type { CaseDef, FractionPair, SortCard } from "@/lib/level2/types";
 import { useNarrate } from "@/lib/narrate";
 import { MISSION_3_CARDS } from "@/lib/level2/missions";
+import { ReplayInstructionsButton } from "../ReplayInstructionsButton";
 
 type Bucket = "unit" | "non-unit";
 
