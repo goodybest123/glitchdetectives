@@ -5,6 +5,7 @@ import type { CaseDef, FractionPair } from "@/lib/level2/types";
 import { useNarrate } from "@/lib/narrate";
 import { NumberTilePicker, TapToCountVisual } from "./shared";
 import { FractionNotation } from "../fractions/FractionNotation";
+import { ReplayInstructionsButton } from "../ReplayInstructionsButton";
 
 /**
  * Mission 1 — Numerator Control Room workspace.
