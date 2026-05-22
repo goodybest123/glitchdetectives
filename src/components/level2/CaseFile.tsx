@@ -75,9 +75,10 @@ export function CaseFile({
             corruptedField={
               caseDef.corruptedField === "set"
                 ? "both"
-                : caseDef.corruptedField === "sort"
-                  ? "none"
-                  : caseDef.corruptedField
+                : caseDef.corruptedField === "numerator" ||
+                    caseDef.corruptedField === "denominator"
+                  ? caseDef.corruptedField
+                  : "none"
             }
             state="corrupted"
             size="md"
