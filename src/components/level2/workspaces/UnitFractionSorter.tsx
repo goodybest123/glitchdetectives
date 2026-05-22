@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Layers } from "lucide-react";
 import type { CaseDef, FractionPair, SortCard } from "@/lib/level2/types";
+import { useNarrate } from "@/lib/narrate";
 import { MISSION_3_CARDS } from "@/lib/level2/missions";
 
 type Bucket = "unit" | "non-unit";
