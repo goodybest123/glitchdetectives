@@ -14,7 +14,7 @@ export function useNarrate(text: string | undefined | null, deps: unknown[] = []
     const s = getVoiceSettings();
     if (s.muted || !s.autoSpeak) return;
     // Small delay so the voice list is ready and the screen has painted.
-    const t = setTimeout(() => speakText(text), 200);
+    const t = setTimeout(() => speakText(text), 350);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, ...deps]);
