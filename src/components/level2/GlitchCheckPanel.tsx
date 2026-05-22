@@ -97,10 +97,10 @@ export function GlitchCheckPanel({
         <p className="label-eyebrow text-cyan-300/80">
           Glitch check · Phase 0
         </p>
-        <h3 className="text-xl font-bold text-cyan-50 mt-1">
+        <h3 className="text-2xl font-bold text-cyan-50 mt-1">
           Is ZED right, or is there a glitch?
         </h3>
-        <p className="text-sm text-cyan-100/85 mt-2 leading-relaxed">
+        <p className="text-base text-cyan-100/85 mt-2 leading-relaxed">
           {PROMPT}
         </p>
       </header>
