@@ -14,13 +14,25 @@ export type FractionVisualSpec = {
 
 export type FractionPair = { numerator: number; denominator: number };
 
-export type CorruptedField = "numerator" | "denominator" | "sort" | "set";
+export type CorruptedField =
+  | "numerator"
+  | "denominator"
+  | "sort"
+  | "set"
+  | "position"
+  | "equivalence"
+  | "comparison"
+  | "whole";
 
 export type ConceptKey =
   | "numerator"
   | "denominator"
   | "unit-fraction"
-  | "fraction-of-set";
+  | "fraction-of-set"
+  | "number-line"
+  | "equivalence"
+  | "comparison"
+  | "whole-as-fraction";
 
 export type CaseDef = {
   id: string;

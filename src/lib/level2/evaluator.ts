@@ -18,6 +18,19 @@ const KEYWORDS: Record<ConceptKey, string[]> = {
     "total", "all", "objects", "group", "set", "out of", "selected",
     "glowing", "active", "every",
   ],
+  "number-line": [
+    "halfway", "middle", "between", "closer", "near", "before", "after",
+    "left", "right", "1/2", "half", "quarter", "tick", "mark", "spot", "position", "checkpoint",
+  ],
+  equivalence: [
+    "same", "equal", "match", "amount", "size", "half", "double", "same amount", "the same",
+  ],
+  comparison: [
+    "bigger", "smaller", "more", "less", "larger", "fewer", "greater", "than", "shaded", "filled",
+  ],
+  "whole-as-fraction": [
+    "whole", "all", "complete", "one whole", "full", "every part", "every piece", "all of it",
+  ],
 };
 
 export function hasConceptKeywordL2(text: string, concept: ConceptKey): boolean {
@@ -50,4 +63,12 @@ export const MODEL_REASONING: Record<ConceptKey, string> = {
     "A unit fraction has a 1 on top — one single equal part of the whole.",
   "fraction-of-set":
     "For a set, the bottom is the total objects and the top is the chosen ones.",
+  "number-line":
+    "On a number line, the fraction tells us where to stop between 0 and 1.",
+  equivalence:
+    "Equivalent fractions cover the same amount, even when the numbers look different.",
+  comparison:
+    "When the wholes are the same size, the fraction with more shaded parts is bigger.",
+  "whole-as-fraction":
+    "When every part is filled, the fraction equals one whole.",
 };

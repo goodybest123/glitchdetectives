@@ -71,6 +71,18 @@ export function ConversationPanel({
     if (conceptKey === "unit-fraction") {
       return `Ohh! A unit fraction always has a 1 on top. That means only one piece is taken!`;
     }
+    if (conceptKey === "number-line") {
+      return `Ohh! I see now. On the path, ${truth.numerator}/${truth.denominator} means I cut the road from 0 to 1 into ${truth.denominator} equal steps and stop after ${truth.numerator} of them!`;
+    }
+    if (conceptKey === "equivalence") {
+      return `Ohh! I get it. Even if the numbers look different, ${truth.numerator}/${truth.denominator} covers the SAME amount as the other one. Same shaded space — just sliced differently!`;
+    }
+    if (conceptKey === "comparison") {
+      return `Ohh! Same-size wholes, so I compare the shaded space. The one with MORE shaded is bigger, even if its bottom number looks smaller!`;
+    }
+    if (conceptKey === "whole-as-fraction") {
+      return `Ohh! When ALL the parts are filled, the top number equals the bottom number — and that's the same as 1 whole!`;
+    }
     return `Ohh! I see now. The top number is how many are glowing (${truth.numerator}), and the bottom is ALL of them (${truth.denominator}). So it's ${truth.numerator} out of ${truth.denominator}!`;
   };
 

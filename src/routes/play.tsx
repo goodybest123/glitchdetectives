@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import FractionFactoryLevel1 from "@/components/FractionFactoryLevel1";
 import FractionFactoryLevel2 from "@/components/FractionFactoryLevel2";
+import FractionFactoryLevel3 from "@/components/FractionFactoryLevel3";
 import { useLevelProgress } from "@/lib/mission-progress";
 
 
@@ -41,7 +42,7 @@ type Level = {
 const LEVELS: Level[] = [
   { n: 1, grade: 1, title: "Fraction Foundations", desc: "Spot unequal parts, repair halves, build quarters, and master mixed shares.", focus: "Halves & quarters", missions: 4, done: 0, unlocked: true, Icon: Layers },
   { n: 2, grade: 2, title: "Fraction Discovery Zone", desc: "Children begin understanding how fractions are written and interpreted.", focus: "Numerators, denominators, unit fractions", missions: 4, done: 0, unlocked: false, Icon: Scissors },
-  { n: 3, grade: 3, title: "Number Line & Equivalence Sector", desc: "Plot fractions on number lines and uncover equivalent forms.", focus: "Equivalence on the number line", missions: 5, done: 0, unlocked: false, Icon: Ruler },
+  { n: 3, grade: 3, title: "Fraction Pathways & Equivalence City", desc: "Repair pathways, sync equivalence reactors, balance comparison scanners, and restore the identity vault.", focus: "Number lines · Equivalence · Comparison · Whole numbers", missions: 4, done: 0, unlocked: true, Icon: Ruler },
   { n: 4, grade: 4, title: "Fraction Repair Systems", desc: "Diagnose and fix broken addition and subtraction of fractions.", focus: "Add & subtract like fractions", missions: 6, done: 0, unlocked: false, Icon: Wrench },
   { n: 5, grade: 5, title: "Advanced Fraction Operations", desc: "Multiply, divide, and reason with mixed numbers.", focus: "Multiply, divide, mixed numbers", missions: 6, done: 0, unlocked: false, Icon: Calculator },
   { n: 6, grade: 6, title: "Fraction Mastery Lab", desc: "Stress-test ratios, rates, and proportional reasoning.", focus: "Ratios & proportional reasoning", missions: 6, done: 0, unlocked: false, Icon: FlaskConical },
@@ -55,19 +56,23 @@ function Play() {
   if (activeLevel === 2) {
     return <FractionFactoryLevel2 onExitToHub={() => setActiveLevel(null)} />;
   }
+  if (activeLevel === 3) {
+    return <FractionFactoryLevel3 onExitToHub={() => setActiveLevel(null)} />;
+  }
   return <LevelSelect onStart={(n) => setActiveLevel(n)} />;
 }
 
 function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
   const level1 = useLevelProgress(1);
   const level2 = useLevelProgress(2);
+  const level3 = useLevelProgress(3);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const level2Unlocked = true;
   const levels = LEVELS.map((l) => {
-    if (!mounted) return l; // SSR + first paint use defaults to avoid hydration mismatch
+    if (!mounted) return l;
     if (l.n === 1) return { ...l, done: level1.completedCount };
-    if (l.n === 2) return { ...l, done: level2.completedCount, unlocked: level2Unlocked };
+    if (l.n === 2) return { ...l, done: level2.completedCount, unlocked: true };
+    if (l.n === 3) return { ...l, done: level3.completedCount, unlocked: true };
     return l;
   });
 
