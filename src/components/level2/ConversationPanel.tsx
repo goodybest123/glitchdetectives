@@ -83,6 +83,24 @@ export function ConversationPanel({
     if (conceptKey === "whole-as-fraction") {
       return `Ohh! When ALL the parts are filled, the top number equals the bottom number — and that's the same as 1 whole!`;
     }
+    if (conceptKey === "add-like") {
+      return `Ohh! I get it now. The pieces are the SAME size, so I just add the top numbers. The bottom number names the size — it stays ${truth.denominator}. So the answer is ${truth.numerator}/${truth.denominator}!`;
+    }
+    if (conceptKey === "subtract-like") {
+      return `Ohh! Same-size pieces means I just subtract the top numbers. The bottom stays ${truth.denominator} because the pieces are still that size. The answer is ${truth.numerator}/${truth.denominator}!`;
+    }
+    if (conceptKey === "denominator-stability") {
+      return `Ohh! The whole was cut into ${truth.denominator} equal parts before AND after. The bottom number names the part size — it can't change just because we added or took some away!`;
+    }
+    if (conceptKey === "equivalence-generation") {
+      return `Ohh! If I split each piece into the same number of smaller pieces, the top and bottom both grow by that same number. Same amount of pizza, just more slices. So it becomes ${truth.numerator}/${truth.denominator}!`;
+    }
+    if (conceptKey === "simplification") {
+      return `Ohh! I can group the equal pieces into bigger equal chunks. Same amount, fewer parts. The simplest form is ${truth.numerator}/${truth.denominator}!`;
+    }
+    if (conceptKey === "mixed-ops") {
+      return `Ohh! I fix it one step at a time — keep the bottom the same when the pieces match, then simplify at the end. The repaired answer is ${truth.numerator}/${truth.denominator}!`;
+    }
     return `Ohh! I see now. The top number is how many are glowing (${truth.numerator}), and the bottom is ALL of them (${truth.denominator}). So it's ${truth.numerator} out of ${truth.denominator}!`;
   };
 
