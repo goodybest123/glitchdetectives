@@ -22,7 +22,8 @@ export type CorruptedField =
   | "position"
   | "equivalence"
   | "comparison"
-  | "whole";
+  | "whole"
+  | "operation";
 
 export type ConceptKey =
   | "numerator"
@@ -32,7 +33,13 @@ export type ConceptKey =
   | "number-line"
   | "equivalence"
   | "comparison"
-  | "whole-as-fraction";
+  | "whole-as-fraction"
+  | "add-like"
+  | "subtract-like"
+  | "denominator-stability"
+  | "equivalence-generation"
+  | "simplification"
+  | "mixed-ops";
 
 export type CaseDef = {
   id: string;

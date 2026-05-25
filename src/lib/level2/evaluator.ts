@@ -31,6 +31,30 @@ const KEYWORDS: Record<ConceptKey, string[]> = {
   "whole-as-fraction": [
     "whole", "all", "complete", "one whole", "full", "every part", "every piece", "all of it",
   ],
+  "add-like": [
+    "add", "added", "plus", "combine", "combined", "merge", "together", "total",
+    "same size", "same bottom", "equal parts", "count", "more",
+  ],
+  "subtract-like": [
+    "subtract", "minus", "remove", "take away", "took", "leak", "left", "leftover",
+    "same bottom", "same size", "equal parts", "fewer", "less",
+  ],
+  "denominator-stability": [
+    "same", "stays", "stay", "doesn't change", "did not change", "same bottom",
+    "same size", "equal parts", "whole", "partition",
+  ],
+  "equivalence-generation": [
+    "multiply", "times", "double", "triple", "split", "cut", "twice", "same amount",
+    "equal", "equivalent", "both", "top and bottom",
+  ],
+  simplification: [
+    "group", "groups", "combine", "divide", "divided", "factor", "common",
+    "smaller", "simpler", "reduce", "simplest", "same amount", "fewer pieces",
+  ],
+  "mixed-ops": [
+    "first", "then", "next", "after", "step", "combine", "simplify", "equivalent",
+    "add", "subtract", "same", "result", "answer",
+  ],
 };
 
 export function hasConceptKeywordL2(text: string, concept: ConceptKey): boolean {
@@ -71,4 +95,16 @@ export const MODEL_REASONING: Record<ConceptKey, string> = {
     "When the wholes are the same size, the fraction with more shaded parts is bigger.",
   "whole-as-fraction":
     "When every part is filled, the fraction equals one whole.",
+  "add-like":
+    "When the parts are the same size, we add the top numbers — the bottom number tells us the part size and stays the same.",
+  "subtract-like":
+    "Equal-size parts means we just take away the top numbers — the bottom number names the size and doesn't change.",
+  "denominator-stability":
+    "The whole was split into the same equal parts before and after, so the bottom number can't change.",
+  "equivalence-generation":
+    "If we split each piece into the same number of smaller pieces, the top and bottom both grow by that number — same amount, more pieces.",
+  simplification:
+    "We can group equal pieces into bigger equal chunks. Same amount of pizza, fewer parts named.",
+  "mixed-ops":
+    "Repair one step at a time: keep the bottom number when the parts are the same, then simplify at the end.",
 };
