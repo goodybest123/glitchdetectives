@@ -64,7 +64,10 @@ export function CategoryGrid() {
           <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-10">
             {visibleCategories.map((c) => (
               <li key={c.title}>
-                <CategoryCard category={c} />
+                <CategoryCard
+                  category={c}
+                  onActivate={c.live ? () => setActive(c.title) : undefined}
+                />
               </li>
             ))}
           </ul>
@@ -104,14 +107,28 @@ function FilterTabs({ active, onChange }: { active: TabKey; onChange: (t: TabKey
   );
 }
 
-function CategoryCard({ category: c }: { category: Category }) {
+function CategoryCard({ category: c, onActivate }: { category: Category; onActivate?: () => void }) {
   const Icon = c.icon;
+  const interactive = Boolean(onActivate);
   return (
     <div
-      className="group h-full rounded-3xl p-7 sm:p-8 border border-black/5 transition-transform hover:-translate-y-1 hover:shadow-md cursor-pointer"
+      className={`group h-full rounded-3xl p-7 sm:p-8 border border-black/5 transition-transform ${
+        interactive ? "hover:-translate-y-1 hover:shadow-md cursor-pointer" : "cursor-default"
+      }`}
       style={{ background: c.bg }}
-      role="link"
-      tabIndex={0}
+      role={interactive ? "button" : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onClick={onActivate}
+      onKeyDown={
+        interactive
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onActivate?.();
+              }
+            }
+          : undefined
+      }
     >
       <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white/70 backdrop-blur-sm">
         <Icon className="w-7 h-7" style={{ color: BLUE }} strokeWidth={2} />
