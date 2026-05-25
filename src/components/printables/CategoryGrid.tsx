@@ -64,7 +64,10 @@ export function CategoryGrid() {
           <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-10">
             {visibleCategories.map((c) => (
               <li key={c.title}>
-                <CategoryCard category={c} />
+                <CategoryCard
+                  category={c}
+                  onActivate={c.live ? () => setActive(c.title) : undefined}
+                />
               </li>
             ))}
           </ul>
