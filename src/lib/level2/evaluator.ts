@@ -95,4 +95,16 @@ export const MODEL_REASONING: Record<ConceptKey, string> = {
     "When the wholes are the same size, the fraction with more shaded parts is bigger.",
   "whole-as-fraction":
     "When every part is filled, the fraction equals one whole.",
+  "add-like":
+    "When the parts are the same size, we add the top numbers — the bottom number tells us the part size and stays the same.",
+  "subtract-like":
+    "Equal-size parts means we just take away the top numbers — the bottom number names the size and doesn't change.",
+  "denominator-stability":
+    "The whole was split into the same equal parts before and after, so the bottom number can't change.",
+  "equivalence-generation":
+    "If we split each piece into the same number of smaller pieces, the top and bottom both grow by that number — same amount, more pieces.",
+  simplification:
+    "We can group equal pieces into bigger equal chunks. Same amount of pizza, fewer parts named.",
+  "mixed-ops":
+    "Repair one step at a time: keep the bottom number when the parts are the same, then simplify at the end.",
 };
