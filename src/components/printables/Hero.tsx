@@ -1,4 +1,4 @@
-import { BookOpen, Printer, Sparkles } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 const BLUE = "var(--color-brand-blue)";
 const MINT = "var(--color-bg-mint)";
@@ -23,15 +23,6 @@ export function PrintablesHero() {
           Calm, hands-on, off-screen reasoning activities. Print, sit down with a pencil, and
           investigate the maths together — no screens, no rush, no red pens.
         </p>
-
-        <ul
-          className="mt-9 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm font-medium"
-          style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, transparent)" }}
-        >
-          <li className="inline-flex items-center gap-2"><Printer className="w-4 h-4" /> Print-friendly PDFs</li>
-          <li className="inline-flex items-center gap-2"><Sparkles className="w-4 h-4" /> Low-stimulation layouts</li>
-          <li className="inline-flex items-center gap-2"><BookOpen className="w-4 h-4" /> K–6 reasoning focus</li>
-        </ul>
       </div>
     </section>
   );

@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/sections";
 import { PrintablesHero } from "@/components/printables/Hero";
-import { SpotlightBanner } from "@/components/printables/SpotlightBanner";
 import { CategoryGrid } from "@/components/printables/CategoryGrid";
 import { BenefitsRow } from "@/components/printables/BenefitsRow";
 
@@ -24,7 +23,6 @@ function PrintablesPage() {
       <Navbar />
       <main>
         <PrintablesHero />
-        <SpotlightBanner />
         <CategoryGrid />
         <BenefitsRow />
         <Footer />
