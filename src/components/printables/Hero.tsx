@@ -1,0 +1,38 @@
+import { BookOpen, Printer, Sparkles } from "lucide-react";
+
+const BLUE = "var(--color-brand-blue)";
+const MINT = "var(--color-bg-mint)";
+
+export function PrintablesHero() {
+  return (
+    <section style={{ background: MINT }}>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20 lg:py-28 text-center">
+        <span className="label-eyebrow inline-flex items-center gap-2" style={{ color: BLUE }}>
+          <BookOpen className="w-4 h-4" /> Printables Library
+        </span>
+        <h1
+          className="heading-black uppercase text-4xl sm:text-5xl lg:text-6xl mt-5"
+          style={{ color: BLUE }}
+        >
+          The Glitch Detective<br /> Printables Library
+        </h1>
+        <p
+          className="mt-6 mx-auto max-w-2xl text-base sm:text-lg leading-relaxed"
+          style={{ color: "color-mix(in oklab, var(--color-brand-blue) 75%, transparent)" }}
+        >
+          Calm, hands-on, off-screen reasoning activities. Print, sit down with a pencil, and
+          investigate the maths together — no screens, no rush, no red pens.
+        </p>
+
+        <ul
+          className="mt-9 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm font-medium"
+          style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, transparent)" }}
+        >
+          <li className="inline-flex items-center gap-2"><Printer className="w-4 h-4" /> Print-friendly PDFs</li>
+          <li className="inline-flex items-center gap-2"><Sparkles className="w-4 h-4" /> Low-stimulation layouts</li>
+          <li className="inline-flex items-center gap-2"><BookOpen className="w-4 h-4" /> K–6 reasoning focus</li>
+        </ul>
+      </div>
+    </section>
+  );
+}

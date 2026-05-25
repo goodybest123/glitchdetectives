@@ -9,14 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PrintablesRouteImport } from './routes/printables'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
 import { Route as ApiTranscribeRouteImport } from './routes/api/transcribe'
 import { Route as ApiEvaluateWrongReasoningRouteImport } from './routes/api/evaluate-wrong-reasoning'
 import { Route as ApiEvaluateReasoningRouteImport } from './routes/api/evaluate-reasoning'
 import { Route as ApiEvaluateDetectReasoningRouteImport } from './routes/api/evaluate-detect-reasoning'
 import { Route as ApiEvaluateRouteImport } from './routes/api/evaluate'
 
+const PrintablesRoute = PrintablesRouteImport.update({
+  id: '/printables',
+  path: '/printables',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlayRoute = PlayRouteImport.update({
   id: '/play',
   path: '/play',
@@ -26,6 +33,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
+  id: '/fractions-l1',
+  path: '/fractions-l1',
+  getParentRoute: () => PrintablesRoute,
 } as any)
 const ApiTranscribeRoute = ApiTranscribeRouteImport.update({
   id: '/api/transcribe',
@@ -58,64 +70,77 @@ const ApiEvaluateRoute = ApiEvaluateRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/play': typeof PlayRoute
+  '/printables': typeof PrintablesRouteWithChildren
   '/api/evaluate': typeof ApiEvaluateRoute
   '/api/evaluate-detect-reasoning': typeof ApiEvaluateDetectReasoningRoute
   '/api/evaluate-reasoning': typeof ApiEvaluateReasoningRoute
   '/api/evaluate-wrong-reasoning': typeof ApiEvaluateWrongReasoningRoute
   '/api/transcribe': typeof ApiTranscribeRoute
+  '/printables/fractions-l1': typeof PrintablesFractionsL1Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/play': typeof PlayRoute
+  '/printables': typeof PrintablesRouteWithChildren
   '/api/evaluate': typeof ApiEvaluateRoute
   '/api/evaluate-detect-reasoning': typeof ApiEvaluateDetectReasoningRoute
   '/api/evaluate-reasoning': typeof ApiEvaluateReasoningRoute
   '/api/evaluate-wrong-reasoning': typeof ApiEvaluateWrongReasoningRoute
   '/api/transcribe': typeof ApiTranscribeRoute
+  '/printables/fractions-l1': typeof PrintablesFractionsL1Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/play': typeof PlayRoute
+  '/printables': typeof PrintablesRouteWithChildren
   '/api/evaluate': typeof ApiEvaluateRoute
   '/api/evaluate-detect-reasoning': typeof ApiEvaluateDetectReasoningRoute
   '/api/evaluate-reasoning': typeof ApiEvaluateReasoningRoute
   '/api/evaluate-wrong-reasoning': typeof ApiEvaluateWrongReasoningRoute
   '/api/transcribe': typeof ApiTranscribeRoute
+  '/printables/fractions-l1': typeof PrintablesFractionsL1Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/play'
+    | '/printables'
     | '/api/evaluate'
     | '/api/evaluate-detect-reasoning'
     | '/api/evaluate-reasoning'
     | '/api/evaluate-wrong-reasoning'
     | '/api/transcribe'
+    | '/printables/fractions-l1'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/play'
+    | '/printables'
     | '/api/evaluate'
     | '/api/evaluate-detect-reasoning'
     | '/api/evaluate-reasoning'
     | '/api/evaluate-wrong-reasoning'
     | '/api/transcribe'
+    | '/printables/fractions-l1'
   id:
     | '__root__'
     | '/'
     | '/play'
+    | '/printables'
     | '/api/evaluate'
     | '/api/evaluate-detect-reasoning'
     | '/api/evaluate-reasoning'
     | '/api/evaluate-wrong-reasoning'
     | '/api/transcribe'
+    | '/printables/fractions-l1'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PlayRoute: typeof PlayRoute
+  PrintablesRoute: typeof PrintablesRouteWithChildren
   ApiEvaluateRoute: typeof ApiEvaluateRoute
   ApiEvaluateDetectReasoningRoute: typeof ApiEvaluateDetectReasoningRoute
   ApiEvaluateReasoningRoute: typeof ApiEvaluateReasoningRoute
@@ -125,6 +150,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/printables': {
+      id: '/printables'
+      path: '/printables'
+      fullPath: '/printables'
+      preLoaderRoute: typeof PrintablesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/play': {
       id: '/play'
       path: '/play'
@@ -138,6 +170,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/printables/fractions-l1': {
+      id: '/printables/fractions-l1'
+      path: '/fractions-l1'
+      fullPath: '/printables/fractions-l1'
+      preLoaderRoute: typeof PrintablesFractionsL1RouteImport
+      parentRoute: typeof PrintablesRoute
     }
     '/api/transcribe': {
       id: '/api/transcribe'
@@ -177,9 +216,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PrintablesRouteChildren {
+  PrintablesFractionsL1Route: typeof PrintablesFractionsL1Route
+}
+
+const PrintablesRouteChildren: PrintablesRouteChildren = {
+  PrintablesFractionsL1Route: PrintablesFractionsL1Route,
+}
+
+const PrintablesRouteWithChildren = PrintablesRoute._addFileChildren(
+  PrintablesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PlayRoute: PlayRoute,
+  PrintablesRoute: PrintablesRouteWithChildren,
   ApiEvaluateRoute: ApiEvaluateRoute,
   ApiEvaluateDetectReasoningRoute: ApiEvaluateDetectReasoningRoute,
   ApiEvaluateReasoningRoute: ApiEvaluateReasoningRoute,

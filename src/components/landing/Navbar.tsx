@@ -5,7 +5,7 @@ const LINKS = [
   { href: "#home", label: "Home" },
   { href: "#how-it-works", label: "How It Works" },
   { href: "#worlds", label: "Worlds" },
-  { href: "#printables", label: "Printables" },
+  { href: "/printables", label: "Printables" },
 ];
 
 export function Navbar() {
