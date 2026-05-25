@@ -1,94 +1,66 @@
 ## Goal
 
-Create a dedicated **/printables** route — "The Glitch Detective Printables Library" — designed with calm whitespace, soft pastels, and neuro-inclusive typography. It links into existing nav, and a follow-up detail route for the Fractions Level 1 workbook is stubbed.
+Add filter tabs to the Printables Library. When "Fractions" is selected, the category grid swaps to a 3-column "sequential learning path" of fraction printables — Level 1 active, Levels 2 & 3 locked.
 
-## Design language
+## Behavior
 
-- **Palette**: anchor on existing brand tokens (`--color-bg-mint` `#e8f9f5`, `--color-brand-blue` `#1e293b`, `--color-brand-yellow`, `--color-brand-mint`) plus per-category soft pastels (mint, peach, lavender, sky, butter, blush). All low-saturation, high-contrast text.
-- **Type**: existing Space Grotesk display, generous line-height, no italics, max line-length ~64ch.
-- **Spacing**: roomy `py-24`, `gap-8`, rounded-3xl cards, subtle borders (`border-black/5`), soft shadows only.
-- **No motion overload**: gentle hover lift (translate-y / scale 1.02 max), no parallax or autoplay.
+- Default tab: **All** → shows the existing 5-category pastel grid (unchanged).
+- Tabs (left-aligned pill row, above the grid): `All`, `Fractions`, `Addition`, `Geometry`, `Decimals`, `Place Value`.
+- Selecting `Fractions` → replaces grid contents with the **Fraction Learning Path** (3 cards).
+- Selecting any other topic → same grid but pre-filtered to a single "Coming soon" card for that topic (keeps the page balanced rather than empty).
+- State is local React state inside `CategoryGrid` (no URL sync yet — keeps scope tight; can be lifted to search params later).
 
-## Page structure (`src/routes/printables.tsx`)
+## Fraction Learning Path (3-column grid)
 
 ```text
-┌──────────────────────────────────────────────────┐
-│ <Navbar /> (existing landing navbar, reused)     │
-├──────────────────────────────────────────────────┤
-│ HERO  (soft mint bg)                             │
-│   eyebrow: "Printables Library"                  │
-│   H1: The Glitch Detective Printables Library    │
-│   subtitle: hands-on, off-screen reasoning…      │
-│   small trust row: low-screen · printable · K-6  │
-├──────────────────────────────────────────────────┤
-│ SPOTLIGHT  (wide banner, white card on mint)     │
-│   ◤ NEW RELEASE ◢ pill                            │
-│   left: workbook-cover placeholder (3:4, yellow  │
-│         frame, magnifier + "F1" mark)            │
-│   right: "Fractions Level 1" title + 2-line      │
-│         description + meta chips (Grade 1 · 12   │
-│         pages · PDF) + primary CTA:              │
-│         [ Investigate Now → ]  -> /printables/   │
-│                                   fractions-l1   │
-├──────────────────────────────────────────────────┤
-│ CATEGORY GRID (3 cols on lg, 2 on sm, 1 mobile)  │
-│   5 cards: Fractions, Addition, Geometry,        │
-│            Decimals, Place Value                 │
-│   each: soft pastel bg, minimalist lucide icon   │
-│         in a rounded square, bold title,         │
-│         one-line descriptor, count chip          │
-│         ("8 printables")                         │
-├──────────────────────────────────────────────────┤
-│ BENEFITS ROW (3 cols, white bg)                  │
-│   ☼ Low Cognitive Load                            │
-│   ☻ Sparks Conversation                           │
-│   ✦ Builds Confidence                             │
-│   icon in pastel circle, title, short line       │
-├──────────────────────────────────────────────────┤
-│ <Footer /> (reused from landing sections)        │
-└──────────────────────────────────────────────────┘
+┌─────────────────┬─────────────────┬─────────────────┐
+│  LEVEL 1        │  LEVEL 2        │  LEVEL 3        │
+│  [color image]  │  [grayscale]    │  [grayscale]    │
+│  Foundations    │  Classified     │  Classified     │
+│  Investigate    │  Mission brief  │  Mission brief  │
+│  sharing        │  is sealed.     │  is sealed.     │
+│  mistakes…      │                 │                 │
+│  [View Case     │  [Mission in    │  [Mission in    │
+│   File →]       │   Progress]     │   Progress]     │
+└─────────────────┴─────────────────┴─────────────────┘
 ```
+
+**Level 1: Foundations** (active)
+- Full-color illustrated tile (CSS-built placeholder: mint background, pie-chart icon, "F1" stamp, "GRADE 1" eyebrow — same visual language as the existing workbook cover).
+- Description: "Investigate sharing mistakes — spot unequal halves, repair mis-cut shapes, and explain why fair means equal."
+- Meta chips: `Grade 1` · `12 pages`.
+- Primary CTA: `View Case File →` → links to `/printables/fractions-l1` (already exists).
+
+**Level 2 & Level 3** (locked)
+- Same tile structure, but the illustrated tile is rendered with `grayscale` + reduced opacity, a soft overlay, and a centered `Lock` icon.
+- Description (L2): "Mission classified. Equivalence and number-line cases unlock soon."
+- Description (L3): "Mission classified. Comparison and pathway cases unlock soon."
+- Replace the button with a non-clickable badge: `Mission in Progress` (muted slate background, `Clock` icon).
+- Whole card has `cursor-default`, no hover lift, `aria-disabled="true"`.
+
+## Visual / accessibility
+
+- Tabs: soft pill bar; active = solid `--color-brand-blue` on white text; idle = transparent with subtle border, `--color-brand-blue/70`. Keyboard-navigable via native `<button>` with `aria-pressed`.
+- Cards keep the existing `rounded-3xl`, generous padding (`p-8`), border `black/5`, gap `8`.
+- Locked cards use only neutral grays — no red — to stay calm and non-punitive.
+- Single H2 above ("Choose a maths world") stays; when a filter is active, swap subtitle line to context-aware copy ("Follow the fraction case files in order.").
+- Maintains the same vertical rhythm as the rest of the page (no layout jumps).
 
 ## Files
 
-**New**
-- `src/routes/printables.tsx` — TanStack route with full `head()` meta (title, description, og:title, og:description), composes the sections below.
-- `src/components/printables/Hero.tsx`
-- `src/components/printables/SpotlightBanner.tsx` — placeholder workbook cover built with CSS (no image gen): yellow frame, magnifier icon, "FRACTIONS · LEVEL 1" stamp, "F1" mono mark.
-- `src/components/printables/CategoryGrid.tsx` — typed `Category[]` array with 5 entries.
-- `src/components/printables/BenefitsRow.tsx`
-- `src/routes/printables.fractions-l1.tsx` — minimal stub detail page so the spotlight CTA resolves (TanStack requires the route file to exist before `<Link to>`). Has its own head() meta and a "Coming soon — preview PDF" placeholder block.
-
 **Edited**
-- `src/components/landing/Navbar.tsx` — change the "Printables" nav link from `#printables` hash to a `<Link to="/printables">` so the library is discoverable. Keep all other links as hash anchors.
+- `src/components/printables/CategoryGrid.tsx`
+  - Add local `activeTab` state and `<FilterTabs />` row.
+  - Extract existing card markup into a small inline `CategoryCard` component.
+  - Add a new `FractionLearningPath` section rendered when `activeTab === "Fractions"`.
+  - Render a single "Coming soon" card when another specific topic is selected.
 
 **Not touched**
-- `src/components/landing/sections.tsx` Printables section stays (acts as a teaser); no copy changes.
-- `src/routeTree.gen.ts` (auto-regenerated).
-
-## Categories (final list)
-
-| key | icon (lucide) | pastel bg |
-|---|---|---|
-| Fractions | `PieChart` | mint `#e8f9f5` |
-| Addition | `Plus` | butter `#fff4d6` |
-| Geometry | `Shapes` | lavender `#ece8ff` |
-| Decimals | `CircleDot` | sky `#e3f1ff` |
-| Place Value | `Layers` | blush `#ffe8ee` |
-
-Cards are clickable but currently route to a soft "Coming soon" state via in-page disabled styling (cursor-default, "Coming soon" chip) — only the Fractions card links through to the spotlight detail page to keep one live path.
-
-## Benefits row
-
-| icon | title | line |
-|---|---|---|
-| `Brain` | Low Cognitive Load | Calm layouts, one task per page, no distractions. |
-| `MessageCircle` | Sparks Conversation | Each sheet ends with a "talk it through" prompt. |
-| `Sparkles` | Builds Confidence | Small wins, visible progress, no red pens. |
+- Routes, hero, spotlight, benefits row, navbar.
+- No new files — keeps the addition surgical and one-purpose.
 
 ## Out of scope
 
-- Actual PDF assets / downloads.
-- Filtering, search, pagination.
-- Backend / progress tracking.
-- Workbook detail page content beyond a polite stub.
+- URL persistence of the active tab (would need a `validateSearch` on `/printables`).
+- Real images for the Level 1 tile (CSS placeholder matches existing brand language).
+- Level 2 / Level 3 detail routes (locked state needs no destination).
