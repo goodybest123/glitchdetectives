@@ -31,6 +31,30 @@ const KEYWORDS: Record<ConceptKey, string[]> = {
   "whole-as-fraction": [
     "whole", "all", "complete", "one whole", "full", "every part", "every piece", "all of it",
   ],
+  "add-like": [
+    "add", "added", "plus", "combine", "combined", "merge", "together", "total",
+    "same size", "same bottom", "equal parts", "count", "more",
+  ],
+  "subtract-like": [
+    "subtract", "minus", "remove", "take away", "took", "leak", "left", "leftover",
+    "same bottom", "same size", "equal parts", "fewer", "less",
+  ],
+  "denominator-stability": [
+    "same", "stays", "stay", "doesn't change", "did not change", "same bottom",
+    "same size", "equal parts", "whole", "partition",
+  ],
+  "equivalence-generation": [
+    "multiply", "times", "double", "triple", "split", "cut", "twice", "same amount",
+    "equal", "equivalent", "both", "top and bottom",
+  ],
+  simplification: [
+    "group", "groups", "combine", "divide", "divided", "factor", "common",
+    "smaller", "simpler", "reduce", "simplest", "same amount", "fewer pieces",
+  ],
+  "mixed-ops": [
+    "first", "then", "next", "after", "step", "combine", "simplify", "equivalent",
+    "add", "subtract", "same", "result", "answer",
+  ],
 };
 
 export function hasConceptKeywordL2(text: string, concept: ConceptKey): boolean {
