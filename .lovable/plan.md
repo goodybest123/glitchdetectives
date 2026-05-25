@@ -1,90 +1,94 @@
+## Goal
 
-# Level 4 — Fraction Repair Systems
+Create a dedicated **/printables** route — "The Glitch Detective Printables Library" — designed with calm whitespace, soft pastels, and neuro-inclusive typography. It links into existing nav, and a follow-up detail route for the Fractions Level 1 workbook is stubbed.
 
-Build a new playable level following the same architecture as Level 3, focused on fraction operations (add, subtract, equivalence, simplification). Children act as Fraction Repair Engineers diagnosing broken arithmetic engines and teaching ZED-4 *why* operations work.
+## Design language
 
-## Architecture (reuses existing shell)
+- **Palette**: anchor on existing brand tokens (`--color-bg-mint` `#e8f9f5`, `--color-brand-blue` `#1e293b`, `--color-brand-yellow`, `--color-brand-mint`) plus per-category soft pastels (mint, peach, lavender, sky, butter, blush). All low-saturation, high-contrast text.
+- **Type**: existing Space Grotesk display, generous line-height, no italics, max line-length ~64ch.
+- **Spacing**: roomy `py-24`, `gap-8`, rounded-3xl cards, subtle borders (`border-black/5`), soft shadows only.
+- **No motion overload**: gentle hover lift (translate-y / scale 1.02 max), no parallax or autoplay.
 
-- Reuse `InvestigationLayout`, `L2TopBar`, `DialogueDock`, `ExplainPanel`, `ReplayInstructionsButton`, `useNarrate`, `useAutoSpeak`, `mission-progress`.
-- Persistent left **Case File** (Level 4 variant), dynamic right **Workspace**, bottom dialogue dock, top bar with replay/voice — identical pattern to Level 3.
-- Phase machine per case: `intro → glitch-check → workspace-repair → explain → teach-zed → success`.
-- Voice instructions on every screen via existing `narrate` + 🔊 Read Instructions Again button.
+## Page structure (`src/routes/printables.tsx`)
 
-## New files
+```text
+┌──────────────────────────────────────────────────┐
+│ <Navbar /> (existing landing navbar, reused)     │
+├──────────────────────────────────────────────────┤
+│ HERO  (soft mint bg)                             │
+│   eyebrow: "Printables Library"                  │
+│   H1: The Glitch Detective Printables Library    │
+│   subtitle: hands-on, off-screen reasoning…      │
+│   small trust row: low-screen · printable · K-6  │
+├──────────────────────────────────────────────────┤
+│ SPOTLIGHT  (wide banner, white card on mint)     │
+│   ◤ NEW RELEASE ◢ pill                            │
+│   left: workbook-cover placeholder (3:4, yellow  │
+│         frame, magnifier + "F1" mark)            │
+│   right: "Fractions Level 1" title + 2-line      │
+│         description + meta chips (Grade 1 · 12   │
+│         pages · PDF) + primary CTA:              │
+│         [ Investigate Now → ]  -> /printables/   │
+│                                   fractions-l1   │
+├──────────────────────────────────────────────────┤
+│ CATEGORY GRID (3 cols on lg, 2 on sm, 1 mobile)  │
+│   5 cards: Fractions, Addition, Geometry,        │
+│            Decimals, Place Value                 │
+│   each: soft pastel bg, minimalist lucide icon   │
+│         in a rounded square, bold title,         │
+│         one-line descriptor, count chip          │
+│         ("8 printables")                         │
+├──────────────────────────────────────────────────┤
+│ BENEFITS ROW (3 cols, white bg)                  │
+│   ☼ Low Cognitive Load                            │
+│   ☻ Sparks Conversation                           │
+│   ✦ Builds Confidence                             │
+│   icon in pastel circle, title, short line       │
+├──────────────────────────────────────────────────┤
+│ <Footer /> (reused from landing sections)        │
+└──────────────────────────────────────────────────┘
+```
 
-**Domain / data**
-- `src/lib/level4/types.ts` — `L4MissionDef`, `L4CaseDef`, op specs (`addLike`, `subtractLike`, `denominatorStability`, `equivalence`, `simplify`, `mixed`), `Phase` union.
-- `src/lib/level4/missions.ts` — 6 missions × 3 cases each (18 cases), each with `zedClaim` (wrong equation), `truth`, `visualModel`, `voiceInstructions`, `explainPrompt`, `teachPrompt`.
-- `src/lib/level4/evaluator.ts` — keyword sets for new concept keys: `add-like`, `subtract-like`, `denominator-stability`, `equivalence-generation`, `simplification`, `mixed-ops`. Mirrors `level2/evaluator.ts`.
+## Files
 
-**Orchestrator**
-- `src/components/FractionFactoryLevel4.tsx` — intro → mission-select → mission-play, same shape as `FractionFactoryLevel3.tsx`. Theme: futuristic arithmetic repair facility (warmer amber/copper accents on existing deep-blue base).
+**New**
+- `src/routes/printables.tsx` — TanStack route with full `head()` meta (title, description, og:title, og:description), composes the sections below.
+- `src/components/printables/Hero.tsx`
+- `src/components/printables/SpotlightBanner.tsx` — placeholder workbook cover built with CSS (no image gen): yellow frame, magnifier icon, "FRACTIONS · LEVEL 1" stamp, "F1" mono mark.
+- `src/components/printables/CategoryGrid.tsx` — typed `Category[]` array with 5 entries.
+- `src/components/printables/BenefitsRow.tsx`
+- `src/routes/printables.fractions-l1.tsx` — minimal stub detail page so the spotlight CTA resolves (TanStack requires the route file to exist before `<Link to>`). Has its own head() meta and a "Coming soon — preview PDF" placeholder block.
 
-**Shared UI**
-- `src/components/level4/CaseFile.tsx` — persistent investigation board showing broken equation, ZED's incorrect reasoning, visual model, repair alert.
-- `src/components/level4/GlitchCheckPanel.tsx` — initial "is this calculation right?" gate.
-- `src/components/level4/visuals/FractionBar.tsx` — segmented bar with shaded/unshaded parts (shared across missions).
-- `src/components/level4/visuals/QuantityObject.tsx` — themed object renderer (pizza, fuel tank, candy jar, battery, juice, chocolate bar, energy cell, snack box, treasure crate).
-- `src/components/level4/visuals/OperationStrip.tsx` — renders `A op B = ?` visually with two model bars + result slot.
+**Edited**
+- `src/components/landing/Navbar.tsx` — change the "Printables" nav link from `#printables` hash to a `<Link to="/printables">` so the library is discoverable. Keep all other links as hash anchors.
 
-**Workspaces (one per mission)**
-- `src/components/level4/workspaces/SupplyMergeStation.tsx` (M1 — add like): drag/combine themed quantities into a merged tank; live numerator counter; denominator locked & labeled "equal parts stay equal parts".
-- `src/components/level4/workspaces/LeakDetector.tsx` (M2 — subtract like): remove portions from a starting quantity; verify result matches truth.
-- `src/components/level4/workspaces/DenominatorCore.tsx` (M3 — structural reasoning): side-by-side partitioned wholes; child confirms partition consistency by aligning grids and rejecting tempting wrong-denominator answers.
-- `src/components/level4/workspaces/EquivalenceBooster.tsx` (M4 — equivalent fractions): multiplier dial that splits each part into N sub-parts; visual proves 1/2 = 2/4 = 3/6; child matches required booster value.
-- `src/components/level4/workspaces/SimplificationEngine.tsx` (M5 — simplify): group equal slices into bigger chunks; pick the divisor that fully reduces; visual collapse animation.
-- `src/components/level4/workspaces/MasterRepairStation.tsx` (M6 — mixed): multi-step pipeline (add → simplify, or equivalence → subtract); each stage gated by previous repair.
+**Not touched**
+- `src/components/landing/sections.tsx` Printables section stays (acts as a teaser); no copy changes.
+- `src/routeTree.gen.ts` (auto-regenerated).
 
-## Missions
+## Categories (final list)
 
-| # | Title | Concept | Workspace | Sample glitch |
-|---|---|---|---|---|
-| 1 | Fraction Supply Merge | Add like fractions | SupplyMergeStation | 1/4 + 2/4 = 3/8 |
-| 2 | Subtraction Leak Detector | Subtract like fractions | LeakDetector | 5/8 − 2/8 = 3/16 |
-| 3 | Denominator Stability Core | Why denominators stay | DenominatorCore | "everything changes when adding" |
-| 4 | Equivalence Booster | Generate equivalents | EquivalenceBooster | 1/2 = 2/4 |
-| 5 | Fraction Simplification Engine | Reduce to simplest form | SimplificationEngine | 6/8 = 3/4 |
-| 6 | Master Repair Station | Mixed operations | MasterRepairStation | chained multi-step |
+| key | icon (lucide) | pastel bg |
+|---|---|---|
+| Fractions | `PieChart` | mint `#e8f9f5` |
+| Addition | `Plus` | butter `#fff4d6` |
+| Geometry | `Shapes` | lavender `#ece8ff` |
+| Decimals | `CircleDot` | sky `#e3f1ff` |
+| Place Value | `Layers` | blush `#ffe8ee` |
 
-## Integration
+Cards are clickable but currently route to a soft "Coming soon" state via in-page disabled styling (cursor-default, "Coming soon" chip) — only the Fractions card links through to the spotlight detail page to keep one live path.
 
-- `src/routes/play.tsx`:
-  - Import `FractionFactoryLevel4`; route `activeLevel === 4` to it.
-  - In `LEVELS`, mark Level 4 `unlocked: true` and update `desc`/`focus` to match brief.
-  - Add `const level4 = useLevelProgress(4);` and reflect `completedCount` (out of 6).
+## Benefits row
 
-## Reasoning / Teach the AI
+| icon | title | line |
+|---|---|---|
+| `Brain` | Low Cognitive Load | Calm layouts, one task per page, no distractions. |
+| `MessageCircle` | Sparks Conversation | Each sheet ends with a "talk it through" prompt. |
+| `Sparkles` | Builds Confidence | Small wins, visible progress, no red pens. |
 
-- Reuse Level 2/3 `ConversationPanel` pattern. Extend `buildHelperLine()` (or add a Level 4 variant) with model-reasoning lines per new concept key:
-  - add-like: "We add the top numbers because the parts are the same size; the bottom number names the size."
-  - subtract-like: parallel framing.
-  - denominator-stability: "The whole was split the same way before and after, so the bottom number can't change."
-  - equivalence-generation: "Splitting each piece into N smaller pieces multiplies top and bottom by N."
-  - simplification: "Group equal pieces into bigger equal chunks — same amount, fewer parts."
-- ZED-4 voice: operation-confusion era. Curious, slightly embarrassed, teachable. Example: "Wait… why didn't the denominator change?"
+## Out of scope
 
-## Accessibility / UX
-
-- Persistent glitch + visual model visible at all times.
-- Large drag targets, snap-to-grid; keyboard-equivalent +/− buttons on every slider/dial.
-- Calm transitions (existing motion variants), no flashing.
-- 🔊 Read Instructions Again on every phase; captions under all ZED audio.
-- Adaptive hint tray (reuse `level2/HintTray.tsx`) with 3 graduated hints per case.
-
-## Visual direction
-
-- Base: existing deep-blue radial. Accent: warm amber/copper for "repair facility" feel (define as `--l4-accent` tokens in `src/styles.css`, not hard-coded).
-- Workspace chrome: subtle bolt/rivet motifs, glowing arithmetic conduits between operand and result slots.
-- Object art: simple flat SVG (pizza, fuel tank, battery, juice, chocolate) — reuse across missions for cohesion.
-
-## Out of scope (for future levels)
-
-- Unlike denominators / LCM (Level 5).
-- Multiplication, division, mixed numbers (Level 5).
-- Ratios / proportional reasoning (Level 6).
-
-## Verification
-
-- After build, walk through Mission 1 case 1 in preview: glitch-check → repair → explain → teach → success → progress increments.
-- Spot-check Mission 4 (equivalence) and Mission 6 (mixed) since they have the most novel mechanics.
-- Confirm Level 4 card on `/play` shows "0/6 missions completed" and "Enter Level" is active.
+- Actual PDF assets / downloads.
+- Filtering, search, pagination.
+- Backend / progress tracking.
+- Workbook detail page content beyond a polite stub.
