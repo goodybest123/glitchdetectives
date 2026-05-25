@@ -318,9 +318,12 @@ export function Printables() {
         <div className="text-center max-w-2xl mx-auto mb-14">
           <span className="label-eyebrow text-lg">Off-Screen</span>
           <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
-            Explore Printables
+            No screen? No problem.
           </h2>
-          <p className="mt-4 text-[var(--color-brand-blue)]/70">
+          <p className="mt-5 text-[var(--color-brand-blue)]/80 text-base sm:text-lg leading-relaxed">
+            Children can still experience the full Glitch Detectives reasoning journey through calm, hands-on printable activities designed for families who prefer low-screen or screen-free learning.
+          </p>
+          <p className="mt-3 text-[var(--color-brand-blue)]/60 text-sm">
             Calm, tactile activities that extend the detective loop beyond the screen.
           </p>
         </div>
