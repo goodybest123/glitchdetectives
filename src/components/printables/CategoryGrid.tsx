@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
-  ArrowRight, CircleDot, Clock, Layers, Lock, PieChart, Plus, Shapes,
+  ArrowLeft, ArrowRight, CircleDot, Clock, Layers, Lock, PieChart, Plus, Shapes,
   type LucideIcon,
 } from "lucide-react";
 
