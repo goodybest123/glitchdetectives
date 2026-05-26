@@ -307,7 +307,7 @@ export function RoleReversal() {
 /* -------------------- PRINTABLES -------------------- */
 export function Printables() {
   const items = [
-    { t: "Glitch Detective Worksheets", d: "Find hidden errors in mathematical equations.", img: imgWorksheets },
+    { t: "Glitch Detective Worksheets", d: "Find hidden errors in mathematical equations.", img: imgWorksheets, href: "/printables" as const },
     { t: "Tactile Activities", d: "Hands-on learning through cutting and gluing.", img: imgTactile },
     { t: "Story-Based Adventures", d: "Narrative missions that makes the math to make sense.", img: imgStories },
     { t: "Real-World Challenges", d: "Applying math reasoning in real world scenarios.", img: imgRealworld },
@@ -328,16 +328,25 @@ export function Printables() {
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {items.map((it) => (
-            <div key={it.t} className="bg-white rounded-3xl overflow-hidden border border-black/5 hover:scale-105 transition-transform shadow-sm">
-              <img src={it.img} alt={it.t} width={768} height={768} loading="lazy" className="w-full aspect-square object-cover" />
-              <div className="p-5">
-                <h3 className="font-black uppercase text-[var(--color-brand-blue)] text-sm tracking-wide">{it.t}</h3>
-                <p className="mt-2 text-[var(--color-brand-blue)]/70 text-sm leading-relaxed">{it.d}</p>
-              </div>
-            </div>
-          ))}
+          {items.map((it) => {
+            const inner = (
+              <>
+                <img src={it.img} alt={it.t} width={768} height={768} loading="lazy" className="w-full aspect-square object-cover" />
+                <div className="p-5">
+                  <h3 className="font-black uppercase text-[var(--color-brand-blue)] text-sm tracking-wide">{it.t}</h3>
+                  <p className="mt-2 text-[var(--color-brand-blue)]/70 text-sm leading-relaxed">{it.d}</p>
+                </div>
+              </>
+            );
+            const className = "block bg-white rounded-3xl overflow-hidden border border-black/5 hover:scale-105 transition-transform shadow-sm";
+            return it.href ? (
+              <Link key={it.t} to={it.href} className={className}>{inner}</Link>
+            ) : (
+              <div key={it.t} className={className}>{inner}</div>
+            );
+          })}
         </div>
+
 
       </div>
     </section>
