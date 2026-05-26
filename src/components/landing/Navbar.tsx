@@ -32,14 +32,11 @@ export function Navbar() {
             </li>
           ))}
           <li>
-            <Link
-              to="/printables"
-              className={linkClass}
-              activeProps={{ className: `${linkClass} !text-[var(--color-brand-blue)]` }}
-            >
+            <Link to="/" hash="printables" className={linkClass}>
               Printables
             </Link>
           </li>
+
         </ul>
         <Link
           to="/play"
