@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
-  ArrowRight, CircleDot, Clock, Layers, Lock, PieChart, Plus, Shapes,
+  ArrowLeft, ArrowRight, CircleDot, Clock, Layers, Lock, PieChart, Plus, Shapes,
   type LucideIcon,
 } from "lucide-react";
 
@@ -46,6 +46,16 @@ export function CategoryGrid() {
   return (
     <section className="bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 lg:py-24">
+        {active !== "All" && (
+          <button
+            type="button"
+            onClick={() => setActive("All")}
+            className="inline-flex items-center gap-2 text-sm font-semibold mb-8 hover:opacity-80"
+            style={{ color: BLUE }}
+          >
+            <ArrowLeft className="w-4 h-4" /> Back to all topics
+          </button>
+        )}
         <div className="text-center max-w-2xl mx-auto mb-10">
           <span className="label-eyebrow" style={{ color: BLUE }}>Browse by Topic</span>
           <h2 className="heading-black uppercase text-3xl sm:text-4xl mt-3" style={{ color: BLUE }}>
