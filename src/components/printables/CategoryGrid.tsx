@@ -4,6 +4,7 @@ import {
   ArrowLeft, ArrowRight, CircleDot, Clock, Layers, Lock, PieChart, Plus, Shapes,
   type LucideIcon,
 } from "lucide-react";
+import fractionsL1Cover from "@/assets/fractions-level-1-cover.png";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
@@ -170,6 +171,7 @@ type FractionLevel = {
   meta?: string[];
   locked: boolean;
   href?: string;
+  cover?: string;
 };
 
 const FRACTION_LEVELS: FractionLevel[] = [
@@ -180,6 +182,7 @@ const FRACTION_LEVELS: FractionLevel[] = [
     meta: ["Grade 1-2", "6 pages"],
     locked: false,
     href: "/printables/fractions-level-1-foundations.pdf",
+    cover: fractionsL1Cover,
   },
   {
     n: 2,
@@ -219,28 +222,37 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
     >
       {/* Illustrated tile */}
       <div
-        className={`relative aspect-[4/3] flex items-center justify-center ${
+        className={`relative aspect-[4/3] flex items-center justify-center overflow-hidden ${
           locked ? "grayscale opacity-70" : ""
         }`}
         style={{
           background: locked ? "#e7eaef" : "var(--color-bg-mint)",
         }}
       >
-        <div
-          className="w-24 h-24 rounded-full flex items-center justify-center"
-          style={{
-            background: locked ? "rgba(30,41,59,0.06)" : "rgba(255,222,89,0.18)",
-            border: locked
-              ? "2px dashed rgba(30,41,59,0.25)"
-              : `2px dashed ${YELLOW}`,
-          }}
-        >
-          <PieChart
-            className="w-12 h-12"
-            style={{ color: locked ? "#64748b" : BLUE }}
-            strokeWidth={2}
+        {lvl.cover ? (
+          <img
+            src={lvl.cover}
+            alt={`${lvl.title} workbook cover`}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
           />
-        </div>
+        ) : (
+          <div
+            className="w-24 h-24 rounded-full flex items-center justify-center"
+            style={{
+              background: locked ? "rgba(30,41,59,0.06)" : "rgba(255,222,89,0.18)",
+              border: locked
+                ? "2px dashed rgba(30,41,59,0.25)"
+                : `2px dashed ${YELLOW}`,
+            }}
+          >
+            <PieChart
+              className="w-12 h-12"
+              style={{ color: locked ? "#64748b" : BLUE }}
+              strokeWidth={2}
+            />
+          </div>
+        )}
 
         <span
           className="absolute top-4 left-4 label-eyebrow px-2 py-1 rounded-full"
