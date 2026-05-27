@@ -201,7 +201,7 @@ const FRACTION_LEVELS: FractionLevel[] = [
         Best For: Grades 1 & 2 (or a visual reboot for older kids).
       </>
     ),
-meta: ["Grade 1-2", "6 pages"],
+    meta: ["Grade 1-2", "6 pages"],
     locked: false,
     href: "/printables/fractions-level-1-foundations.pdf",
     cover: fractionsL1Cover,
