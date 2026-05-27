@@ -14,7 +14,7 @@ import imgAlgebra from "@/assets/landing/world-algebra.jpg";
 import imgAiLogic from "@/assets/landing/world-ailogic.jpg";
 import imgWorksheets from "@/assets/landing/print-worksheets.jpg";
 import imgTactile from "@/assets/landing/print-tactile.jpg";
-import imgStories from "@/assets/landing/print-stories.jpg";
+
 import imgRealworld from "@/assets/landing/print-realworld.jpg";
 
 const BLUE = "var(--color-brand-blue)";
@@ -309,7 +309,6 @@ export function Printables() {
   const items = [
     { t: "Glitch Detective Worksheets", d: "Find hidden errors in mathematical equations.", img: imgWorksheets, href: "/printables" as const },
     { t: "Tactile Activities", d: "Hands-on learning through cutting and gluing.", img: imgTactile },
-    { t: "Story-Based Adventures", d: "Narrative missions that makes the math to make sense.", img: imgStories },
     { t: "Real-World Challenges", d: "Applying math reasoning in real world scenarios.", img: imgRealworld },
   ];
   return (
