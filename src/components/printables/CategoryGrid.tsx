@@ -178,7 +178,7 @@ const FRACTION_LEVELS: FractionLevel[] = [
   {
     n: 1,
     title: "Foundations",
-    desc: "Investigate sharing mistakes — spot unequal halves, repair mis-cut shapes, and explain why fair means equal.",
+    desc: "Turn math practice into a mystery to solve!\n\nSam is trying to share with his friends, but his math logic keeps glitching. In this interactive workbook, your child becomes the Lead Detective. Instead of boring drills, they investigate Sam’s work, spot his mistakes, and teach him the true rules of fractions.\n\n\n\n\nWhy Kids & Parents Love It:\n\nThe 4-Step Framework: Investigate, Detect, Repair, Explain.\n\nBuilds Confidence: Finding someone else's mistakes removes the fear of failure.\n\nMeaningful Conversations: The \"Explain\" step turns quiet practice into deep discussions.\n\nNeuro-Inclusive Design: Clean, visual, and uncluttered to reduce cognitive overload.\n\nProduct Details:\n\nFocus: Halves, Quarters, & Equal Shares.\n\nBest For: Grades 1 & 2 (or a visual reboot for older kids).",
     meta: ["Grade 1-2", "6 pages"],
     locked: false,
     href: "/printables/fractions-level-1-foundations.pdf",
@@ -285,7 +285,7 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
           {lvl.title}
         </h3>
         <p
-          className="mt-3 text-sm leading-relaxed flex-1"
+          className="mt-3 text-sm leading-relaxed flex-1 whitespace-pre-wrap"
           style={{ color: locked ? "#94a3b8" : MUTED }}
         >
           {lvl.desc}
@@ -314,7 +314,7 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
               className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
               style={{ background: BLUE, color: "white" }}
             >
-              View Case File <ArrowRight className="w-4 h-4" />
+              VIEW AND DOWNLOAD CASE FILE <ArrowRight className="w-4 h-4" />
             </a>
           ) : (
             <span
