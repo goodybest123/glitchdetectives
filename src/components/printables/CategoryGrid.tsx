@@ -4,6 +4,7 @@ import {
   ArrowLeft, ArrowRight, CircleDot, Clock, Layers, Lock, PieChart, Plus, Shapes,
   type LucideIcon,
 } from "lucide-react";
+import fractionsL1Cover from "@/assets/fractions-level-1-cover.png";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
