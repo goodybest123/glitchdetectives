@@ -167,7 +167,7 @@ function CategoryCard({ category: c, onActivate }: { category: Category; onActiv
 type FractionLevel = {
   n: 1 | 2 | 3;
   title: string;
-  desc: string;
+  desc: React.ReactNode;
   meta?: string[];
   locked: boolean;
   href?: string;
@@ -285,7 +285,7 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
           {lvl.title}
         </h3>
         <p
-          className="mt-3 text-sm leading-relaxed flex-1 whitespace-pre-wrap font-bold"
+          className="mt-3 text-sm leading-relaxed flex-1 whitespace-pre-wrap"
           style={{ color: locked ? "#94a3b8" : MUTED }}
         >
           {lvl.desc}
