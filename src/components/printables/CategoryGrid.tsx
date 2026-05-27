@@ -178,7 +178,29 @@ const FRACTION_LEVELS: FractionLevel[] = [
   {
     n: 1,
     title: "Foundations",
-    desc: "Turn math practice into a mystery to solve!\nSam is trying to share with his friends, but his math logic keeps glitching. In this interactive workbook, your child becomes the Lead Detective. Instead of boring drills, they investigate Sam’s work, spot his mistakes, and teach him the true rules of fractions.\n\nWhy Kids & Parents Love It:\nThe 4-Step Framework: Investigate, Detect, Repair, Explain.\nBuilds Confidence: Finding someone else's mistakes removes the fear of failure.\nMeaningful Conversations: The \"Explain\" step turns quiet practice into deep discussions.\nNeuro-Inclusive Design: Clean, visual, and uncluttered to reduce cognitive overload.\n\nWorkbook Details:\nFocus: Halves, Quarters, & Equal Shares.\nBest For: Grades 1 & 2 (or a visual reboot for older kids).",
+    desc: (
+      <>
+        <strong>Turn math practice into a mystery to solve!</strong>
+        <br />
+        Sam is trying to share with his friends, but his math logic keeps glitching. In this interactive workbook, your child becomes the Lead Detective. Instead of boring drills, they investigate Sam's work, spot his mistakes, and teach him the true rules of fractions.
+        <br /><br />
+        <strong>Why Kids & Parents Love It:</strong>
+        <br />
+        The 4-Step Framework: Investigate, Detect, Repair, Explain.
+        <br />
+        <strong>Builds Confidence:</strong> Finding someone else's mistakes removes the fear of failure.
+        <br />
+        <strong>Meaningful Conversations:</strong> The "Explain" step turns quiet practice into deep discussions.
+        <br />
+        <strong>Neuro-Inclusive Design:</strong> Clean, visual, and uncluttered to reduce cognitive overload.
+        <br /><br />
+        <strong>Workbook Details:</strong>
+        <br />
+        Focus: Halves, Quarters, & Equal Shares.
+        <br />
+        Best For: Grades 1 & 2 (or a visual reboot for older kids).
+      </>
+    )Explain\" step turns quiet practice into deep discussions.\nNeuro-Inclusive Design: Clean, visual, and uncluttered to reduce cognitive overload.\n\nWorkbook Details:\nFocus: Halves, Quarters, & Equal Shares.\nBest For: Grades 1 & 2 (or a visual reboot for older kids).",
     meta: ["Grade 1-2", "6 pages"],
     locked: false,
     href: "/printables/fractions-level-1-foundations.pdf",
