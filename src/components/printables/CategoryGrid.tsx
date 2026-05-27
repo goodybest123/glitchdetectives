@@ -177,9 +177,9 @@ const FRACTION_LEVELS: FractionLevel[] = [
     n: 1,
     title: "Foundations",
     desc: "Investigate sharing mistakes — spot unequal halves, repair mis-cut shapes, and explain why fair means equal.",
-    meta: ["Grade 1", "12 pages"],
+    meta: ["Grade 1-2", "6 pages"],
     locked: false,
-    href: "/printables/fractions-l1",
+    href: "/printables/fractions-level-1-foundations.pdf",
   },
   {
     n: 2,
