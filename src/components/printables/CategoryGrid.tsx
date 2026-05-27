@@ -295,13 +295,15 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
 
         <div className="mt-7">
           {!locked && lvl.href ? (
-            <Link
-              to={lvl.href}
+            <a
+              href={lvl.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
               style={{ background: BLUE, color: "white" }}
             >
               View Case File <ArrowRight className="w-4 h-4" />
-            </Link>
+            </a>
           ) : (
             <span
               aria-disabled="true"
