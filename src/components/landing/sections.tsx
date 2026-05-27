@@ -309,7 +309,6 @@ export function Printables() {
   const items = [
     { t: "Glitch Detective Worksheets", d: "Find hidden errors in mathematical equations.", img: imgWorksheets, href: "/printables" as const },
     { t: "Tactile Activities", d: "Hands-on learning through cutting and gluing.", img: imgTactile },
-    { t: "Story-Based Adventures", d: "Narrative missions that makes the math to make sense.", img: imgStories },
     { t: "Real-World Challenges", d: "Applying math reasoning in real world scenarios.", img: imgRealworld },
   ];
   return (
