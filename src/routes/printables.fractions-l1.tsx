@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Search, Sparkles } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Search, Sparkles } from "lucide-react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/sections";
 
@@ -11,9 +11,9 @@ export const Route = createFileRoute("/printables/fractions-l1")({
   head: () => ({
     meta: [
       { title: "Fractions Level 1 — Printables — Glitch Detectives" },
-      { name: "description", content: "Twelve gentle pages of glitch-detective fraction missions for Grade 1. Spot unequal halves, repair mis-cut shapes, and talk through every fix." },
+      { name: "description", content: "Download the Glitch Detectives Fractions Level 1 workbook: twelve gentle Grade 1 pages to spot unequal halves, repair mis-cut shapes, and explain why fair means equal." },
       { property: "og:title", content: "Fractions Level 1 — Glitch Detective Printables" },
-      { property: "og:description", content: "Grade 1 fraction printables: calm, low-ink, neuro-inclusive reasoning activities." },
+      { property: "og:description", content: "Grade 1 fraction printables: calm, low-ink, neuro-inclusive reasoning activities. Available now." },
     ],
   }),
   component: FractionsL1Page,
@@ -75,19 +75,64 @@ function FractionsL1Page() {
                   unequal halves, repair mis-cut shapes, and talk through every fix.
                 </p>
 
-                <div
-                  className="mt-8 rounded-2xl bg-white border border-black/5 p-6"
-                  style={{ color: BLUE }}
-                >
-                  <h2 className="font-black uppercase tracking-wide text-sm">Workbook preview</h2>
-                  <p
-                    className="mt-2 text-sm leading-relaxed"
-                    style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, transparent)" }}
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <a
+                    href="/printables/fractions-level-1-foundations.pdf"
+                    download
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
+                    style={{ background: BLUE, color: "white" }}
                   >
-                    PDF preview and download arriving soon. We're putting the final ink-friendly
-                    touches on every page.
-                  </p>
+                    <Download className="w-4 h-4" /> Download PDF
+                  </a>
+                  <a
+                    href="/printables/fractions-level-1-foundations.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs border hover:opacity-80 transition-opacity"
+                    style={{ borderColor: BLUE, color: BLUE }}
+                  >
+                    <ExternalLink className="w-4 h-4" /> Open in new tab
+                  </a>
                 </div>
+              </div>
+            </div>
+
+            <div className="mt-12">
+              <h2
+                className="heading-black uppercase text-2xl sm:text-3xl mb-5"
+                style={{ color: BLUE }}
+              >
+                Workbook preview
+              </h2>
+              <div
+                className="rounded-2xl overflow-hidden border border-black/10 bg-white shadow-lg"
+                style={{ minHeight: "80vh" }}
+              >
+                <object
+                  data="/printables/fractions-level-1-foundations.pdf#view=FitH"
+                  type="application/pdf"
+                  className="w-full"
+                  style={{ height: "80vh" }}
+                  aria-label="Fractions Level 1 workbook PDF preview"
+                >
+                  <iframe
+                    src="/printables/fractions-level-1-foundations.pdf"
+                    title="Fractions Level 1 workbook PDF preview"
+                    className="w-full"
+                    style={{ height: "80vh", border: 0 }}
+                  />
+                  <div className="p-8 text-center" style={{ color: BLUE }}>
+                    <p className="text-base font-semibold">
+                      Your browser can't preview PDFs inline.
+                    </p>
+                    <p
+                      className="mt-2 text-sm"
+                      style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, transparent)" }}
+                    >
+                      Use the Download or Open in new tab buttons above to view the workbook.
+                    </p>
+                  </div>
+                </object>
               </div>
             </div>
           </div>
