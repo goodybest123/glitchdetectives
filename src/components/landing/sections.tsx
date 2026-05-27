@@ -14,7 +14,7 @@ import imgAlgebra from "@/assets/landing/world-algebra.jpg";
 import imgAiLogic from "@/assets/landing/world-ailogic.jpg";
 import imgWorksheets from "@/assets/landing/print-worksheets.jpg";
 import imgTactile from "@/assets/landing/print-tactile.jpg";
-import imgStories from "@/assets/landing/print-stories.jpg";
+
 import imgRealworld from "@/assets/landing/print-realworld.jpg";
 
 const BLUE = "var(--color-brand-blue)";
