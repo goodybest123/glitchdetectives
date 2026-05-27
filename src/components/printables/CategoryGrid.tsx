@@ -171,6 +171,7 @@ type FractionLevel = {
   meta?: string[];
   locked: boolean;
   href?: string;
+  cover?: string;
 };
 
 const FRACTION_LEVELS: FractionLevel[] = [
@@ -181,6 +182,7 @@ const FRACTION_LEVELS: FractionLevel[] = [
     meta: ["Grade 1-2", "6 pages"],
     locked: false,
     href: "/printables/fractions-level-1-foundations.pdf",
+    cover: fractionsL1Cover,
   },
   {
     n: 2,
