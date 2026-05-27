@@ -13,8 +13,8 @@ const BENEFITS: Benefit[] = [
 export function BenefitsRow() {
   return (
     <section style={{ background: "var(--color-bg-light)" }}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-24 lg:py-32">
-        <ul className="grid sm:grid-cols-3 gap-10 lg:gap-14 text-center">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 lg:py-24">
+        <ul className="grid sm:grid-cols-3 gap-8 lg:gap-12 text-center">
           {BENEFITS.map((b) => {
             const Icon = b.icon;
             return (

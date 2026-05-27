@@ -45,18 +45,18 @@ export function CategoryGrid() {
 
   return (
     <section className="bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-24 lg:py-32">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 lg:py-24">
         {active !== "All" && (
           <button
             type="button"
             onClick={() => setActive("All")}
-            className="inline-flex items-center gap-2 text-sm font-semibold mb-10 hover:opacity-80"
+            className="inline-flex items-center gap-2 text-sm font-semibold mb-8 hover:opacity-80"
             style={{ color: BLUE }}
           >
             <ArrowLeft className="w-4 h-4" /> Back to all topics
           </button>
         )}
-        <div className="text-center max-w-2xl mx-auto mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-10">
           <span className="label-eyebrow" style={{ color: BLUE }}>Browse by Topic</span>
           <h2 className="heading-black uppercase text-3xl sm:text-4xl mt-3" style={{ color: BLUE }}>
             Choose a maths world
@@ -71,7 +71,7 @@ export function CategoryGrid() {
         {active === "Fractions" ? (
           <FractionLearningPath />
         ) : (
-          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 mt-14">
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-10">
             {visibleCategories.map((c) => (
               <li key={c.title}>
                 <CategoryCard
@@ -92,7 +92,7 @@ function FilterTabs({ active, onChange }: { active: TabKey; onChange: (t: TabKey
     <div
       role="tablist"
       aria-label="Filter printables by topic"
-      className="flex flex-wrap justify-center gap-2 mb-4"
+      className="flex flex-wrap justify-center gap-2 mb-2"
     >
       {TABS.map((t) => {
         const isActive = t === active;
@@ -122,7 +122,7 @@ function CategoryCard({ category: c, onActivate }: { category: Category; onActiv
   const interactive = Boolean(onActivate);
   return (
     <div
-      className={`group h-full rounded-3xl p-8 sm:p-10 border border-black/5 transition-transform ${
+      className={`group h-full rounded-3xl p-7 sm:p-8 border border-black/5 transition-transform ${
         interactive ? "hover:-translate-y-1 hover:shadow-md cursor-pointer" : "cursor-default"
       }`}
       style={{ background: c.bg }}
@@ -197,7 +197,7 @@ const FRACTION_LEVELS: FractionLevel[] = [
 
 function FractionLearningPath() {
   return (
-    <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 mt-14">
+    <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-10">
       {FRACTION_LEVELS.map((lvl) => (
         <li key={lvl.n}>
           <FractionLevelCard lvl={lvl} />

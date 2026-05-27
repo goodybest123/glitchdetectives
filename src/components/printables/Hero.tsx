@@ -7,7 +7,7 @@ const MINT = "var(--color-bg-mint)";
 export function PrintablesHero() {
   return (
     <section style={{ background: MINT }}>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 pb-24 lg:pt-12 lg:pb-32">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 pb-20 lg:pt-12 lg:pb-28">
         <Link
           to="/"
           hash="printables"
