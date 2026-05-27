@@ -11,9 +11,9 @@ export const Route = createFileRoute("/printables/fractions-l1")({
   head: () => ({
     meta: [
       { title: "Fractions Level 1 — Printables — Glitch Detectives" },
-      { name: "description", content: "Twelve gentle pages of glitch-detective fraction missions for Grade 1. Spot unequal halves, repair mis-cut shapes, and talk through every fix." },
+      { name: "description", content: "Download the Glitch Detectives Fractions Level 1 workbook: twelve gentle Grade 1 pages to spot unequal halves, repair mis-cut shapes, and explain why fair means equal." },
       { property: "og:title", content: "Fractions Level 1 — Glitch Detective Printables" },
-      { property: "og:description", content: "Grade 1 fraction printables: calm, low-ink, neuro-inclusive reasoning activities." },
+      { property: "og:description", content: "Grade 1 fraction printables: calm, low-ink, neuro-inclusive reasoning activities. Available now." },
     ],
   }),
   component: FractionsL1Page,
