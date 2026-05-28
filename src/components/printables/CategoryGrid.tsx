@@ -167,7 +167,7 @@ function CategoryCard({ category: c, onActivate }: { category: Category; onActiv
 type FractionLevel = {
   n: 1 | 2 | 3;
   title: string;
-  desc: React.ReactNode;
+  desc: ReactNode;
   meta?: string[];
   locked: boolean;
   href?: string;
