@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft, ArrowRight, CircleDot, Clock, Layers, Lock, PieChart, Plus, Shapes,
@@ -167,7 +167,7 @@ function CategoryCard({ category: c, onActivate }: { category: Category; onActiv
 type FractionLevel = {
   n: 1 | 2 | 3;
   title: string;
-  desc: React.ReactNode;
+  desc: ReactNode;
   meta?: string[];
   locked: boolean;
   href?: string;
