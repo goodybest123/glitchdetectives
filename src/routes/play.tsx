@@ -9,6 +9,7 @@ import FractionFactoryLevel1 from "@/components/FractionFactoryLevel1";
 import FractionFactoryLevel2 from "@/components/FractionFactoryLevel2";
 import FractionFactoryLevel3 from "@/components/FractionFactoryLevel3";
 import FractionFactoryLevel4 from "@/components/FractionFactoryLevel4";
+import FractionFactoryLevel5 from "@/components/FractionFactoryLevel5";
 import { useLevelProgress } from "@/lib/mission-progress";
 
 
@@ -45,7 +46,7 @@ const LEVELS: Level[] = [
   { n: 2, grade: 2, title: "Fraction Discovery Zone", desc: "Children begin understanding how fractions are written and interpreted.", focus: "Numerators, denominators, unit fractions", missions: 4, done: 0, unlocked: false, Icon: Scissors },
   { n: 3, grade: 3, title: "Fraction Pathways & Equivalence City", desc: "Repair pathways, sync equivalence reactors, balance comparison scanners, and restore the identity vault.", focus: "Number lines · Equivalence · Comparison · Whole numbers", missions: 4, done: 0, unlocked: true, Icon: Ruler },
   { n: 4, grade: 4, title: "Fraction Repair Systems", desc: "Repair the merge stations, fix subtraction leaks, stabilise denominator cores, fire equivalence boosters, simplify, and master multi-step repairs.", focus: "Add · Subtract · Denominator stability · Equivalence · Simplify · Master repair", missions: 6, done: 0, unlocked: true, Icon: Wrench },
-  { n: 5, grade: 5, title: "Advanced Fraction Operations", desc: "Multiply, divide, and reason with mixed numbers.", focus: "Multiply, divide, mixed numbers", missions: 6, done: 0, unlocked: false, Icon: Calculator },
+  { n: 5, grade: 5, title: "Fraction Power Grid", desc: "Synchronize the city's power stations, balance resource cores, fire scaling reactors, boost transport trains, distribute supplies, and reconnect the central command tower.", focus: "Add unlike · Subtract unlike · Multiply · Multiply by whole · Divide · Fractions as division", missions: 6, done: 0, unlocked: true, Icon: Calculator },
   { n: 6, grade: 6, title: "Fraction Mastery Lab", desc: "Stress-test ratios, rates, and proportional reasoning.", focus: "Ratios & proportional reasoning", missions: 6, done: 0, unlocked: false, Icon: FlaskConical },
 ];
 
@@ -63,6 +64,9 @@ function Play() {
   if (activeLevel === 4) {
     return <FractionFactoryLevel4 onExitToHub={() => setActiveLevel(null)} />;
   }
+  if (activeLevel === 5) {
+    return <FractionFactoryLevel5 onExitToHub={() => setActiveLevel(null)} />;
+  }
   return <LevelSelect onStart={(n) => setActiveLevel(n)} />;
 }
 
@@ -71,6 +75,7 @@ function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
   const level2 = useLevelProgress(2);
   const level3 = useLevelProgress(3);
   const level4 = useLevelProgress(4);
+  const level5 = useLevelProgress(5);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const levels = LEVELS.map((l) => {
@@ -79,6 +84,7 @@ function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
     if (l.n === 2) return { ...l, done: level2.completedCount, unlocked: true };
     if (l.n === 3) return { ...l, done: level3.completedCount, unlocked: true };
     if (l.n === 4) return { ...l, done: level4.completedCount, unlocked: true };
+    if (l.n === 5) return { ...l, done: level5.completedCount, unlocked: true };
     return l;
   });
 
