@@ -10,6 +10,7 @@ import FractionFactoryLevel2 from "@/components/FractionFactoryLevel2";
 import FractionFactoryLevel3 from "@/components/FractionFactoryLevel3";
 import FractionFactoryLevel4 from "@/components/FractionFactoryLevel4";
 import FractionFactoryLevel5 from "@/components/FractionFactoryLevel5";
+import FractionFactoryLevel6 from "@/components/FractionFactoryLevel6";
 import { useLevelProgress } from "@/lib/mission-progress";
 
 
@@ -47,7 +48,7 @@ const LEVELS: Level[] = [
   { n: 3, grade: 3, title: "Fraction Pathways & Equivalence City", desc: "Repair pathways, sync equivalence reactors, balance comparison scanners, and restore the identity vault.", focus: "Number lines · Equivalence · Comparison · Whole numbers", missions: 4, done: 0, unlocked: true, Icon: Ruler },
   { n: 4, grade: 4, title: "Fraction Repair Systems", desc: "Repair the merge stations, fix subtraction leaks, stabilise denominator cores, fire equivalence boosters, simplify, and master multi-step repairs.", focus: "Add · Subtract · Denominator stability · Equivalence · Simplify · Master repair", missions: 6, done: 0, unlocked: true, Icon: Wrench },
   { n: 5, grade: 5, title: "Fraction Power Grid", desc: "Synchronize the city's power stations, balance resource cores, fire scaling reactors, boost transport trains, distribute supplies, and reconnect the central command tower.", focus: "Add unlike · Subtract unlike · Multiply · Multiply by whole · Divide · Fractions as division", missions: 6, done: 0, unlocked: true, Icon: Calculator },
-  { n: 6, grade: 6, title: "Fraction Mastery Lab", desc: "Stress-test ratios, rates, and proportional reasoning.", focus: "Ratios & proportional reasoning", missions: 6, done: 0, unlocked: false, Icon: FlaskConical },
+  { n: 6, grade: 6, title: "Fraction Nexus", desc: "Repair the Nexus Core. Divide fractions, master mixed numbers, and reconnect the fraction, decimal, and percentage languages.", focus: "Divide · Mixed numbers · Fractions ↔ Decimals ↔ Percentages · Multi-step reasoning", missions: 7, done: 0, unlocked: true, Icon: FlaskConical },
 ];
 
 function Play() {
@@ -67,6 +68,9 @@ function Play() {
   if (activeLevel === 5) {
     return <FractionFactoryLevel5 onExitToHub={() => setActiveLevel(null)} />;
   }
+  if (activeLevel === 6) {
+    return <FractionFactoryLevel6 onExitToHub={() => setActiveLevel(null)} />;
+  }
   return <LevelSelect onStart={(n) => setActiveLevel(n)} />;
 }
 
@@ -76,6 +80,7 @@ function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
   const level3 = useLevelProgress(3);
   const level4 = useLevelProgress(4);
   const level5 = useLevelProgress(5);
+  const level6 = useLevelProgress(6);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const levels = LEVELS.map((l) => {
@@ -85,6 +90,7 @@ function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
     if (l.n === 3) return { ...l, done: level3.completedCount, unlocked: true };
     if (l.n === 4) return { ...l, done: level4.completedCount, unlocked: true };
     if (l.n === 5) return { ...l, done: level5.completedCount, unlocked: true };
+    if (l.n === 6) return { ...l, done: level6.completedCount, unlocked: true };
     return l;
   });
 

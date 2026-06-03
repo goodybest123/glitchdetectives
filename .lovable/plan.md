@@ -1,91 +1,109 @@
-# Level 5 — Fraction Power Grid
 
-A new 6-mission level inside Fraction Factory, built using the same Investigation Workspace pattern as Levels 2–4 (persistent Case File on the left, mission-specific repair Workspace on the right, dialogue dock at the bottom, top bar with replay/voice). Visual theme: futuristic engineering city — glowing rails, holographic panels, calm dark-blue/cyan/violet palette (distinct from L4's amber).
+# Level 6 — Fraction Nexus
 
-## Missions
+Final level of Fraction Factory. Built using the same Investigation Workspace pattern as Levels 2–5 (persistent Case File left, mission Workspace right, DialogueDock bottom, TopBar top). New visual theme: deep blue / sky blue / white with subtle purple accents, holographic translation portals and data streams — distinct from L5's cyan/violet engineering grid.
 
-1. **Power Grid Synchronizer** — Adding unlike fractions. Glitch: `1/2 + 1/4 = 2/6`.
-2. **Resource Balance Core** — Subtracting unlike fractions. Glitch: `3/4 - 1/2 = 2/2`.
-3. **Scaling Reactor** — Multiplying fractions (part of a part). Glitch: `1/2 × 1/3 = 2/5`.
-4. **Energy Booster Network** — Fraction × whole number. Glitch: `3 × 1/4 = 3/12`.
-5. **Distribution Tunnel** — Dividing unit fractions / whole ÷ unit fraction. Glitch: `1/2 ÷ 2 = 1`.
-6. **Central Command Grid** — Fractions as division. Glitch: ZED claims `3/4` and `3 ÷ 4` are unrelated.
+## Missions (7 total, 3 cases each → 21 cases + boss)
 
-Each mission ships 3 cases (18 total) so it matches the existing case-by-case progress + reasoning flow used by L2–L4.
+1. **Fraction Division Reactor** — Dividing fractions. Glitch: `1/2 ÷ 1/4 = 1/8`.
+2. **Mixed Number Mechanics** — Add/subtract mixed numbers. Glitch: `1 1/2 + 2 3/4 = 3 4/6`.
+3. **Decimal Translator** — Fractions ↔ decimals. Glitch: `1/2 = 0.2`.
+4. **Percentage Command Center** — Fractions ↔ percentages. Glitch: `1/4 = 4%`.
+5. **Nexus Translator** — Match fraction ↔ decimal ↔ percentage triples (e.g. `1/2`, `0.5`, `50%`).
+6. **Multi-System Operations Lab** — Multi-step reasoning chains (add fractions → convert → interpret %).
+7. **The Nexus Core (Boss)** — One case from each of M1–M6 chained into a city-wide rescue.
 
-After all 6 missions are complete, a **Fraction Power Grid Emergency** boss screen chains one case from each mission into a single city-wide rescue, then awards the **Fraction Systems Engineer Badge**.
+Each mission ships 3 cases so progress + reasoning flow matches L2–L5. Boss is a single integrated screen.
 
 ## Per-mission learning loop
 
-Reuse the existing Investigate → Detect → Repair → Explain loop from Level 4:
+Reuse Investigate → Detect → Repair → Explain from L4/L5:
+- **Case File (left, persistent)**: original glitch, ZED reasoning, broken system viz, objectives, translation clues.
+- **Workspace (right)**: mission-specific repair interactions.
+- **Glitch Check panel**: "ZED is right" / "Glitch detected" → Repair.
+- **Explain Panel**: free-text + voice, graded by existing reasoning evaluator with the conceptual prompts in the brief ("Why can dividing by a fraction increase the answer?", "What does percent actually mean?", etc.).
+- **Dialogue Dock**: ZED-4 narration, captions, replay button.
 
-- **Case File (left)**: original glitch, ZED's reasoning, broken visualization, fraction model, objectives, system status. Persistent — never unmounts.
-- **Workspace (right)**: mission-specific repair interactions (see below).
-- **Glitch Check panel**: choose "ZED is right" / "Glitch detected", then enter Repair.
-- **Explain Panel**: free-text + voice, graded by the existing reasoning evaluator with conceptual prompts ("Why must units match?", "What does 'of' mean?", etc.).
-- **Dialogue Dock**: ZED-4 narration with calm captions; "Read instructions again" replay button.
+ZED-4 dialogue evolves across the level toward the final line: *"Fractions, decimals, and percentages aren't competing systems. They're different ways of describing the same reality."*
 
-## New mission-specific repair workspaces
+## New mission-specific workspaces
 
-Six new components under `src/components/level5/workspaces/`:
+Seven new components under `src/components/level6/workspaces/`:
 
-1. `SynchronizerRail` — drag two energy cells onto a rail; expand each cell's partition grid (×2, ×3, …) until denominators match, then merge into a combined cell. Confirms repaired sum.
-2. `ResourceBalanceCore` — two fraction tanks; user matches denominators via partition controls, then removes the smaller quantity to reveal the stabilized output.
-3. `ScalingReactorGrid` — overlay two fraction strips at 90° to form an a/b × c/d grid; user shades the overlap region; reactor restarts when shaded cells = numerator and total cells = denominator.
-4. `BoosterTrainLine` — duplicate a unit fraction cell N times along a train track; total fills a power gauge showing N × 1/d = N/d.
-5. `DistributionTunnel` — take a unit-fraction packet and split it into k equal sub-packets; visualization shows 1/d ÷ k = 1/(d·k); also supports whole ÷ unit fraction (how many 1/d fit in W).
-6. `CommandGridLinker` — drag-connect a fraction node (a/b) to its matching division node (a ÷ b) and to a shared visual (bar split into b parts, a shaded). All connections lit = command tower powers up.
+1. `DivisionReactor` — fill a 1/2 container with 1/4 "energy packets"; counter shows how many fit. Symbolic repair follows visual.
+2. `MixedNumberAssembler` — cargo crates (wholes) + remainder strips; child regroups when remainder ≥ 1 whole.
+3. `DecimalTranslator` — fraction bar paired with a 10×10 hundred grid + decimal number line; child shades both to confirm equivalence.
+4. `PercentageCommand` — battery/progress gauge; child slides percent bar to match a fraction visual, sees both labels lock.
+5. `NexusPortalLinker` — drag-connect 3 portal nodes (fraction / decimal / percentage) sharing one visual quantity. Decoys included.
+6. `MultiSystemLab` — multi-step pipeline (Step 1 add fractions → Step 2 convert → Step 3 interpret as %); each step locks before next.
+7. `NexusCoreBoss` — composite screen running one mini-version of workspaces 1–6 in sequence.
 
-All workspaces use the shared `FractionBar` / `OperationStrip` visuals from L4 where appropriate, plus a new `EnergyCell` and `GridOverlay` primitive under `src/components/level5/visuals/`.
+Shared primitives under `src/components/level6/visuals/`:
+- `HundredGrid` — 10×10 grid for decimal/percent shading.
+- `TranslationPortal` — three-node holographic connector visual.
+- `MixedNumberCrate` — whole + fraction crate visual.
+
+Shared controls reused from L5: `NumberDial`, `LockButton`, `WorkspaceHeader` (via `workspaces/shared.tsx`).
 
 ## Files to add
 
 ```
-src/lib/level5/
-  types.ts                 -- L5MissionDef, L5CaseDef, L5Phase, per-mission `spec`
-  missions.ts              -- 6 missions × 3 cases (18 cases) with zedClaim / truth / explainPrompt / l5.spec
-src/components/level5/
-  CaseFile.tsx             -- L5 themed case file (cyan/violet)
-  GlitchCheckPanel.tsx     -- thin wrapper around the L4 panel shape
+src/lib/level6/
+  types.ts                 -- L6MissionDef, L6CaseDef, L6Phase, per-mission `spec`
+  missions.ts              -- 7 missions × 3 cases (21) + boss spec
+src/components/level6/
+  CaseFile.tsx
+  GlitchCheckPanel.tsx
   visuals/
-    EnergyCell.tsx
-    GridOverlay.tsx
+    HundredGrid.tsx
+    TranslationPortal.tsx
+    MixedNumberCrate.tsx
   workspaces/
-    SynchronizerRail.tsx
-    ResourceBalanceCore.tsx
-    ScalingReactorGrid.tsx
-    BoosterTrainLine.tsx
-    DistributionTunnel.tsx
-    CommandGridLinker.tsx
-src/components/FractionFactoryLevel5.tsx   -- Intro → MissionSelect → MissionPlay → BossChallenge
+    DivisionReactor.tsx
+    MixedNumberAssembler.tsx
+    DecimalTranslator.tsx
+    PercentageCommand.tsx
+    NexusPortalLinker.tsx
+    MultiSystemLab.tsx
+    NexusCoreBoss.tsx
+    shared.tsx
+src/components/FractionFactoryLevel6.tsx   -- Intro → MissionSelect → MissionPlay → NexusCoreBoss → Completion
 ```
 
 ## Files to edit
 
 - `src/routes/play.tsx`
-  - Import `FractionFactoryLevel5`.
-  - Set Level 5's `unlocked: true`, update its `desc` and `focus` text to match the brief, keep `missions: 6`.
-  - Add `if (activeLevel === 5) return <FractionFactoryLevel5 onExitToHub={...} />`.
-  - Wire `useLevelProgress(5)` into the displayed `done` count.
-- `src/lib/mission-progress.ts` — only if level 5 isn't already a generic level; otherwise no change (L4 used the same hook generically).
+  - Import `FractionFactoryLevel6`.
+  - Flip Level 6 to `unlocked: true`, update `desc` / `focus` / `missions: 7`.
+  - Add `if (activeLevel === 6) return <FractionFactoryLevel6 onExitToHub={...} />`.
+  - Wire `useLevelProgress(6)` into the displayed `done`.
+- Final completion screen unlocks "Decimal District" placeholder (display-only banner — no new world built).
 
-## Reused infrastructure (no changes needed)
+## Reused infrastructure (no changes)
 
-- `InvestigationLayout`, `L2TopBar`, `DialogueDock`, `ExplainPanel`, `ReplayInstructionsButton`
-- Reasoning evaluator endpoints (`/api/evaluate*`) — already concept-agnostic via `explainPrompt`
-- `useAutoSpeak`, `useNarrate`, voice settings, accessibility helpers
+- `InvestigationLayout`, `L2TopBar`, `DialogueDock`, `ExplainPanel`, `ReplayInstructionsButton`.
+- `/api/evaluate*` reasoning evaluator (concept-agnostic via `explainPrompt`).
+- `useAutoSpeak`, `useNarrate`, voice settings, `useLevelProgress`.
 
 ## Accessibility
 
-- Keyboard-navigable controls on all new drag/partition interactions (arrow keys to adjust denominator splits, Enter to merge/split).
-- Each interactive element labeled; status conveyed by icon + text, never color alone.
-- Calm motion (≤300ms, no flashing); respects `prefers-reduced-motion`.
-- Large tap targets, predictable layout mirroring L4.
+- Keyboard navigation across all drag/slider/portal-link interactions.
+- Status conveyed via icon + text, never color alone.
+- Motion ≤300ms; respects `prefers-reduced-motion`.
+- Large tap targets, predictable layout matching L4/L5.
+- Replayable narration + captions on every mission.
+
+## Completion
+
+- Badge: 🏆 Fraction Nexus Architect.
+- Ceremony screen lists L1–L6 mastered, plays final ZED-4 line.
+- "New World Unlocked: Decimal District" banner (no new route).
 
 ## Out of scope
 
-- New backend / DB / auth changes.
-- Modifying L1–L4 missions or shared evaluator logic.
-- Audio asset additions beyond existing TTS narration.
+- Backend / DB / auth changes.
+- Building the Decimal District world (banner only).
+- Modifying L1–L5 missions or shared evaluator logic.
+- New audio assets beyond TTS.
 
 Ready to switch to build mode and implement?
