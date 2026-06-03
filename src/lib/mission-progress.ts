@@ -121,3 +121,13 @@ export function getLevelCompletedCount(level: number): number {
   const all = read();
   return Object.keys(all[`level-${level}`]?.completed ?? {}).length;
 }
+
+/** Flat list of every completed mission's stats across all levels. */
+export function getAllMissionStats(): MissionStats[] {
+  const all = read();
+  const out: MissionStats[] = [];
+  for (const lvl of Object.values(all)) {
+    for (const s of Object.values(lvl.completed)) out.push(s);
+  }
+  return out;
+}

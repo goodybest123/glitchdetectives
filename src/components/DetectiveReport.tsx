@@ -36,7 +36,7 @@ export function DetectiveReport({
           <span className="label-eyebrow text-muted-foreground">{title}</span>
         </div>
         <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-foreground">
-          {rank.name}
+          {rank.rank.name}
         </span>
       </div>
 
