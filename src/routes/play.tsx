@@ -12,6 +12,7 @@ import FractionFactoryLevel4 from "@/components/FractionFactoryLevel4";
 import FractionFactoryLevel5 from "@/components/FractionFactoryLevel5";
 import FractionFactoryLevel6 from "@/components/FractionFactoryLevel6";
 import { useLevelProgress } from "@/lib/mission-progress";
+import { DetectiveRankBadge } from "@/components/DetectiveRankBadge";
 
 
 
@@ -114,12 +115,15 @@ function LevelSelect({ onStart }: { onStart: (n: number) => void }) {
             >
               <ArrowLeft className="w-4 h-4" /> Return to Map
             </Link>
-            <span
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
-              style={{ background: YELLOW, color: BLUE }}
-            >
-              <Shield className="w-3.5 h-3.5" /> Detective Access Granted
-            </span>
+            <div className="flex items-center gap-2 flex-wrap">
+              <DetectiveRankBadge />
+              <span
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
+                style={{ background: YELLOW, color: BLUE }}
+              >
+                <Shield className="w-3.5 h-3.5" /> Detective Access Granted
+              </span>
+            </div>
           </div>
 
           <div className="flex flex-col items-center text-center mt-10">

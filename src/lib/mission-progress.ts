@@ -6,11 +6,17 @@ import { useCallback, useEffect, useState } from "react";
  * sync to Lovable Cloud later without breaking consumers.
  */
 
+export type ScoreBreakdownSnapshot = Record<string, number>;
+
 export type MissionStats = {
   completedAt: string; // ISO
-  reasoningScore: number; // 1-3 average
+  reasoningScore: number; // 1-3 average (legacy)
   repairAttempts: number;
   hintsUsed: number;
+  /** 0–100 overall reasoning score. */
+  score?: number;
+  /** Per-category 0–100 breakdown. */
+  breakdown?: ScoreBreakdownSnapshot;
 };
 
 export type LevelProgress = {
@@ -69,11 +75,14 @@ export function useLevelProgress(level: number) {
       const current = all[key] ?? { level, completed: {} };
       // Don't overwrite a better score
       const prev = current.completed[missionId];
+      const nextScore = Math.max(prev?.score ?? 0, stats.score ?? 0);
       const next: MissionStats = {
         completedAt: prev?.completedAt ?? new Date().toISOString(),
         reasoningScore: Math.max(prev?.reasoningScore ?? 0, stats.reasoningScore),
         repairAttempts: (prev?.repairAttempts ?? 0) + stats.repairAttempts,
         hintsUsed: (prev?.hintsUsed ?? 0) + stats.hintsUsed,
+        score: nextScore,
+        breakdown: (stats.score ?? 0) >= (prev?.score ?? 0) ? stats.breakdown : prev?.breakdown,
       };
       current.completed[missionId] = next;
       all[key] = current;
@@ -111,4 +120,14 @@ export function useLevelProgress(level: number) {
 export function getLevelCompletedCount(level: number): number {
   const all = read();
   return Object.keys(all[`level-${level}`]?.completed ?? {}).length;
+}
+
+/** Flat list of every completed mission's stats across all levels. */
+export function getAllMissionStats(): MissionStats[] {
+  const all = read();
+  const out: MissionStats[] = [];
+  for (const lvl of Object.values(all)) {
+    for (const s of Object.values(lvl.completed)) out.push(s);
+  }
+  return out;
 }
