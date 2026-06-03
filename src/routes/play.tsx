@@ -12,6 +12,7 @@ import FractionFactoryLevel4 from "@/components/FractionFactoryLevel4";
 import FractionFactoryLevel5 from "@/components/FractionFactoryLevel5";
 import FractionFactoryLevel6 from "@/components/FractionFactoryLevel6";
 import { useLevelProgress } from "@/lib/mission-progress";
+import { DetectiveRankBadge } from "@/components/DetectiveRankBadge";
 
 
 

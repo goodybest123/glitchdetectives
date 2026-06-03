@@ -1,10 +1,17 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertTriangle, ArrowRight, CheckCircle2, RefreshCcw, Sparkles, Wrench } from "lucide-react";
+import { AlertTriangle, ArrowRight, CheckCircle2, Wrench } from "lucide-react";
 import { GLITCHES, type Glitch } from "@/lib/glitches";
 import { ZedBubble } from "./ZedBubble";
 import { ExplainInput } from "./ExplainInput";
 import { StepIndicator } from "./StepIndicator";
+import { DetectiveReport } from "./DetectiveReport";
+import type { BuilderConfig } from "./SentenceBuilder";
+import {
+  computeReasoningReport,
+  type ExplainAttempt,
+  type MissionTelemetry,
+} from "@/lib/reasoning-score";
 
 type Phase =
   | "briefing"
@@ -26,6 +33,38 @@ async function evaluate(text: string, mode: "detect" | "wrong" | "explain", shap
   return (await res.json()) as EvalResult;
 }
 
+function builderForGlitch(glitch: Glitch, mode: "detect" | "wrong" | "explain"): BuilderConfig {
+  const partName =
+    glitch.parts === 2 ? "halves"
+    : glitch.parts === 3 ? "thirds"
+    : glitch.parts === 4 ? "quarters"
+    : "parts";
+  if (mode === "detect" || mode === "wrong") {
+    return {
+      stem: "The glitch is because…",
+      chips: [
+        { id: "size", text: "the pieces are not the same size", isStrong: true },
+        { id: "unequal", text: `the ${partName} are unequal`, isStrong: true },
+        { id: "unfair", text: "the shape was not split fairly", isStrong: true },
+        { id: "bigger", text: "one part is bigger than the others", isStrong: true },
+        { id: "color", text: "the colour looks wrong" },
+        { id: "count", text: `there are too many ${partName}` },
+      ],
+    };
+  }
+  return {
+    stem: "The repair works because…",
+    chips: [
+      { id: "equal", text: "all the parts are equal", isStrong: true },
+      { id: "fair", text: "each share is fair", isStrong: true },
+      { id: "even", text: "the shape is divided evenly", isStrong: true },
+      { id: "match", text: `every ${partName.slice(0, -1)} is the same size`, isStrong: true },
+      { id: "pretty", text: "it looks neater now" },
+      { id: "lines", text: "the lines are straight" },
+    ],
+  };
+}
+
 export function MissionRunner({ onExit }: { onExit: () => void }) {
   const [shapeIdx, setShapeIdx] = useState(0);
   const [phase, setPhase] = useState<Phase>("briefing");
@@ -35,6 +74,16 @@ export function MissionRunner({ onExit }: { onExit: () => void }) {
   const [busy, setBusy] = useState(false);
   const [scores, setScores] = useState<number[]>([]);
   const [repaired, setRepaired] = useState(false);
+
+  // Telemetry accumulator (across all shapes in this run)
+  const [telemetry, setTelemetry] = useState<MissionTelemetry>({
+    detectedFirstTry: true,
+    repairAttempts: 0,
+    idealRepairAttempts: GLITCHES.length,
+    hintsUsed: 0,
+    explainAttempts: [],
+    teachAttempts: [],
+  });
 
   const isRepaired = useMemo(
     () => vals.every((v, i) => Math.abs(v - glitch.target[i]) <= glitch.tolerance),
@@ -49,12 +98,29 @@ export function MissionRunner({ onExit }: { onExit: () => void }) {
     setRepaired(false);
   }
 
-  async function handleExplain(text: string, mode: "detect" | "wrong" | "explain", nextPhase: Phase) {
+  async function handleExplain(
+    text: string,
+    modality: "voice" | "type" | "build",
+    mode: "detect" | "wrong" | "explain",
+    nextPhase: Phase,
+  ) {
     setBusy(true);
     setFeedback("");
     try {
       const result = await evaluate(text, mode, `${glitch.name} divided into ${glitch.parts} parts`);
       setFeedback(result.feedbackText);
+
+      const attempt: ExplainAttempt = {
+        text,
+        reasoningScore: result.reasoningScore,
+        modality,
+      };
+      setTelemetry((t) => ({
+        ...t,
+        explainAttempts: mode === "explain" ? t.explainAttempts : [...t.explainAttempts, attempt],
+        teachAttempts: mode === "explain" ? [...t.teachAttempts, attempt] : t.teachAttempts,
+      }));
+
       if (result.isCorrect) {
         if (mode === "explain") setScores((s) => [...s, result.reasoningScore]);
         setTimeout(() => {
@@ -70,6 +136,7 @@ export function MissionRunner({ onExit }: { onExit: () => void }) {
   }
 
   function handleCheckRepair() {
+    setTelemetry((t) => ({ ...t, repairAttempts: t.repairAttempts + 1 }));
     if (isRepaired) {
       setRepaired(true);
       setTimeout(() => setPhase("teach"), 1200);
@@ -103,6 +170,8 @@ export function MissionRunner({ onExit }: { onExit: () => void }) {
     : phase === "teach" ? glitch.robotExplain
     : glitch.robotSuccess;
 
+  const report = phase === "success" ? computeReasoningReport(telemetry) : null;
+
   return (
     <div className="min-h-screen grid-bg">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
@@ -112,7 +181,7 @@ export function MissionRunner({ onExit }: { onExit: () => void }) {
             ← MISSION MAP
           </button>
           <div className="label-eyebrow text-muted-foreground">
-            SHAPE {shapeIdx + 1} / {GLITCHES.length}
+            SHAPE {Math.min(shapeIdx + 1, GLITCHES.length)} / {GLITCHES.length}
           </div>
         </div>
 
@@ -120,13 +189,21 @@ export function MissionRunner({ onExit }: { onExit: () => void }) {
           <div className="mb-6 overflow-x-auto"><StepIndicator step={currentStep} /></div>
         )}
 
+        {phase === "success" && report ? (
+          <DetectiveReport
+            report={report}
+            title="Mission Complete — Detective Report"
+            primaryActionLabel="Return to Map"
+            onPrimary={onExit}
+          />
+        ) : (
         <div className="grid lg:grid-cols-5 gap-6">
           {/* Shape panel */}
           <div className="lg:col-span-3">
             <div className="rounded-3xl border border-border bg-card p-5 sm:p-8 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <span className="label-eyebrow text-muted-foreground">TARGET AREA</span>
-                {phase !== "briefing" && phase !== "success" && (
+                {phase !== "briefing" && (
                   <span className={`label-eyebrow px-2.5 py-1 rounded-full ${
                     repaired || (phase === "repair" && isRepaired)
                       ? "bg-success/15 text-foreground"
@@ -212,7 +289,10 @@ export function MissionRunner({ onExit }: { onExit: () => void }) {
             {phase === "investigate" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
-                  onClick={() => setPhase("explainWrong")}
+                  onClick={() => {
+                    setTelemetry((t) => ({ ...t, detectedFirstTry: false }));
+                    setPhase("explainWrong");
+                  }}
                   className="flex items-center gap-2 justify-center py-4 px-4 rounded-2xl border border-border bg-card hover:border-primary transition"
                 >
                   <CheckCircle2 className="w-5 h-5 text-success" />
@@ -233,9 +313,11 @@ export function MissionRunner({ onExit }: { onExit: () => void }) {
                 placeholder="Explain your thinking to ZED-4..."
                 promptText={robotLine}
                 disabled={busy}
-                onSubmit={(t) =>
+                builder={builderForGlitch(glitch, phase === "detect" ? "detect" : "wrong")}
+                onSubmit={(t, modality) =>
                   handleExplain(
                     t,
+                    modality,
                     phase === "detect" ? "detect" : "wrong",
                     "repair",
                   )
@@ -248,33 +330,26 @@ export function MissionRunner({ onExit }: { onExit: () => void }) {
                 placeholder="Tell ZED-4 why the parts had to be equal..."
                 promptText={robotLine}
                 disabled={busy}
-                onSubmit={(t) => handleExplain(t, "explain", "success")}
+                builder={builderForGlitch(glitch, "explain")}
+                onSubmit={(t, modality) => handleExplain(t, modality, "explain", shapeIdx + 1 < GLITCHES.length ? "briefing" : "success")}
               />
             )}
 
-            {phase === "success" && (
-              <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-                <div className="rounded-2xl border-2 border-success bg-success/10 p-5 text-center">
-                  <Sparkles className="w-8 h-8 mx-auto text-success mb-2" />
-                  <div className="label-eyebrow text-foreground mb-1">SHAPE RESTORED</div>
-                  <p className="text-lg font-semibold mb-4">Reasoning score: {scores[scores.length - 1] ?? 3} / 3</p>
-                  {shapeIdx + 1 < GLITCHES.length ? (
-                    <button onClick={nextShape} className="px-5 py-3 rounded-xl bg-primary text-primary-foreground font-semibold inline-flex items-center gap-2">
-                      Next Shape <ArrowRight className="w-4 h-4" />
-                    </button>
-                  ) : (
-                    <div className="space-y-3">
-                      <p className="text-sm text-muted-foreground">Mission complete. Max Depth Potential: {Math.round((scores.reduce((a, b) => a + b, 0) / Math.max(scores.length, 1)) * 33)}%</p>
-                      <button onClick={onExit} className="px-5 py-3 rounded-xl bg-primary text-primary-foreground font-semibold inline-flex items-center gap-2">
-                        <RefreshCcw className="w-4 h-4" /> Return to Map
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
+            {phase === "teach" && repaired && shapeIdx + 1 < GLITCHES.length && (
+              <button
+                onClick={nextShape}
+                className="w-full mt-2 px-5 py-3 rounded-xl border border-border bg-card text-foreground font-medium inline-flex items-center justify-center gap-2 hover:border-primary transition"
+              >
+                Skip to next shape <ArrowRight className="w-4 h-4" />
+              </button>
             )}
+
+            <p className="text-xs text-muted-foreground text-center">
+              Last explanation score: {scores[scores.length - 1] ?? "—"} / 3
+            </p>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
