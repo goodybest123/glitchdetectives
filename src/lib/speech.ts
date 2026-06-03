@@ -386,11 +386,8 @@ export function useContinuousSpeech(
     const id = setInterval(() => {
       if (!wantOnRef.current) return;
       if (synth.speaking && startedRef.current) {
-        // ZED started talking — pause mic and clear pending flush so we
-        // don't send anything that overlapped with TTS.
-        clearFlush();
-        bufferRef.current = "";
-        setInterim("");
+        // ZED started talking — pause mic so we don't transcribe TTS,
+        // but keep the buffered transcript so it can flush once ZED is quiet.
         safeStop();
       } else if (!synth.speaking && !startedRef.current) {
         safeStart();
