@@ -20,11 +20,18 @@ export function ConversationPanel({
   caseDef,
   seedZedLine,
   onComplete,
+  builderMode = "explain",
 }: {
   caseDef: CaseDef;
   seedZedLine: string;
   onComplete: (stats: { reasoningScore: number; explanation: string }) => void;
+  builderMode?: BuilderMode;
 }) {
+  const builderConfig = useMemo(
+    () => getBuilderConfig(caseDef, builderMode),
+    [caseDef, builderMode],
+  );
+  const [inputMode, setInputMode] = useState<"build" | "type" | "voice">("build");
   const [turns, setTurns] = useState<Turn[]>([{ role: "zed", text: seedZedLine }]);
   const [pending, setPending] = useState(false);
   const [typed, setTyped] = useState("");
