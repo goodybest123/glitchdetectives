@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, Mic, MicOff, RefreshCcw, Send, Sparkles } from "lucide-react";
+import { Keyboard, Loader2, Mic, MicOff, Puzzle, RefreshCcw, Send, Sparkles } from "lucide-react";
 import { speakText, useContinuousSpeech } from "@/lib/speech";
 import type { CaseDef } from "@/lib/level2/types";
+import { SentenceBuilder } from "@/components/SentenceBuilder";
+import { getBuilderConfig, type BuilderMode } from "@/lib/builders/conceptBuilders";
+
 
 type Turn = { role: "child" | "zed"; text: string };
 
