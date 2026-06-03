@@ -28,7 +28,9 @@ export function ExplainPanel({
         caseDef={caseDef}
         seedZedLine={seed}
         onComplete={onComplete}
+        builderMode="explain"
       />
+
     </div>
   );
 }
