@@ -1,86 +1,61 @@
+## Goal
+Extend the 🧩 Sentence Builder modality (already live in Level 1) to **every world and level** of Fraction Factory, so kids who struggle with open-ended typing/speech can still demonstrate reasoning.
 
-# Reasoning Layer Upgrade — Glitch Detectives
+## Current state
 
-Three tightly-scoped additions that turn the app from "math game with AI feedback" into a measurable reasoning platform. Built as shared primitives so every world (Fraction Factory L1–L6, future Decimal District, etc.) opts in with one prop.
+- **Level 1** (`MissionRunner.tsx`) already uses `ExplainInput` with a `builder={builderForGlitch(...)}` prop, exposing 🧩 Build · ⌨️ Type · 🎤 Voice tabs.
+- **Levels 2–6** all route their **Glitch‑Check explain** *and* **post‑repair explain** phases through `level2/ConversationPanel.tsx` (via `level2/ExplainPanel.tsx` and `level2/GlitchCheckPanel.tsx`). That panel only supports mic + free‑form text — no builder.
+- Per‑case concept is already tagged via `caseDef.conceptKey` (L2 types) and is shared by L3–L6 case shapes (they all reuse `CaseDef` from `lib/level2/types.ts` via their own type files, or set `conceptKey` directly on their cases).
 
-## 1. Sentence Builder (universal explain modality)
+## What to build
 
-A third way to answer any "Explain" prompt, alongside Voice and Type.
+### 1. Concept → BuilderConfig factory
+New file `src/lib/builders/conceptBuilders.ts`:
 
-**New shared component** `src/components/SentenceBuilder.tsx`
-- Renders a sentence stem ("The glitch happened because…") and a chip grid of 4–6 candidate clauses.
-- Multi-select chips; selected chips assemble into a live sentence preview.
-- "Send to ZED-4" submits the assembled sentence as plain text to the existing `/api/evaluate*` pipeline — no backend change, no separate evaluator.
-- Each chip has `{ id, text, isStrong }`. `isStrong` chips contain a target concept keyword (equal, same size, fair, etc.); at least one strong chip required to enable Send. This gives the existing `hasConceptKeyword` / `shouldOverrideToFalse` checks something to bite on.
-- Accessibility: large tap targets, keyboard navigable, chips speak on tap via `speakText`.
+- Export `getBuilderConfig(caseDef, mode: "detect" | "explain"): BuilderConfig`.
+- Keyed off `caseDef.conceptKey` (all 14 keys already enumerated in `lib/level2/types.ts`: `numerator`, `denominator`, `unit-fraction`, `fraction-of-set`, `number-line`, `equivalence`, `comparison`, `whole-as-fraction`, `add-like`, `subtract-like`, `denominator-stability`, `equivalence-generation`, `simplification`, `mixed-ops`).
+- For L6 concepts (decimal, percent, mixed number, division-as-fraction, nexus) extend the L6 type union if `conceptKey` isn't already present; otherwise add new keys (`decimal-link`, `percent-link`, `mixed-number`, `division-as-fraction`, `multi-system`) and map them here too.
+- Each entry returns:
+  - `stem`: child-facing sentence stem (e.g. *"The glitch is because…"* for detect, *"The answer is right because…"* for explain).
+  - `chips`: 5–7 chips, **2–3 marked `isStrong: true`** containing the target vocabulary (e.g. *"the pieces are not the same size"*, *"the bottom number names the slice size"*), the rest plausible-but-wrong distractors. Numeric chips are interpolated from `caseDef.truth` / `zedClaim` (e.g. *"the top is {truth.n}"*).
+- Numbers and visual nouns (slices, cells, tank pieces, energy cells, percent grid squares) come from the active `caseDef.visual.kind` and the level theme.
 
-**Refactor** `src/components/ExplainInput.tsx`
-- Wrap current textarea/mic in a tabbed shell with three tabs: 🎤 Voice · ⌨️ Type · 🧩 Build.
-- New optional prop `builder?: { stem: string; chips: Chip[] }`. When present, the Build tab renders `<SentenceBuilder>`. When absent, the Build tab is hidden (back-compat).
-- All three tabs converge on the same `onSubmit(text)` callback, so MissionRunner and every level runner work unchanged.
+### 2. Add Build tab to `ConversationPanel`
+Edit `src/components/level2/ConversationPanel.tsx`:
 
-**Content** — add a small chip bank per mission
-- Extend `src/lib/glitches.tsx` and each `src/lib/levelN/missions.ts` `Mission`/`Glitch` type with optional `explainBuilder: { stem, chips }` and `wrongBuilder`, `detectBuilder` variants.
-- Author chip banks for L1 first (highest impact for ELL / younger kids), then L2–L6. Each bank: 4 strong concept chips + 2 distractor chips.
+- Accept a new optional prop `builderMode?: "detect" | "explain"` (default `"explain"`).
+- Add a tab bar identical in spirit to `ExplainInput.tsx`: 🧩 Build · ⌨️ Type · 🎤 Voice. Default to Build when chips exist, otherwise fall back to Type.
+- Render `SentenceBuilder` (existing `src/components/SentenceBuilder.tsx`) using `getBuilderConfig(caseDef, builderMode)`. On submit, call the existing `sendToZed(fullSentence)` so the LLM evaluator pipeline and "3 misses → ZED teaches" flow are unchanged.
+- Keep the existing mic + typed input wired for the other tabs. No backend changes.
 
-## 2. Reasoning Score & Detective Report
+### 3. Wire `builderMode` through the two entry points
+- `src/components/level2/ExplainPanel.tsx` → pass `builderMode="explain"` to `ConversationPanel`.
+- `src/components/level2/GlitchCheckPanel.tsx` → pass `builderMode="detect"` to its inner `ConversationPanel` (the "Tell ZED what's wrong" stage).
 
-Replace the implicit pass/fail with a visible, multi-dimensional score after every mission.
+### 4. L6 concept coverage
+L6 missions use new mechanics (decimals, percent, mixed numbers, division-as-fraction, Nexus). If their `conceptKey` doesn't already match one of the 14 L2 keys, extend `src/lib/level6/types.ts` with the additional keys and ensure each L6 mission/case sets `conceptKey`. Then add those entries in `conceptBuilders.ts`.
 
-**New shared module** `src/lib/reasoning-score.ts`
-- Pure functions that turn per-phase telemetry into a 0–100 score across six categories:
-  Investigation · Error Detection · Repair Accuracy · Explanation Quality · Mathematical Vocabulary · Critical Thinking.
-- Inputs (all already available in MissionRunner / level runners):
-  - phase reached without hint
-  - repair attempts vs target
-  - hints used
-  - per-explain `reasoningScore` from the LLM (1–3)
-  - per-explain text → counted concept keywords via `CONCEPT_KEYWORDS`
-  - which explain modality was used (Build/Type/Voice — Build still scores fully; we evaluate the assembled sentence, not the modality)
-- Returns `{ overall, breakdown, strengths[], growthAreas[] }`.
+### 5. Level 1 untouched
+`MissionRunner.tsx` keeps its own `builderForGlitch` factory — no regression risk, since L1 has unique glitch shapes (halves/quarters/etc.) that don't share the L2 concept taxonomy.
 
-**New shared component** `src/components/DetectiveReport.tsx`
-- Replaces the existing "Mission Complete" screen. Shows:
-  - big circular Reasoning Score (0–100)
-  - 6-bar breakdown with category labels and 0–100 bars
-  - 2–3 strengths bullets, 1–2 growth-area bullets, generated from the score breakdown
-  - "Next mission" / "Replay" buttons (existing behavior)
-- Used by `MissionRunner` and every `FractionFactoryLevelN.tsx` success screen.
+## Accessibility & UX
+- Build tab honors existing per-chip 🔊 speak buttons in `SentenceBuilder`.
+- "Send to ZED-4" gating still requires at least one **strong** chip, preventing kids from sending pure distractors.
+- Animations stay ≤ 300 ms; semantic tokens from `src/styles.css`; no new colors.
 
-**Extend** `src/lib/mission-progress.ts`
-- `MissionStats` gains: `score: number` (0–100) and `breakdown: Record<Category, number>`.
-- `markComplete` keeps the existing "don't overwrite better" rule, now keyed on `score`.
-- Back-compat: missing fields default to derived values from existing `reasoningScore`.
+## Out of scope
+- Reasoning Score & Detective Report changes (already shipped for L1; extending to L2–L6 is a follow-up).
+- Detective Rank changes.
+- LLM prompt / `/api/evaluate*` changes — the builder output is just a regular sentence the evaluator already handles.
+- Parent/teacher dashboard.
 
-## 3. Detective Rank (progression system)
+## Files
 
-Cross-level rank derived from cumulative reasoning quality.
+**New**
+- `src/lib/builders/conceptBuilders.ts`
 
-**New shared module** `src/lib/detective-rank.ts`
-- Reads all levels via existing `getLevelCompletedCount` + a new `getAllMissionStats()` helper in `mission-progress.ts`.
-- Computes average score across completed missions and returns one of:
-  Rookie Detective → Junior Investigator → Glitch Hunter → Reasoning Expert → Master Detective → Nexus Architect.
-- Rank thresholds based on (avg score) × (missions completed weight) so rank is earned by quality, not grinding.
-
-**New shared component** `src/components/DetectiveRankBadge.tsx`
-- Small badge: icon + rank name + tiny progress bar to next rank.
-- Mounted in the top bar of `src/routes/play.tsx` (the hub) and on the DetectiveReport screen with a rank-up animation when the rank changes.
-
-## Roll-out order
-
-1. `SentenceBuilder` + `ExplainInput` tabs + chip banks for L1.
-2. `reasoning-score.ts` + `DetectiveReport` wired into `MissionRunner` (L1).
-3. Extend `mission-progress.ts` schema + `DetectiveRankBadge` in hub.
-4. Author chip banks for L2–L6 and swap each level's success screen to `DetectiveReport`.
-
-## Out of scope (deliberately)
-
-- Teacher / Parent dashboard (item 4 in the brief) — separate phase, needs auth + Cloud schema.
-- Server-side persistence of scores — keep `localStorage` for now; the new schema is shaped so a future Supabase sync is a drop-in.
-- No changes to the LLM prompt or `/api/evaluate*` endpoints — the assembled sentence flows through the existing pipeline.
-
-## Technical notes
-
-- All new components live in `src/components/` and `src/lib/`; no route changes required beyond importing the rank badge in `play.tsx`.
-- Strict TS, semantic tokens from `src/styles.css` only (no raw colors).
-- Animations via existing `framer-motion`, kept ≤300ms per the accessibility rules already in the project.
+**Edited**
+- `src/components/level2/ConversationPanel.tsx` (add Build tab + `builderMode` prop)
+- `src/components/level2/ExplainPanel.tsx` (forward `builderMode="explain"`)
+- `src/components/level2/GlitchCheckPanel.tsx` (forward `builderMode="detect"`)
+- `src/lib/level6/types.ts` + `src/lib/level6/missions.ts` (only if L6 concept keys need adding)
