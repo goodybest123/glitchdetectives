@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, Mic, MicOff, RefreshCcw, Send, Sparkles } from "lucide-react";
+import { Keyboard, Loader2, Mic, MicOff, Puzzle, RefreshCcw, Send, Sparkles } from "lucide-react";
 import { speakText, useContinuousSpeech } from "@/lib/speech";
 import type { CaseDef } from "@/lib/level2/types";
+import { SentenceBuilder } from "@/components/SentenceBuilder";
+import { getBuilderConfig, type BuilderMode } from "@/lib/builders/conceptBuilders";
+
 
 type Turn = { role: "child" | "zed"; text: string };
 
@@ -17,11 +20,18 @@ export function ConversationPanel({
   caseDef,
   seedZedLine,
   onComplete,
+  builderMode = "explain",
 }: {
   caseDef: CaseDef;
   seedZedLine: string;
   onComplete: (stats: { reasoningScore: number; explanation: string }) => void;
+  builderMode?: BuilderMode;
 }) {
+  const builderConfig = useMemo(
+    () => getBuilderConfig(caseDef, builderMode),
+    [caseDef, builderMode],
+  );
+  const [inputMode, setInputMode] = useState<"build" | "type" | "voice">("build");
   const [turns, setTurns] = useState<Turn[]>([{ role: "zed", text: seedZedLine }]);
   const [pending, setPending] = useState(false);
   const [typed, setTyped] = useState("");
@@ -285,8 +295,78 @@ export function ConversationPanel({
         </motion.button>
       )}
 
-      <div className="flex items-center gap-2">
+      {/* Modality tabs */}
+      <div role="tablist" className="flex gap-1 p-1 rounded-xl bg-white/5 text-xs font-medium">
+        <ModeTab
+          label="Build"
+          icon={<Puzzle className="w-3.5 h-3.5" />}
+          active={inputMode === "build"}
+          onClick={() => setInputMode("build")}
+        />
+        <ModeTab
+          label="Type"
+          icon={<Keyboard className="w-3.5 h-3.5" />}
+          active={inputMode === "type"}
+          onClick={() => setInputMode("type")}
+        />
         {supported && (
+          <ModeTab
+            label="Voice"
+            icon={<Mic className="w-3.5 h-3.5" />}
+            active={inputMode === "voice"}
+            onClick={() => setInputMode("voice")}
+          />
+        )}
+      </div>
+
+      {inputMode === "build" && (
+        <SentenceBuilder
+          config={builderConfig}
+          disabled={pending || lockedRef.current}
+          onSubmit={(text) => void sendToZed(text)}
+        />
+      )}
+
+      {inputMode === "type" && (
+        <div className="flex items-center gap-2">
+          <input
+            value={typed}
+            onChange={(e) => setTyped(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") submitTyped(); }}
+            placeholder="Type your reply to ZED-4"
+            className="flex-1 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2"
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              color: "#e6faff",
+              border: "1px solid color-mix(in oklab, #5fd0ff 25%, transparent)",
+            }}
+          />
+          <button
+            onClick={submitTyped}
+            disabled={!typed.trim() || pending}
+            className="inline-flex items-center gap-1 px-3 py-2.5 rounded-xl font-semibold text-sm disabled:opacity-40"
+            style={{ background: "linear-gradient(135deg, #5fd0ff, #2a8ec9)", color: "white" }}
+          >
+            <Send className="w-3.5 h-3.5" /> Send
+          </button>
+          {turns.length > 1 && !lockedRef.current && !helped && (
+            <button
+              onClick={() => { setTurns([{ role: "zed", text: seedZedLine }]); setAttempts(0); }}
+              title="Reset"
+              className="inline-flex items-center px-2 py-2.5 rounded-xl text-xs"
+              style={{
+                color: "#e6faff",
+                border: "1px solid color-mix(in oklab, #5fd0ff 25%, transparent)",
+              }}
+            >
+              <RefreshCcw className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+      )}
+
+      {inputMode === "voice" && supported && (
+        <div className="flex items-center gap-2">
           <motion.button
             onClick={listening ? stop : start}
             whileTap={{ scale: 0.95 }}
@@ -305,41 +385,28 @@ export function ConversationPanel({
             {listening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
             {listening ? "Listening…" : "Talk to ZED-4"}
           </motion.button>
-        )}
-        <input
-          value={typed}
-          onChange={(e) => setTyped(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") submitTyped(); }}
-          placeholder={supported ? "…or type" : "Type your reply to ZED-4"}
-          className="flex-1 px-3 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2"
-          style={{
-            background: "rgba(255,255,255,0.06)",
-            color: "#e6faff",
-            border: "1px solid color-mix(in oklab, #5fd0ff 25%, transparent)",
-          }}
-        />
-        <button
-          onClick={submitTyped}
-          disabled={!typed.trim() || pending}
-          className="inline-flex items-center gap-1 px-3 py-2.5 rounded-xl font-semibold text-sm disabled:opacity-40"
-          style={{ background: "linear-gradient(135deg, #5fd0ff, #2a8ec9)", color: "white" }}
-        >
-          <Send className="w-3.5 h-3.5" /> Send
-        </button>
-        {turns.length > 1 && !lockedRef.current && !helped && (
-          <button
-            onClick={() => { setTurns([{ role: "zed", text: seedZedLine }]); setAttempts(0); }}
-            title="Reset"
-            className="inline-flex items-center px-2 py-2.5 rounded-xl text-xs"
-            style={{
-              color: "#e6faff",
-              border: "1px solid color-mix(in oklab, #5fd0ff 25%, transparent)",
-            }}
-          >
-            <RefreshCcw className="w-3.5 h-3.5" />
-          </button>
-        )}
-      </div>
+          <span className="text-xs text-cyan-100/60">Speak your answer out loud.</span>
+        </div>
+      )}
     </div>
   );
 }
+
+function ModeTab({
+  label, icon, active, onClick,
+}: { label: string; icon: React.ReactNode; active: boolean; onClick: () => void }) {
+  return (
+    <button
+      role="tab"
+      aria-selected={active}
+      onClick={onClick}
+      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg transition ${
+        active ? "bg-white/10 text-cyan-50 shadow-sm" : "text-cyan-100/60 hover:text-cyan-50"
+      }`}
+    >
+      {icon}
+      {label}
+    </button>
+  );
+}
+
