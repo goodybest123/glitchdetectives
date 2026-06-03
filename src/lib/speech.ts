@@ -266,10 +266,20 @@ export function useContinuousSpeech(
     clearFlush();
     flushTimerRef.current = setTimeout(() => {
       const text = bufferRef.current.trim();
+      if (!text || text.length < MIN_CHARS) {
+        bufferRef.current = "";
+        setInterim("");
+        return;
+      }
+      // If ZED is still speaking, defer the flush instead of discarding the
+      // child's transcript — re-arm so it fires as soon as TTS finishes.
+      if (isSpeaking()) {
+        clearFlush();
+        flushTimerRef.current = setTimeout(() => scheduleFlush(), 600);
+        return;
+      }
       bufferRef.current = "";
       setInterim("");
-      if (!text || text.length < MIN_CHARS) return;
-      if (isSpeaking()) return; // don't fire while ZED is talking
       const norm = text.toLowerCase().replace(/\s+/g, " ").trim();
       if (norm === lastSentRef.current) return; // de-dupe identical chunks
       lastSentRef.current = norm;
@@ -376,11 +386,8 @@ export function useContinuousSpeech(
     const id = setInterval(() => {
       if (!wantOnRef.current) return;
       if (synth.speaking && startedRef.current) {
-        // ZED started talking — pause mic and clear pending flush so we
-        // don't send anything that overlapped with TTS.
-        clearFlush();
-        bufferRef.current = "";
-        setInterim("");
+        // ZED started talking — pause mic so we don't transcribe TTS,
+        // but keep the buffered transcript so it can flush once ZED is quiet.
         safeStop();
       } else if (!synth.speaking && !startedRef.current) {
         safeStart();
