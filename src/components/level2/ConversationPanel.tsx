@@ -410,6 +410,3 @@ function ModeTab({
   );
 }
 
-    </div>
-  );
-}
