@@ -90,7 +90,9 @@ export function GlitchCheckPanel({
           caseDef={caseDef}
           seedZedLine={seed}
           onComplete={() => onResolved()}
+          builderMode="detect"
         />
+
       </div>
     );
   }
