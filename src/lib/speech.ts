@@ -87,6 +87,19 @@ export function speakText(
   runNext();
 }
 
+/**
+ * Immediately stop any in-flight TTS and clear the queue. Use this when the
+ * child navigates away from the section that queued the speech so ZED
+ * doesn't keep talking into the next screen.
+ */
+export function stopSpeech() {
+  if (typeof window === "undefined") return;
+  queue.length = 0;
+  try { window.speechSynthesis?.cancel(); } catch { /* */ }
+  running = false;
+  speakingFlag = false;
+}
+
 export function useAutoSpeak(text: string, deps: unknown[] = []) {
   useEffect(() => {
     if (!text) return;
