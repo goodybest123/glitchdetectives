@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Keyboard, Loader2, Mic, MicOff, Puzzle, RefreshCcw, Send, Sparkles } from "lucide-react";
-import { speakText, useContinuousSpeech } from "@/lib/speech";
+import { speakText, stopSpeech, useContinuousSpeech } from "@/lib/speech";
 import type { CaseDef } from "@/lib/level2/types";
 import { SentenceBuilder } from "@/components/SentenceBuilder";
 import { getBuilderConfig, type BuilderMode } from "@/lib/builders/conceptBuilders";
@@ -219,7 +219,7 @@ export function ConversationPanel({
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: "smooth" });
   }, [turns, interim, pending]);
 
-  useEffect(() => () => { try { stop(); } catch { /* */ } }, [stop]);
+  useEffect(() => () => { try { stop(); } catch { /* */ } stopSpeech(); }, [stop]);
 
   const submitTyped = () => {
     if (!typed.trim() || pending) return;
