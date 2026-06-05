@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -118,15 +119,12 @@ function RootComponent() {
 
   // Stop ZED's TTS whenever the URL changes so leftover speech doesn't
   // bleed into the next screen.
-  if (typeof window !== "undefined") {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    React.useEffect(() => {
-      const unsub = router.subscribe("onResolved", () => {
-        import("@/lib/speech").then((m) => m.stopSpeech()).catch(() => {});
-      });
-      return () => { unsub(); };
-    }, [router]);
-  }
+  useEffect(() => {
+    const unsub = router.subscribe("onResolved", () => {
+      import("@/lib/speech").then((m) => m.stopSpeech()).catch(() => {});
+    });
+    return () => { unsub(); };
+  }, [router]);
 
   return (
     <QueryClientProvider client={queryClient}>
