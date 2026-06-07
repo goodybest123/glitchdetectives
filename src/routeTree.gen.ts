@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PrintablesRouteImport } from './routes/printables'
+import { Route as PlayRouteImport } from './routes/play'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
 
 const PrintablesRoute = PrintablesRouteImport.update({
   id: '/printables',
   path: '/printables',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlayRoute = PlayRouteImport.update({
+  id: '/play',
+  path: '/play',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -31,30 +37,34 @@ const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/play': typeof PlayRoute
   '/printables': typeof PrintablesRouteWithChildren
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/play': typeof PlayRoute
   '/printables': typeof PrintablesRouteWithChildren
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/play': typeof PlayRoute
   '/printables': typeof PrintablesRouteWithChildren
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/printables' | '/printables/fractions-l1'
+  fullPaths: '/' | '/play' | '/printables' | '/printables/fractions-l1'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/printables' | '/printables/fractions-l1'
-  id: '__root__' | '/' | '/printables' | '/printables/fractions-l1'
+  to: '/' | '/play' | '/printables' | '/printables/fractions-l1'
+  id: '__root__' | '/' | '/play' | '/printables' | '/printables/fractions-l1'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PlayRoute: typeof PlayRoute
   PrintablesRoute: typeof PrintablesRouteWithChildren
 }
 
@@ -65,6 +75,13 @@ declare module '@tanstack/react-router' {
       path: '/printables'
       fullPath: '/printables'
       preLoaderRoute: typeof PrintablesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/play': {
+      id: '/play'
+      path: '/play'
+      fullPath: '/play'
+      preLoaderRoute: typeof PlayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -98,8 +115,19 @@ const PrintablesRouteWithChildren = PrintablesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PlayRoute: PlayRoute,
   PrintablesRoute: PrintablesRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
