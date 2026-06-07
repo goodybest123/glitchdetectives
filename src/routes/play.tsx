@@ -38,6 +38,7 @@ function PlayPage() {
         <header className="mb-12 sm:mb-16">
           <Link
             to="/"
+            hash="worlds"
             className="label-eyebrow text-neutral-500 hover:text-neutral-900 transition-colors"
           >
             ← Back to Explore Detective Worlds
