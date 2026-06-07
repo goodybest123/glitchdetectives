@@ -40,7 +40,7 @@ function PlayPage() {
             to="/"
             className="label-eyebrow text-neutral-500 hover:text-neutral-900 transition-colors"
           >
-            ← Back to Glitch Detectives
+            ← Back to Explore Detective Worlds
           </Link>
           <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-neutral-900 leading-[0.95]">
             Fraction Factory:
