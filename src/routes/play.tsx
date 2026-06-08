@@ -59,7 +59,10 @@ function PlayPage() {
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
           {/* Active case */}
-          <article className="group relative flex flex-col rounded-3xl bg-white p-7 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.18)] ring-1 ring-neutral-100 transition-shadow hover:shadow-[0_12px_40px_-12px_rgba(15,23,42,0.25)] min-h-[280px]">
+          <Link
+            to="/play/case-01"
+            className="group relative flex flex-col rounded-3xl bg-white p-7 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.18)] ring-1 ring-neutral-100 transition-shadow hover:shadow-[0_12px_40px_-12px_rgba(15,23,42,0.25)] min-h-[280px] text-left"
+          >
             <span className="inline-flex w-fit items-center rounded-full bg-[#ffde59] px-3 py-1 text-[11px] font-bold tracking-wider text-neutral-900">
               ACTIVE CASE
             </span>
@@ -71,14 +74,12 @@ function PlayPage() {
                 Are the slices fair?
               </p>
             </div>
-            <Link
-              to="/play/case-01"
-              className="mt-8 inline-flex w-fit items-center gap-2 text-sm font-bold tracking-wider text-neutral-900 transition-transform hover:translate-x-1"
-            >
+            <span className="mt-8 inline-flex w-fit items-center gap-2 text-sm font-bold tracking-wider text-neutral-900 transition-transform group-hover:translate-x-1">
               INVESTIGATE
               <span aria-hidden>→</span>
-            </Link>
-          </article>
+            </span>
+          </Link>
+
 
           {/* Pending cases */}
           {PENDING_CASES.map((c) => {
