@@ -63,7 +63,7 @@ export function DiagnosticReport({
           </h2>
         </div>
         <span className="rounded-full bg-[#dcfce7] px-3 py-1 text-xs font-bold text-[#166534]">
-          Case 01 · Fair Sharing
+          {caseTitle}
         </span>
       </header>
 
