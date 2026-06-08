@@ -133,6 +133,18 @@ export function PizzaSVG({
             />
           );
         })}
+        {/* Full-pizza click target (top-most), only when interactive */}
+        {interactive && (
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R + 12}
+            fill="transparent"
+            onClick={handleClick}
+            className={cursor}
+            style={{ pointerEvents: "all" }}
+          />
+        )}
       </svg>
     </div>
   );
