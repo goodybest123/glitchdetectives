@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
+import { Route as ApiChatCase01ChocolateRouteImport } from './routes/api/chat/case-01-chocolate'
 import { Route as ApiChatCase01RouteImport } from './routes/api/chat/case-01'
 
 const PrintablesRoute = PrintablesRouteImport.update({
@@ -47,6 +48,11 @@ const PlayCase01Route = PlayCase01RouteImport.update({
   path: '/case-01',
   getParentRoute: () => PlayRoute,
 } as any)
+const ApiChatCase01ChocolateRoute = ApiChatCase01ChocolateRouteImport.update({
+  id: '/api/chat/case-01-chocolate',
+  path: '/api/chat/case-01-chocolate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatCase01Route = ApiChatCase01RouteImport.update({
   id: '/api/chat/case-01',
   path: '/api/chat/case-01',
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
+  '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
+  '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
+  '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
+    | '/api/chat/case-01-chocolate'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/printables/fractions-l1'
     | '/play'
     | '/api/chat/case-01'
+    | '/api/chat/case-01-chocolate'
   id:
     | '__root__'
     | '/'
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
+    | '/api/chat/case-01-chocolate'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -114,6 +126,7 @@ export interface RootRouteChildren {
   PlayRoute: typeof PlayRouteWithChildren
   PrintablesRoute: typeof PrintablesRouteWithChildren
   ApiChatCase01Route: typeof ApiChatCase01Route
+  ApiChatCase01ChocolateRoute: typeof ApiChatCase01ChocolateRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -160,6 +173,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayCase01RouteImport
       parentRoute: typeof PlayRoute
     }
+    '/api/chat/case-01-chocolate': {
+      id: '/api/chat/case-01-chocolate'
+      path: '/api/chat/case-01-chocolate'
+      fullPath: '/api/chat/case-01-chocolate'
+      preLoaderRoute: typeof ApiChatCase01ChocolateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat/case-01': {
       id: '/api/chat/case-01'
       path: '/api/chat/case-01'
@@ -199,7 +219,18 @@ const rootRouteChildren: RootRouteChildren = {
   PlayRoute: PlayRouteWithChildren,
   PrintablesRoute: PrintablesRouteWithChildren,
   ApiChatCase01Route: ApiChatCase01Route,
+  ApiChatCase01ChocolateRoute: ApiChatCase01ChocolateRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
