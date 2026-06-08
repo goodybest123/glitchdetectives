@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Lock } from "lucide-react";
 
-export const Route = createFileRoute("/play")({
+export const Route = createFileRoute("/play/")({
   head: () => ({
     meta: [
       { title: "Fraction Factory: Active Cases" },

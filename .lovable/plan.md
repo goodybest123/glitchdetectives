@@ -1,32 +1,26 @@
 ## Problem
 
-On `/play/case-01`, the "Submit Evidence" button is already in the code but it stays disabled until the `explain` stage. To reach `explain` you must:
-1. Click the pizza to trigger **detect**
-2. Drag the equalizer slider to 1 → **repair** → **explain**
-
-Step 1 is broken: the pizza's clickable areas are 4 thin dividing lines plus mostly-transparent slice paths, so most clicks on the pizza body miss. The session replay shows repeated clicks around the pizza that never advance the state.
+Navigating to `/play/case-01` shows the `/play` dashboard instead of the case page. Cause: `src/routes/play.case-01.tsx` is registered as a **child** of `src/routes/play.tsx` (per `routeTree.gen.ts`), but `play.tsx`'s `component: PlayPage` does not render `<Outlet />`. TanStack Router matches the child route, but it has nowhere to mount — the parent silently keeps rendering the dashboard.
 
 ## Fix
 
-### 1. Make the whole pizza clickable in INVESTIGATE state (`src/components/case01/PizzaSVG.tsx`)
-- Add an invisible full-pizza hit circle (radius `R`, `fill="transparent"`, `pointer-events: all`) rendered on top of the slices/lines, wired to `onGlitchClick` only when `interactive` is true.
-- Keep the existing slice/line click handlers (they still work for precise clicks).
-- Add `cursor-pointer` to the hit circle when interactive.
+Convert `/play` into a layout + index route (standard TanStack pattern):
 
-### 2. Confirm Submit Evidence wiring (`src/routes/play.case-01.tsx`)
-The button exists and submits via AI SDK `sendMessage({ text })` to `/api/chat/case-01`. No code change needed there — just verify after the fix:
-- Click pizza → ZED-4 says "Glitch Detected" and slider appears.
-- Drag slider to right → green "Logic Repaired" banner shows, chat panel un-greys.
-- Type reasoning, click SUBMIT EVIDENCE → user bubble appears, "AI Guide is thinking…", streamed ZED-4 reply appears.
+1. **Rename** `src/routes/play.tsx` → `src/routes/play.index.tsx` (no code change inside the file; the existing dashboard becomes the leaf route for `/play`).
+2. **Create** new `src/routes/play.tsx` as a minimal layout:
+   ```tsx
+   import { createFileRoute, Outlet } from "@tanstack/react-router";
+   export const Route = createFileRoute("/play")({ component: () => <Outlet /> });
+   ```
+3. Let the router plugin regenerate `routeTree.gen.ts` (do not edit by hand).
 
-### 3. Small UX polish (same file)
-- In the INVESTIGATE prompt, change copy to make clear the whole pizza is clickable: *"Scan ZED-4's logic. Tap the pizza where the logic breaks."* (already says "Click on the pizza" — keep, just ensure prompt cursor hint).
+After this:
+- `/play` → renders the layout's `<Outlet />` → renders `play.index.tsx` (dashboard).
+- `/play/case-01` → renders the layout's `<Outlet />` → renders `play.case-01.tsx` (case page).
 
 ## Files touched
-- **edit** `src/components/case01/PizzaSVG.tsx` — add full-area transparent hit circle on top, gated by `interactive`.
-- *(no change needed)* `src/routes/play.case-01.tsx` — Submit Evidence button and chat already wired correctly.
-- *(no change needed)* `src/routes/api/chat/case-01.ts` — already streams via Lovable AI Gateway.
+- **rename** `src/routes/play.tsx` → `src/routes/play.index.tsx`.
+- **create** `src/routes/play.tsx` (3-line layout with `<Outlet />`).
 
 ## Out of scope
-- Restricting the glitch click to only the unequal sliver (the spec says "where the logic breaks" — accepting any pizza click is calmer for a K-12 audience and matches the neuro-inclusive design intent; we can tighten later if you want).
-- Persisting chat history / progress.
+- Any changes to the case-01 page itself, the pizza component, or the chat — those remain working once routing is fixed.
