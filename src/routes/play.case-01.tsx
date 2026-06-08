@@ -117,6 +117,26 @@ function CaseOnePage() {
     [messages],
   );
 
+  const marks = useMemo(() => {
+    const investigate = stage === "investigate" ? 0 : 5;
+    const detect = stage === "investigate" ? 0 : 5;
+    const repair =
+      equalized >= 0.995 ? 5 : equalized >= 0.85 ? 4 : equalized >= 0.6 ? 3 : 2;
+    let explain = 0;
+    if (stage === "solved") {
+      const turns = studentQuotes.length;
+      const longestWords = studentQuotes.reduce(
+        (m, q) => Math.max(m, q.split(/\s+/).filter(Boolean).length),
+        0,
+      );
+      if (turns <= 3 && longestWords >= 6) explain = 5;
+      else if (turns <= 5 || longestWords >= 4) explain = 4;
+      else explain = 3;
+    }
+    return { investigate, detect, repair, explain };
+  }, [stage, equalized, studentQuotes]);
+
+
   const zed =
     stage === "investigate"
       ? { tone: "neutral" as const, text: "Look! I served exactly four pieces of pizza!" }
@@ -212,6 +232,7 @@ function CaseOnePage() {
               <DiagnosticReport
                 studentQuotes={studentQuotes}
                 turnCount={studentQuotes.length}
+                marks={marks}
               />
             </div>
           )}

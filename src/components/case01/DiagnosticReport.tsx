@@ -1,12 +1,31 @@
 import { Link } from "@tanstack/react-router";
 import { SpeakButton } from "./SpeakButton";
 
+export type CaseMarks = {
+  investigate: number;
+  detect: number;
+  repair: number;
+  explain: number;
+};
+
 type Props = {
   studentQuotes: string[];
   turnCount: number;
+  marks: CaseMarks;
 };
 
-export function DiagnosticReport({ studentQuotes, turnCount }: Props) {
+const MAX_PER_STEP = 5;
+
+function remarkFor(total: number) {
+  if (total >= 18) return "Outstanding detective work!";
+  if (total >= 14) return "Great reasoning, Detective.";
+  return "Nice work — you closed the case!";
+}
+
+export function DiagnosticReport({ studentQuotes, turnCount, marks }: Props) {
+  const total =
+    marks.investigate + marks.detect + marks.repair + marks.explain;
+  const maxTotal = MAX_PER_STEP * 4;
   const evidenceStatement =
     [...studentQuotes].sort((a, b) => b.length - a.length)[0] ?? "";
 
@@ -44,6 +63,29 @@ export function DiagnosticReport({ studentQuotes, turnCount }: Props) {
         </div>
         <SpeakButton text={`ZED-4 says: ${thanks}`} />
       </div>
+
+      {/* Marks */}
+      <div className="mt-6 rounded-2xl border border-neutral-100 bg-[#f8fafc] p-5">
+        <div className="flex items-center justify-between border-b border-neutral-200/70 pb-3">
+          <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">
+            Marks
+          </div>
+          <span className="rounded-full bg-[#dcfce7] px-3 py-1 text-sm font-bold text-[#166534]">
+            {total} / {maxTotal}
+          </span>
+        </div>
+        <ul className="mt-4 space-y-2.5">
+          <StepMark label="Investigate" score={marks.investigate} />
+          <StepMark label="Detect" score={marks.detect} />
+          <StepMark label="Repair" score={marks.repair} />
+          <StepMark label="Explain" score={marks.explain} />
+        </ul>
+        <div className="mt-4 border-t border-neutral-200/70 pt-3 text-sm font-semibold text-neutral-700">
+          {remarkFor(total)}
+        </div>
+      </div>
+
+
 
       {/* Concept mastered */}
       <div className="mt-6">
@@ -125,5 +167,29 @@ function CheckDot() {
         <path d="M5 10l3 3 7-7" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </span>
+  );
+}
+
+function StepMark({ label, score }: { label: string; score: number }) {
+  const clamped = Math.max(0, Math.min(MAX_PER_STEP, Math.round(score)));
+  return (
+    <li className="flex items-center justify-between gap-3 text-sm text-neutral-700">
+      <span className="font-medium">{label}</span>
+      <span className="flex items-center gap-3">
+        <span className="flex gap-1" aria-label={`${clamped} out of ${MAX_PER_STEP}`}>
+          {Array.from({ length: MAX_PER_STEP }).map((_, i) => (
+            <span
+              key={i}
+              className={`inline-block h-2.5 w-2.5 rounded-full ${
+                i < clamped ? "bg-[#10b981]" : "bg-neutral-200"
+              }`}
+            />
+          ))}
+        </span>
+        <span className="w-10 text-right font-semibold tabular-nums text-neutral-900">
+          {clamped}/{MAX_PER_STEP}
+        </span>
+      </span>
+    </li>
   );
 }
