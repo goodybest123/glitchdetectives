@@ -14,7 +14,11 @@ import { Route as PlayRouteImport } from './routes/play'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
+import { Route as PlayCase02RouteImport } from './routes/play.case-02'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
+import { Route as ApiChatCase02PanelsRouteImport } from './routes/api/chat/case-02-panels'
+import { Route as ApiChatCase02CrateRouteImport } from './routes/api/chat/case-02-crate'
+import { Route as ApiChatCase02BarRouteImport } from './routes/api/chat/case-02-bar'
 import { Route as ApiChatCase01ChocolateRouteImport } from './routes/api/chat/case-01-chocolate'
 import { Route as ApiChatCase01CanvasRouteImport } from './routes/api/chat/case-01-canvas'
 import { Route as ApiChatCase01RouteImport } from './routes/api/chat/case-01'
@@ -44,10 +48,30 @@ const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
   path: '/fractions-l1',
   getParentRoute: () => PrintablesRoute,
 } as any)
+const PlayCase02Route = PlayCase02RouteImport.update({
+  id: '/case-02',
+  path: '/case-02',
+  getParentRoute: () => PlayRoute,
+} as any)
 const PlayCase01Route = PlayCase01RouteImport.update({
   id: '/case-01',
   path: '/case-01',
   getParentRoute: () => PlayRoute,
+} as any)
+const ApiChatCase02PanelsRoute = ApiChatCase02PanelsRouteImport.update({
+  id: '/api/chat/case-02-panels',
+  path: '/api/chat/case-02-panels',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase02CrateRoute = ApiChatCase02CrateRouteImport.update({
+  id: '/api/chat/case-02-crate',
+  path: '/api/chat/case-02-crate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase02BarRoute = ApiChatCase02BarRouteImport.update({
+  id: '/api/chat/case-02-bar',
+  path: '/api/chat/case-02-bar',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatCase01ChocolateRoute = ApiChatCase01ChocolateRouteImport.update({
   id: '/api/chat/case-01-chocolate',
@@ -70,21 +94,29 @@ export interface FileRoutesByFullPath {
   '/play': typeof PlayRouteWithChildren
   '/printables': typeof PrintablesRouteWithChildren
   '/play/case-01': typeof PlayCase01Route
+  '/play/case-02': typeof PlayCase02Route
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
   '/api/chat/case-01-canvas': typeof ApiChatCase01CanvasRoute
   '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
+  '/api/chat/case-02-bar': typeof ApiChatCase02BarRoute
+  '/api/chat/case-02-crate': typeof ApiChatCase02CrateRoute
+  '/api/chat/case-02-panels': typeof ApiChatCase02PanelsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/printables': typeof PrintablesRouteWithChildren
   '/play/case-01': typeof PlayCase01Route
+  '/play/case-02': typeof PlayCase02Route
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
   '/api/chat/case-01-canvas': typeof ApiChatCase01CanvasRoute
   '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
+  '/api/chat/case-02-bar': typeof ApiChatCase02BarRoute
+  '/api/chat/case-02-crate': typeof ApiChatCase02CrateRoute
+  '/api/chat/case-02-panels': typeof ApiChatCase02PanelsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -92,11 +124,15 @@ export interface FileRoutesById {
   '/play': typeof PlayRouteWithChildren
   '/printables': typeof PrintablesRouteWithChildren
   '/play/case-01': typeof PlayCase01Route
+  '/play/case-02': typeof PlayCase02Route
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
   '/api/chat/case-01-canvas': typeof ApiChatCase01CanvasRoute
   '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
+  '/api/chat/case-02-bar': typeof ApiChatCase02BarRoute
+  '/api/chat/case-02-crate': typeof ApiChatCase02CrateRoute
+  '/api/chat/case-02-panels': typeof ApiChatCase02PanelsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -105,32 +141,44 @@ export interface FileRouteTypes {
     | '/play'
     | '/printables'
     | '/play/case-01'
+    | '/play/case-02'
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
     | '/api/chat/case-01-canvas'
     | '/api/chat/case-01-chocolate'
+    | '/api/chat/case-02-bar'
+    | '/api/chat/case-02-crate'
+    | '/api/chat/case-02-panels'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/printables'
     | '/play/case-01'
+    | '/play/case-02'
     | '/printables/fractions-l1'
     | '/play'
     | '/api/chat/case-01'
     | '/api/chat/case-01-canvas'
     | '/api/chat/case-01-chocolate'
+    | '/api/chat/case-02-bar'
+    | '/api/chat/case-02-crate'
+    | '/api/chat/case-02-panels'
   id:
     | '__root__'
     | '/'
     | '/play'
     | '/printables'
     | '/play/case-01'
+    | '/play/case-02'
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
     | '/api/chat/case-01-canvas'
     | '/api/chat/case-01-chocolate'
+    | '/api/chat/case-02-bar'
+    | '/api/chat/case-02-crate'
+    | '/api/chat/case-02-panels'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -140,6 +188,9 @@ export interface RootRouteChildren {
   ApiChatCase01Route: typeof ApiChatCase01Route
   ApiChatCase01CanvasRoute: typeof ApiChatCase01CanvasRoute
   ApiChatCase01ChocolateRoute: typeof ApiChatCase01ChocolateRoute
+  ApiChatCase02BarRoute: typeof ApiChatCase02BarRoute
+  ApiChatCase02CrateRoute: typeof ApiChatCase02CrateRoute
+  ApiChatCase02PanelsRoute: typeof ApiChatCase02PanelsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -179,12 +230,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrintablesFractionsL1RouteImport
       parentRoute: typeof PrintablesRoute
     }
+    '/play/case-02': {
+      id: '/play/case-02'
+      path: '/case-02'
+      fullPath: '/play/case-02'
+      preLoaderRoute: typeof PlayCase02RouteImport
+      parentRoute: typeof PlayRoute
+    }
     '/play/case-01': {
       id: '/play/case-01'
       path: '/case-01'
       fullPath: '/play/case-01'
       preLoaderRoute: typeof PlayCase01RouteImport
       parentRoute: typeof PlayRoute
+    }
+    '/api/chat/case-02-panels': {
+      id: '/api/chat/case-02-panels'
+      path: '/api/chat/case-02-panels'
+      fullPath: '/api/chat/case-02-panels'
+      preLoaderRoute: typeof ApiChatCase02PanelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-02-crate': {
+      id: '/api/chat/case-02-crate'
+      path: '/api/chat/case-02-crate'
+      fullPath: '/api/chat/case-02-crate'
+      preLoaderRoute: typeof ApiChatCase02CrateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-02-bar': {
+      id: '/api/chat/case-02-bar'
+      path: '/api/chat/case-02-bar'
+      fullPath: '/api/chat/case-02-bar'
+      preLoaderRoute: typeof ApiChatCase02BarRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/chat/case-01-chocolate': {
       id: '/api/chat/case-01-chocolate'
@@ -212,11 +291,13 @@ declare module '@tanstack/react-router' {
 
 interface PlayRouteChildren {
   PlayCase01Route: typeof PlayCase01Route
+  PlayCase02Route: typeof PlayCase02Route
   PlayIndexRoute: typeof PlayIndexRoute
 }
 
 const PlayRouteChildren: PlayRouteChildren = {
   PlayCase01Route: PlayCase01Route,
+  PlayCase02Route: PlayCase02Route,
   PlayIndexRoute: PlayIndexRoute,
 }
 
@@ -241,6 +322,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatCase01Route: ApiChatCase01Route,
   ApiChatCase01CanvasRoute: ApiChatCase01CanvasRoute,
   ApiChatCase01ChocolateRoute: ApiChatCase01ChocolateRoute,
+  ApiChatCase02BarRoute: ApiChatCase02BarRoute,
+  ApiChatCase02CrateRoute: ApiChatCase02CrateRoute,
+  ApiChatCase02PanelsRoute: ApiChatCase02PanelsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
