@@ -4,6 +4,9 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { PizzaSVG } from "@/components/case01/PizzaSVG";
 import { ZedBubble } from "@/components/case01/ZedBubble";
+import { CaseStepper } from "@/components/case01/CaseStepper";
+import { SpeakButton } from "@/components/case01/SpeakButton";
+import { MicButton } from "@/components/case01/MicButton";
 
 export const Route = createFileRoute("/play/case-01")({
   head: () => ({
@@ -108,8 +111,9 @@ function CaseOnePage() {
         {/* Case file */}
         <section className="lg:col-span-2">
           <div className="rounded-3xl bg-white p-6 sm:p-10 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100">
+            <CaseStepper stage={stage} />
             <div className="mb-6">
-              <ZedBubble message={zed.text} tone={zed.tone} />
+              <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
             <PizzaSVG
