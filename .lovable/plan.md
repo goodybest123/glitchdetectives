@@ -1,53 +1,55 @@
-# Case 05: Combining Matches (Adding/Subtracting Like Denominators)
+# Case 06: The Mismatched Puzzle (Adding/Subtracting Unlike Denominators)
 
-Three sub-cases targeting the "add the bottoms too" trap. All share the Investigate → Detect → Repair → Explain loop, with a `[ - ] [ + ]` stepper on the wrong denominator instead of Case 03/04's comparator.
+Final case of the Fraction Factory MVP. Targets the "add straight across" trap with unlike denominators. Three sub-cases share the Investigate → Detect → Repair → Explain loop, with a one-click "slice/calibrate/segment" tool that converts one fraction to a common denominator.
 
 ## Sub-cases
 
-| ID | Title | Equation shown | Wrong denom | Correct denom | Operation |
-|---|---|---|---|---|---|
-| `conveyor` | Conveyor Belt | 1/5 + 2/5 = 3/? | 10 | 5 | add |
-| `coolant` | Coolant Drain | 5/8 − 2/8 = 3/? | 0 | 8 | subtract |
-| `assembly` | Assembly Line | 2/6 + 3/6 = 5/? | 12 | 6 | add |
+| ID | Title | Wrong equation | Repaired equation | Tool label |
+|---|---|---|---|---|
+| `blueprint` | The Blueprint | 1/2 + 1/4 = 2/6 | 2/4 + 1/4 = 3/4 | Laser Slicer |
+| `paint` | The Paint Vats | 1/3 + 1/6 = 2/9 | 2/6 + 1/6 = 3/6 | Grid Calibrator |
+| `circuit` | The Circuit Board | 1/2 − 1/8 = 0/6 | 4/8 − 1/8 = 3/8 | Segmenter Tool |
 
-All three have correct numerator already (ZED only broke the denominator). The mechanic is identical: click the wrong denominator → stepper appears → step to the correct value → visual snaps back to the right whole.
+In all three, ZED only broke the left fraction (the one with the smaller denominator). The repair converts it to match the right fraction's denominator; then the equation re-renders with like denominators and the output container morphs into the correct whole.
 
 ## Files to create
 
-**Registry & visuals** (`src/components/case05/`)
-- `cases.ts` — per sub-case: `id`, `title`, `subtitle`, `emoji`, `Visual`, `leftFraction`, `rightFraction`, `operator` (`"+" | "−"`), `correctNumerator`, `wrongDenominator`, `correctDenominator`, `stepperMin`, `stepperMax`, `chatEndpoint`, `bubbles`, `captions`, `welcomeText`, `conceptMastered`, `successBanner`.
-- `ConveyorBeltSVG.tsx` — two 5-slot crates + output crate. `solved` prop swaps output between a stretched 10-slot crate with 3 tiny blocks and a normal 5-slot crate with 3 full-size blocks. CSS transition on width/slot count.
-- `CoolantDrainSVG.tsx` — 8-section tank. `solved=false`: tank outline missing, 3 floating fluid puddles. `solved=true`: tank outline fades in, 3 sections fill cleanly.
-- `AssemblyLineSVG.tsx` — hexagonal motherboard. `solved=false`: 12-sided mutant outline with 5 misaligned chips. `solved=true`: morphs to 6-sided board, chips snap into 5 of 6 slots.
-- All three share the contract: `{ solved: boolean; pulseKey?: number }`.
-- `EquationDisplay.tsx` — renders `A/B [op] C/D = N/?` where `?` is the clickable/highlighted denominator slot. Props: `leftFrac`, `rightFrac`, `operator`, `resultNumerator`, `denominatorValue`, `denominatorState` (`"idle" | "glitch" | "editing" | "solved"`), `onDenominatorClick`.
-- `DenominatorStepper.tsx` — `[ - ] [ + ]` control with current value displayed. Props: `value`, `min`, `max`, `onChange`. Disables `+`/`-` at bounds.
-- `CasePicker.tsx` — three sub-case cards, same shape as Case 04's picker.
+**Registry & visuals** (`src/components/case06/`)
+- `cases.ts` — per sub-case: `id`, `title`, `shortTitle`, `subtitle`, `emoji`, `chatEndpoint`, `left` (original fraction), `right`, `operator` (`"+" | "−"`), `wrongResult` ({n,d} — the impossible answer), `repairedLeft` (the converted left fraction), `repairedResult`, `toolLabel`, `welcomeText`, `bubbles` (investigate/detect/solved), `captions` (per stage), `conceptMastered`, `successBanner`, `Visual`.
+- `BlueprintSVG.tsx` — large 1/2 block + small 1/4 block on a factory mat + output box. Props `{ sliced: boolean; pulseKey? }`. `sliced=false`: one big block + small block, mismatched output container (6 tiny slots, 2 filled, big block visibly too big to fit). `sliced=true`: big block split into two 1/4 blocks via CSS transition, output container becomes a 4-slot box with 3 slots filled.
+- `PaintVatsSVG.tsx` — two vats. `calibrated=false`: vat A has 3 thick sections (1 filled), vat B has 6 thin sections (1 filled), output vat shows 9 slots with 2 microscopic puddles. `calibrated=true`: horizontal line drops across vat A turning it into 6 sections (2 filled), output vat shows 6 sections with 3 filled (half full).
+- `CircuitBoardSVG.tsx` — circuit board with green power cell. `segmented=false`: solid 1/2 power cell, tiny 1/8 chip floating, output board fully empty (vanished). `segmented=true`: grid drops over the 1/2 cell dividing it into four 1/8 segments, one segment pops out, 3/8 remain glowing.
+- All three share `VisualProps = { repaired: boolean; pulseKey?: number }` (the prop is named `repaired` internally; each visual reads it).
+- `EquationDisplay.tsx` — renders `A/B [op] C/D = N/D2`. Props: `left`, `right`, `operator`, `result`, `resultState` (`"idle" | "glitch" | "solved"`), `clickable`, `onResultClick`. The whole right-hand `N/D2` is the clickable glitch zone (matches the spec: "click the 2/6"). Highlights yellow on glitch, green on solved.
+- `RepairToolButton.tsx` — single button with `toolLabel`, `onClick`, `disabled`. Styled to match Case 05's stepper visual weight.
+- `CasePicker.tsx` — three sub-case cards, same shape as Case 04/05's picker.
 
 **AI routes** (`src/routes/api/chat/`)
-- `case-05-conveyor.ts` — guide child to articulate "the bottom number is the size of the whole; it doesn't change when we add pieces."
-- `case-05-coolant.ts` — guide child to articulate "the tank still has 8 sections even after we drain some; the bottom number is the container."
-- `case-05-assembly.ts` — guide child to articulate "the board is still 6-sided; only the filled chips change."
-- All three: Grade 1 voice, kid words only, `[[CASE_SOLVED]]` token, same shape as Case 04 routes.
+- `case-06-blueprint.ts` — guide child to articulate "pieces must be the same size before adding."
+- `case-06-paint.ts` — guide child to articulate "the vats need the same grid/measurement before mixing."
+- `case-06-circuit.ts` — guide child to articulate "subtraction also needs same-size pieces."
+- All three: Grade 1 voice, kid words only, `[[CASE_SOLVED]]` token, same shape as Case 05 routes.
 
 **Page route**
-- `src/routes/play.case-05.tsx` — adapted from `play.case-04.tsx`:
+- `src/routes/play.case-06.tsx` — adapted from `play.case-05.tsx`:
   - Stage machine `investigate → detect → repair → explain`.
-  - `detect` triggered by clicking the highlighted denominator.
-  - `repair` shows `DenominatorStepper`; reaching `correctDenominator` → `solved=true`, success banner, advance to `explain`.
-  - Same chat panel, DiagnosticReport, marks rubric, and CasePicker pattern as Case 04.
+  - `detect` triggered by clicking the wrong result fraction (`EquationDisplay`'s glitch zone).
+  - `repair` shows `RepairToolButton`; clicking it sets `repaired=true`, swaps the equation to the repaired form, plays the visual transition, shows the green banner, advances to `explain`.
+  - Same chat panel, DiagnosticReport, marks rubric, and CasePicker pattern as Case 05.
+  - Header title: "Case 06: The Mismatched Puzzle".
 
 ## Files to edit
-- `src/routes/play.index.tsx` — promote Case 05 from Pending → Active, route `/play/case-05`. Replace the `05` pending entry; keep `06` pending.
+- `src/routes/play.index.tsx` — promote Case 06 from Pending → Active, route `/play/case-06`. Remove from `PENDING_CASES`, add to `ACTIVE_CASES` with subtitle "When pieces don't match, slice before you add."
 
 ## Out of scope
-- No mixed-denominator addition (that's Case 06).
+- No reducing to lowest terms (3/6 stays 3/6; mention "half" in chat but don't auto-simplify).
+- No free-form denominator entry — the repair is a single one-click tool, not a stepper.
 - No persistence across sessions.
-- No changes to Cases 01–04.
+- No changes to Cases 01–05.
 - No new audio assets; reuse existing chat panel components.
 
 ## Technical notes
-- Denominator slot rendered as a `<button>` while `stage === "investigate"`; becomes a non-interactive highlighted box during `detect`/`repair`.
-- Stepper bounds: conveyor 5–10, coolant 0–8, assembly 6–12 — so the child can step in the correct direction to reach the answer.
-- Crate/tank/board "morph" is a CSS width/scale transition keyed off `solved`; reuse the `pulseKey` remount trick from Case 04 for the success pulse.
-- Numerator stays fixed and visually correct throughout — only the denominator is wrong.
+- The right-hand fraction (1/4, 1/6, 1/8) is already the target denominator in all three sub-cases, so the repair just maps left → repairedLeft. No common-denominator computation needed.
+- Output container morph is a CSS transition keyed off `repaired`, plus a `pulseKey` remount for the success pulse (same pattern as Cases 04/05).
+- Equation re-renders atomically when `repaired` flips; no intermediate "editing" state needed.
+- ZED-4 bubbles and captions follow the exact wording from the spec for each sub-case.

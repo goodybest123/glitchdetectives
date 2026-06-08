@@ -14,11 +14,15 @@ import { Route as PlayRouteImport } from './routes/play'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
+import { Route as PlayCase06RouteImport } from './routes/play.case-06'
 import { Route as PlayCase05RouteImport } from './routes/play.case-05'
 import { Route as PlayCase04RouteImport } from './routes/play.case-04'
 import { Route as PlayCase03RouteImport } from './routes/play.case-03'
 import { Route as PlayCase02RouteImport } from './routes/play.case-02'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
+import { Route as ApiChatCase06PaintRouteImport } from './routes/api/chat/case-06-paint'
+import { Route as ApiChatCase06CircuitRouteImport } from './routes/api/chat/case-06-circuit'
+import { Route as ApiChatCase06BlueprintRouteImport } from './routes/api/chat/case-06-blueprint'
 import { Route as ApiChatCase05CoolantRouteImport } from './routes/api/chat/case-05-coolant'
 import { Route as ApiChatCase05ConveyorRouteImport } from './routes/api/chat/case-05-conveyor'
 import { Route as ApiChatCase05AssemblyRouteImport } from './routes/api/chat/case-05-assembly'
@@ -60,6 +64,11 @@ const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
   path: '/fractions-l1',
   getParentRoute: () => PrintablesRoute,
 } as any)
+const PlayCase06Route = PlayCase06RouteImport.update({
+  id: '/case-06',
+  path: '/case-06',
+  getParentRoute: () => PlayRoute,
+} as any)
 const PlayCase05Route = PlayCase05RouteImport.update({
   id: '/case-05',
   path: '/case-05',
@@ -84,6 +93,21 @@ const PlayCase01Route = PlayCase01RouteImport.update({
   id: '/case-01',
   path: '/case-01',
   getParentRoute: () => PlayRoute,
+} as any)
+const ApiChatCase06PaintRoute = ApiChatCase06PaintRouteImport.update({
+  id: '/api/chat/case-06-paint',
+  path: '/api/chat/case-06-paint',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase06CircuitRoute = ApiChatCase06CircuitRouteImport.update({
+  id: '/api/chat/case-06-circuit',
+  path: '/api/chat/case-06-circuit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase06BlueprintRoute = ApiChatCase06BlueprintRouteImport.update({
+  id: '/api/chat/case-06-blueprint',
+  path: '/api/chat/case-06-blueprint',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatCase05CoolantRoute = ApiChatCase05CoolantRouteImport.update({
   id: '/api/chat/case-05-coolant',
@@ -170,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/play/case-03': typeof PlayCase03Route
   '/play/case-04': typeof PlayCase04Route
   '/play/case-05': typeof PlayCase05Route
+  '/play/case-06': typeof PlayCase06Route
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -187,6 +212,9 @@ export interface FileRoutesByFullPath {
   '/api/chat/case-05-assembly': typeof ApiChatCase05AssemblyRoute
   '/api/chat/case-05-conveyor': typeof ApiChatCase05ConveyorRoute
   '/api/chat/case-05-coolant': typeof ApiChatCase05CoolantRoute
+  '/api/chat/case-06-blueprint': typeof ApiChatCase06BlueprintRoute
+  '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
+  '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -196,6 +224,7 @@ export interface FileRoutesByTo {
   '/play/case-03': typeof PlayCase03Route
   '/play/case-04': typeof PlayCase04Route
   '/play/case-05': typeof PlayCase05Route
+  '/play/case-06': typeof PlayCase06Route
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -213,6 +242,9 @@ export interface FileRoutesByTo {
   '/api/chat/case-05-assembly': typeof ApiChatCase05AssemblyRoute
   '/api/chat/case-05-conveyor': typeof ApiChatCase05ConveyorRoute
   '/api/chat/case-05-coolant': typeof ApiChatCase05CoolantRoute
+  '/api/chat/case-06-blueprint': typeof ApiChatCase06BlueprintRoute
+  '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
+  '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -224,6 +256,7 @@ export interface FileRoutesById {
   '/play/case-03': typeof PlayCase03Route
   '/play/case-04': typeof PlayCase04Route
   '/play/case-05': typeof PlayCase05Route
+  '/play/case-06': typeof PlayCase06Route
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -241,6 +274,9 @@ export interface FileRoutesById {
   '/api/chat/case-05-assembly': typeof ApiChatCase05AssemblyRoute
   '/api/chat/case-05-conveyor': typeof ApiChatCase05ConveyorRoute
   '/api/chat/case-05-coolant': typeof ApiChatCase05CoolantRoute
+  '/api/chat/case-06-blueprint': typeof ApiChatCase06BlueprintRoute
+  '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
+  '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -253,6 +289,7 @@ export interface FileRouteTypes {
     | '/play/case-03'
     | '/play/case-04'
     | '/play/case-05'
+    | '/play/case-06'
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
@@ -270,6 +307,9 @@ export interface FileRouteTypes {
     | '/api/chat/case-05-assembly'
     | '/api/chat/case-05-conveyor'
     | '/api/chat/case-05-coolant'
+    | '/api/chat/case-06-blueprint'
+    | '/api/chat/case-06-circuit'
+    | '/api/chat/case-06-paint'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -279,6 +319,7 @@ export interface FileRouteTypes {
     | '/play/case-03'
     | '/play/case-04'
     | '/play/case-05'
+    | '/play/case-06'
     | '/printables/fractions-l1'
     | '/play'
     | '/api/chat/case-01'
@@ -296,6 +337,9 @@ export interface FileRouteTypes {
     | '/api/chat/case-05-assembly'
     | '/api/chat/case-05-conveyor'
     | '/api/chat/case-05-coolant'
+    | '/api/chat/case-06-blueprint'
+    | '/api/chat/case-06-circuit'
+    | '/api/chat/case-06-paint'
   id:
     | '__root__'
     | '/'
@@ -306,6 +350,7 @@ export interface FileRouteTypes {
     | '/play/case-03'
     | '/play/case-04'
     | '/play/case-05'
+    | '/play/case-06'
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
@@ -323,6 +368,9 @@ export interface FileRouteTypes {
     | '/api/chat/case-05-assembly'
     | '/api/chat/case-05-conveyor'
     | '/api/chat/case-05-coolant'
+    | '/api/chat/case-06-blueprint'
+    | '/api/chat/case-06-circuit'
+    | '/api/chat/case-06-paint'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -344,6 +392,9 @@ export interface RootRouteChildren {
   ApiChatCase05AssemblyRoute: typeof ApiChatCase05AssemblyRoute
   ApiChatCase05ConveyorRoute: typeof ApiChatCase05ConveyorRoute
   ApiChatCase05CoolantRoute: typeof ApiChatCase05CoolantRoute
+  ApiChatCase06BlueprintRoute: typeof ApiChatCase06BlueprintRoute
+  ApiChatCase06CircuitRoute: typeof ApiChatCase06CircuitRoute
+  ApiChatCase06PaintRoute: typeof ApiChatCase06PaintRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -383,6 +434,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrintablesFractionsL1RouteImport
       parentRoute: typeof PrintablesRoute
     }
+    '/play/case-06': {
+      id: '/play/case-06'
+      path: '/case-06'
+      fullPath: '/play/case-06'
+      preLoaderRoute: typeof PlayCase06RouteImport
+      parentRoute: typeof PlayRoute
+    }
     '/play/case-05': {
       id: '/play/case-05'
       path: '/case-05'
@@ -417,6 +475,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/play/case-01'
       preLoaderRoute: typeof PlayCase01RouteImport
       parentRoute: typeof PlayRoute
+    }
+    '/api/chat/case-06-paint': {
+      id: '/api/chat/case-06-paint'
+      path: '/api/chat/case-06-paint'
+      fullPath: '/api/chat/case-06-paint'
+      preLoaderRoute: typeof ApiChatCase06PaintRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-06-circuit': {
+      id: '/api/chat/case-06-circuit'
+      path: '/api/chat/case-06-circuit'
+      fullPath: '/api/chat/case-06-circuit'
+      preLoaderRoute: typeof ApiChatCase06CircuitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-06-blueprint': {
+      id: '/api/chat/case-06-blueprint'
+      path: '/api/chat/case-06-blueprint'
+      fullPath: '/api/chat/case-06-blueprint'
+      preLoaderRoute: typeof ApiChatCase06BlueprintRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/chat/case-05-coolant': {
       id: '/api/chat/case-05-coolant'
@@ -532,6 +611,7 @@ interface PlayRouteChildren {
   PlayCase03Route: typeof PlayCase03Route
   PlayCase04Route: typeof PlayCase04Route
   PlayCase05Route: typeof PlayCase05Route
+  PlayCase06Route: typeof PlayCase06Route
   PlayIndexRoute: typeof PlayIndexRoute
 }
 
@@ -541,6 +621,7 @@ const PlayRouteChildren: PlayRouteChildren = {
   PlayCase03Route: PlayCase03Route,
   PlayCase04Route: PlayCase04Route,
   PlayCase05Route: PlayCase05Route,
+  PlayCase06Route: PlayCase06Route,
   PlayIndexRoute: PlayIndexRoute,
 }
 
@@ -577,17 +658,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatCase05AssemblyRoute: ApiChatCase05AssemblyRoute,
   ApiChatCase05ConveyorRoute: ApiChatCase05ConveyorRoute,
   ApiChatCase05CoolantRoute: ApiChatCase05CoolantRoute,
+  ApiChatCase06BlueprintRoute: ApiChatCase06BlueprintRoute,
+  ApiChatCase06CircuitRoute: ApiChatCase06CircuitRoute,
+  ApiChatCase06PaintRoute: ApiChatCase06PaintRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
