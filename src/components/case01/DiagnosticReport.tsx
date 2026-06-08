@@ -169,3 +169,27 @@ function CheckDot() {
     </span>
   );
 }
+
+function StepMark({ label, score }: { label: string; score: number }) {
+  const clamped = Math.max(0, Math.min(MAX_PER_STEP, Math.round(score)));
+  return (
+    <li className="flex items-center justify-between gap-3 text-sm text-neutral-700">
+      <span className="font-medium">{label}</span>
+      <span className="flex items-center gap-3">
+        <span className="flex gap-1" aria-label={`${clamped} out of ${MAX_PER_STEP}`}>
+          {Array.from({ length: MAX_PER_STEP }).map((_, i) => (
+            <span
+              key={i}
+              className={`inline-block h-2.5 w-2.5 rounded-full ${
+                i < clamped ? "bg-[#10b981]" : "bg-neutral-200"
+              }`}
+            />
+          ))}
+        </span>
+        <span className="w-10 text-right font-semibold tabular-nums text-neutral-900">
+          {clamped}/{MAX_PER_STEP}
+        </span>
+      </span>
+    </li>
+  );
+}
