@@ -265,16 +265,10 @@ function SubCaseRunner({
             </div>
 
             {/* Tanks/beds/disks with comparator in the middle */}
-            <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:justify-center sm:gap-4">
-              <SideWithLabel
-                fraction={`${c.left.n}/${c.left.d}`}
-                inline={false}
-              >
-                <LeftHalf Visual={Visual} dividersVisible={dividersVisible} spinKey={spinKey} side="left" />
-              </SideWithLabel>
-
-              <div className="flex flex-col items-center gap-1">
-                <FractionInline n={c.left.n} d={c.left.d} />
+            <Visual
+              dividersVisible={dividersVisible}
+              spinKey={spinKey}
+              middleSlot={
                 <ComparatorSymbol
                   operator={operator}
                   highlight={stage === "detect" || stage === "repair"}
@@ -282,16 +276,8 @@ function SubCaseRunner({
                   onClick={handleSymbolClick}
                   pulseKey={pulseKey}
                 />
-                <FractionInline n={c.right.n} d={c.right.d} />
-              </div>
-
-              <SideWithLabel
-                fraction={`${c.right.n}/${c.right.d}`}
-                inline={false}
-              >
-                <LeftHalf Visual={Visual} dividersVisible={dividersVisible} spinKey={spinKey} side="right" />
-              </SideWithLabel>
-            </div>
+              }
+            />
 
             <p className="mt-6 text-center text-neutral-600">{caption}</p>
 
