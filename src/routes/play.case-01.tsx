@@ -1,28 +1,29 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { PizzaSVG } from "@/components/case01/PizzaSVG";
 import { ZedBubble } from "@/components/case01/ZedBubble";
-import { CaseStepper } from "@/components/case01/CaseStepper";
+import { CaseStepper, type Stage } from "@/components/case01/CaseStepper";
 import { SpeakButton } from "@/components/case01/SpeakButton";
 import { MicButton } from "@/components/case01/MicButton";
+import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 
 export const Route = createFileRoute("/play/case-01")({
   head: () => ({
     meta: [
-      { title: "Case 01: Parts of a Whole — Fraction Factory" },
+      { title: "Case 01: Fair Sharing — Glitch Detectives" },
       {
         name: "description",
         content:
-          "Audit ZED-4's logic, find the glitch in the pizza, repair it, and explain why — a calm, neuro-inclusive maths puzzle.",
+          "Audit ZED-4's logic, find the unfair slice, repair it, and explain fair sharing — a calm Grade 1 maths case.",
       },
     ],
   }),
   component: CaseOnePage,
 });
 
-type Stage = "investigate" | "detect" | "repair" | "explain";
+const SOLVED_TOKEN = "[[CASE_SOLVED]]";
 
 const WELCOME_MESSAGE: UIMessage = {
   id: "welcome",
@@ -31,7 +32,7 @@ const WELCOME_MESSAGE: UIMessage = {
     {
       type: "text",
       text:
-        "Great detective work! You fixed ZED-4's glitch. Before we close the case, tell me: why was it wrong to call that first tiny slice 1/4?",
+        "Great detective work! You fixed my pizza. Can you tell me — why was my first try not fair?",
     },
   ],
 };
@@ -41,6 +42,7 @@ function CaseOnePage() {
   const [equalized, setEqualized] = useState(0);
   const [pulseKey, setPulseKey] = useState(0);
   const composerRef = useRef<HTMLTextAreaElement>(null);
+  const reportRef = useRef<HTMLDivElement>(null);
 
   const transport = useRef(
     new DefaultChatTransport({ api: "/api/chat/case-01" }),
@@ -73,6 +75,28 @@ function CaseOnePage() {
     if (stage === "explain") composerRef.current?.focus();
   }, [stage]);
 
+  // Detect solved sentinel from any assistant message
+  useEffect(() => {
+    if (stage !== "explain") return;
+    const hasSolved = messages.some(
+      (m) =>
+        m.role === "assistant" &&
+        m.parts.some((p) => p.type === "text" && p.text.includes(SOLVED_TOKEN)),
+    );
+    if (hasSolved) setStage("solved");
+  }, [messages, stage]);
+
+  // Scroll report into view when it appears
+  useEffect(() => {
+    if (stage === "solved") {
+      const t = setTimeout(
+        () => reportRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+        200,
+      );
+      return () => clearTimeout(t);
+    }
+  }, [stage]);
+
   const handleGlitchClick = () => {
     if (stage !== "investigate") return;
     setStage("detect");
@@ -82,9 +106,20 @@ function CaseOnePage() {
   const isSending = status === "submitted" || status === "streaming";
   const chatEnabled = stage === "explain";
 
+  const studentQuotes = useMemo(
+    () =>
+      messages
+        .filter((m) => m.role === "user")
+        .map((m) =>
+          m.parts.map((p) => (p.type === "text" ? p.text : "")).join("").trim(),
+        )
+        .filter(Boolean),
+    [messages],
+  );
+
   const zed =
     stage === "investigate"
-      ? { tone: "neutral" as const, text: "Look! I served exactly 1/4 of the pizza!" }
+      ? { tone: "neutral" as const, text: "Look! I served exactly four pieces of pizza!" }
       : stage === "detect" || stage === "repair"
       ? { tone: "alert" as const, text: "Glitch Detected! The pieces don't look fair." }
       : { tone: "happy" as const, text: "Logic repaired. The case is yours to close." };
@@ -101,7 +136,7 @@ function CaseOnePage() {
             ← Back to Active Cases
           </Link>
           <h1 className="text-base sm:text-lg font-bold tracking-tight text-neutral-900">
-            Case 01: Parts of a Whole
+            Case 01: Fair Sharing
           </h1>
           <span className="w-[160px]" aria-hidden />
         </div>
@@ -125,17 +160,19 @@ function CaseOnePage() {
 
             <p className="mt-6 text-center text-neutral-600">
               {stage === "investigate" &&
-                "Scan ZED-4's logic. Click on the pizza where the logic breaks."}
+                "Scan ZED-4's logic. Click on the pizza where the sharing is not fair."}
               {stage === "detect" &&
-                "Now drag the Equalizer Tool to repair the slices."}
+                "Now drag the Equalizer Tool to make the pieces the same size."}
               {stage === "repair" &&
                 "Keep going — make all four parts the same size."}
               {stage === "explain" &&
-                "The chat panel is now open. Share your reasoning with the AI Guide."}
+                "The chat panel is now open. Tell ZED-4 why it wasn't fair."}
+              {stage === "solved" &&
+                "Case closed. Read your diagnostic report below."}
             </p>
 
             {/* Repair tool */}
-            {(stage === "detect" || stage === "repair" || stage === "explain") && (
+            {(stage === "detect" || stage === "repair" || stage === "explain" || stage === "solved") && (
               <div className="mt-8 rounded-2xl bg-[#f8fafc] p-5">
                 <label
                   htmlFor="equalizer"
@@ -151,7 +188,7 @@ function CaseOnePage() {
                   step={0.01}
                   value={equalized}
                   onChange={(e) => setEqualized(parseFloat(e.target.value))}
-                  disabled={stage === "explain"}
+                  disabled={stage === "explain" || stage === "solved"}
                   className="w-full accent-[#60a5fa]"
                 />
                 <div className="mt-2 flex justify-between text-xs text-neutral-500">
@@ -162,19 +199,29 @@ function CaseOnePage() {
             )}
 
             {/* Repaired banner */}
-            {stage === "explain" && (
+            {(stage === "explain" || stage === "solved") && (
               <div className="mt-6 rounded-2xl bg-[#dcfce7] px-5 py-4 text-center text-sm font-semibold text-[#166534]">
                 Logic Repaired: The parts are now equal.
               </div>
             )}
           </div>
+
+          {/* Diagnostic Report */}
+          {stage === "solved" && (
+            <div ref={reportRef}>
+              <DiagnosticReport
+                studentQuotes={studentQuotes}
+                turnCount={studentQuotes.length}
+              />
+            </div>
+          )}
         </section>
 
         {/* Chat panel */}
         <aside className="lg:sticky lg:top-8 lg:self-start">
           <div
             className={`flex h-[600px] flex-col rounded-3xl bg-white shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100 transition-opacity ${
-              chatEnabled ? "opacity-100" : "opacity-50"
+              chatEnabled || stage === "solved" ? "opacity-100" : "opacity-50"
             }`}
             aria-disabled={!chatEnabled}
           >
@@ -184,7 +231,9 @@ function CaseOnePage() {
                   AI GUIDE
                 </h2>
                 <p className="mt-0.5 text-xs text-neutral-500">
-                  {chatEnabled
+                  {stage === "solved"
+                    ? "Case closed — great work, Detective!"
+                    : chatEnabled
                     ? "Explain your reasoning — type or speak."
                     : "Unlocks after you repair the logic."}
                 </p>
@@ -192,11 +241,12 @@ function CaseOnePage() {
             </div>
 
             <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
-              {chatEnabled ? (
+              {chatEnabled || stage === "solved" ? (
                 messages.map((m) => {
-                  const text = m.parts
+                  const raw = m.parts
                     .map((p) => (p.type === "text" ? p.text : ""))
                     .join("");
+                  const text = raw.replace(SOLVED_TOKEN, "").trim();
                   if (!text) return null;
                   const isUser = m.role === "user";
                   return (
@@ -233,53 +283,67 @@ function CaseOnePage() {
               )}
             </div>
 
-            <form
-              className="border-t border-neutral-100 p-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                const text = input.trim();
-                if (!text || !chatEnabled || isSending) return;
-                sendMessage({ text });
-                setInput("");
-              }}
-            >
-              <textarea
-                ref={composerRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    (e.currentTarget.form as HTMLFormElement).requestSubmit();
-                  }
-                }}
-                disabled={!chatEnabled || isSending}
-                rows={2}
-                placeholder={
-                  chatEnabled
-                    ? "Type your reasoning, or tap the mic to speak…"
-                    : "Locked until repair is complete"
-                }
-                className="w-full resize-none rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-[#60a5fa] focus:outline-none focus:ring-2 focus:ring-[#dbeafe] disabled:bg-neutral-50"
-              />
-              <div className="mt-2 flex items-center justify-between gap-2">
-                <MicButton
-                  disabled={!chatEnabled || isSending}
-                  onTranscript={(t, isFinal) => {
-                    if (isFinal) {
-                      setInput((prev) => (prev ? prev.trimEnd() + " " : "") + t);
-                    }
-                  }}
-                />
+            {stage === "solved" ? (
+              <div className="border-t border-neutral-100 p-4">
                 <button
-                  type="submit"
-                  disabled={!chatEnabled || isSending || !input.trim()}
-                  className="rounded-full bg-[#1f2937] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-black disabled:bg-neutral-300"
+                  type="button"
+                  onClick={() =>
+                    reportRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+                  }
+                  className="w-full rounded-full bg-[#10b981] px-4 py-2.5 text-xs font-bold tracking-wider text-white transition-colors hover:bg-[#0ea371]"
                 >
-                  SUBMIT EVIDENCE
+                  VIEW DIAGNOSTIC REPORT
                 </button>
               </div>
-            </form>
+            ) : (
+              <form
+                className="border-t border-neutral-100 p-4"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const text = input.trim();
+                  if (!text || !chatEnabled || isSending) return;
+                  sendMessage({ text });
+                  setInput("");
+                }}
+              >
+                <textarea
+                  ref={composerRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      (e.currentTarget.form as HTMLFormElement).requestSubmit();
+                    }
+                  }}
+                  disabled={!chatEnabled || isSending}
+                  rows={2}
+                  placeholder={
+                    chatEnabled
+                      ? "Type your reasoning, or tap the mic to speak…"
+                      : "Locked until repair is complete"
+                  }
+                  className="w-full resize-none rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-[#60a5fa] focus:outline-none focus:ring-2 focus:ring-[#dbeafe] disabled:bg-neutral-50"
+                />
+                <div className="mt-2 flex items-center justify-between gap-2">
+                  <MicButton
+                    disabled={!chatEnabled || isSending}
+                    onTranscript={(t, isFinal) => {
+                      if (isFinal) {
+                        setInput((prev) => (prev ? prev.trimEnd() + " " : "") + t);
+                      }
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={!chatEnabled || isSending || !input.trim()}
+                    className="rounded-full bg-[#1f2937] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-black disabled:bg-neutral-300"
+                  >
+                    SUBMIT EVIDENCE
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </aside>
       </div>
