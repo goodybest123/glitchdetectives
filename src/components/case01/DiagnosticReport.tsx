@@ -116,10 +116,10 @@ export function DiagnosticReport({
         </div>
         <ul className="mt-3 space-y-2 text-sm text-neutral-700">
           <li className="flex items-start gap-2">
-            <CheckDot /> Spotted the glitch in ZED-4's pizza.
+            <CheckDot /> Spotted the glitch in ZED-4's logic.
           </li>
           <li className="flex items-start gap-2">
-            <CheckDot /> Repaired the slices so all parts were equal.
+            <CheckDot /> Repaired it so all parts were equal.
           </li>
           <li className="flex items-start gap-2">
             <CheckDot /> Explained the idea in their own words.
