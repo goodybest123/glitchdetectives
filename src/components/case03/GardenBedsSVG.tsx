@@ -1,12 +1,10 @@
 import type { VisualProps } from "./cases";
 
-export function GardenBedsSVG({ dividersVisible }: VisualProps) {
+export function GardenBedsSVG({ dividersVisible, middleSlot }: VisualProps) {
   return (
-    <div className="flex flex-col items-center gap-8 sm:flex-row sm:justify-center sm:gap-6">
+    <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-4">
       <Bed divisions={3} filled={1} label="1/3" dividersVisible={dividersVisible} />
-      <div aria-hidden className="text-sm font-bold tracking-wider text-neutral-300">
-        BEDS
-      </div>
+      <div>{middleSlot}</div>
       <Bed divisions={6} filled={2} label="2/6" dividersVisible={dividersVisible} />
     </div>
   );
@@ -36,9 +34,7 @@ function Bed({
             <stop offset="100%" stopColor="#22c55e" />
           </linearGradient>
         </defs>
-        {/* Soil */}
         <rect x={2} y={2} width={W - 4} height={H - 4} rx={10} fill="#fef3c7" stroke="#d6c39a" strokeWidth={2} />
-        {/* Plants (bottom rows filled) */}
         <rect
           x={6}
           y={H - 4 - fillHeight}
@@ -47,7 +43,6 @@ function Bed({
           rx={6}
           fill={`url(#bed-${divisions})`}
         />
-        {/* Row dividers */}
         <g
           style={{
             opacity: dividersVisible ? 1 : 0,
