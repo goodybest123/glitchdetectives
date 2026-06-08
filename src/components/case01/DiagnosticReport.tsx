@@ -12,6 +12,10 @@ type Props = {
   studentQuotes: string[];
   turnCount: number;
   marks: CaseMarks;
+  caseTitle?: string;
+  conceptMastered?: string;
+  onTryAnother?: () => void;
+  nextCaseLabel?: string;
 };
 
 const MAX_PER_STEP = 5;
@@ -22,7 +26,15 @@ function remarkFor(total: number) {
   return "Nice work — you closed the case!";
 }
 
-export function DiagnosticReport({ studentQuotes, turnCount, marks }: Props) {
+export function DiagnosticReport({
+  studentQuotes,
+  turnCount,
+  marks,
+  caseTitle = "Case 01 · Fair Sharing",
+  conceptMastered = "Fair Sharing — equal parts of one whole",
+  onTryAnother,
+  nextCaseLabel = "Case 02 — comparing fair shares.",
+}: Props) {
   const total =
     marks.investigate + marks.detect + marks.repair + marks.explain;
   const maxTotal = MAX_PER_STEP * 4;
@@ -51,7 +63,7 @@ export function DiagnosticReport({ studentQuotes, turnCount, marks }: Props) {
           </h2>
         </div>
         <span className="rounded-full bg-[#dcfce7] px-3 py-1 text-xs font-bold text-[#166534]">
-          Case 01 · Fair Sharing
+          {caseTitle}
         </span>
       </header>
 
@@ -93,7 +105,7 @@ export function DiagnosticReport({ studentQuotes, turnCount, marks }: Props) {
           Concept Mastered
         </div>
         <div className="mt-2 flex items-center gap-2 text-lg font-semibold text-neutral-900">
-          <CheckDot /> Fair Sharing — equal parts of one whole
+          <CheckDot /> {conceptMastered}
         </div>
       </div>
 
@@ -104,10 +116,10 @@ export function DiagnosticReport({ studentQuotes, turnCount, marks }: Props) {
         </div>
         <ul className="mt-3 space-y-2 text-sm text-neutral-700">
           <li className="flex items-start gap-2">
-            <CheckDot /> Spotted the glitch in ZED-4's pizza.
+            <CheckDot /> Spotted the glitch in ZED-4's logic.
           </li>
           <li className="flex items-start gap-2">
-            <CheckDot /> Repaired the slices so all parts were equal.
+            <CheckDot /> Repaired it so all parts were equal.
           </li>
           <li className="flex items-start gap-2">
             <CheckDot /> Explained the idea in their own words.
@@ -137,7 +149,7 @@ export function DiagnosticReport({ studentQuotes, turnCount, marks }: Props) {
       {/* Next */}
       <div className="mt-6 rounded-2xl bg-[#fff4cc] px-5 py-4 text-sm text-[#7c5e10]">
         <span className="font-bold">Next up: </span>
-        Case 02 — comparing fair shares.
+        {nextCaseLabel}
       </div>
 
       {/* Actions */}
@@ -149,6 +161,15 @@ export function DiagnosticReport({ studentQuotes, turnCount, marks }: Props) {
         >
           PRINT REPORT
         </button>
+        {onTryAnother && (
+          <button
+            type="button"
+            onClick={onTryAnother}
+            className="rounded-full bg-[#10b981] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-[#0ea371]"
+          >
+            TRY ANOTHER CASE
+          </button>
+        )}
         <Link
           to="/play"
           className="rounded-full bg-[#1f2937] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-black"

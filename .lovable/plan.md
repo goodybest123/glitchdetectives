@@ -1,57 +1,109 @@
 ## Goal
 
-Add per-step marks (each /5) plus a total /20 to the Case 01 diagnostic report, scored automatically from the student's session.
+Turn Case 01 into a small "Fair Sharing" case file with **three sub-cases**. When the page loads (or when the student clicks "Investigate"/the case-file icon), they see a **case picker** with three cards. Picking one runs the existing Investigate → Detect → Repair → Explain → Solved flow for that sub-case. The diagnostic report appears after each sub-case is solved.
 
-## Scoring rubric (auto, local — no extra AI call)
+Sub-cases:
+1. **The Pizza** (Quarters) — existing flow, unchanged conceptually.
+2. **The Chocolate Bar** (Thirds) — rectangle split into 3 unequal pieces.
+3. **The Painted Canvas** (Halves) — canvas with an off-center vertical line; half is painted blue.
 
-All scoring derived from existing session state in `play.case-01.tsx` and passed into `DiagnosticReport`.
+All three are Grade 1, fair-sharing only — same warm tone, no fraction notation in chat copy.
 
-- **Investigate /5** — Based on whether the glitch slice was clicked (stage advanced past `investigate`). Bonus deduction if it took a while is out of scope for L1; for Grade 1 → full 5 when the click happened.
-- **Detect /5** — Awarded when stage reached `detect`/`repair` (student engaged the Equalizer). Full 5.
-- **Repair /5** — Based on final `equalized` value:
-  - `>= 0.995` → 5
-  - `>= 0.85` → 4
-  - `>= 0.6`  → 3
-  - else → 2 (they at least tried; case can't reach `solved` without full repair anyway, so in practice this is 5)
-- **Explain /5** — Derived from the conversation:
-  - 5 — solved in ≤ 3 student turns AND longest message ≥ 6 words
-  - 4 — solved in ≤ 5 turns OR longest message ≥ 4 words
-  - 3 — solved but short / many turns
-  - Floor of 3 once `[[CASE_SOLVED]]` fires (Grade 1, appreciative tone).
-
-Total = sum, displayed as **`X / 20`** with a warm one-line remark:
-- 18–20 → "Outstanding detective work!"
-- 14–17 → "Great reasoning, Detective."
-- ≤ 13  → "Nice work — you closed the case!"
-
-No percentages, no letter grades, no red/negative styling.
-
-## UI
-
-New "Marks" block in `DiagnosticReport.tsx`, placed between the thank-you bubble and "Concept Mastered":
+## UX flow
 
 ```text
-+------------------------------------------------+
-|  MARKS                              16 / 20    |
-|  ----------------------------------------------|
-|  Investigate   ●●●●●   5/5                     |
-|  Detect        ●●●●●   5/5                     |
-|  Repair        ●●●●●   5/5                     |
-|  Explain       ●●●●○   4/5                     |
-|  ----------------------------------------------|
-|  Great reasoning, Detective.                   |
-+------------------------------------------------+
+/play/case-01
+  ┌───────────────────────────────────────────┐
+  │  Case 01 · Fair Sharing                   │
+  │  Choose a case to investigate:            │
+  │  ┌────────┐  ┌────────┐  ┌────────┐       │
+  │  │ Pizza  │  │Chocolate│  │ Canvas │      │
+  │  │ ¼ ¼ ¼ ¼│  │  Thirds │  │ Halves │      │
+  │  └────────┘  └────────┘  └────────┘       │
+  └───────────────────────────────────────────┘
 ```
 
-- Filled dots use the existing `#10b981` green; empty dots use `#e5e7eb`.
-- Total badge uses the same green pill style as the existing "Case 01 · Fair Sharing" chip.
-- Print-friendly (already inside the `print:` styled card).
+- Picker is the default view. Solved cases show a small green check badge on their card.
+- Clicking a card mounts the existing case shell (stepper + visual + chat + report) for that sub-case.
+- A "← Choose another case" link in the case header returns to the picker. State for each sub-case is kept in memory for the session (so a solved case stays solved on return).
+- After a sub-case is solved and the report is shown, a "Try another case" button under the report goes back to the picker.
+
+## Visuals & repair tools (per sub-case)
+
+### 1. Pizza (existing)
+- Uses current `PizzaSVG.tsx` and Equalizer slider. No changes.
+
+### 2. Chocolate bar (new `ChocolateSVG.tsx`)
+- Horizontal rectangle, brown gradient with subtle grid texture, 3 vertical snap lines.
+- Unequal state: divider positions ~12% and ~88% (tiny end slivers, huge middle).
+- Equal state: dividers at 33.3% and 66.6%.
+- Interpolated by `equalized` 0→1, same as pizza.
+- Two small "robot friend" silhouettes flank ZED-4 in the bubble copy ("We each get one!").
+
+### 3. Canvas (new `CanvasSVG.tsx`)
+- Wide rectangle (art canvas) with a thin frame.
+- Single vertical divider line. Left region painted soft pastel blue (`#bcd8f5`), right region white.
+- Unequal: divider at ~15% from left.
+- Equal: divider at 50% (the blue half and white half are identical).
+- Slider label: **"CENTERING TOOL"** instead of "Equalizer Tool".
+
+All three visuals share the same prop shape: `{ equalized, onGlitchClick, interactive, pulseKey }`.
+
+## Stepper & copy (per sub-case)
+
+The 4-step stepper stays the same. Only the prompts under the visual and ZED-4's bubble change:
+
+| Case | Investigate bubble | Detect bubble | Solved bubble | Caption (investigate) |
+|---|---|---|---|---|
+| Pizza | "Look! I served exactly four pieces of pizza!" | "Glitch Detected! The pieces don't look fair." | "Logic repaired. The case is yours to close." | "Click the pizza where the sharing is not fair." |
+| Chocolate | "I broke it into thirds! We each get one piece!" | "Glitch Detected! Those shares are not fair." | "Logic repaired. Thanks, Detective." | "Click the chocolate bar where it's split unfairly." |
+| Canvas | "I just painted exactly half of the canvas!" | "Glitch Detected! The sides do not match." | "Logic repaired. The canvas is balanced." | "Click the line that's splitting the canvas unfairly." |
+
+Step labels in the stepper stay "Investigate / Detect / Repair / Explain".
+
+## AI prompts (per sub-case)
+
+One server route per sub-case keeps the system prompt focused and the `[[CASE_SOLVED]]` detection cleanly scoped.
+
+- `src/routes/api/chat/case-01.ts` — existing pizza prompt, unchanged.
+- `src/routes/api/chat/case-01-chocolate.ts` — new. Same shape as pizza prompt but framed around "thirds = three equal pieces"; opening assistant message: *"Great detective work! ZED-4 wanted to give his friends those tiny pieces. Why was it wrong to call them thirds?"*
+- `src/routes/api/chat/case-01-canvas.ts` — new. Framed around "half = two matching sides"; opening assistant message: *"Case almost closed! ZED-4 thought any line cuts the canvas in half. What does 'half' really mean?"*
+
+All three prompts keep:
+- Grade 1 voice (≤10 word sentences, no fraction notation, no emojis).
+- `[[CASE_SOLVED]]` sentinel + warm "thanks for teaching me" close.
+- The "must say it in their own words" rule before solving.
+
+## Marks
+
+Same rubric as today — `investigate / detect / repair / explain` each /5, total /20. Computed per sub-case (each sub-case has its own session state). The diagnostic report renders unchanged, but its header chip reads the active case title (e.g. "Case 01 · The Chocolate Bar").
 
 ## Files
 
-- Edit `src/components/case01/DiagnosticReport.tsx` — accept new `marks: { investigate, detect, repair, explain }` prop, compute total, render the Marks block + remark, add a small `StepMark` subcomponent for the dot row.
-- Edit `src/routes/play.case-01.tsx` — compute marks from `equalized` and `studentQuotes` (turn count + longest message word count) and pass to `<DiagnosticReport marks={...} />`.
+**New**
+- `src/components/case01/CasePicker.tsx` — renders the 3 cards (icon, title, subtitle, solved checkmark) and emits the picked case id.
+- `src/components/case01/ChocolateSVG.tsx` — rectangle visual.
+- `src/components/case01/CanvasSVG.tsx` — canvas visual.
+- `src/components/case01/cases.ts` — small registry mapping `caseId → { title, subtitle, chatEndpoint, welcome, bubbles, caption, Visual, sliderLabel }`. Keeps `play.case-01.tsx` mostly visual-agnostic.
+- `src/routes/api/chat/case-01-chocolate.ts`
+- `src/routes/api/chat/case-01-canvas.ts`
+
+**Edit**
+- `src/routes/play.case-01.tsx`
+  - Add `activeCase: "pizza" | "chocolate" | "canvas" | null` state. `null` → render `<CasePicker />`.
+  - Per-case session state stored in a `Record<caseId, SubCaseState>` so progress survives going back to the picker. `SubCaseState = { stage, equalized, messages, marks, solved }`.
+  - Pick the registry entry by `activeCase`, render its `Visual` + chat endpoint + bubbles + slider label.
+  - "← Choose another case" link in the case header.
+  - After solved + report, "Try another case" button → returns to picker.
+- `src/components/case01/DiagnosticReport.tsx` — accept optional `caseTitle` prop for the header chip (defaults to current "Case 01 · Fair Sharing").
+- `.lovable/plan.md` — update to reflect new structure.
+
+**Unchanged**
+- `CaseStepper.tsx`, `ZedBubble.tsx`, `SpeakButton.tsx`, `MicButton.tsx`, `PizzaSVG.tsx`, existing pizza chat route.
 
 ## Out of scope
 
-No DB persistence of marks, no parent dashboard, no changes to AI prompt, no changes to Cases 02+.
+- No DB persistence between sessions (picker resets on full reload).
+- No new audio/voice changes.
+- No Case 02+ work — this is all still inside Case 01.
+- No changes to the marks rubric or scoring formulas.
