@@ -22,11 +22,15 @@ type PendingCase = {
 };
 
 const PENDING_CASES: PendingCase[] = [
-  { id: "02", title: "Case 02: Naming the Pieces" },
   { id: "03", title: "Case 03: The Shape Shifters" },
   { id: "04", title: "Case 04: The Scale Weigh-In" },
   { id: "05", title: "Case 05: Combining Matches" },
   { id: "06", title: "Case 06: The Mismatched Puzzle" },
+];
+
+const ACTIVE_CASES: { to: "/play/case-01" | "/play/case-02"; title: string; subtitle: string }[] = [
+  { to: "/play/case-01", title: "Case 01: Parts of a Whole", subtitle: "Are the slices fair?" },
+  { to: "/play/case-02", title: "Case 02: Naming the Pieces", subtitle: "Top number, bottom number." },
 ];
 
 function PlayPage() {
@@ -58,28 +62,28 @@ function PlayPage() {
           aria-label="Case files"
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {/* Active case */}
-          <Link
-            to="/play/case-01"
-            className="group relative flex flex-col rounded-3xl bg-white p-7 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.18)] ring-1 ring-neutral-100 transition-shadow hover:shadow-[0_12px_40px_-12px_rgba(15,23,42,0.25)] min-h-[280px] text-left"
-          >
-            <span className="inline-flex w-fit items-center rounded-full bg-[#ffde59] px-3 py-1 text-[11px] font-bold tracking-wider text-neutral-900">
-              ACTIVE CASE
-            </span>
-            <div className="mt-6 flex-1">
-              <h2 className="text-2xl font-bold leading-snug text-neutral-900">
-                Case 01: Parts of a Whole
-              </h2>
-              <p className="mt-2 text-base text-neutral-500">
-                Are the slices fair?
-              </p>
-            </div>
-            <span className="mt-8 inline-flex w-fit items-center gap-2 text-sm font-bold tracking-wider text-neutral-900 transition-transform group-hover:translate-x-1">
-              INVESTIGATE
-              <span aria-hidden>→</span>
-            </span>
-          </Link>
-
+          {/* Active cases */}
+          {ACTIVE_CASES.map((a) => (
+            <Link
+              key={a.to}
+              to={a.to}
+              className="group relative flex flex-col rounded-3xl bg-white p-7 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.18)] ring-1 ring-neutral-100 transition-shadow hover:shadow-[0_12px_40px_-12px_rgba(15,23,42,0.25)] min-h-[280px] text-left"
+            >
+              <span className="inline-flex w-fit items-center rounded-full bg-[#ffde59] px-3 py-1 text-[11px] font-bold tracking-wider text-neutral-900">
+                ACTIVE CASE
+              </span>
+              <div className="mt-6 flex-1">
+                <h2 className="text-2xl font-bold leading-snug text-neutral-900">
+                  {a.title}
+                </h2>
+                <p className="mt-2 text-base text-neutral-500">{a.subtitle}</p>
+              </div>
+              <span className="mt-8 inline-flex w-fit items-center gap-2 text-sm font-bold tracking-wider text-neutral-900 transition-transform group-hover:translate-x-1">
+                INVESTIGATE
+                <span aria-hidden>→</span>
+              </span>
+            </Link>
+          ))}
 
           {/* Pending cases */}
           {PENDING_CASES.map((c) => {

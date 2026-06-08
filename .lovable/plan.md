@@ -1,109 +1,63 @@
-## Goal
+# Case 02: Naming the Pieces (Numerator & Denominator)
 
-Turn Case 01 into a small "Fair Sharing" case file with **three sub-cases**. When the page loads (or when the student clicks "Investigate"/the case-file icon), they see a **case picker** with three cards. Picking one runs the existing Investigate → Detect → Repair → Explain → Solved flow for that sub-case. The diagnostic report appears after each sub-case is solved.
+Mirror Case 01's architecture: a case picker with 3 sub-cases sharing one Investigate → Detect → Repair → Explain loop, an AI Socratic chat that unlocks after Repair, per-step marks, and a diagnostic report.
 
-Sub-cases:
-1. **The Pizza** (Quarters) — existing flow, unchanged conceptually.
-2. **The Chocolate Bar** (Thirds) — rectangle split into 3 unequal pieces.
-3. **The Painted Canvas** (Halves) — canvas with an off-center vertical line; half is painted blue.
+## Sub-cases
 
-All three are Grade 1, fair-sharing only — same warm tone, no fraction notation in chat copy.
+1. **Fraction Bar** — bar of 5 blocks (3 green, 2 white), displays `3/2`. Click denominator → highlight. Repair: `−/+` toggle, raise to 5 → `3/5`.
+2. **Energy Crate** — 4 battery slots, 1 filled, displays `4/1`. Click fraction → pulse. Repair: circular Swap button flips to `1/4`.
+3. **Solar Panels** — row of 6 panels, 4 active, sign reads `2/6`. Click numerator → highlight. Repair: `−/+` toggle, raise to 4 → `4/6`.
 
-## UX flow
-
-```text
-/play/case-01
-  ┌───────────────────────────────────────────┐
-  │  Case 01 · Fair Sharing                   │
-  │  Choose a case to investigate:            │
-  │  ┌────────┐  ┌────────┐  ┌────────┐       │
-  │  │ Pizza  │  │Chocolate│  │ Canvas │      │
-  │  │ ¼ ¼ ¼ ¼│  │  Thirds │  │ Halves │      │
-  │  └────────┘  └────────┘  └────────┘       │
-  └───────────────────────────────────────────┘
-```
-
-- Picker is the default view. Solved cases show a small green check badge on their card.
-- Clicking a card mounts the existing case shell (stepper + visual + chat + report) for that sub-case.
-- A "← Choose another case" link in the case header returns to the picker. State for each sub-case is kept in memory for the session (so a solved case stays solved on return).
-- After a sub-case is solved and the report is shown, a "Try another case" button under the report goes back to the picker.
-
-## Visuals & repair tools (per sub-case)
-
-### 1. Pizza (existing)
-- Uses current `PizzaSVG.tsx` and Equalizer slider. No changes.
-
-### 2. Chocolate bar (new `ChocolateSVG.tsx`)
-- Horizontal rectangle, brown gradient with subtle grid texture, 3 vertical snap lines.
-- Unequal state: divider positions ~12% and ~88% (tiny end slivers, huge middle).
-- Equal state: dividers at 33.3% and 66.6%.
-- Interpolated by `equalized` 0→1, same as pizza.
-- Two small "robot friend" silhouettes flank ZED-4 in the bubble copy ("We each get one!").
-
-### 3. Canvas (new `CanvasSVG.tsx`)
-- Wide rectangle (art canvas) with a thin frame.
-- Single vertical divider line. Left region painted soft pastel blue (`#bcd8f5`), right region white.
-- Unequal: divider at ~15% from left.
-- Equal: divider at 50% (the blue half and white half are identical).
-- Slider label: **"CENTERING TOOL"** instead of "Equalizer Tool".
-
-All three visuals share the same prop shape: `{ equalized, onGlitchClick, interactive, pulseKey }`.
-
-## Stepper & copy (per sub-case)
-
-The 4-step stepper stays the same. Only the prompts under the visual and ZED-4's bubble change:
-
-| Case | Investigate bubble | Detect bubble | Solved bubble | Caption (investigate) |
-|---|---|---|---|---|
-| Pizza | "Look! I served exactly four pieces of pizza!" | "Glitch Detected! The pieces don't look fair." | "Logic repaired. The case is yours to close." | "Click the pizza where the sharing is not fair." |
-| Chocolate | "I broke it into thirds! We each get one piece!" | "Glitch Detected! Those shares are not fair." | "Logic repaired. Thanks, Detective." | "Click the chocolate bar where it's split unfairly." |
-| Canvas | "I just painted exactly half of the canvas!" | "Glitch Detected! The sides do not match." | "Logic repaired. The canvas is balanced." | "Click the line that's splitting the canvas unfairly." |
-
-Step labels in the stepper stay "Investigate / Detect / Repair / Explain".
-
-## AI prompts (per sub-case)
-
-One server route per sub-case keeps the system prompt focused and the `[[CASE_SOLVED]]` detection cleanly scoped.
-
-- `src/routes/api/chat/case-01.ts` — existing pizza prompt, unchanged.
-- `src/routes/api/chat/case-01-chocolate.ts` — new. Same shape as pizza prompt but framed around "thirds = three equal pieces"; opening assistant message: *"Great detective work! ZED-4 wanted to give his friends those tiny pieces. Why was it wrong to call them thirds?"*
-- `src/routes/api/chat/case-01-canvas.ts` — new. Framed around "half = two matching sides"; opening assistant message: *"Case almost closed! ZED-4 thought any line cuts the canvas in half. What does 'half' really mean?"*
-
-All three prompts keep:
-- Grade 1 voice (≤10 word sentences, no fraction notation, no emojis).
-- `[[CASE_SOLVED]]` sentinel + warm "thanks for teaching me" close.
-- The "must say it in their own words" rule before solving.
-
-## Marks
-
-Same rubric as today — `investigate / detect / repair / explain` each /5, total /20. Computed per sub-case (each sub-case has its own session state). The diagnostic report renders unchanged, but its header chip reads the active case title (e.g. "Case 01 · The Chocolate Bar").
+All three glitch on a number, not a shape. The Equalizer slider from Case 01 is replaced by a small inline number-control widget per sub-case.
 
 ## Files
 
 **New**
-- `src/components/case01/CasePicker.tsx` — renders the 3 cards (icon, title, subtitle, solved checkmark) and emits the picked case id.
-- `src/components/case01/ChocolateSVG.tsx` — rectangle visual.
-- `src/components/case01/CanvasSVG.tsx` — canvas visual.
-- `src/components/case01/cases.ts` — small registry mapping `caseId → { title, subtitle, chatEndpoint, welcome, bubbles, caption, Visual, sliderLabel }`. Keeps `play.case-01.tsx` mostly visual-agnostic.
-- `src/routes/api/chat/case-01-chocolate.ts`
-- `src/routes/api/chat/case-01-canvas.ts`
+- `src/components/case02/cases.ts` — sub-case registry: `id`, `title`, `subtitle`, `emoji`, `chatEndpoint`, `welcomeText`, `bubbles`, `captions`, `conceptMastered`, `Visual` component, `Repair` component, plus `initial` / `target` numbers and a `glitchTarget` ("denominator" | "fraction" | "numerator") to drive Detect highlighting.
+- `src/components/case02/CasePicker.tsx` — 3 cards, solved checkmarks (mirrors Case 01 picker, restyled headers to "CASE 02.0X").
+- `src/components/case02/FractionBarSVG.tsx` — 5 rounded blocks (3 pastel green, 2 white), big `numerator/denominator` next to it. Props: `{ numerator, denominator, highlight: "none" | "numerator" | "denominator" | "fraction", onClickPart(part), interactive }`.
+- `src/components/case02/EnergyCrateSVG.tsx` — 4 battery slots in a rounded crate, glowing-green battery in 1 slot, large digital `top/bottom` display. Same prop shape; `highlight="fraction"` pulses both numbers.
+- `src/components/case02/SolarPanelsSVG.tsx` — 6 panels (4 yellow glow, 2 grey), "Active Solar Power: top/bottom" sign.
+- `src/components/case02/NumberStepper.tsx` — soft `[ − ] [ value ] [ + ]` control, bounded by `min`/`max`, disabled at target. Used by Fraction Bar and Solar Panels.
+- `src/components/case02/SwapControl.tsx` — circular swap button used by Energy Crate; single click flips numerator/denominator with a 400ms transition.
+- `src/components/case02/DiagnosticReport.tsx` — Case-02 variant (or reuse Case 01's by passing it through). Keeping a thin Case-02 wrapper is cleaner; same marks shape `{investigate, detect, repair, explain}` totalling /20.
+- `src/routes/api/chat/case-02-bar.ts` — Socratic prompt focused on "the bottom number counts ALL the pieces".
+- `src/routes/api/chat/case-02-crate.ts` — Socratic prompt on "the total goes on the bottom, the filled goes on top".
+- `src/routes/api/chat/case-02-panels.ts` — Socratic prompt on "the top number counts the active pieces you were asked about".
+- `src/routes/play.case-02.tsx` — page mirroring `play.case-01.tsx`: picker → `SubCaseRunner` keyed by sub-case id. Manages stage, the current number value (or swap state), AI chat, per-case marks, and the report.
 
-**Edit**
-- `src/routes/play.case-01.tsx`
-  - Add `activeCase: "pizza" | "chocolate" | "canvas" | null` state. `null` → render `<CasePicker />`.
-  - Per-case session state stored in a `Record<caseId, SubCaseState>` so progress survives going back to the picker. `SubCaseState = { stage, equalized, messages, marks, solved }`.
-  - Pick the registry entry by `activeCase`, render its `Visual` + chat endpoint + bubbles + slider label.
-  - "← Choose another case" link in the case header.
-  - After solved + report, "Try another case" button → returns to picker.
-- `src/components/case01/DiagnosticReport.tsx` — accept optional `caseTitle` prop for the header chip (defaults to current "Case 01 · Fair Sharing").
-- `.lovable/plan.md` — update to reflect new structure.
+**Edited**
+- `src/routes/play.index.tsx` — promote Case 02 to a second ACTIVE CASE card (`/play/case-02`); remove it from `PENDING_CASES`.
 
-**Unchanged**
-- `CaseStepper.tsx`, `ZedBubble.tsx`, `SpeakButton.tsx`, `MicButton.tsx`, `PizzaSVG.tsx`, existing pizza chat route.
+## State & flow (per sub-case)
+
+```
+stage: "investigate" | "detect" | "repair" | "explain" | "solved"
+value: number          // current denominator OR numerator (depending on sub-case)
+swapped: boolean       // crate only
+```
+
+- INVESTIGATE: Visual is interactive; clicking the wrong number(s) → `setStage("detect")` + brief pulse.
+- DETECT: target number highlights soft pastel yellow; ZED-4 bubble updates; stepper or swap control appears.
+- REPAIR: each step adjusts `value` (or toggles `swapped`). When `value === target` (or `swapped === true`), success animation + green banner "Logic Repaired: …" and `setStage("explain")`.
+- EXPLAIN: chat unlocks with the case's `welcomeText`. Detect `[[CASE_SOLVED]]` token from assistant → `setStage("solved")`, mark sub-case solved, scroll to report.
+
+## Marks rubric (per sub-case, total /20)
+
+- investigate: 5 once they leave Investigate.
+- detect: 5 once a stepper/swap interaction begins.
+- repair: 5 if reached target in minimum steps (bar: 3 clicks, crate: 1 swap, panels: 2 clicks); 4 if within +1 extra; 3 otherwise.
+- explain: same heuristic as Case 01 (turns + longest message word count).
+
+## Design notes (matches Case 01)
+
+- White background, generous whitespace, rounded-3xl card with soft shadow.
+- Reuse `CaseStepper`, `ZedBubble`, `SpeakButton`, `MicButton` from `case01/`.
+- Pastel green `#bbf7d0`, soft yellow highlight `#fef9c3`, success banner `#dcfce7` / `#166534`.
+- No timers, no scoreboards, no harsh red.
 
 ## Out of scope
 
-- No DB persistence between sessions (picker resets on full reload).
-- No new audio/voice changes.
-- No Case 02+ work — this is all still inside Case 01.
-- No changes to the marks rubric or scoring formulas.
+- No persistence between sessions.
+- No changes to Case 01 or shared chat components.
+- No new audio/voice features.
