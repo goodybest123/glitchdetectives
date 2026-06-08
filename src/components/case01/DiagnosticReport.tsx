@@ -26,7 +26,15 @@ function remarkFor(total: number) {
   return "Nice work — you closed the case!";
 }
 
-export function DiagnosticReport({ studentQuotes, turnCount, marks }: Props) {
+export function DiagnosticReport({
+  studentQuotes,
+  turnCount,
+  marks,
+  caseTitle = "Case 01 · Fair Sharing",
+  conceptMastered = "Fair Sharing — equal parts of one whole",
+  onTryAnother,
+  nextCaseLabel = "Case 02 — comparing fair shares.",
+}: Props) {
   const total =
     marks.investigate + marks.detect + marks.repair + marks.explain;
   const maxTotal = MAX_PER_STEP * 4;
