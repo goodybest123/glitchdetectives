@@ -232,6 +232,7 @@ function CaseOnePage() {
               <DiagnosticReport
                 studentQuotes={studentQuotes}
                 turnCount={studentQuotes.length}
+                marks={marks}
               />
             </div>
           )}
