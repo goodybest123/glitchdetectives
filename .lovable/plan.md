@@ -1,53 +1,53 @@
-# Case 04: The Scale Weigh-In (Comparing Fractions)
+# Case 05: Combining Matches (Adding/Subtracting Like Denominators)
 
-Mirrors Case 03's architecture exactly. Three sub-cases targeting the "Bigger Denominator = Bigger Fraction" trap, all using the same Investigate → Detect → Repair → Explain loop with the `[ < ] [ = ] [ > ]` comparator.
+Three sub-cases targeting the "add the bottoms too" trap. All share the Investigate → Detect → Repair → Explain loop, with a `[ - ] [ + ]` stepper on the wrong denominator instead of Case 03/04's comparator.
 
 ## Sub-cases
 
-| ID | Title | Left | Right | Wrong op | Correct |
+| ID | Title | Equation shown | Wrong denom | Correct denom | Operation |
 |---|---|---|---|---|---|
-| `cargo` | Cargo Blocks | 1/8 | 1/4 | `>` | `<` |
-| `coolant` | Liquid Coolant | 2/3 | 2/5 | `<` | `>` |
-| `beams` | Metal Beams | 3/4 | 3/8 | `<` | `>` |
+| `conveyor` | Conveyor Belt | 1/5 + 2/5 = 3/? | 10 | 5 | add |
+| `coolant` | Coolant Drain | 5/8 − 2/8 = 3/? | 0 | 8 | subtract |
+| `assembly` | Assembly Line | 2/6 + 3/6 = 5/? | 12 | 6 | add |
 
-Unlike Case 03 (all answers `=`), Case 04 answers are strictly `<` or `>`. The runner must support a configurable `correctOperator` per sub-case instead of hardcoding `=`.
+All three have correct numerator already (ZED only broke the denominator). The mechanic is identical: click the wrong denominator → stepper appears → step to the correct value → visual snaps back to the right whole.
 
 ## Files to create
 
-**Registry & visuals** (`src/components/case04/`)
-- `cases.ts` — per-sub-case metadata: `id`, `title`, `subtitle`, `emoji`, `Visual`, `leftFraction`, `rightFraction`, `wrongOperator`, `correctOperator`, `chatEndpoint`, `bubbles`, `captions`, `welcomeText`, `conceptMastered`, `successBanner`.
-- `BalanceScaleSVG.tsx` — fulcrum + two pans with blocks sized proportionally; `tilt` prop (`"left" | "right" | "balanced"`) drives a smooth rotation transform on the beam. Glitch state = tilted toward smaller fraction; solved state = animates to correct tilt.
-- `CoolantTubesSVG.tsx` — two identical vertical tubes with fluid fills at proportional heights; on solve, fluid pulses (subtle opacity/scale loop for ~1.5s).
-- `MetalBeamsSVG.tsx` — two horizontal bars with proportional widths; on solve, a faint grid background fades in behind to emphasize length difference.
-- All three SVGs follow Case 03's `VisualProps` contract: `{ solved: boolean; pulseKey?: number; middleSlot?: ReactNode }`. The `middleSlot` renders the comparator + fraction display between/under the visual.
-- `CasePicker.tsx` — three cards with emoji, title, subtitle, solved checkmark. Same look as Case 03's picker.
-- `FractionDisplayLine.tsx` — small helper that renders `A/B  [op]  C/D` with the comparator slot in the middle, used inside `middleSlot`.
-
-**Reused from Case 03** (imported, not duplicated)
-- `ComparatorSymbol.tsx` and `ComparatorToggle.tsx` — already generic; reuse via `@/components/case03/...`.
+**Registry & visuals** (`src/components/case05/`)
+- `cases.ts` — per sub-case: `id`, `title`, `subtitle`, `emoji`, `Visual`, `leftFraction`, `rightFraction`, `operator` (`"+" | "−"`), `correctNumerator`, `wrongDenominator`, `correctDenominator`, `stepperMin`, `stepperMax`, `chatEndpoint`, `bubbles`, `captions`, `welcomeText`, `conceptMastered`, `successBanner`.
+- `ConveyorBeltSVG.tsx` — two 5-slot crates + output crate. `solved` prop swaps output between a stretched 10-slot crate with 3 tiny blocks and a normal 5-slot crate with 3 full-size blocks. CSS transition on width/slot count.
+- `CoolantDrainSVG.tsx` — 8-section tank. `solved=false`: tank outline missing, 3 floating fluid puddles. `solved=true`: tank outline fades in, 3 sections fill cleanly.
+- `AssemblyLineSVG.tsx` — hexagonal motherboard. `solved=false`: 12-sided mutant outline with 5 misaligned chips. `solved=true`: morphs to 6-sided board, chips snap into 5 of 6 slots.
+- All three share the contract: `{ solved: boolean; pulseKey?: number }`.
+- `EquationDisplay.tsx` — renders `A/B [op] C/D = N/?` where `?` is the clickable/highlighted denominator slot. Props: `leftFrac`, `rightFrac`, `operator`, `resultNumerator`, `denominatorValue`, `denominatorState` (`"idle" | "glitch" | "editing" | "solved"`), `onDenominatorClick`.
+- `DenominatorStepper.tsx` — `[ - ] [ + ]` control with current value displayed. Props: `value`, `min`, `max`, `onChange`. Disables `+`/`-` at bounds.
+- `CasePicker.tsx` — three sub-case cards, same shape as Case 04's picker.
 
 **AI routes** (`src/routes/api/chat/`)
-- `case-04-cargo.ts` — Grade 1 voice, kid words only ("smaller pieces", "bigger bottom number = smaller slice"). Emits `[[CASE_SOLVED]]` once child explains "8 means cut into 8 little pieces, so each one is tiny."
-- `case-04-coolant.ts` — guides child to articulate "thirds are bigger chunks than fifths, so 2 thirds is more liquid."
-- `case-04-beams.ts` — guides child to articulate "the bigger the bottom number, the smaller each piece."
-- All three use `google/gemini-3-flash-preview` via `createLovableAiGatewayProvider`, same shape as Case 03 routes.
+- `case-05-conveyor.ts` — guide child to articulate "the bottom number is the size of the whole; it doesn't change when we add pieces."
+- `case-05-coolant.ts` — guide child to articulate "the tank still has 8 sections even after we drain some; the bottom number is the container."
+- `case-05-assembly.ts` — guide child to articulate "the board is still 6-sided; only the filled chips change."
+- All three: Grade 1 voice, kid words only, `[[CASE_SOLVED]]` token, same shape as Case 04 routes.
 
 **Page route**
-- `src/routes/play.case-04.tsx` — copy of `play.case-03.tsx` adapted to:
-  - Compare `operator === c.correctOperator` (not hardcoded `=`) to trigger reveal.
-  - Pass `solved` (boolean) + `pulseKey` to visuals instead of `dividersVisible` / `spinKey`.
-  - Same stage machine, same marks rubric, same DiagnosticReport flow, same chat panel.
+- `src/routes/play.case-05.tsx` — adapted from `play.case-04.tsx`:
+  - Stage machine `investigate → detect → repair → explain`.
+  - `detect` triggered by clicking the highlighted denominator.
+  - `repair` shows `DenominatorStepper`; reaching `correctDenominator` → `solved=true`, success banner, advance to `explain`.
+  - Same chat panel, DiagnosticReport, marks rubric, and CasePicker pattern as Case 04.
 
 ## Files to edit
-- `src/routes/play.index.tsx` — promote Case 04 from Pending → Active, route `/play/case-04`.
+- `src/routes/play.index.tsx` — promote Case 05 from Pending → Active, route `/play/case-05`. Replace the `05` pending entry; keep `06` pending.
 
 ## Out of scope
-- No persistence between sessions.
-- No changes to Cases 01–03.
-- No new audio assets; reuse existing `SpeakButton` / `MicButton`.
-- No leaderboard or timers.
+- No mixed-denominator addition (that's Case 06).
+- No persistence across sessions.
+- No changes to Cases 01–04.
+- No new audio assets; reuse existing chat panel components.
 
 ## Technical notes
-- Balance scale tilt: rotate the beam group around the fulcrum center using CSS `transition: transform 800ms ease-out`. Pan positions follow via translateY tied to the same tilt state.
-- Coolant pulse and beam-grid fade are pure CSS keyframes keyed off `pulseKey` (re-mount trick) like Case 03's spin.
-- Block/tube/beam sizes are derived from the fraction values so the visual truth always matches the math (1/4 block visibly 2× the 1/8 block area, etc.).
+- Denominator slot rendered as a `<button>` while `stage === "investigate"`; becomes a non-interactive highlighted box during `detect`/`repair`.
+- Stepper bounds: conveyor 5–10, coolant 0–8, assembly 6–12 — so the child can step in the correct direction to reach the answer.
+- Crate/tank/board "morph" is a CSS width/scale transition keyed off `solved`; reuse the `pulseKey` remount trick from Case 04 for the success pulse.
+- Numerator stays fixed and visually correct throughout — only the denominator is wrong.
