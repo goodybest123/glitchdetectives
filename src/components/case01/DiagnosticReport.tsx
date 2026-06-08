@@ -105,7 +105,7 @@ export function DiagnosticReport({
           Concept Mastered
         </div>
         <div className="mt-2 flex items-center gap-2 text-lg font-semibold text-neutral-900">
-          <CheckDot /> Fair Sharing — equal parts of one whole
+          <CheckDot /> {conceptMastered}
         </div>
       </div>
 
