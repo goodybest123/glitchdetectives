@@ -12,6 +12,10 @@ type Props = {
   studentQuotes: string[];
   turnCount: number;
   marks: CaseMarks;
+  caseTitle?: string;
+  conceptMastered?: string;
+  onTryAnother?: () => void;
+  nextCaseLabel?: string;
 };
 
 const MAX_PER_STEP = 5;
