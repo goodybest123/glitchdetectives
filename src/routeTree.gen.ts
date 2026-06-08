@@ -16,6 +16,7 @@ import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
 import { Route as ApiChatCase01ChocolateRouteImport } from './routes/api/chat/case-01-chocolate'
+import { Route as ApiChatCase01CanvasRouteImport } from './routes/api/chat/case-01-canvas'
 import { Route as ApiChatCase01RouteImport } from './routes/api/chat/case-01'
 
 const PrintablesRoute = PrintablesRouteImport.update({
@@ -53,6 +54,11 @@ const ApiChatCase01ChocolateRoute = ApiChatCase01ChocolateRouteImport.update({
   path: '/api/chat/case-01-chocolate',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatCase01CanvasRoute = ApiChatCase01CanvasRouteImport.update({
+  id: '/api/chat/case-01-canvas',
+  path: '/api/chat/case-01-canvas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatCase01Route = ApiChatCase01RouteImport.update({
   id: '/api/chat/case-01',
   path: '/api/chat/case-01',
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
+  '/api/chat/case-01-canvas': typeof ApiChatCase01CanvasRoute
   '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
 }
 export interface FileRoutesByTo {
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
+  '/api/chat/case-01-canvas': typeof ApiChatCase01CanvasRoute
   '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
 }
 export interface FileRoutesById {
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
+  '/api/chat/case-01-canvas': typeof ApiChatCase01CanvasRoute
   '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
 }
 export interface FileRouteTypes {
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
+    | '/api/chat/case-01-canvas'
     | '/api/chat/case-01-chocolate'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/printables/fractions-l1'
     | '/play'
     | '/api/chat/case-01'
+    | '/api/chat/case-01-canvas'
     | '/api/chat/case-01-chocolate'
   id:
     | '__root__'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
+    | '/api/chat/case-01-canvas'
     | '/api/chat/case-01-chocolate'
   fileRoutesById: FileRoutesById
 }
@@ -126,6 +138,7 @@ export interface RootRouteChildren {
   PlayRoute: typeof PlayRouteWithChildren
   PrintablesRoute: typeof PrintablesRouteWithChildren
   ApiChatCase01Route: typeof ApiChatCase01Route
+  ApiChatCase01CanvasRoute: typeof ApiChatCase01CanvasRoute
   ApiChatCase01ChocolateRoute: typeof ApiChatCase01ChocolateRoute
 }
 
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatCase01ChocolateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat/case-01-canvas': {
+      id: '/api/chat/case-01-canvas'
+      path: '/api/chat/case-01-canvas'
+      fullPath: '/api/chat/case-01-canvas'
+      preLoaderRoute: typeof ApiChatCase01CanvasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat/case-01': {
       id: '/api/chat/case-01'
       path: '/api/chat/case-01'
@@ -219,6 +239,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlayRoute: PlayRouteWithChildren,
   PrintablesRoute: PrintablesRouteWithChildren,
   ApiChatCase01Route: ApiChatCase01Route,
+  ApiChatCase01CanvasRoute: ApiChatCase01CanvasRoute,
   ApiChatCase01ChocolateRoute: ApiChatCase01ChocolateRoute,
 }
 export const routeTree = rootRouteImport
