@@ -178,15 +178,17 @@ function CaseOnePage() {
             }`}
             aria-disabled={!chatEnabled}
           >
-            <div className="border-b border-neutral-100 px-5 py-4">
-              <h2 className="text-sm font-bold tracking-wider text-neutral-700">
-                AI GUIDE
-              </h2>
-              <p className="mt-0.5 text-xs text-neutral-500">
-                {chatEnabled
-                  ? "Explain your reasoning."
-                  : "Unlocks after you repair the logic."}
-              </p>
+            <div className="flex items-start justify-between gap-2 border-b border-neutral-100 px-5 py-4">
+              <div>
+                <h2 className="text-sm font-bold tracking-wider text-neutral-700">
+                  AI GUIDE
+                </h2>
+                <p className="mt-0.5 text-xs text-neutral-500">
+                  {chatEnabled
+                    ? "Explain your reasoning — type or speak."
+                    : "Unlocks after you repair the logic."}
+                </p>
+              </div>
             </div>
 
             <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
@@ -200,7 +202,7 @@ function CaseOnePage() {
                   return (
                     <div
                       key={m.id}
-                      className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                      className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
                     >
                       <div
                         className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
@@ -211,6 +213,11 @@ function CaseOnePage() {
                       >
                         {text}
                       </div>
+                      {!isUser && (
+                        <div className="mt-1.5 ml-1">
+                          <SpeakButton text={text} />
+                        </div>
+                      )}
                     </div>
                   );
                 })
@@ -250,12 +257,20 @@ function CaseOnePage() {
                 rows={2}
                 placeholder={
                   chatEnabled
-                    ? "Type your reasoning…"
+                    ? "Type your reasoning, or tap the mic to speak…"
                     : "Locked until repair is complete"
                 }
                 className="w-full resize-none rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-[#60a5fa] focus:outline-none focus:ring-2 focus:ring-[#dbeafe] disabled:bg-neutral-50"
               />
-              <div className="mt-2 flex justify-end">
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <MicButton
+                  disabled={!chatEnabled || isSending}
+                  onTranscript={(t, isFinal) => {
+                    if (isFinal) {
+                      setInput((prev) => (prev ? prev.trimEnd() + " " : "") + t);
+                    }
+                  }}
+                />
                 <button
                   type="submit"
                   disabled={!chatEnabled || isSending || !input.trim()}
