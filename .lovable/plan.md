@@ -1,43 +1,53 @@
-# Case 03: The Shape Shifters
+# Case 04: The Scale Weigh-In (Comparing Fractions)
 
-Three sub-cases teaching equivalent fractions through visual equivalence (no multiplication tables). Same Investigate → Detect → Repair → Explain loop as Cases 01/02, with a shared `[ < ] [ = ] [ > ]` comparator toggle.
+Mirrors Case 03's architecture exactly. Three sub-cases targeting the "Bigger Denominator = Bigger Fraction" trap, all using the same Investigate → Detect → Repair → Explain loop with the `[ < ] [ = ] [ > ]` comparator.
 
 ## Sub-cases
 
-1. **Fuel Tanks** — `1/2 ? 2/4`, ZED-4 picks `>`. Two vertical tanks, identical blue fill height.
-2. **Garden Beds** — `1/3 ? 2/6`, ZED-4 picks `<`. Two horizontal beds, identical green area.
-3. **Memory Disks** — `3/4 ? 6/8`, ZED-4 picks `<`. Two pie-style disks, identical purple sweep.
+| ID | Title | Left | Right | Wrong op | Correct |
+|---|---|---|---|---|---|
+| `cargo` | Cargo Blocks | 1/8 | 1/4 | `>` | `<` |
+| `coolant` | Liquid Coolant | 2/3 | 2/5 | `<` | `>` |
+| `beams` | Metal Beams | 3/4 | 3/8 | `<` | `>` |
 
-All three share one mental model: same shaded amount, different slice counts. Target answer is always `=`.
+Unlike Case 03 (all answers `=`), Case 04 answers are strictly `<` or `>`. The runner must support a configurable `correctOperator` per sub-case instead of hardcoding `=`.
 
-## New files
+## Files to create
 
-- `src/components/case03/cases.ts` — registry: `id`, `title`, `subtitle`, `emoji`, `Visual`, `leftFraction`, `rightFraction`, `wrongOperator` (`>` or `<`), `chatEndpoint`, `bubbles`, `captions`, `welcomeText`, `conceptMastered`, `successBanner`.
-- `src/components/case03/FuelTanksSVG.tsx` — two vertical tanks; props: `dividersVisible` (animated fade for Repair success).
-- `src/components/case03/GardenBedsSVG.tsx` — two horizontal beds, same fade behavior.
-- `src/components/case03/MemoryDisksSVG.tsx` — two circular disks with slice lines; same fade behavior; gentle 360° rotation on solve.
-- `src/components/case03/ComparatorToggle.tsx` — three soft buttons `[ < ] [ = ] [ > ]`, disabled state when solved.
-- `src/components/case03/ComparatorSymbol.tsx` — large center symbol; clickable in Detect; highlights pastel yellow.
-- `src/components/case03/CasePicker.tsx` — sub-case grid mirroring Case 02.
-- `src/routes/api/chat/case-03-tanks.ts`
-- `src/routes/api/chat/case-03-garden.ts`
-- `src/routes/api/chat/case-03-disks.ts`
+**Registry & visuals** (`src/components/case04/`)
+- `cases.ts` — per-sub-case metadata: `id`, `title`, `subtitle`, `emoji`, `Visual`, `leftFraction`, `rightFraction`, `wrongOperator`, `correctOperator`, `chatEndpoint`, `bubbles`, `captions`, `welcomeText`, `conceptMastered`, `successBanner`.
+- `BalanceScaleSVG.tsx` — fulcrum + two pans with blocks sized proportionally; `tilt` prop (`"left" | "right" | "balanced"`) drives a smooth rotation transform on the beam. Glitch state = tilted toward smaller fraction; solved state = animates to correct tilt.
+- `CoolantTubesSVG.tsx` — two identical vertical tubes with fluid fills at proportional heights; on solve, fluid pulses (subtle opacity/scale loop for ~1.5s).
+- `MetalBeamsSVG.tsx` — two horizontal bars with proportional widths; on solve, a faint grid background fades in behind to emphasize length difference.
+- All three SVGs follow Case 03's `VisualProps` contract: `{ solved: boolean; pulseKey?: number; middleSlot?: ReactNode }`. The `middleSlot` renders the comparator + fraction display between/under the visual.
+- `CasePicker.tsx` — three cards with emoji, title, subtitle, solved checkmark. Same look as Case 03's picker.
+- `FractionDisplayLine.tsx` — small helper that renders `A/B  [op]  C/D` with the comparator slot in the middle, used inside `middleSlot`.
 
-Each AI route: warm Grade-1 voice, kid words only ("same amount", "smaller pieces", "more cuts"), forbid words like "denominator/numerator/multiply", emit `[[CASE_SOLVED]]` once the child shows they understand "more pieces just means smaller pieces, not more stuff".
+**Reused from Case 03** (imported, not duplicated)
+- `ComparatorSymbol.tsx` and `ComparatorToggle.tsx` — already generic; reuse via `@/components/case03/...`.
 
-## Edited files
+**AI routes** (`src/routes/api/chat/`)
+- `case-04-cargo.ts` — Grade 1 voice, kid words only ("smaller pieces", "bigger bottom number = smaller slice"). Emits `[[CASE_SOLVED]]` once child explains "8 means cut into 8 little pieces, so each one is tiny."
+- `case-04-coolant.ts` — guides child to articulate "thirds are bigger chunks than fifths, so 2 thirds is more liquid."
+- `case-04-beams.ts` — guides child to articulate "the bigger the bottom number, the smaller each piece."
+- All three use `google/gemini-3-flash-preview` via `createLovableAiGatewayProvider`, same shape as Case 03 routes.
 
-- `src/routes/play.case-03.tsx` — new page: `CasePicker` → `SubCaseRunner` keyed by sub-case id. Stages: `investigate | detect | repair | explain | solved`. State: `operator` (`<`|`=`|`>`), `dividersVisible`, `pulseKey`, per-case marks, chat. Marks rubric per sub-case (/20): investigate 5 (on entering Detect), detect 5 (clicking the wrong symbol), repair 5 (selecting `=` on first try → 5; second → 3; third+ → 1), explain 5 (heuristic reused from Case 01/02 on `[[CASE_SOLVED]]`).
-- `src/routes/play.index.tsx` — promote Case 03 from PENDING to ACTIVE, route `/play/case-03`.
-- Reuse `case01/CaseStepper.tsx`, `ZedBubble.tsx`, `SpeakButton.tsx`, `MicButton.tsx`, and Case 01's `DiagnosticReport.tsx` (already parametrized).
+**Page route**
+- `src/routes/play.case-04.tsx` — copy of `play.case-03.tsx` adapted to:
+  - Compare `operator === c.correctOperator` (not hardcoded `=`) to trigger reveal.
+  - Pass `solved` (boolean) + `pulseKey` to visuals instead of `dividersVisible` / `spinKey`.
+  - Same stage machine, same marks rubric, same DiagnosticReport flow, same chat panel.
 
-## Interaction details
-
-- **Investigate**: large wrong operator visible between visuals, ZED-4 bubble shows the wrong claim. Clicking the operator advances to Detect.
-- **Detect**: operator pulses pastel yellow; bubble updates to "Glitch Detected!"; `ComparatorToggle` slides in below.
-- **Repair**: selecting `=` updates the symbol, fades internal divider lines for ~2s (Memory Disks also rotates 360°), shows green success banner with `successBanner` text, unlocks chat.
-- **Explain**: chat panel enables, auto-posts the case's `welcomeText` as first ZED-4 message. On `[[CASE_SOLVED]]`, mark sub-case solved and show diagnostic report with "Try another case" → returns to picker.
+## Files to edit
+- `src/routes/play.index.tsx` — promote Case 04 from Pending → Active, route `/play/case-04`.
 
 ## Out of scope
+- No persistence between sessions.
+- No changes to Cases 01–03.
+- No new audio assets; reuse existing `SpeakButton` / `MicButton`.
+- No leaderboard or timers.
 
-No persistence between sessions, no changes to Case 01/02, no new audio assets, no leaderboard.
+## Technical notes
+- Balance scale tilt: rotate the beam group around the fulcrum center using CSS `transition: transform 800ms ease-out`. Pan positions follow via translateY tied to the same tilt state.
+- Coolant pulse and beam-grid fade are pure CSS keyframes keyed off `pulseKey` (re-mount trick) like Case 03's spin.
+- Block/tube/beam sizes are derived from the fraction values so the visual truth always matches the math (1/4 block visibly 2× the 1/8 block area, etc.).
