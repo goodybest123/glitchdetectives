@@ -73,12 +73,6 @@ export function PizzaSVG({
         className={`h-[320px] w-[320px] sm:h-[380px] sm:w-[380px] ${
           pulseKey > 0 ? "animate-[pulse-once_700ms_ease-out]" : ""
         }`}
-        style={
-          {
-            // @ts-expect-error custom keyframe
-            "--pulse": "1",
-          } as React.CSSProperties
-        }
       >
         <defs>
           <style>{`
