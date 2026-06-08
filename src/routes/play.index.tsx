@@ -22,19 +22,19 @@ type PendingCase = {
 };
 
 const PENDING_CASES: PendingCase[] = [
-  { id: "04", title: "Case 04: The Scale Weigh-In" },
   { id: "05", title: "Case 05: Combining Matches" },
   { id: "06", title: "Case 06: The Mismatched Puzzle" },
 ];
 
 const ACTIVE_CASES: {
-  to: "/play/case-01" | "/play/case-02" | "/play/case-03";
+  to: "/play/case-01" | "/play/case-02" | "/play/case-03" | "/play/case-04";
   title: string;
   subtitle: string;
 }[] = [
   { to: "/play/case-01", title: "Case 01: Parts of a Whole", subtitle: "Are the slices fair?" },
   { to: "/play/case-02", title: "Case 02: Naming the Pieces", subtitle: "Top number, bottom number." },
   { to: "/play/case-03", title: "Case 03: The Shape Shifters", subtitle: "When more pieces means smaller pieces." },
+  { to: "/play/case-04", title: "Case 04: The Scale Weigh-In", subtitle: "Bigger bottom number means smaller pieces." },
 ];
 
 function PlayPage() {

@@ -14,9 +14,13 @@ import { Route as PlayRouteImport } from './routes/play'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
+import { Route as PlayCase04RouteImport } from './routes/play.case-04'
 import { Route as PlayCase03RouteImport } from './routes/play.case-03'
 import { Route as PlayCase02RouteImport } from './routes/play.case-02'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
+import { Route as ApiChatCase04CoolantRouteImport } from './routes/api/chat/case-04-coolant'
+import { Route as ApiChatCase04CargoRouteImport } from './routes/api/chat/case-04-cargo'
+import { Route as ApiChatCase04BeamsRouteImport } from './routes/api/chat/case-04-beams'
 import { Route as ApiChatCase03TanksRouteImport } from './routes/api/chat/case-03-tanks'
 import { Route as ApiChatCase03GardenRouteImport } from './routes/api/chat/case-03-garden'
 import { Route as ApiChatCase03DisksRouteImport } from './routes/api/chat/case-03-disks'
@@ -52,6 +56,11 @@ const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
   path: '/fractions-l1',
   getParentRoute: () => PrintablesRoute,
 } as any)
+const PlayCase04Route = PlayCase04RouteImport.update({
+  id: '/case-04',
+  path: '/case-04',
+  getParentRoute: () => PlayRoute,
+} as any)
 const PlayCase03Route = PlayCase03RouteImport.update({
   id: '/case-03',
   path: '/case-03',
@@ -66,6 +75,21 @@ const PlayCase01Route = PlayCase01RouteImport.update({
   id: '/case-01',
   path: '/case-01',
   getParentRoute: () => PlayRoute,
+} as any)
+const ApiChatCase04CoolantRoute = ApiChatCase04CoolantRouteImport.update({
+  id: '/api/chat/case-04-coolant',
+  path: '/api/chat/case-04-coolant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase04CargoRoute = ApiChatCase04CargoRouteImport.update({
+  id: '/api/chat/case-04-cargo',
+  path: '/api/chat/case-04-cargo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase04BeamsRoute = ApiChatCase04BeamsRouteImport.update({
+  id: '/api/chat/case-04-beams',
+  path: '/api/chat/case-04-beams',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatCase03TanksRoute = ApiChatCase03TanksRouteImport.update({
   id: '/api/chat/case-03-tanks',
@@ -120,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
+  '/play/case-04': typeof PlayCase04Route
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -131,6 +156,9 @@ export interface FileRoutesByFullPath {
   '/api/chat/case-03-disks': typeof ApiChatCase03DisksRoute
   '/api/chat/case-03-garden': typeof ApiChatCase03GardenRoute
   '/api/chat/case-03-tanks': typeof ApiChatCase03TanksRoute
+  '/api/chat/case-04-beams': typeof ApiChatCase04BeamsRoute
+  '/api/chat/case-04-cargo': typeof ApiChatCase04CargoRoute
+  '/api/chat/case-04-coolant': typeof ApiChatCase04CoolantRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -138,6 +166,7 @@ export interface FileRoutesByTo {
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
+  '/play/case-04': typeof PlayCase04Route
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -149,6 +178,9 @@ export interface FileRoutesByTo {
   '/api/chat/case-03-disks': typeof ApiChatCase03DisksRoute
   '/api/chat/case-03-garden': typeof ApiChatCase03GardenRoute
   '/api/chat/case-03-tanks': typeof ApiChatCase03TanksRoute
+  '/api/chat/case-04-beams': typeof ApiChatCase04BeamsRoute
+  '/api/chat/case-04-cargo': typeof ApiChatCase04CargoRoute
+  '/api/chat/case-04-coolant': typeof ApiChatCase04CoolantRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -158,6 +190,7 @@ export interface FileRoutesById {
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
+  '/play/case-04': typeof PlayCase04Route
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -169,6 +202,9 @@ export interface FileRoutesById {
   '/api/chat/case-03-disks': typeof ApiChatCase03DisksRoute
   '/api/chat/case-03-garden': typeof ApiChatCase03GardenRoute
   '/api/chat/case-03-tanks': typeof ApiChatCase03TanksRoute
+  '/api/chat/case-04-beams': typeof ApiChatCase04BeamsRoute
+  '/api/chat/case-04-cargo': typeof ApiChatCase04CargoRoute
+  '/api/chat/case-04-coolant': typeof ApiChatCase04CoolantRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -179,6 +215,7 @@ export interface FileRouteTypes {
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
+    | '/play/case-04'
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
@@ -190,6 +227,9 @@ export interface FileRouteTypes {
     | '/api/chat/case-03-disks'
     | '/api/chat/case-03-garden'
     | '/api/chat/case-03-tanks'
+    | '/api/chat/case-04-beams'
+    | '/api/chat/case-04-cargo'
+    | '/api/chat/case-04-coolant'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -197,6 +237,7 @@ export interface FileRouteTypes {
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
+    | '/play/case-04'
     | '/printables/fractions-l1'
     | '/play'
     | '/api/chat/case-01'
@@ -208,6 +249,9 @@ export interface FileRouteTypes {
     | '/api/chat/case-03-disks'
     | '/api/chat/case-03-garden'
     | '/api/chat/case-03-tanks'
+    | '/api/chat/case-04-beams'
+    | '/api/chat/case-04-cargo'
+    | '/api/chat/case-04-coolant'
   id:
     | '__root__'
     | '/'
@@ -216,6 +260,7 @@ export interface FileRouteTypes {
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
+    | '/play/case-04'
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
@@ -227,6 +272,9 @@ export interface FileRouteTypes {
     | '/api/chat/case-03-disks'
     | '/api/chat/case-03-garden'
     | '/api/chat/case-03-tanks'
+    | '/api/chat/case-04-beams'
+    | '/api/chat/case-04-cargo'
+    | '/api/chat/case-04-coolant'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -242,6 +290,9 @@ export interface RootRouteChildren {
   ApiChatCase03DisksRoute: typeof ApiChatCase03DisksRoute
   ApiChatCase03GardenRoute: typeof ApiChatCase03GardenRoute
   ApiChatCase03TanksRoute: typeof ApiChatCase03TanksRoute
+  ApiChatCase04BeamsRoute: typeof ApiChatCase04BeamsRoute
+  ApiChatCase04CargoRoute: typeof ApiChatCase04CargoRoute
+  ApiChatCase04CoolantRoute: typeof ApiChatCase04CoolantRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -281,6 +332,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrintablesFractionsL1RouteImport
       parentRoute: typeof PrintablesRoute
     }
+    '/play/case-04': {
+      id: '/play/case-04'
+      path: '/case-04'
+      fullPath: '/play/case-04'
+      preLoaderRoute: typeof PlayCase04RouteImport
+      parentRoute: typeof PlayRoute
+    }
     '/play/case-03': {
       id: '/play/case-03'
       path: '/case-03'
@@ -301,6 +359,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/play/case-01'
       preLoaderRoute: typeof PlayCase01RouteImport
       parentRoute: typeof PlayRoute
+    }
+    '/api/chat/case-04-coolant': {
+      id: '/api/chat/case-04-coolant'
+      path: '/api/chat/case-04-coolant'
+      fullPath: '/api/chat/case-04-coolant'
+      preLoaderRoute: typeof ApiChatCase04CoolantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-04-cargo': {
+      id: '/api/chat/case-04-cargo'
+      path: '/api/chat/case-04-cargo'
+      fullPath: '/api/chat/case-04-cargo'
+      preLoaderRoute: typeof ApiChatCase04CargoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-04-beams': {
+      id: '/api/chat/case-04-beams'
+      path: '/api/chat/case-04-beams'
+      fullPath: '/api/chat/case-04-beams'
+      preLoaderRoute: typeof ApiChatCase04BeamsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/chat/case-03-tanks': {
       id: '/api/chat/case-03-tanks'
@@ -372,6 +451,7 @@ interface PlayRouteChildren {
   PlayCase01Route: typeof PlayCase01Route
   PlayCase02Route: typeof PlayCase02Route
   PlayCase03Route: typeof PlayCase03Route
+  PlayCase04Route: typeof PlayCase04Route
   PlayIndexRoute: typeof PlayIndexRoute
 }
 
@@ -379,6 +459,7 @@ const PlayRouteChildren: PlayRouteChildren = {
   PlayCase01Route: PlayCase01Route,
   PlayCase02Route: PlayCase02Route,
   PlayCase03Route: PlayCase03Route,
+  PlayCase04Route: PlayCase04Route,
   PlayIndexRoute: PlayIndexRoute,
 }
 
@@ -409,17 +490,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatCase03DisksRoute: ApiChatCase03DisksRoute,
   ApiChatCase03GardenRoute: ApiChatCase03GardenRoute,
   ApiChatCase03TanksRoute: ApiChatCase03TanksRoute,
+  ApiChatCase04BeamsRoute: ApiChatCase04BeamsRoute,
+  ApiChatCase04CargoRoute: ApiChatCase04CargoRoute,
+  ApiChatCase04CoolantRoute: ApiChatCase04CoolantRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
