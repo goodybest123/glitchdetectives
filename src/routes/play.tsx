@@ -71,13 +71,13 @@ function PlayPage() {
                 Are the slices fair?
               </p>
             </div>
-            <button
-              type="button"
+            <Link
+              to="/play/case-01"
               className="mt-8 inline-flex w-fit items-center gap-2 text-sm font-bold tracking-wider text-neutral-900 transition-transform hover:translate-x-1"
             >
               INVESTIGATE
               <span aria-hidden>→</span>
-            </button>
+            </Link>
           </article>
 
           {/* Pending cases */}
