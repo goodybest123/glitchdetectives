@@ -1,63 +1,43 @@
-# Case 02: Naming the Pieces (Numerator & Denominator)
+# Case 03: The Shape Shifters
 
-Mirror Case 01's architecture: a case picker with 3 sub-cases sharing one Investigate → Detect → Repair → Explain loop, an AI Socratic chat that unlocks after Repair, per-step marks, and a diagnostic report.
+Three sub-cases teaching equivalent fractions through visual equivalence (no multiplication tables). Same Investigate → Detect → Repair → Explain loop as Cases 01/02, with a shared `[ < ] [ = ] [ > ]` comparator toggle.
 
 ## Sub-cases
 
-1. **Fraction Bar** — bar of 5 blocks (3 green, 2 white), displays `3/2`. Click denominator → highlight. Repair: `−/+` toggle, raise to 5 → `3/5`.
-2. **Energy Crate** — 4 battery slots, 1 filled, displays `4/1`. Click fraction → pulse. Repair: circular Swap button flips to `1/4`.
-3. **Solar Panels** — row of 6 panels, 4 active, sign reads `2/6`. Click numerator → highlight. Repair: `−/+` toggle, raise to 4 → `4/6`.
+1. **Fuel Tanks** — `1/2 ? 2/4`, ZED-4 picks `>`. Two vertical tanks, identical blue fill height.
+2. **Garden Beds** — `1/3 ? 2/6`, ZED-4 picks `<`. Two horizontal beds, identical green area.
+3. **Memory Disks** — `3/4 ? 6/8`, ZED-4 picks `<`. Two pie-style disks, identical purple sweep.
 
-All three glitch on a number, not a shape. The Equalizer slider from Case 01 is replaced by a small inline number-control widget per sub-case.
+All three share one mental model: same shaded amount, different slice counts. Target answer is always `=`.
 
-## Files
+## New files
 
-**New**
-- `src/components/case02/cases.ts` — sub-case registry: `id`, `title`, `subtitle`, `emoji`, `chatEndpoint`, `welcomeText`, `bubbles`, `captions`, `conceptMastered`, `Visual` component, `Repair` component, plus `initial` / `target` numbers and a `glitchTarget` ("denominator" | "fraction" | "numerator") to drive Detect highlighting.
-- `src/components/case02/CasePicker.tsx` — 3 cards, solved checkmarks (mirrors Case 01 picker, restyled headers to "CASE 02.0X").
-- `src/components/case02/FractionBarSVG.tsx` — 5 rounded blocks (3 pastel green, 2 white), big `numerator/denominator` next to it. Props: `{ numerator, denominator, highlight: "none" | "numerator" | "denominator" | "fraction", onClickPart(part), interactive }`.
-- `src/components/case02/EnergyCrateSVG.tsx` — 4 battery slots in a rounded crate, glowing-green battery in 1 slot, large digital `top/bottom` display. Same prop shape; `highlight="fraction"` pulses both numbers.
-- `src/components/case02/SolarPanelsSVG.tsx` — 6 panels (4 yellow glow, 2 grey), "Active Solar Power: top/bottom" sign.
-- `src/components/case02/NumberStepper.tsx` — soft `[ − ] [ value ] [ + ]` control, bounded by `min`/`max`, disabled at target. Used by Fraction Bar and Solar Panels.
-- `src/components/case02/SwapControl.tsx` — circular swap button used by Energy Crate; single click flips numerator/denominator with a 400ms transition.
-- `src/components/case02/DiagnosticReport.tsx` — Case-02 variant (or reuse Case 01's by passing it through). Keeping a thin Case-02 wrapper is cleaner; same marks shape `{investigate, detect, repair, explain}` totalling /20.
-- `src/routes/api/chat/case-02-bar.ts` — Socratic prompt focused on "the bottom number counts ALL the pieces".
-- `src/routes/api/chat/case-02-crate.ts` — Socratic prompt on "the total goes on the bottom, the filled goes on top".
-- `src/routes/api/chat/case-02-panels.ts` — Socratic prompt on "the top number counts the active pieces you were asked about".
-- `src/routes/play.case-02.tsx` — page mirroring `play.case-01.tsx`: picker → `SubCaseRunner` keyed by sub-case id. Manages stage, the current number value (or swap state), AI chat, per-case marks, and the report.
+- `src/components/case03/cases.ts` — registry: `id`, `title`, `subtitle`, `emoji`, `Visual`, `leftFraction`, `rightFraction`, `wrongOperator` (`>` or `<`), `chatEndpoint`, `bubbles`, `captions`, `welcomeText`, `conceptMastered`, `successBanner`.
+- `src/components/case03/FuelTanksSVG.tsx` — two vertical tanks; props: `dividersVisible` (animated fade for Repair success).
+- `src/components/case03/GardenBedsSVG.tsx` — two horizontal beds, same fade behavior.
+- `src/components/case03/MemoryDisksSVG.tsx` — two circular disks with slice lines; same fade behavior; gentle 360° rotation on solve.
+- `src/components/case03/ComparatorToggle.tsx` — three soft buttons `[ < ] [ = ] [ > ]`, disabled state when solved.
+- `src/components/case03/ComparatorSymbol.tsx` — large center symbol; clickable in Detect; highlights pastel yellow.
+- `src/components/case03/CasePicker.tsx` — sub-case grid mirroring Case 02.
+- `src/routes/api/chat/case-03-tanks.ts`
+- `src/routes/api/chat/case-03-garden.ts`
+- `src/routes/api/chat/case-03-disks.ts`
 
-**Edited**
-- `src/routes/play.index.tsx` — promote Case 02 to a second ACTIVE CASE card (`/play/case-02`); remove it from `PENDING_CASES`.
+Each AI route: warm Grade-1 voice, kid words only ("same amount", "smaller pieces", "more cuts"), forbid words like "denominator/numerator/multiply", emit `[[CASE_SOLVED]]` once the child shows they understand "more pieces just means smaller pieces, not more stuff".
 
-## State & flow (per sub-case)
+## Edited files
 
-```
-stage: "investigate" | "detect" | "repair" | "explain" | "solved"
-value: number          // current denominator OR numerator (depending on sub-case)
-swapped: boolean       // crate only
-```
+- `src/routes/play.case-03.tsx` — new page: `CasePicker` → `SubCaseRunner` keyed by sub-case id. Stages: `investigate | detect | repair | explain | solved`. State: `operator` (`<`|`=`|`>`), `dividersVisible`, `pulseKey`, per-case marks, chat. Marks rubric per sub-case (/20): investigate 5 (on entering Detect), detect 5 (clicking the wrong symbol), repair 5 (selecting `=` on first try → 5; second → 3; third+ → 1), explain 5 (heuristic reused from Case 01/02 on `[[CASE_SOLVED]]`).
+- `src/routes/play.index.tsx` — promote Case 03 from PENDING to ACTIVE, route `/play/case-03`.
+- Reuse `case01/CaseStepper.tsx`, `ZedBubble.tsx`, `SpeakButton.tsx`, `MicButton.tsx`, and Case 01's `DiagnosticReport.tsx` (already parametrized).
 
-- INVESTIGATE: Visual is interactive; clicking the wrong number(s) → `setStage("detect")` + brief pulse.
-- DETECT: target number highlights soft pastel yellow; ZED-4 bubble updates; stepper or swap control appears.
-- REPAIR: each step adjusts `value` (or toggles `swapped`). When `value === target` (or `swapped === true`), success animation + green banner "Logic Repaired: …" and `setStage("explain")`.
-- EXPLAIN: chat unlocks with the case's `welcomeText`. Detect `[[CASE_SOLVED]]` token from assistant → `setStage("solved")`, mark sub-case solved, scroll to report.
+## Interaction details
 
-## Marks rubric (per sub-case, total /20)
-
-- investigate: 5 once they leave Investigate.
-- detect: 5 once a stepper/swap interaction begins.
-- repair: 5 if reached target in minimum steps (bar: 3 clicks, crate: 1 swap, panels: 2 clicks); 4 if within +1 extra; 3 otherwise.
-- explain: same heuristic as Case 01 (turns + longest message word count).
-
-## Design notes (matches Case 01)
-
-- White background, generous whitespace, rounded-3xl card with soft shadow.
-- Reuse `CaseStepper`, `ZedBubble`, `SpeakButton`, `MicButton` from `case01/`.
-- Pastel green `#bbf7d0`, soft yellow highlight `#fef9c3`, success banner `#dcfce7` / `#166534`.
-- No timers, no scoreboards, no harsh red.
+- **Investigate**: large wrong operator visible between visuals, ZED-4 bubble shows the wrong claim. Clicking the operator advances to Detect.
+- **Detect**: operator pulses pastel yellow; bubble updates to "Glitch Detected!"; `ComparatorToggle` slides in below.
+- **Repair**: selecting `=` updates the symbol, fades internal divider lines for ~2s (Memory Disks also rotates 360°), shows green success banner with `successBanner` text, unlocks chat.
+- **Explain**: chat panel enables, auto-posts the case's `welcomeText` as first ZED-4 message. On `[[CASE_SOLVED]]`, mark sub-case solved and show diagnostic report with "Try another case" → returns to picker.
 
 ## Out of scope
 
-- No persistence between sessions.
-- No changes to Case 01 or shared chat components.
-- No new audio/voice features.
+No persistence between sessions, no changes to Case 01/02, no new audio assets, no leaderboard.
