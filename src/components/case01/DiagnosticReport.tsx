@@ -64,6 +64,29 @@ export function DiagnosticReport({ studentQuotes, turnCount, marks }: Props) {
         <SpeakButton text={`ZED-4 says: ${thanks}`} />
       </div>
 
+      {/* Marks */}
+      <div className="mt-6 rounded-2xl border border-neutral-100 bg-[#f8fafc] p-5">
+        <div className="flex items-center justify-between border-b border-neutral-200/70 pb-3">
+          <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">
+            Marks
+          </div>
+          <span className="rounded-full bg-[#dcfce7] px-3 py-1 text-sm font-bold text-[#166534]">
+            {total} / {maxTotal}
+          </span>
+        </div>
+        <ul className="mt-4 space-y-2.5">
+          <StepMark label="Investigate" score={marks.investigate} />
+          <StepMark label="Detect" score={marks.detect} />
+          <StepMark label="Repair" score={marks.repair} />
+          <StepMark label="Explain" score={marks.explain} />
+        </ul>
+        <div className="mt-4 border-t border-neutral-200/70 pt-3 text-sm font-semibold text-neutral-700">
+          {remarkFor(total)}
+        </div>
+      </div>
+
+
+
       {/* Concept mastered */}
       <div className="mt-6">
         <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">
