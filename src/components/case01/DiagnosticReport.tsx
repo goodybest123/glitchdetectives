@@ -1,12 +1,31 @@
 import { Link } from "@tanstack/react-router";
 import { SpeakButton } from "./SpeakButton";
 
+export type CaseMarks = {
+  investigate: number;
+  detect: number;
+  repair: number;
+  explain: number;
+};
+
 type Props = {
   studentQuotes: string[];
   turnCount: number;
+  marks: CaseMarks;
 };
 
-export function DiagnosticReport({ studentQuotes, turnCount }: Props) {
+const MAX_PER_STEP = 5;
+
+function remarkFor(total: number) {
+  if (total >= 18) return "Outstanding detective work!";
+  if (total >= 14) return "Great reasoning, Detective.";
+  return "Nice work — you closed the case!";
+}
+
+export function DiagnosticReport({ studentQuotes, turnCount, marks }: Props) {
+  const total =
+    marks.investigate + marks.detect + marks.repair + marks.explain;
+  const maxTotal = MAX_PER_STEP * 4;
   const evidenceStatement =
     [...studentQuotes].sort((a, b) => b.length - a.length)[0] ?? "";
 
