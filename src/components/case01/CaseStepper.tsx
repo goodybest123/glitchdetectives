@@ -1,6 +1,6 @@
-type Stage = "investigate" | "detect" | "repair" | "explain";
+export type Stage = "investigate" | "detect" | "repair" | "explain" | "solved";
 
-const STEPS: { id: Stage; label: string; desc: string }[] = [
+const STEPS: { id: Exclude<Stage, "solved">; label: string; desc: string }[] = [
   { id: "investigate", label: "Investigate", desc: "Scan the completed solution." },
   { id: "detect", label: "Detect", desc: "Find where the logic broke." },
   { id: "repair", label: "Repair", desc: "Fix the mistake." },
@@ -8,7 +8,8 @@ const STEPS: { id: Stage; label: string; desc: string }[] = [
 ];
 
 export function CaseStepper({ stage }: { stage: Stage }) {
-  const activeIndex = STEPS.findIndex((s) => s.id === stage);
+  const activeIndex =
+    stage === "solved" ? STEPS.length : STEPS.findIndex((s) => s.id === stage);
 
   return (
     <ol className="mb-8 grid grid-cols-4 gap-2 sm:gap-4" aria-label="Case progress">
