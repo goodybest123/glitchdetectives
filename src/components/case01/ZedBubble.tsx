@@ -1,9 +1,12 @@
+import { SpeakButton } from "./SpeakButton";
+
 type ZedBubbleProps = {
   message: string;
   tone?: "neutral" | "alert" | "happy";
+  speakable?: boolean;
 };
 
-export function ZedBubble({ message, tone = "neutral" }: ZedBubbleProps) {
+export function ZedBubble({ message, tone = "neutral", speakable = false }: ZedBubbleProps) {
   const bubbleBg =
     tone === "alert"
       ? "bg-[#fff4d6] border-[#f5d97a]"
@@ -29,10 +32,13 @@ export function ZedBubble({ message, tone = "neutral" }: ZedBubbleProps) {
       </div>
       {/* Speech bubble */}
       <div
-        className={`relative max-w-md rounded-2xl border px-4 py-3 text-sm sm:text-base text-neutral-800 shadow-sm ${bubbleBg}`}
+        className={`relative flex max-w-md items-start gap-3 rounded-2xl border px-4 py-3 text-sm sm:text-base text-neutral-800 shadow-sm ${bubbleBg}`}
       >
-        <span className="font-semibold text-neutral-900">ZED-4: </span>
-        {message}
+        <div className="flex-1">
+          <span className="font-semibold text-neutral-900">ZED-4: </span>
+          {message}
+        </div>
+        {speakable && <SpeakButton text={`ZED-4 says: ${message}`} />}
       </div>
     </div>
   );
