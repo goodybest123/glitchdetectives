@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { FuelTanksSVG } from "./FuelTanksSVG";
 import { GardenBedsSVG } from "./GardenBedsSVG";
 import { MemoryDisksSVG } from "./MemoryDisksSVG";
@@ -11,6 +11,8 @@ export type VisualProps = {
   dividersVisible: boolean;
   /** Bump to replay any "solved" animation. */
   spinKey?: number;
+  /** Rendered between the two shapes (typically the comparator). */
+  middleSlot?: ReactNode;
 };
 
 export type Fraction = { n: number; d: number };
