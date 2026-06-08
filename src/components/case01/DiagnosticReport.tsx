@@ -149,7 +149,7 @@ export function DiagnosticReport({
       {/* Next */}
       <div className="mt-6 rounded-2xl bg-[#fff4cc] px-5 py-4 text-sm text-[#7c5e10]">
         <span className="font-bold">Next up: </span>
-        Case 02 — comparing fair shares.
+        {nextCaseLabel}
       </div>
 
       {/* Actions */}
@@ -161,6 +161,15 @@ export function DiagnosticReport({
         >
           PRINT REPORT
         </button>
+        {onTryAnother && (
+          <button
+            type="button"
+            onClick={onTryAnother}
+            className="rounded-full bg-[#10b981] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-[#0ea371]"
+          >
+            TRY ANOTHER CASE
+          </button>
+        )}
         <Link
           to="/play"
           className="rounded-full bg-[#1f2937] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-black"
