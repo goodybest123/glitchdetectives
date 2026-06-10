@@ -92,8 +92,9 @@ export function DiagnosticReport({
           <StepMark label="Repair" score={marks.repair} />
           <StepMark label="Explain" score={marks.explain} />
         </ul>
-        <div className="mt-4 border-t border-neutral-200/70 pt-3 text-sm font-semibold text-neutral-700">
-          {remarkFor(total)}
+        <div className="mt-4 flex items-center gap-2 border-t border-neutral-200/70 pt-3 text-sm font-semibold text-neutral-700">
+          <span>{remarkFor(total)}</span>
+          <SpeakButton text={remarkFor(total)} />
         </div>
       </div>
 
@@ -106,8 +107,10 @@ export function DiagnosticReport({
         </div>
         <div className="mt-2 flex items-center gap-2 text-lg font-semibold text-neutral-900">
           <CheckDot /> {conceptMastered}
+          <SpeakButton text={`Concept mastered. ${conceptMastered}`} />
         </div>
       </div>
+
 
       {/* Evidence */}
       <div className="mt-6">
@@ -147,10 +150,11 @@ export function DiagnosticReport({
       )}
 
       {/* Next */}
-      <div className="mt-6 rounded-2xl bg-[#fff4cc] px-5 py-4 text-sm text-[#7c5e10]">
-        <span className="font-bold">Next up: </span>
-        {nextCaseLabel}
+      <div className="mt-6 flex items-center gap-2 rounded-2xl bg-[#fff4cc] px-5 py-4 text-sm text-[#7c5e10]">
+        <span><span className="font-bold">Next up: </span>{nextCaseLabel}</span>
+        <SpeakButton text={`Next up. ${nextCaseLabel}`} />
       </div>
+
 
       {/* Actions */}
       <div className="mt-6 flex flex-wrap items-center justify-end gap-3 print:hidden">
