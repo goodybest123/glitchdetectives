@@ -277,7 +277,12 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <Visual repaired={repaired} pulseKey={pulseKey} />
+            <div
+              onClick={stage === "detect" ? handleResultClick : undefined}
+              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+            >
+              <Visual repaired={repaired} pulseKey={pulseKey} />
+            </div>
 
             <div className="mt-6">
               <EquationDisplay
@@ -286,7 +291,7 @@ function SubCaseRunner({
                 operator={c.operator}
                 result={displayedResult}
                 resultState={resultState}
-                clickable={stage === "investigate" && verdictPassed}
+                clickable={stage === "detect"}
                 onResultClick={handleResultClick}
               />
             </div>
@@ -306,7 +311,7 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {(stage === "detect" || stage === "repair") && !repaired && (
+            {stage === "repair" && !repaired && (
               <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
                 <RepairToolButton
                   label={c.toolLabel}
