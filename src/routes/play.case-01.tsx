@@ -209,7 +209,14 @@ function SubCaseRunner({
   );
 
   const marks = useMemo(() => {
-    const investigate = stage === "investigate" ? 0 : 5;
+    const investigate =
+      stage === "investigate"
+        ? 0
+        : wrongVerdictCount === 0
+          ? 5
+          : wrongVerdictCount === 1
+            ? 4
+            : 3;
     const detect = stage === "investigate" ? 0 : 5;
     const repair =
       equalized >= 0.995 ? 5 : equalized >= 0.85 ? 4 : equalized >= 0.6 ? 3 : 2;
