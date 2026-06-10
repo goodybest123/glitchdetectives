@@ -316,12 +316,24 @@ function SubCaseRunner({
               denominator={denominator}
               highlight={highlight}
               onClickPart={handleGlitchClick}
-              interactive={stage === "investigate"}
+              interactive={stage === "investigate" && verdictPassed}
               pulseKey={pulseKey}
             />
 
-            <CaptionLine text={caption} />
+            {stage === "investigate" && !verdictPassed && (
+              <VerdictButtons
+                onGlitch={handleVerdictGlitch}
+                onNoGlitch={handleVerdictNoGlitch}
+                shakeKey={verdictShakeKey}
+                wrongCount={wrongVerdictCount}
+              />
+            )}
+
+            {!(stage === "investigate" && !verdictPassed) && (
+              <CaptionLine text={caption} />
+            )}
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
+
 
             {(stage === "detect" || stage === "repair") && !atTarget && (
               <div className="mt-8 rounded-2xl bg-[#f8fafc] p-5">
