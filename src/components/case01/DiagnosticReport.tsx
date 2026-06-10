@@ -150,10 +150,11 @@ export function DiagnosticReport({
       )}
 
       {/* Next */}
-      <div className="mt-6 rounded-2xl bg-[#fff4cc] px-5 py-4 text-sm text-[#7c5e10]">
-        <span className="font-bold">Next up: </span>
-        {nextCaseLabel}
+      <div className="mt-6 flex items-center gap-2 rounded-2xl bg-[#fff4cc] px-5 py-4 text-sm text-[#7c5e10]">
+        <span><span className="font-bold">Next up: </span>{nextCaseLabel}</span>
+        <SpeakButton text={`Next up. ${nextCaseLabel}`} />
       </div>
+
 
       {/* Actions */}
       <div className="mt-6 flex flex-wrap items-center justify-end gap-3 print:hidden">
