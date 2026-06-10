@@ -178,9 +178,20 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleDenominatorClick = () => {
-    if (stage !== "investigate") return;
+    if (stage !== "investigate" || !verdictPassed) return;
     setStage("detect");
     setPulseKey((k) => k + 1);
+  };
+
+  const handleVerdictGlitch = () => {
+    if (stage !== "investigate" || verdictPassed) return;
+    setVerdictPassed(true);
+  };
+
+  const handleVerdictNoGlitch = () => {
+    if (stage !== "investigate" || verdictPassed) return;
+    setWrongVerdictCount((n) => n + 1);
+    setVerdictShakeKey((k) => k + 1);
   };
 
   const handleStepperChange = (v: number) => {
