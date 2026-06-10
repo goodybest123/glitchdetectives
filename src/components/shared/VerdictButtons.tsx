@@ -60,31 +60,40 @@ export function VerdictButtons({
           }
         `}</style>
 
-        <button
-          type="button"
-          onClick={onGlitch}
-          disabled={disabled}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-[#dc2626] px-6 py-3 text-sm font-bold tracking-wider text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#b91c1c] disabled:bg-neutral-300 disabled:hover:translate-y-0"
-        >
-          <span aria-hidden>⚠️</span>
-          THERE IS A GLITCH
-        </button>
+        <div className="flex items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={onGlitch}
+            disabled={disabled}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#dc2626] px-6 py-3 text-sm font-bold tracking-wider text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#b91c1c] disabled:bg-neutral-300 disabled:hover:translate-y-0"
+          >
+            <span aria-hidden>⚠️</span>
+            THERE IS A GLITCH
+          </button>
+          <SpeakButton text="There is a glitch" />
+        </div>
 
-        <button
-          type="button"
-          onClick={onNoGlitch}
-          disabled={disabled}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-[#10b981] px-6 py-3 text-sm font-bold tracking-wider text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#059669] disabled:bg-neutral-300 disabled:hover:translate-y-0"
-        >
-          <span aria-hidden>✅</span>
-          NO GLITCH
-        </button>
+        <div className="flex items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={onNoGlitch}
+            disabled={disabled}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#10b981] px-6 py-3 text-sm font-bold tracking-wider text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#059669] disabled:bg-neutral-300 disabled:hover:translate-y-0"
+          >
+            <span aria-hidden>✅</span>
+            NO GLITCH
+          </button>
+          <SpeakButton text="No glitch" />
+        </div>
       </div>
 
       {wrongCount > 0 && (
-        <p className="mt-3 text-center text-xs font-medium text-[#b91c1c]">
-          Look again, Detective — something doesn't add up.
-        </p>
+        <div className="mt-3 flex items-center justify-center gap-2">
+          <p className="text-center text-xs font-medium text-[#b91c1c]">
+            Look again, Detective — something doesn't add up.
+          </p>
+          <SpeakButton text="Look again, Detective — something doesn't add up." />
+        </div>
       )}
     </div>
   );
