@@ -246,7 +246,7 @@ function SubCaseRunner({
       else explain = 3;
     }
     return { investigate, detect, repair, explain };
-  }, [stage, atTarget, attempts, studentQuotes, c.wrongDenominator, c.correctDenominator]);
+  }, [stage, atTarget, attempts, studentQuotes, c.wrongDenominator, c.correctDenominator, wrongVerdictCount]);
 
   const zed =
     stage === "investigate" || stage === "detect" || (stage === "repair" && !atTarget)
