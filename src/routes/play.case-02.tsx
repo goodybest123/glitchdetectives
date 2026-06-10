@@ -182,12 +182,23 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleGlitchClick = (part: GlitchPart) => {
-    if (stage !== "investigate") return;
+    if (stage !== "investigate" || !verdictPassed) return;
     // Any click advances to detect; pulse only if it matches the target part.
     setStage("detect");
     setPulseKey((k) => k + 1);
     // Silently ignore which part was clicked — highlight is driven by glitchTarget.
     void part;
+  };
+
+  const handleVerdictGlitch = () => {
+    if (stage !== "investigate" || verdictPassed) return;
+    setVerdictPassed(true);
+  };
+
+  const handleVerdictNoGlitch = () => {
+    if (stage !== "investigate" || verdictPassed) return;
+    setWrongVerdictCount((n) => n + 1);
+    setVerdictShakeKey((k) => k + 1);
   };
 
   const adjustNumerator = (next: number) => {
