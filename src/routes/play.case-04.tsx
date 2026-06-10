@@ -282,25 +282,30 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <Visual
-              solved={solvedVisual}
-              pulseKey={pulseKey}
-              middleSlot={
-                <FractionDisplayLine
-                  left={c.left}
-                  right={c.right}
-                  middle={
-                    <ComparatorSymbol
-                      operator={operator}
-                      highlight={stage === "detect" || stage === "repair"}
-                      clickable={stage === "investigate" && verdictPassed}
-                      onClick={handleSymbolClick}
-                      pulseKey={pulseKey}
-                    />
-                  }
-                />
-              }
-            />
+            <div
+              onClick={stage === "detect" ? handleSymbolClick : undefined}
+              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+            >
+              <Visual
+                solved={solvedVisual}
+                pulseKey={pulseKey}
+                middleSlot={
+                  <FractionDisplayLine
+                    left={c.left}
+                    right={c.right}
+                    middle={
+                      <ComparatorSymbol
+                        operator={operator}
+                        highlight={stage === "detect" || stage === "repair"}
+                        clickable={stage === "detect"}
+                        onClick={handleSymbolClick}
+                        pulseKey={pulseKey}
+                      />
+                    }
+                  />
+                }
+              />
+            </div>
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
@@ -317,7 +322,7 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {(stage === "detect" || stage === "repair") && !atTarget && (
+            {stage === "repair" && !atTarget && (
               <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
                 <ComparatorToggle value={operator} onChange={handleOperatorChange} />
               </div>
