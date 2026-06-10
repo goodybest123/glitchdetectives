@@ -258,7 +258,8 @@ function SubCaseRunner({
               pulseKey={pulseKey}
             />
 
-            <p className="mt-6 text-center text-neutral-600">{caption}</p>
+            <CaptionLine text={caption} />
+            {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
             {(stage === "detect" ||
               stage === "repair" ||
@@ -289,11 +290,7 @@ function SubCaseRunner({
               </div>
             )}
 
-            {(stage === "explain" || stage === "solved") && (
-              <div className="mt-6 rounded-2xl bg-[#dcfce7] px-5 py-4 text-center text-sm font-semibold text-[#166534]">
-                Logic Repaired: The parts are now equal.
-              </div>
-            )}
+            {(stage === "explain" || stage === "solved") && <SuccessBanner />}
           </div>
 
           {stage === "solved" && (
