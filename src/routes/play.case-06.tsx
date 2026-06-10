@@ -13,6 +13,7 @@ import { RepairToolButton } from "@/components/case06/RepairToolButton";
 import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
+import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,
@@ -113,6 +114,9 @@ function SubCaseRunner({
   );
 
   const [stage, setStage] = useState<Stage>("investigate");
+  const [verdictPassed, setVerdictPassed] = useState(false);
+  const [wrongVerdictCount, setWrongVerdictCount] = useState(0);
+  const [verdictShakeKey, setVerdictShakeKey] = useState(0);
   const [repaired, setRepaired] = useState(false);
   const [pulseKey, setPulseKey] = useState(0);
   const composerRef = useRef<HTMLTextAreaElement>(null);
@@ -162,9 +166,20 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleResultClick = () => {
-    if (stage !== "investigate") return;
+    if (stage !== "investigate" || !verdictPassed) return;
     setStage("detect");
     setPulseKey((k) => k + 1);
+  };
+
+  const handleVerdictGlitch = () => {
+    if (stage !== "investigate" || verdictPassed) return;
+    setVerdictPassed(true);
+  };
+
+  const handleVerdictNoGlitch = () => {
+    if (stage !== "investigate" || verdictPassed) return;
+    setWrongVerdictCount((n) => n + 1);
+    setVerdictShakeKey((k) => k + 1);
   };
 
   const handleRepair = () => {
@@ -190,7 +205,14 @@ function SubCaseRunner({
   );
 
   const marks = useMemo(() => {
-    const investigate = stage === "investigate" ? 0 : 5;
+    const investigate =
+      stage === "investigate"
+        ? 0
+        : wrongVerdictCount === 0
+          ? 5
+          : wrongVerdictCount === 1
+            ? 4
+            : 3;
     const detect = stage === "investigate" || stage === "detect" ? 0 : 5;
     const repair = repaired ? 5 : 0;
     let explain = 0;
@@ -205,7 +227,7 @@ function SubCaseRunner({
       else explain = 3;
     }
     return { investigate, detect, repair, explain };
-  }, [stage, repaired, studentQuotes]);
+  }, [stage, repaired, studentQuotes, wrongVerdictCount]);
 
   const zed =
     stage === "investigate" || stage === "detect" || stage === "repair"
@@ -263,13 +285,25 @@ function SubCaseRunner({
                 operator={c.operator}
                 result={displayedResult}
                 resultState={resultState}
-                clickable={stage === "investigate"}
+                clickable={stage === "investigate" && verdictPassed}
                 onResultClick={handleResultClick}
               />
             </div>
 
-            <CaptionLine text={caption} />
+            {stage === "investigate" && !verdictPassed && (
+              <VerdictButtons
+                onGlitch={handleVerdictGlitch}
+                onNoGlitch={handleVerdictNoGlitch}
+                shakeKey={verdictShakeKey}
+                wrongCount={wrongVerdictCount}
+              />
+            )}
+
+            {!(stage === "investigate" && !verdictPassed) && (
+              <CaptionLine text={caption} />
+            )}
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
+
 
             {(stage === "detect" || stage === "repair") && !repaired && (
               <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">

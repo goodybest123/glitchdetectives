@@ -11,6 +11,7 @@ import { CasePicker } from "@/components/case01/CasePicker";
 import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
+import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,
@@ -113,6 +114,9 @@ function SubCaseRunner({
   );
 
   const [stage, setStage] = useState<Stage>("investigate");
+  const [verdictPassed, setVerdictPassed] = useState(false);
+  const [wrongVerdictCount, setWrongVerdictCount] = useState(0);
+  const [verdictShakeKey, setVerdictShakeKey] = useState(0);
   const [equalized, setEqualized] = useState(0);
   const [pulseKey, setPulseKey] = useState(0);
   const composerRef = useRef<HTMLTextAreaElement>(null);
@@ -174,9 +178,20 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleGlitchClick = () => {
-    if (stage !== "investigate") return;
+    if (stage !== "investigate" || !verdictPassed) return;
     setStage("detect");
     setPulseKey((k) => k + 1);
+  };
+
+  const handleVerdictGlitch = () => {
+    if (stage !== "investigate" || verdictPassed) return;
+    setVerdictPassed(true);
+  };
+
+  const handleVerdictNoGlitch = () => {
+    if (stage !== "investigate" || verdictPassed) return;
+    setWrongVerdictCount((n) => n + 1);
+    setVerdictShakeKey((k) => k + 1);
   };
 
   const isSending = status === "submitted" || status === "streaming";
@@ -194,7 +209,14 @@ function SubCaseRunner({
   );
 
   const marks = useMemo(() => {
-    const investigate = stage === "investigate" ? 0 : 5;
+    const investigate =
+      stage === "investigate"
+        ? 0
+        : wrongVerdictCount === 0
+          ? 5
+          : wrongVerdictCount === 1
+            ? 4
+            : 3;
     const detect = stage === "investigate" ? 0 : 5;
     const repair =
       equalized >= 0.995 ? 5 : equalized >= 0.85 ? 4 : equalized >= 0.6 ? 3 : 2;
@@ -210,7 +232,7 @@ function SubCaseRunner({
       else explain = 3;
     }
     return { investigate, detect, repair, explain };
-  }, [stage, equalized, studentQuotes]);
+  }, [stage, equalized, studentQuotes, wrongVerdictCount]);
 
   const zed =
     stage === "investigate" || stage === "detect" || stage === "repair"
@@ -254,12 +276,24 @@ function SubCaseRunner({
             <Visual
               equalized={equalized}
               onGlitchClick={handleGlitchClick}
-              interactive={stage === "investigate"}
+              interactive={stage === "investigate" && verdictPassed}
               pulseKey={pulseKey}
             />
 
-            <CaptionLine text={caption} />
+            {stage === "investigate" && !verdictPassed && (
+              <VerdictButtons
+                onGlitch={handleVerdictGlitch}
+                onNoGlitch={handleVerdictNoGlitch}
+                shakeKey={verdictShakeKey}
+                wrongCount={wrongVerdictCount}
+              />
+            )}
+
+            {!(stage === "investigate" && !verdictPassed) && (
+              <CaptionLine text={caption} />
+            )}
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
+
 
             {(stage === "detect" ||
               stage === "repair" ||
