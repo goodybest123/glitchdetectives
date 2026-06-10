@@ -114,6 +114,9 @@ function SubCaseRunner({
   );
 
   const [stage, setStage] = useState<Stage>("investigate");
+  const [verdictPassed, setVerdictPassed] = useState(false);
+  const [wrongVerdictCount, setWrongVerdictCount] = useState(0);
+  const [verdictShakeKey, setVerdictShakeKey] = useState(0);
   const [repaired, setRepaired] = useState(false);
   const [pulseKey, setPulseKey] = useState(0);
   const composerRef = useRef<HTMLTextAreaElement>(null);
