@@ -1,59 +1,70 @@
-# Verdict Buttons: "Is there a glitch?" gating across all 6 cases
+# Fix verdict → detect → repair flow across all 6 cases
 
-## New flow (replaces current investigate → detect)
+## What's wrong today
+
+- After "THERE IS A GLITCH" the child stays on `investigate` (verdict just unlocks the result click). The stage label should move to **Detect**.
+- The Detect caption still says "Click on the pizza where the sharing is not fair" — should be a short "Click on the glitch."
+- Only the equation result is clickable. The visual (pizza slice, crate, beam, etc.) should also count.
+- Clicking the glitch currently jumps straight to `detect`; it should move to **Repair** so the Repair tool button is the next step.
+
+## New flow
 
 ```
-INVESTIGATE  →  VERDICT       →  DETECT             →  REPAIR → EXPLAIN → SOLVED
-ZED-4 claim     2 buttons:       Click the actual      (existing)
-                · There IS a     glitch spot on the
-                  glitch         visual (existing
-                · No glitch      click-the-thing
-                                 interaction)
+INVESTIGATE (ZED-4 claim + Verdict buttons)
+   └─ click "THERE IS A GLITCH" → stage = DETECT, caption = "Click on the glitch."
+DETECT (visual + result are both clickable)
+   └─ click either → stage = REPAIR, Repair tool button appears
+REPAIR
+   └─ tap repair tool → repaired = true → stage = EXPLAIN
+EXPLAIN → SOLVED
 ```
 
-- Tapping **"There IS a glitch"** advances to the existing DETECT stage where the visual becomes interactive and the child clicks the glitchy area (pizza slice, equation result, mismatched piece, etc.) → this then unlocks REPAIR exactly as today.
-- Tapping **"No glitch"** is wrong: the buttons row shakes, a small penalty is recorded (investigate score drops by 1, min 3), the child can try again. ZED-4 stays silent.
+## Changes
 
-## New shared component
+### 1. Route files (all 6: `src/routes/play.case-0X.tsx`)
 
-`src/components/shared/VerdictButtons.tsx` — two large, kid-friendly buttons under the visual with a small prompt ("Your verdict, Detective?") and a speaker. Props: `onGlitch()`, `onNoGlitch()`, `shakeKey` (number that triggers a shake animation when bumped), `disabled`.
+- `handleVerdictGlitch`: also set `setStage("detect")` (not just `verdictPassed`).
+- New `handleGlitchSpotClick` (or reuse existing detect-click): when `stage === "detect"`, advance to `"repair"` and pulse. Wire it to BOTH the visual click and the equation result click.
+- Equation/visual `clickable` prop: true while `stage === "detect"` (was `investigate && verdictPassed`).
+- Existing `handleRepair` already moves repair→explain; unchanged.
+- Update `showDetective` / caption gating so the Detective callout + "Click on the glitch" caption show during `detect`, and the Repair-tool block shows only during `repair`.
 
-## Per-route changes (cases 01–06)
+### 2. Visuals — make them clickable in Detect
 
-Each `play.case-0X.tsx` needs:
+Each case's primary SVG/visual component gets an optional `onGlitchClick` (or wrapping `<button>` in the route). Cases:
+- 01 Pizza, Chocolate, Canvas
+- 02 Fraction bar, Crate, Panels
+- 03 Tanks, Garden, Disks (these already may use a comparator click — keep that path, also accept a visual click)
+- 04 Beams, Coolant, Cargo (balance scale)
+- 05 Conveyor, Assembly, Coolant drain
+- 06 Blueprint, Paint, Circuit
 
-1. Add `"verdict"` as an intermediate UI sub-state. Implementation: keep `Stage` as-is and use a local `verdictPassed` boolean. Initial state: stage = `investigate`, `verdictPassed = false`.
-2. ZED-4's confident-wrong claim remains visible during INVESTIGATE. **The visual is NOT yet interactive** until the verdict is given correctly.
-3. Render `<VerdictButtons>` directly under the visual whenever `stage === "investigate" && !verdictPassed`.
-4. On "There IS a glitch":
-   - set `verdictPassed = true`
-   - advance to DETECT (`setStage("detect")`)
-   - the existing visual click-to-detect handler (`onGlitchClick`, `onResultClick`, etc.) is then enabled exactly as today.
-5. On "No glitch":
-   - bump `wrongVerdictCount` (cap at 2 for scoring)
-   - bump `shakeKey` so the buttons shake
-   - stay in INVESTIGATE
-6. Move the existing `DetectiveCallout` ("Click the pizza slice that's unfair…") so it appears only during DETECT (i.e. after the verdict passes), not during INVESTIGATE. The callout stays — it's now the prompt for *where* to click.
-7. Scoring: in the `marks` memo, deduct from `investigate` based on `wrongVerdictCount` (5 if zero wrong, 4 if one wrong, 3 if two+).
+Simplest implementation: wrap the rendered visual in a `<button type="button" disabled={stage !== "detect"}>` inside the route file rather than editing each SVG component. Adds a soft hover ring when active.
 
-Cases that currently use `handleResultClick` on the equation result (cases 05, 06) and cases that use `onGlitchClick` on the SVG (cases 01–04) all follow the same pattern — only the handler name differs.
+### 3. Captions (`src/components/case0X/cases.ts`)
 
-## CaptionLine copy tweak
+Change every `captions.detect` to a short generic line. Proposed copy (kid-friendly, with light per-world flavor — speakable via existing CaptionLine):
 
-Update each `cases.ts` `captions.investigate` to ask the verdict question instead of telling the child to click the visual, e.g.:
-- Case 01 pizza: "Scan ZED-4's logic. Do you spot a glitch — or is this fair?"
-- Case 05 conveyor: "Scan the equation. Is ZED-4's math glitched, or is it correct?"
-- Etc. for all 18 sub-cases (3 per case × 6 cases).
+- Case 01: "Click on the glitch."
+- Case 02: "Click on the glitch."
+- Case 03: "Click on the glitch."
+- Case 04: "Click on the glitch."
+- Case 05: "Click on the glitch."
+- Case 06: "Click on the glitch."
 
-The existing `captions.detect` already says "click the …" so it works unchanged for the new DETECT step.
+(If you'd like a tiny bit of theme flavor instead — e.g. "Tap the glitched slice." / "Tap the glitched crate." — say the word and I'll vary per sub-case. Default is the uniform "Click on the glitch.")
 
-## Out of scope (not changing)
+### 4. Scoring
 
-- Repair mechanics, SVGs, AI chat routes, diagnostic report layout, SuccessBanner, audio.
-- The stepper component (`CaseStepper`) keeps the same 5 stages; the verdict is a sub-step inside INVESTIGATE, not a new stage chip.
+No change to the rubric. `detect = 5` once stage advances past detect (already true once stage hits `repair`/`explain`/`solved`).
+
+## Out of scope
+
+- Verdict buttons UI (unchanged).
+- ZED-4 bubble copy, Detective callout copy, SuccessBanner, AI chat routes, SVG internals beyond accepting a click.
+- CaseStepper component (it already renders Detect/Repair as separate stages).
 
 ## Files touched
 
-- New: `src/components/shared/VerdictButtons.tsx`
-- Edited: `src/routes/play.case-01.tsx` … `play.case-06.tsx` (6 files)
-- Edited: `src/components/case0{1..6}/cases.ts` (6 files — caption.investigate copy only)
+- `src/routes/play.case-01.tsx` … `play.case-06.tsx` (6 files): handlers + clickable wrappers + caption gating.
+- `src/components/case01/cases.ts` … `case06/cases.ts` (6 files): `captions.detect` copy only.

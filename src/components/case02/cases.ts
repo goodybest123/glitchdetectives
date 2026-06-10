@@ -65,12 +65,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Observation log entry forty-seven. I scanned the bar and counted exactly 3 painted blocks on top, then exactly 2 blank blocks on the bottom — therefore the fraction is plainly 3 over 2. My report is filed and stamped. This case is solved.",
       detect:
-        "Detective — something here looks wrong. Click the number in the fraction that glitched.",
+        "Click on the glitch.",
       solved: "Logic repaired. The case is yours to close.",
     },
     captions: {
       investigate: "Scan ZED-4's logic. Click the wrong number in the fraction.",
-      detect: "Now use the − and + buttons to fix the bottom number.",
+      detect: "Click on the glitch.",
       repair: "Keep going — the bottom number should count every block.",
       explain: "The chat panel is open. Tell ZED-4 what the bottom number means.",
       solved: "Case closed. Read your diagnostic report below.",
@@ -98,12 +98,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Observation log entry forty-eight. The crate clearly has 4 total slots, so the big number 4 goes on top — the big proud number on top! The 1 battery underneath rides on the bottom like a passenger. My official reading: this crate is 4 over 1 full. I am certain.",
       detect:
-        "Detective — something here looks upside down. Click the fraction if it looks wrong.",
+        "Click on the glitch.",
       solved: "Logic repaired. The crate reads correctly now.",
     },
     captions: {
       investigate: "Look at the fraction. Click it if it seems upside down.",
-      detect: "Tap the Swap button to flip the numbers.",
+      detect: "Click on the glitch.",
       repair: "Swap them so the total sits on the bottom.",
       explain: "The chat panel is open. Tell ZED-4 why the total goes on the bottom.",
       solved: "Case closed. Read your diagnostic report below.",
@@ -130,12 +130,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Observation log entry forty-nine. I looked, I scanned, I counted the panels that were NOT glowing — exactly 2 dark ones — and wrote 2 on top. We are clearly generating 2 over 6 active power. Filed under: definitely correct.",
       detect:
-        "Detective — something looks wrong on the sign. Click the number that glitched.",
+        "Click on the glitch.",
       solved: "Logic repaired. The sign reads correctly.",
     },
     captions: {
       investigate: "Scan the sign. Click the wrong number.",
-      detect: "Use − and + to count the glowing panels.",
+      detect: "Click on the glitch.",
       repair: "Keep going — count only the active panels.",
       explain: "The chat panel is open. Tell ZED-4 which panels to count.",
       solved: "Case closed. Read your diagnostic report below.",

@@ -144,7 +144,7 @@ function SubCaseRunner({
 
   // Auto-advance repair → explain when target hit
   useEffect(() => {
-    if ((stage === "repair" || stage === "detect") && atTarget) {
+    if (stage === "repair" && atTarget) {
       const t = setTimeout(() => setStage("explain"), 500);
       return () => clearTimeout(t);
     }
@@ -182,17 +182,16 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleGlitchClick = (part: GlitchPart) => {
-    if (stage !== "investigate" || !verdictPassed) return;
-    // Any click advances to detect; pulse only if it matches the target part.
-    setStage("detect");
+    if (stage !== "detect") return;
+    setStage("repair");
     setPulseKey((k) => k + 1);
-    // Silently ignore which part was clicked — highlight is driven by glitchTarget.
     void part;
   };
 
   const handleVerdictGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setVerdictPassed(true);
+    setStage("detect");
   };
 
   const handleVerdictNoGlitch = () => {
@@ -202,23 +201,20 @@ function SubCaseRunner({
   };
 
   const adjustNumerator = (next: number) => {
-    if (stage !== "detect" && stage !== "repair") return;
+    if (stage !== "repair") return;
     setStepCount((s) => s + 1);
-    if (stage === "detect") setStage("repair");
     setNumerator(next);
   };
 
   const adjustDenominator = (next: number) => {
-    if (stage !== "detect" && stage !== "repair") return;
+    if (stage !== "repair") return;
     setStepCount((s) => s + 1);
-    if (stage === "detect") setStage("repair");
     setDenominator(next);
   };
 
   const handleSwap = () => {
-    if (stage !== "detect" && stage !== "repair") return;
+    if (stage !== "repair") return;
     setStepCount((s) => s + 1);
-    if (stage === "detect") setStage("repair");
     const a = numerator;
     setNumerator(denominator);
     setDenominator(a);
@@ -311,14 +307,19 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <Visual
-              numerator={numerator}
-              denominator={denominator}
-              highlight={highlight}
-              onClickPart={handleGlitchClick}
-              interactive={stage === "investigate" && verdictPassed}
-              pulseKey={pulseKey}
-            />
+            <div
+              onClick={stage === "detect" ? () => handleGlitchClick(c.glitchTarget) : undefined}
+              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+            >
+              <Visual
+                numerator={numerator}
+                denominator={denominator}
+                highlight={highlight}
+                onClickPart={handleGlitchClick}
+                interactive={stage === "detect"}
+                pulseKey={pulseKey}
+              />
+            </div>
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
@@ -335,7 +336,7 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {(stage === "detect" || stage === "repair") && !atTarget && (
+            {stage === "repair" && !atTarget && (
               <div className="mt-8 rounded-2xl bg-[#f8fafc] p-5">
                 {c.repair === "stepper-denominator" && c.stepperRange && (
                   <NumberStepper

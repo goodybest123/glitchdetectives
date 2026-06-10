@@ -183,14 +183,15 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleSymbolClick = () => {
-    if (stage !== "investigate" || !verdictPassed) return;
-    setStage("detect");
+    if (stage !== "detect") return;
+    setStage("repair");
     setPulseKey((k) => k + 1);
   };
 
   const handleVerdictGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setVerdictPassed(true);
+    setStage("detect");
   };
 
   const handleVerdictNoGlitch = () => {
@@ -200,8 +201,7 @@ function SubCaseRunner({
   };
 
   const handleOperatorChange = (op: Operator) => {
-    if (stage !== "detect" && stage !== "repair") return;
-    if (stage === "detect") setStage("repair");
+    if (stage !== "repair") return;
     setAttempts((a) => a + 1);
     setOperator(op);
   };
@@ -289,19 +289,24 @@ function SubCaseRunner({
             </div>
 
             {/* Tanks/beds/disks with comparator in the middle */}
-            <Visual
-              dividersVisible={dividersVisible}
-              spinKey={spinKey}
-              middleSlot={
-                <ComparatorSymbol
-                  operator={operator}
-                  highlight={stage === "detect" || stage === "repair"}
-                  clickable={stage === "investigate" && verdictPassed}
-                  onClick={handleSymbolClick}
-                  pulseKey={pulseKey}
-                />
-              }
-            />
+            <div
+              onClick={stage === "detect" ? handleSymbolClick : undefined}
+              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+            >
+              <Visual
+                dividersVisible={dividersVisible}
+                spinKey={spinKey}
+                middleSlot={
+                  <ComparatorSymbol
+                    operator={operator}
+                    highlight={stage === "detect" || stage === "repair"}
+                    clickable={stage === "detect"}
+                    onClick={handleSymbolClick}
+                    pulseKey={pulseKey}
+                  />
+                }
+              />
+            </div>
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
@@ -318,7 +323,7 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {(stage === "detect" || stage === "repair") && !atTarget && (
+            {stage === "repair" && !atTarget && (
               <div className="mt-8 flex justify-center rounded-2xl bg-[#f8fafc] p-5">
                 <ComparatorToggle value={operator} onChange={handleOperatorChange} />
               </div>

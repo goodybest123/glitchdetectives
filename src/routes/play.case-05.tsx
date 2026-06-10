@@ -138,7 +138,7 @@ function SubCaseRunner({
   const atTarget = denominator === c.correctDenominator;
 
   useEffect(() => {
-    if ((stage === "repair" || stage === "detect") && atTarget) {
+    if (stage === "repair" && atTarget) {
       setSolvedVisual(true);
       setPulseKey((k) => k + 1);
       const t = setTimeout(() => setStage("explain"), 900);
@@ -178,14 +178,15 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleDenominatorClick = () => {
-    if (stage !== "investigate" || !verdictPassed) return;
-    setStage("detect");
+    if (stage !== "detect") return;
+    setStage("repair");
     setPulseKey((k) => k + 1);
   };
 
   const handleVerdictGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setVerdictPassed(true);
+    setStage("detect");
   };
 
   const handleVerdictNoGlitch = () => {
@@ -195,8 +196,7 @@ function SubCaseRunner({
   };
 
   const handleStepperChange = (v: number) => {
-    if (stage !== "detect" && stage !== "repair") return;
-    if (stage === "detect") setStage("repair");
+    if (stage !== "repair") return;
     setAttempts((a) => a + 1);
     setDenominator(v);
   };
@@ -294,7 +294,12 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <Visual solved={solvedVisual} pulseKey={pulseKey} />
+            <div
+              onClick={stage === "detect" ? handleDenominatorClick : undefined}
+              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+            >
+              <Visual solved={solvedVisual} pulseKey={pulseKey} />
+            </div>
 
             <div className="mt-6">
               <EquationDisplay
@@ -304,7 +309,7 @@ function SubCaseRunner({
                 resultNumerator={c.correctNumerator}
                 denominatorValue={denominator}
                 denominatorState={denominatorState}
-                clickable={stage === "investigate" && verdictPassed}
+                clickable={stage === "detect"}
                 onDenominatorClick={handleDenominatorClick}
               />
             </div>
@@ -324,7 +329,7 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {(stage === "detect" || stage === "repair") && !atTarget && (
+            {stage === "repair" && !atTarget && (
               <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
                 <DenominatorStepper
                   value={denominator}

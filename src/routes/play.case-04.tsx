@@ -138,7 +138,7 @@ function SubCaseRunner({
   const atTarget = operator === c.correctOperator;
 
   useEffect(() => {
-    if ((stage === "repair" || stage === "detect") && atTarget) {
+    if (stage === "repair" && atTarget) {
       setSolvedVisual(true);
       setPulseKey((k) => k + 1);
       const t = setTimeout(() => setStage("explain"), 900);
@@ -178,14 +178,15 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleSymbolClick = () => {
-    if (stage !== "investigate" || !verdictPassed) return;
-    setStage("detect");
+    if (stage !== "detect") return;
+    setStage("repair");
     setPulseKey((k) => k + 1);
   };
 
   const handleVerdictGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setVerdictPassed(true);
+    setStage("detect");
   };
 
   const handleVerdictNoGlitch = () => {
@@ -195,8 +196,7 @@ function SubCaseRunner({
   };
 
   const handleOperatorChange = (op: Operator) => {
-    if (stage !== "detect" && stage !== "repair") return;
-    if (stage === "detect") setStage("repair");
+    if (stage !== "repair") return;
     setAttempts((a) => a + 1);
     setOperator(op);
   };
@@ -282,25 +282,30 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <Visual
-              solved={solvedVisual}
-              pulseKey={pulseKey}
-              middleSlot={
-                <FractionDisplayLine
-                  left={c.left}
-                  right={c.right}
-                  middle={
-                    <ComparatorSymbol
-                      operator={operator}
-                      highlight={stage === "detect" || stage === "repair"}
-                      clickable={stage === "investigate" && verdictPassed}
-                      onClick={handleSymbolClick}
-                      pulseKey={pulseKey}
-                    />
-                  }
-                />
-              }
-            />
+            <div
+              onClick={stage === "detect" ? handleSymbolClick : undefined}
+              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+            >
+              <Visual
+                solved={solvedVisual}
+                pulseKey={pulseKey}
+                middleSlot={
+                  <FractionDisplayLine
+                    left={c.left}
+                    right={c.right}
+                    middle={
+                      <ComparatorSymbol
+                        operator={operator}
+                        highlight={stage === "detect" || stage === "repair"}
+                        clickable={stage === "detect"}
+                        onClick={handleSymbolClick}
+                        pulseKey={pulseKey}
+                      />
+                    }
+                  />
+                }
+              />
+            </div>
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
@@ -317,7 +322,7 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {(stage === "detect" || stage === "repair") && !atTarget && (
+            {stage === "repair" && !atTarget && (
               <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
                 <ComparatorToggle value={operator} onChange={handleOperatorChange} />
               </div>

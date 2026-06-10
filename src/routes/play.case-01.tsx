@@ -135,10 +135,6 @@ function SubCaseRunner({
   const [input, setInput] = useState("");
 
   useEffect(() => {
-    if (stage === "detect" && equalized > 0) setStage("repair");
-  }, [equalized, stage]);
-
-  useEffect(() => {
     if (stage === "repair" && equalized >= 0.995) {
       setEqualized(1);
       const t = setTimeout(() => setStage("explain"), 400);
@@ -178,14 +174,15 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleGlitchClick = () => {
-    if (stage !== "investigate" || !verdictPassed) return;
-    setStage("detect");
+    if (stage !== "detect") return;
+    setStage("repair");
     setPulseKey((k) => k + 1);
   };
 
   const handleVerdictGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setVerdictPassed(true);
+    setStage("detect");
   };
 
   const handleVerdictNoGlitch = () => {
@@ -273,12 +270,17 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <Visual
-              equalized={equalized}
-              onGlitchClick={handleGlitchClick}
-              interactive={stage === "investigate" && verdictPassed}
-              pulseKey={pulseKey}
-            />
+            <div
+              onClick={stage === "detect" ? handleGlitchClick : undefined}
+              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+            >
+              <Visual
+                equalized={equalized}
+                onGlitchClick={handleGlitchClick}
+                interactive={stage === "detect"}
+                pulseKey={pulseKey}
+              />
+            </div>
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
@@ -295,8 +297,7 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {(stage === "detect" ||
-              stage === "repair" ||
+            {(stage === "repair" ||
               stage === "explain" ||
               stage === "solved") && (
               <div className="mt-8 rounded-2xl bg-[#f8fafc] p-5">
