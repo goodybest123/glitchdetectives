@@ -11,6 +11,9 @@ import { CasePicker } from "@/components/case04/CasePicker";
 import { FractionDisplayLine } from "@/components/case04/FractionDisplayLine";
 import { ComparatorSymbol } from "@/components/case03/ComparatorSymbol";
 import { ComparatorToggle } from "@/components/case03/ComparatorToggle";
+import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
+import { SuccessBanner } from "@/components/shared/SuccessBanner";
+import { CaptionLine } from "@/components/shared/CaptionLine";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,

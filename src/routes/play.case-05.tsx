@@ -10,6 +10,9 @@ import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case05/CasePicker";
 import { EquationDisplay } from "@/components/case05/EquationDisplay";
 import { DenominatorStepper } from "@/components/case05/DenominatorStepper";
+import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
+import { SuccessBanner } from "@/components/shared/SuccessBanner";
+import { CaptionLine } from "@/components/shared/CaptionLine";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,

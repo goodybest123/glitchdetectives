@@ -10,6 +10,9 @@ import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case06/CasePicker";
 import { EquationDisplay } from "@/components/case06/EquationDisplay";
 import { RepairToolButton } from "@/components/case06/RepairToolButton";
+import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
+import { SuccessBanner } from "@/components/shared/SuccessBanner";
+import { CaptionLine } from "@/components/shared/CaptionLine";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,
