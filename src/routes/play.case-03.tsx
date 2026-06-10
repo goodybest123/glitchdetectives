@@ -10,6 +10,9 @@ import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case03/CasePicker";
 import { ComparatorSymbol } from "@/components/case03/ComparatorSymbol";
 import { ComparatorToggle } from "@/components/case03/ComparatorToggle";
+import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
+import { SuccessBanner } from "@/components/shared/SuccessBanner";
+import { CaptionLine } from "@/components/shared/CaptionLine";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,
@@ -226,13 +229,12 @@ function SubCaseRunner({
   }, [stage, atTarget, attempts, studentQuotes]);
 
   const zed =
-    stage === "investigate"
+    stage === "investigate" || stage === "detect" || (stage === "repair" && !atTarget)
       ? { tone: "neutral" as const, text: c.bubbles.investigate }
-      : stage === "detect" || (stage === "repair" && !atTarget)
-        ? { tone: "alert" as const, text: c.bubbles.detect }
-        : { tone: "happy" as const, text: c.bubbles.solved };
+      : { tone: "happy" as const, text: c.bubbles.solved };
 
   const caption = c.captions[stage];
+  const showDetective = (stage === "detect" || stage === "repair") && !atTarget;
 
   const nextIndex = SUB_CASE_ORDER.indexOf(caseId) + 1;
   const nextCaseLabel =

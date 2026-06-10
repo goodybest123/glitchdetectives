@@ -221,13 +221,12 @@ function SubCaseRunner({
   }, [stage, atTarget, attempts, studentQuotes]);
 
   const zed =
-    stage === "investigate"
+    stage === "investigate" || stage === "detect" || (stage === "repair" && !atTarget)
       ? { tone: "neutral" as const, text: c.bubbles.investigate }
-      : stage === "detect" || (stage === "repair" && !atTarget)
-        ? { tone: "alert" as const, text: c.bubbles.detect }
-        : { tone: "happy" as const, text: c.bubbles.solved };
+      : { tone: "happy" as const, text: c.bubbles.solved };
 
   const caption = c.captions[stage];
+  const showDetective = (stage === "detect" || stage === "repair") && !atTarget;
 
   const nextIndex = SUB_CASE_ORDER.indexOf(caseId) + 1;
   const nextCaseLabel =
