@@ -8,6 +8,9 @@ import { SpeakButton } from "@/components/case01/SpeakButton";
 import { MicButton } from "@/components/case01/MicButton";
 import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case01/CasePicker";
+import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
+import { SuccessBanner } from "@/components/shared/SuccessBanner";
+import { CaptionLine } from "@/components/shared/CaptionLine";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,
@@ -210,13 +213,12 @@ function SubCaseRunner({
   }, [stage, equalized, studentQuotes]);
 
   const zed =
-    stage === "investigate"
+    stage === "investigate" || stage === "detect" || stage === "repair"
       ? { tone: "neutral" as const, text: c.bubbles.investigate }
-      : stage === "detect" || stage === "repair"
-      ? { tone: "alert" as const, text: c.bubbles.detect }
       : { tone: "happy" as const, text: c.bubbles.solved };
 
   const caption = c.captions[stage];
+  const showDetective = stage === "detect" || stage === "repair";
 
   // Next-case label
   const nextIndex = SUB_CASE_ORDER.indexOf(caseId) + 1;
@@ -256,7 +258,8 @@ function SubCaseRunner({
               pulseKey={pulseKey}
             />
 
-            <p className="mt-6 text-center text-neutral-600">{caption}</p>
+            <CaptionLine text={caption} />
+            {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
             {(stage === "detect" ||
               stage === "repair" ||
@@ -287,11 +290,7 @@ function SubCaseRunner({
               </div>
             )}
 
-            {(stage === "explain" || stage === "solved") && (
-              <div className="mt-6 rounded-2xl bg-[#dcfce7] px-5 py-4 text-center text-sm font-semibold text-[#166534]">
-                Logic Repaired: The parts are now equal.
-              </div>
-            )}
+            {(stage === "explain" || stage === "solved") && <SuccessBanner />}
           </div>
 
           {stage === "solved" && (

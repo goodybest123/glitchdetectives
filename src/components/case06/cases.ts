@@ -69,8 +69,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Incredible detective work! ZED-4 tried to jam a giant 1/2 piece and a small 1/4 piece into the same box. Explain to him why we had to slice the big piece into fourths before we could add them together.",
     bubbles: {
-      investigate: "I added 1 big piece and 1 small piece! We have 2/6!",
-      detect: "Glitch Detected! The big piece doesn't fit in the new box!",
+      investigate:
+        "Standard engineering procedure — I've run the simulation twice and the numbers line up. I added the tops, 1 plus 1 equals 2, then I added the bottoms, 2 plus 4 equals 6. Final answer: 2 over 6. Everything fits in the box. Filed under: completely solved.",
+      detect:
+        "Detective — the answer looks wrong. Click the number that glitched!",
       solved: "Logic repaired. All pieces are the same size now!",
     },
     captions: {
@@ -83,7 +85,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     Visual: BlueprintSVG,
     conceptMastered:
       "Adding unlike denominators — pieces must be the same size first",
-    successBanner: "Logic Repaired: All pieces must be the same size before building.",
+    successBanner: "Logic Repaired!",
   },
   paint: {
     id: "paint",
@@ -103,8 +105,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Great fix! ZED-4 ended up with almost no paint when he added 3 and 6 to make 9. Why did we have to change the 1/3 vat to match the 1/6 vat before mixing?",
     bubbles: {
-      investigate: "1 top plus 1 top is 2! 3 bottom plus 6 bottom is 9!",
-      detect: "Glitch Detected! Did we lose some paint?",
+      investigate:
+        "Routine paint-mix protocol — I verified the math against my schematics. Top numbers: 1 plus 1 makes 2. Bottom numbers: 3 plus 6 makes 9. Therefore the combined vat reads 2 over 9. The blueprint is signed, sealed, and frankly elegant. I do not make mistakes.",
+      detect:
+        "Detective — that's almost no paint at all. Click the number that glitched!",
       solved: "Logic repaired. The vats use the same grid now!",
     },
     captions: {
@@ -117,7 +121,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     Visual: PaintVatsSVG,
     conceptMastered:
       "Adding unlike denominators — the vats need the same measuring grid",
-    successBanner: "Logic Repaired: The vats must use the same measurement grid.",
+    successBanner: "Logic Repaired!",
   },
   circuit: {
     id: "circuit",
@@ -137,8 +141,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Case closed! ZED-4 almost deleted all our power! Why did we have to slice the big 1/2 power cell into smaller eighths before we could take 1/8 away?",
     bubbles: {
-      investigate: "1 minus 1 is 0! We have no power left!",
-      detect: "Glitch Detected! A tiny chip shouldn't destroy the whole cell!",
+      investigate:
+        "Performing power-cell subtraction by the book. Top: 1 minus 1 is 0. Bottom: 2 minus 8 — I'll round that to 6 for engineering safety. Final reading: 0 over 6 power remaining. Everything checks out. I have run the diagnostics twice, and frankly that should be enough.",
+      detect:
+        "Detective — the power cell vanished! Click the number that glitched!",
       solved: "Logic repaired. Power is safe — 3/8 left!",
     },
     captions: {
@@ -151,7 +157,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     Visual: CircuitBoardSVG,
     conceptMastered:
       "Subtracting unlike denominators — same-size pieces before taking any away",
-    successBanner: "Logic Repaired: You must measure in the same size to remove pieces safely.",
+    successBanner: "Logic Repaired!",
   },
 };
 

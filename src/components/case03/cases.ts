@@ -60,8 +60,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Excellent fix! ZED-4 thought Tank B had more fuel because 4 is bigger than 2. Why does cutting the tank into more pieces NOT give you more fuel?",
     bubbles: {
-      investigate: "Tank B has way more fuel because 4 is bigger than 2!",
-      detect: "Glitch Detected! Wait, look at the fuel levels...",
+      investigate:
+        "Trivial! By the universally accepted Law of Bigger Bottom Numbers, 4 is mathematically superior to 2, which means Tank B is mathematically more full. The numbers don't lie — the bigger the bottom, the bigger the fuel. I'd publish this in a textbook.",
+      detect:
+        "Detective — something doesn't match. Click the symbol between the tanks if it looks wrong.",
       solved: "Logic repaired. Both tanks hold the same fuel!",
     },
     captions: {
@@ -73,7 +75,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: FuelTanksSVG,
     conceptMastered: "Equivalent fractions — more pieces means smaller pieces",
-    successBanner: "Logic Repaired: The amounts are exactly the same.",
+    successBanner: "Logic Repaired!",
   },
   garden: {
     id: "garden",
@@ -88,8 +90,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Great fix! ZED-4 looked at the number 6 and assumed it was bigger. Explain to him why having 6 rows doesn't mean you have more plants if the garden bed is the exact same size.",
     bubbles: {
-      investigate: "Bed B is growing way more plants because 6 is bigger than 3!",
-      detect: "Glitch Detected! Wait, look at the size of the green space...",
+      investigate:
+        "Elementary horticulture, really. By my exclusive theorem — the More-Rows-More-Plants Principle — a bed cut into 6 rows must therefore grow strictly more plants than a bed cut into only 3. The number 6 is BIGGER than 3, and bigger numbers mean bigger gardens. Quod erat demonstrandum.",
+      detect:
+        "Detective — something looks fishy. Click the symbol between the beds if it looks wrong.",
       solved: "Logic repaired. Both beds grow the same plants!",
     },
     captions: {
@@ -97,11 +101,11 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       detect: "Now choose the right symbol below.",
       repair: "Pick the symbol that matches the green area.",
       explain: "The chat panel is open. Tell ZED-4 why the beds are equal.",
-      solved: "Case closed. Read your diagnostic report below.",
+      solved: "Logic repaired. Both beds grow the same plants!",
     },
     Visual: GardenBedsSVG,
     conceptMastered: "Equivalent fractions — same area, just more cuts",
-    successBanner: "Logic Repaired: The total planted area is identical.",
+    successBanner: "Logic Repaired!",
   },
   disks: {
     id: "disks",
@@ -116,8 +120,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Case closed! ZED-4 got tricked because the number 6 is bigger than 3. How can 6 slices be the exact same amount of data as 3 slices?",
     bubbles: {
-      investigate: "Disk B holds more data! 6 slices of data is way more than 3!",
-      detect: "Glitch Detected! Let me look at the empty space left on both disks...",
+      investigate:
+        "A clear application of my patented Bigger-Slice-Count Conjecture: Disk B has SIX slices of data, and six is famously larger than three. Therefore Disk B is storing strictly more data. The math is bulletproof. I have circuits for this kind of thing.",
+      detect:
+        "Detective — the symbol doesn't match. Click it if it looks wrong.",
       solved: "Logic repaired. Both disks store the same data!",
     },
     captions: {
@@ -129,7 +135,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: MemoryDisksSVG,
     conceptMastered: "Equivalent fractions — 6 small slices can equal 3 big ones",
-    successBanner: "Logic Repaired: The data takes up the same amount of space.",
+    successBanner: "Logic Repaired!",
   },
 };
 

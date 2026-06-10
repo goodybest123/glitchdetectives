@@ -10,6 +10,9 @@ import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case06/CasePicker";
 import { EquationDisplay } from "@/components/case06/EquationDisplay";
 import { RepairToolButton } from "@/components/case06/RepairToolButton";
+import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
+import { SuccessBanner } from "@/components/shared/SuccessBanner";
+import { CaptionLine } from "@/components/shared/CaptionLine";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,
@@ -205,13 +208,12 @@ function SubCaseRunner({
   }, [stage, repaired, studentQuotes]);
 
   const zed =
-    stage === "investigate"
+    stage === "investigate" || stage === "detect" || stage === "repair"
       ? { tone: "neutral" as const, text: c.bubbles.investigate }
-      : stage === "detect"
-        ? { tone: "alert" as const, text: c.bubbles.detect }
-        : { tone: "happy" as const, text: c.bubbles.solved };
+      : { tone: "happy" as const, text: c.bubbles.solved };
 
   const caption = c.captions[stage];
+  const showDetective = (stage === "detect" || stage === "repair") && !repaired;
 
   const nextIndex = SUB_CASE_ORDER.indexOf(caseId) + 1;
   const nextCaseLabel =
@@ -266,7 +268,8 @@ function SubCaseRunner({
               />
             </div>
 
-            <p className="mt-6 text-center text-neutral-600">{caption}</p>
+            <CaptionLine text={caption} />
+            {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
             {(stage === "detect" || stage === "repair") && !repaired && (
               <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
@@ -278,11 +281,7 @@ function SubCaseRunner({
               </div>
             )}
 
-            {(stage === "explain" || stage === "solved") && (
-              <div className="mt-6 rounded-2xl bg-[#dcfce7] px-5 py-4 text-center text-sm font-semibold text-[#166534]">
-                {c.successBanner}
-              </div>
-            )}
+            {(stage === "explain" || stage === "solved") && <SuccessBanner />}
           </div>
 
           {stage === "solved" && (

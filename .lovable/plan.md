@@ -1,55 +1,88 @@
-# Case 06: The Mismatched Puzzle (Adding/Subtracting Unlike Denominators)
 
-Final case of the Fraction Factory MVP. Targets the "add straight across" trap with unlike denominators. Three sub-cases share the Investigate → Detect → Repair → Explain loop, with a one-click "slice/calibrate/segment" tool that converts one fraction to a common denominator.
+## Goal
 
-## Sub-cases
+Apply four consistent UX upgrades across every level (Cases 01–06) of the Fraction Factory MVP, without changing the underlying puzzle logic or AI tutoring behavior.
 
-| ID | Title | Wrong equation | Repaired equation | Tool label |
-|---|---|---|---|---|
-| `blueprint` | The Blueprint | 1/2 + 1/4 = 2/6 | 2/4 + 1/4 = 3/4 | Laser Slicer |
-| `paint` | The Paint Vats | 1/3 + 1/6 = 2/9 | 2/6 + 1/6 = 3/6 | Grid Calibrator |
-| `circuit` | The Circuit Board | 1/2 − 1/8 = 0/6 | 4/8 − 1/8 = 3/8 | Segmenter Tool |
+## Changes (apply to all 6 cases)
 
-In all three, ZED only broke the left fraction (the one with the smaller denominator). The repair converts it to match the right fraction's denominator; then the equation re-renders with like denominators and the output container morphs into the correct whole.
+### 1. ZED-4 investigation lines — longer & more confidently wrong
 
-## Files to create
+Current `bubbles.investigate` strings are short (e.g. "I added the top parts and the bottom slots! We have 3/10!"). Rewrite each one as 2–3 sentences where ZED-4 sounds proud, certain, and shows his (wrong) reasoning. Examples of the new tone:
 
-**Registry & visuals** (`src/components/case06/`)
-- `cases.ts` — per sub-case: `id`, `title`, `shortTitle`, `subtitle`, `emoji`, `chatEndpoint`, `left` (original fraction), `right`, `operator` (`"+" | "−"`), `wrongResult` ({n,d} — the impossible answer), `repairedLeft` (the converted left fraction), `repairedResult`, `toolLabel`, `welcomeText`, `bubbles` (investigate/detect/solved), `captions` (per stage), `conceptMastered`, `successBanner`, `Visual`.
-- `BlueprintSVG.tsx` — large 1/2 block + small 1/4 block on a factory mat + output box. Props `{ sliced: boolean; pulseKey? }`. `sliced=false`: one big block + small block, mismatched output container (6 tiny slots, 2 filled, big block visibly too big to fit). `sliced=true`: big block split into two 1/4 blocks via CSS transition, output container becomes a 4-slot box with 3 slots filled.
-- `PaintVatsSVG.tsx` — two vats. `calibrated=false`: vat A has 3 thick sections (1 filled), vat B has 6 thin sections (1 filled), output vat shows 9 slots with 2 microscopic puddles. `calibrated=true`: horizontal line drops across vat A turning it into 6 sections (2 filled), output vat shows 6 sections with 3 filled (half full).
-- `CircuitBoardSVG.tsx` — circuit board with green power cell. `segmented=false`: solid 1/2 power cell, tiny 1/8 chip floating, output board fully empty (vanished). `segmented=true`: grid drops over the 1/2 cell dividing it into four 1/8 segments, one segment pops out, 3/8 remain glowing.
-- All three share `VisualProps = { repaired: boolean; pulseKey?: number }` (the prop is named `repaired` internally; each visual reads it).
-- `EquationDisplay.tsx` — renders `A/B [op] C/D = N/D2`. Props: `left`, `right`, `operator`, `result`, `resultState` (`"idle" | "glitch" | "solved"`), `clickable`, `onResultClick`. The whole right-hand `N/D2` is the clickable glitch zone (matches the spec: "click the 2/6"). Highlights yellow on glitch, green on solved.
-- `RepairToolButton.tsx` — single button with `toolLabel`, `onClick`, `disabled`. Styled to match Case 05's stepper visual weight.
-- `CasePicker.tsx` — three sub-case cards, same shape as Case 04/05's picker.
+- Case 05 Conveyor: "Easy one! I lined up both crates and added the top parts together, then added the bottom slots together too. That gives us 3 parts inside a brand-new 10-slot mega-crate. I'm one hundred percent sure — case closed!"
+- Case 04 Scale: "Look at the numbers — 8 is way bigger than 4, so 1/8 has to be the heavier block. Bigger number on the bottom means a heavier slice, every single time. I'd bet my circuits on it!"
 
-**AI routes** (`src/routes/api/chat/`)
-- `case-06-blueprint.ts` — guide child to articulate "pieces must be the same size before adding."
-- `case-06-paint.ts` — guide child to articulate "the vats need the same grid/measurement before mixing."
-- `case-06-circuit.ts` — guide child to articulate "subtraction also needs same-size pieces."
-- All three: Grade 1 voice, kid words only, `[[CASE_SOLVED]]` token, same shape as Case 05 routes.
+Each level gets its own confident-but-wrong investigate paragraph; logic and final wrong answer stay identical.
 
-**Page route**
-- `src/routes/play.case-06.tsx` — adapted from `play.case-05.tsx`:
-  - Stage machine `investigate → detect → repair → explain`.
-  - `detect` triggered by clicking the wrong result fraction (`EquationDisplay`'s glitch zone).
-  - `repair` shows `RepairToolButton`; clicking it sets `repaired=true`, swaps the equation to the repaired form, plays the visual transition, shows the green banner, advances to `explain`.
-  - Same chat panel, DiagnosticReport, marks rubric, and CasePicker pattern as Case 05.
-  - Header title: "Case 06: The Mismatched Puzzle".
+### 2. The child detects the glitch (not ZED-4)
+
+Today `bubbles.detect` is spoken by ZED-4 (e.g. "Glitch Detected! The big piece doesn't fit…"). Change the detect-stage UI so:
+
+- ZED-4's bubble in the `detect` stage stays on his confident investigate line (or goes silent), and does NOT announce the glitch.
+- A new on-screen prompt addressed to the child appears: "Detective — what looks wrong here? Tap the part of the answer that glitched." (per-case wording).
+- When the child clicks the glitch hotspot (denominator / wrong fraction / wrong scale / etc.), show a child-voiced confirmation banner: "You spotted the glitch! 🔍" (no robot avatar, styled as the detective's own callout).
+
+Rename the `bubbles.detect` field to `prompts.detect` (child-directed) and add `prompts.glitchFound` for the post-click child callout. ZED-4 no longer owns the detect message.
+
+### 3. Speaker button on every on-screen text block
+
+Reuse the existing `SpeakButton` from `src/components/case01/SpeakButton.tsx` (move it to `src/components/shared/SpeakButton.tsx` so all cases import from one place; keep a re-export in the case01 path to avoid breaking imports).
+
+Attach a `<SpeakButton>` to every learner-facing text surface in each case page and shared components:
+
+- ZED-4 bubble (already has it via `ZedBubble speakable`; enable `speakable` everywhere it's used).
+- Stage caption ("Scan the equation. Click the answer that looks wrong.").
+- Child detective prompt (new, from change #2).
+- Repair instructions / tool hint.
+- Success banner ("Logic Repaired!").
+- AI welcome / Socratic chat messages (per-message speaker on assistant turns).
+- Case title + subtitle on the CasePicker cards.
+- DiagnosticReport "Concept Mastered" text.
+
+Place the speaker as a small round icon-button next to (or inline-end of) the text. Keep current visual layout; do not introduce a global autoplay.
+
+### 4. Generic "Logic Repaired!" banner
+
+Replace every per-case `successBanner` string (which currently leaks the explanation, e.g. "Logic Repaired: The vats must use the same measurement grid.") with the single phrase:
+
+> **Logic Repaired!**
+
+Rendered as the existing green banner, with a speaker button. The explanation is now exclusively the child's job in the chat panel. Remove `successBanner` text content from `cases.ts` files (keep the field but set to `"Logic Repaired!"`), and delete any sub-headline that hints at the why.
+
+### 5. ZED-4 sentence-style variety across levels
+
+Give each level its own distinct ZED-4 "voice flavor" so the character feels like he's evolving (and so kids notice the change). Apply this flavor to that level's investigate bubble and to the assistant's opening welcome line in chat. Suggested flavors:
+
+| Level | ZED-4 voice flavor |
+|---|---|
+| Case 01 — Slice | Childlike excitement, lots of exclamations: "Whoa! Look look look!" |
+| Case 02 — Identify | Detective-wannabe, narrates like a report: "Observation log entry 47…" |
+| Case 03 — Equivalent | Math-bragger, drops fake jargon: "Trivial. By the Law of Bigger Numbers…" |
+| Case 04 — Compare | Sports-commentator energy: "And the winner, weighing in at a massive eight…!" |
+| Case 05 — Like denominators | Game-show host: "Ding ding ding! Easy points!" |
+| Case 06 — Unlike denominators | Overconfident engineer: "Standard procedure. I've run the simulation twice." |
+
+Rewrite each `bubbles.investigate` and chat-route system prompt's "ZED-4 said" framing line in the matching flavor. (System prompts themselves stay otherwise identical — same Grade-1 voice for the AI Guide, same `[[CASE_SOLVED]]` rule.)
 
 ## Files to edit
-- `src/routes/play.index.tsx` — promote Case 06 from Pending → Active, route `/play/case-06`. Remove from `PENDING_CASES`, add to `ACTIVE_CASES` with subtitle "When pieces don't match, slice before you add."
+
+- `src/components/case01/SpeakButton.tsx` → move to `src/components/shared/SpeakButton.tsx` (+ thin re-export).
+- `src/components/case0{1..6}/cases.ts` — rewrite `bubbles.investigate`, restructure `bubbles.detect` → `prompts.detect` + `prompts.glitchFound`, set `successBanner = "Logic Repaired!"`, apply per-level voice flavor.
+- `src/components/case0{1..6}/CasePicker.tsx` — add speaker on title/subtitle.
+- `src/components/case01/ZedBubble.tsx` and any case-specific bubble components — ensure `speakable` is on by default.
+- `src/components/case01/DiagnosticReport.tsx` — add speaker on concept-mastered line.
+- `src/routes/play.case-0{1..6}.tsx` — render the new child detective prompt during `detect`, render child glitch-found callout after click, swap success-banner copy, add speakers to all captions and instructions, mount speaker on each assistant chat message.
+- `src/routes/api/chat/case-0*-*.ts` (all chat routes) — update the "THE CASE" framing to match the new ZED-4 voice flavor; no other behavior changes.
 
 ## Out of scope
-- No reducing to lowest terms (3/6 stays 3/6; mention "half" in chat but don't auto-simplify).
-- No free-form denominator entry — the repair is a single one-click tool, not a stepper.
-- No persistence across sessions.
-- No changes to Cases 01–05.
-- No new audio assets; reuse existing chat panel components.
+
+- No changes to puzzle math, repair mechanics, click targets, or AI tutoring rules.
+- No new audio assets — uses existing Web Speech API via `SpeakButton`.
+- No persistence, no scoring changes, no new routes.
+- Case 01 chat route triplet stays intact; only the framing sentence is reworded.
 
 ## Technical notes
-- The right-hand fraction (1/4, 1/6, 1/8) is already the target denominator in all three sub-cases, so the repair just maps left → repairedLeft. No common-denominator computation needed.
-- Output container morph is a CSS transition keyed off `repaired`, plus a `pulseKey` remount for the success pulse (same pattern as Cases 04/05).
-- Equation re-renders atomically when `repaired` flips; no intermediate "editing" state needed.
-- ZED-4 bubbles and captions follow the exact wording from the spec for each sub-case.
+
+- `SpeakButton` already handles voice selection, stop/start, and SSR-safe `speechSynthesis` detection — no new dependency.
+- For streamed chat messages, attach the speaker once `status !== "streaming"` for that message so it reads the final text.
+- Use `aria-label` on every speaker for accessibility; keep existing focus rings.
