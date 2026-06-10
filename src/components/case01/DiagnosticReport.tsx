@@ -92,8 +92,9 @@ export function DiagnosticReport({
           <StepMark label="Repair" score={marks.repair} />
           <StepMark label="Explain" score={marks.explain} />
         </ul>
-        <div className="mt-4 border-t border-neutral-200/70 pt-3 text-sm font-semibold text-neutral-700">
-          {remarkFor(total)}
+        <div className="mt-4 flex items-center gap-2 border-t border-neutral-200/70 pt-3 text-sm font-semibold text-neutral-700">
+          <span>{remarkFor(total)}</span>
+          <SpeakButton text={remarkFor(total)} />
         </div>
       </div>
 
@@ -106,8 +107,10 @@ export function DiagnosticReport({
         </div>
         <div className="mt-2 flex items-center gap-2 text-lg font-semibold text-neutral-900">
           <CheckDot /> {conceptMastered}
+          <SpeakButton text={`Concept mastered. ${conceptMastered}`} />
         </div>
       </div>
+
 
       {/* Evidence */}
       <div className="mt-6">
