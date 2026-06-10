@@ -166,14 +166,15 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleResultClick = () => {
-    if (stage !== "investigate" || !verdictPassed) return;
-    setStage("detect");
+    if (stage !== "detect") return;
+    setStage("repair");
     setPulseKey((k) => k + 1);
   };
 
   const handleVerdictGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setVerdictPassed(true);
+    setStage("detect");
   };
 
   const handleVerdictNoGlitch = () => {
@@ -183,7 +184,7 @@ function SubCaseRunner({
   };
 
   const handleRepair = () => {
-    if (stage !== "detect" && stage !== "repair") return;
+    if (stage !== "repair") return;
     setRepaired(true);
     setPulseKey((k) => k + 1);
     const t = setTimeout(() => setStage("explain"), 900);
