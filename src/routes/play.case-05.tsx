@@ -13,6 +13,7 @@ import { DenominatorStepper } from "@/components/case05/DenominatorStepper";
 import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
+import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,
