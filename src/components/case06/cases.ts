@@ -72,12 +72,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Standard engineering procedure — I've run the simulation twice and the numbers line up. I added the tops, 1 plus 1 equals 2, then I added the bottoms, 2 plus 4 equals 6. Final answer: 2 over 6. Everything fits in the box. Filed under: completely solved.",
       detect:
-        "Detective — the answer looks wrong. Click the number that glitched!",
+        "Click on the glitch.",
       solved: "Logic repaired. All pieces are the same size now!",
     },
     captions: {
       investigate: "Scan the equation. Click the answer that looks wrong.",
-      detect: "Use the Laser Slicer to make the pieces match.",
+      detect: "Click on the glitch.",
       repair: "Cut the big block until both pieces are the same size.",
       explain: "The chat is open. Tell ZED-4 why we had to slice first.",
       solved: "Case closed. Read your diagnostic report below.",
@@ -108,12 +108,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Routine paint-mix protocol — I verified the math against my schematics. Top numbers: 1 plus 1 makes 2. Bottom numbers: 3 plus 6 makes 9. Therefore the combined vat reads 2 over 9. The blueprint is signed, sealed, and frankly elegant. I do not make mistakes.",
       detect:
-        "Detective — that's almost no paint at all. Click the number that glitched!",
+        "Click on the glitch.",
       solved: "Logic repaired. The vats use the same grid now!",
     },
     captions: {
       investigate: "Scan the equation. Click the answer that looks wrong.",
-      detect: "Use the Grid Calibrator to match the vats.",
+      detect: "Click on the glitch.",
       repair: "Add a line so both vats measure the same way.",
       explain: "The chat is open. Tell ZED-4 why the vats need the same grid.",
       solved: "Case closed. Read your diagnostic report below.",
@@ -144,12 +144,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Performing power-cell subtraction by the book. Top: 1 minus 1 is 0. Bottom: 2 minus 8 — I'll round that to 6 for engineering safety. Final reading: 0 over 6 power remaining. Everything checks out. I have run the diagnostics twice, and frankly that should be enough.",
       detect:
-        "Detective — the power cell vanished! Click the number that glitched!",
+        "Click on the glitch.",
       solved: "Logic repaired. Power is safe — 3/8 left!",
     },
     captions: {
       investigate: "Scan the equation. Click the answer that looks wrong.",
-      detect: "Use the Segmenter Tool to slice the power cell.",
+      detect: "Click on the glitch.",
       repair: "Cut the cell into eighths so the chip can pop out safely.",
       explain: "The chat is open. Tell ZED-4 why we had to slice first.",
       solved: "Case closed. Read your diagnostic report below.",

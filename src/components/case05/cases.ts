@@ -70,12 +70,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Ding ding ding — easy points for ZED-4! I added the top parts together AND I added the bottom slots together. One plus two on the top is three, five plus five on the bottom is ten — boom, 3 out of 10! I'd like to thank the audience, this category is too easy!",
       detect:
-        "Detective — the answer looks wrong. Click the number that glitched!",
+        "Click on the glitch.",
       solved: "Logic repaired. The crate stays the same size!",
     },
     captions: {
       investigate: "Scan the equation. Click the number that looks wrong.",
-      detect: "Use the − / + tool to fix the bottom number.",
+      detect: "Click on the glitch.",
       repair: "Keep stepping until the bottom number matches the crate.",
       explain: "The chat panel is open. Tell ZED-4 why the bottom number stays the same.",
       solved: "Case closed. Read your diagnostic report below.",
@@ -105,12 +105,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Survey says — JACKPOT! I subtracted straight across! Top: five minus two equals three. Bottom: eight minus eight equals ZERO. So we have 3 out of 0 coolant left. The crowd goes wild, the buzzers light up — round complete!",
       detect:
-        "Detective — that answer looks impossible. Click the number that glitched!",
+        "Click on the glitch.",
       solved: "Logic repaired. The tank is still there!",
     },
     captions: {
       investigate: "Scan the equation. Click the number that looks wrong.",
-      detect: "Use the − / + tool to bring back the tank.",
+      detect: "Click on the glitch.",
       repair: "Step the bottom number back up to match the tank sections.",
       explain: "The chat panel is open. Tell ZED-4 why the tank doesn't disappear.",
       solved: "Case closed. Read your diagnostic report below.",
@@ -140,12 +140,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Bonus round bonus round! I added the top chips — 2 plus 3 is 5 — AND I added the bottom sides — 6 plus 6 is 12! So obviously the motherboard upgraded itself to a 12-sided super-board with 5 chips on it. The audience is on their feet — this is my finest work!",
       detect:
-        "Detective — the answer looks too big. Click the number that glitched!",
+        "Click on the glitch.",
       solved: "Logic repaired. The board is the right size!",
     },
     captions: {
       investigate: "Scan the equation. Click the number that looks wrong.",
-      detect: "Use the − / + tool to fix the bottom number.",
+      detect: "Click on the glitch.",
       repair: "Step the board back down to its proper size.",
       explain: "The chat panel is open. Tell ZED-4 why the board size stays the same.",
       solved: "Case closed. Read your diagnostic report below.",

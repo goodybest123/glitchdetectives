@@ -63,12 +63,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Trivial! By the universally accepted Law of Bigger Bottom Numbers, 4 is mathematically superior to 2, which means Tank B is mathematically more full. The numbers don't lie — the bigger the bottom, the bigger the fuel. I'd publish this in a textbook.",
       detect:
-        "Detective — something doesn't match. Click the symbol between the tanks if it looks wrong.",
+        "Click on the glitch.",
       solved: "Logic repaired. Both tanks hold the same fuel!",
     },
     captions: {
       investigate: "Scan the symbol between the tanks. Click it if it looks wrong.",
-      detect: "Now choose the right symbol below.",
+      detect: "Click on the glitch.",
       repair: "Pick the symbol that matches what you see.",
       explain: "The chat panel is open. Tell ZED-4 why the tanks are equal.",
       solved: "Case closed. Read your diagnostic report below.",
@@ -93,12 +93,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Elementary horticulture, really. By my exclusive theorem — the More-Rows-More-Plants Principle — a bed cut into 6 rows must therefore grow strictly more plants than a bed cut into only 3. The number 6 is BIGGER than 3, and bigger numbers mean bigger gardens. Quod erat demonstrandum.",
       detect:
-        "Detective — something looks fishy. Click the symbol between the beds if it looks wrong.",
+        "Click on the glitch.",
       solved: "Logic repaired. Both beds grow the same plants!",
     },
     captions: {
       investigate: "Scan the symbol between the beds. Click it if it looks wrong.",
-      detect: "Now choose the right symbol below.",
+      detect: "Click on the glitch.",
       repair: "Pick the symbol that matches the green area.",
       explain: "The chat panel is open. Tell ZED-4 why the beds are equal.",
       solved: "Logic repaired. Both beds grow the same plants!",
@@ -123,12 +123,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "A clear application of my patented Bigger-Slice-Count Conjecture: Disk B has SIX slices of data, and six is famously larger than three. Therefore Disk B is storing strictly more data. The math is bulletproof. I have circuits for this kind of thing.",
       detect:
-        "Detective — the symbol doesn't match. Click it if it looks wrong.",
+        "Click on the glitch.",
       solved: "Logic repaired. Both disks store the same data!",
     },
     captions: {
       investigate: "Scan the symbol between the disks. Click it if it looks wrong.",
-      detect: "Now choose the right symbol below.",
+      detect: "Click on the glitch.",
       repair: "Pick the symbol that matches the purple area.",
       explain: "The chat panel is open. Tell ZED-4 why the disks are equal.",
       solved: "Case closed. Read your diagnostic report below.",

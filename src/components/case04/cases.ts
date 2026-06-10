@@ -64,12 +64,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "AND folks, the winner of the heavyweight bout is — 1 OVER 8! Look at that gigantic number 8 on the bottom — eight is huge, four is puny, the call on the floor stands! 1/8 brings the BIG number, so 1/8 brings the BIG weight! I'd bet my circuits on it!",
       detect:
-        "Detective — the symbol on the display looks wrong. Click it!",
+        "Click on the glitch.",
       solved: "Logic repaired. The 1/4 block is heavier!",
     },
     captions: {
       investigate: "Scan the symbol on the display. Click it if it looks wrong.",
-      detect: "Now choose the right symbol below.",
+      detect: "Click on the glitch.",
       repair: "Pick the symbol that matches the real block sizes.",
       explain: "The chat panel is open. Tell ZED-4 why 1/4 is heavier.",
       solved: "Case closed. Read your diagnostic report below.",
@@ -95,12 +95,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "And down the home stretch — Tube B is roaring ahead with 2 over 5 because, ladies and gents, 5 is bigger than 3, and bigger numbers always mean MORE coolant! It's a landslide victory for Tube B! I've called a thousand races and this one isn't even close!",
       detect:
-        "Detective — the symbol looks wrong. Click the display!",
+        "Click on the glitch.",
       solved: "Logic repaired. Thirds are larger than fifths!",
     },
     captions: {
       investigate: "Scan the symbol on the display. Click it if it looks wrong.",
-      detect: "Now choose the right symbol below.",
+      detect: "Click on the glitch.",
       repair: "Pick the symbol that matches the fluid you see.",
       explain: "The chat panel is open. Tell ZED-4 why 2/3 is more.",
       solved: "Case closed. Read your diagnostic report below.",
@@ -126,12 +126,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Coming in HOT to the construction site — Beam B is the obvious winner, towering over Beam A! Why? Because 8 is greater than 4 — that's championship-level math! Bigger bottom number, bigger beam, every single time! Take it from your favorite sports robot — this one's a done deal!",
       detect:
-        "Detective — the symbol on the display doesn't match! Click it!",
+        "Click on the glitch.",
       solved: "Logic repaired. The 3/4 beam is longer!",
     },
     captions: {
       investigate: "Scan the symbol on the display. Click it if it looks wrong.",
-      detect: "Now choose the right symbol below.",
+      detect: "Click on the glitch.",
       repair: "Pick the symbol that matches the real beam lengths.",
       explain: "The chat panel is open. Tell ZED-4 why 3/4 is longer.",
       solved: "Case closed. Read your diagnostic report below.",

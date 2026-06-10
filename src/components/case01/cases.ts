@@ -52,13 +52,13 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Whoa look look look! I served exactly four whole pieces of pizza, one for every robot! Counting all the way to four is a HUGE deal — I am totally, completely sure this is fair sharing!",
       detect:
-        "Hmm… something here looks wrong. Click on the pizza where the sharing is not fair.",
+        "Click on the glitch.",
       solved: "Logic repaired. The case is yours to close.",
     },
     captions: {
       investigate:
         "Scan ZED-4's logic. Click on the pizza where the sharing is not fair.",
-      detect: "Now drag the Equalizer Tool to make the pieces the same size.",
+      detect: "Click on the glitch.",
       repair: "Keep going — make all four parts the same size.",
       explain: "The chat panel is now open. Tell ZED-4 why it wasn't fair.",
       solved: "Case closed. Read your diagnostic report below.",
@@ -80,13 +80,13 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Easy peasy! I snapped this chocolate bar into THREE whole pieces, and three is the magic number for thirds! Three friends, three pieces — case closed! I am one hundred percent positively sure this is perfect sharing!",
       detect:
-        "Hmm… something looks off. Click the chocolate bar where the pieces are split unfairly.",
+        "Click on the glitch.",
       solved: "Logic repaired. Thanks, Detective.",
     },
     captions: {
       investigate:
         "Click the chocolate bar where the pieces are split unfairly.",
-      detect: "Drag the Equalizer Tool to make all three pieces the same.",
+      detect: "Click on the glitch.",
       repair: "Keep going — three pieces, all the same size.",
       explain:
         "The chat panel is open. Tell ZED-4 why those pieces weren't real thirds.",
@@ -109,13 +109,13 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       investigate:
         "Yes yes yes! I painted ONE side and left ONE side, so that is obviously HALF! One and one — that is the official rule for halves! I am so proud of this — beep boop, perfect work!",
       detect:
-        "Hmm… something looks off. Click the line that's splitting the canvas unfairly.",
+        "Click on the glitch.",
       solved: "Logic repaired. The canvas is balanced.",
     },
     captions: {
       investigate:
         "Click the line that's splitting the canvas unfairly.",
-      detect: "Drag the Centering Tool to move the line to the middle.",
+      detect: "Click on the glitch.",
       repair: "Keep going — make both sides match.",
       explain:
         "The chat panel is open. Tell ZED-4 what 'half' really means.",
