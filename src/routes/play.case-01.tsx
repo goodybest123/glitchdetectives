@@ -232,7 +232,7 @@ function SubCaseRunner({
       else explain = 3;
     }
     return { investigate, detect, repair, explain };
-  }, [stage, equalized, studentQuotes]);
+  }, [stage, equalized, studentQuotes, wrongVerdictCount]);
 
   const zed =
     stage === "investigate" || stage === "detect" || stage === "repair"
