@@ -301,12 +301,15 @@ function SubCaseRunner({
               stage === "explain" ||
               stage === "solved") && (
               <div className="mt-8 rounded-2xl bg-[#f8fafc] p-5">
-                <label
-                  htmlFor="equalizer"
-                  className="mb-3 block text-sm font-semibold tracking-wide text-neutral-700"
-                >
-                  {c.sliderLabel}
-                </label>
+                <div className="mb-3 flex items-center gap-2">
+                  <label
+                    htmlFor="equalizer"
+                    className="block text-sm font-semibold tracking-wide text-neutral-700"
+                  >
+                    {c.sliderLabel}
+                  </label>
+                  <SpeakButton text={c.sliderLabel} />
+                </div>
                 <input
                   id="equalizer"
                   type="range"
