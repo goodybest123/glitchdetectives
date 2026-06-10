@@ -356,13 +356,7 @@ function SubCaseRunner({
                 <h2 className="text-sm font-bold tracking-wider text-neutral-700">
                   AI GUIDE
                 </h2>
-                <p className="mt-0.5 text-xs text-neutral-500">
-                  {stage === "solved"
-                    ? "Case closed — great work, Detective!"
-                    : chatEnabled
-                    ? "Explain your reasoning — type or speak."
-                    : "Unlocks after you repair the logic."}
-                </p>
+                <div className="mt-0.5 flex items-center gap-2"><p className="text-xs text-neutral-500">{stage === "solved" ? "Case closed — great work, Detective!" : chatEnabled ? "Explain your reasoning — type or speak." : "Unlocks after you repair the logic."}</p><SpeakButton text={stage === "solved" ? "Case closed — great work, Detective!" : chatEnabled ? "Explain your reasoning — type or speak." : "Unlocks after you repair the logic."} /></div>
               </div>
             </div>
 
