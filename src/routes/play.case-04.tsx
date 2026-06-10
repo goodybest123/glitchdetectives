@@ -178,14 +178,15 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleSymbolClick = () => {
-    if (stage !== "investigate" || !verdictPassed) return;
-    setStage("detect");
+    if (stage !== "detect") return;
+    setStage("repair");
     setPulseKey((k) => k + 1);
   };
 
   const handleVerdictGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setVerdictPassed(true);
+    setStage("detect");
   };
 
   const handleVerdictNoGlitch = () => {
@@ -195,8 +196,7 @@ function SubCaseRunner({
   };
 
   const handleOperatorChange = (op: Operator) => {
-    if (stage !== "detect" && stage !== "repair") return;
-    if (stage === "detect") setStage("repair");
+    if (stage !== "repair") return;
     setAttempts((a) => a + 1);
     setOperator(op);
   };
