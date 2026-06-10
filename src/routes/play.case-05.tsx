@@ -138,7 +138,7 @@ function SubCaseRunner({
   const atTarget = denominator === c.correctDenominator;
 
   useEffect(() => {
-    if ((stage === "repair" || stage === "detect") && atTarget) {
+    if (stage === "repair" && atTarget) {
       setSolvedVisual(true);
       setPulseKey((k) => k + 1);
       const t = setTimeout(() => setStage("explain"), 900);
