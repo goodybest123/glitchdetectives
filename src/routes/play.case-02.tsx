@@ -307,14 +307,19 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <Visual
-              numerator={numerator}
-              denominator={denominator}
-              highlight={highlight}
-              onClickPart={handleGlitchClick}
-              interactive={stage === "investigate" && verdictPassed}
-              pulseKey={pulseKey}
-            />
+            <div
+              onClick={stage === "detect" ? () => handleGlitchClick(c.glitchTarget) : undefined}
+              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+            >
+              <Visual
+                numerator={numerator}
+                denominator={denominator}
+                highlight={highlight}
+                onClickPart={handleGlitchClick}
+                interactive={stage === "detect"}
+                pulseKey={pulseKey}
+              />
+            </div>
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
@@ -331,7 +336,7 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {(stage === "detect" || stage === "repair") && !atTarget && (
+            {stage === "repair" && !atTarget && (
               <div className="mt-8 rounded-2xl bg-[#f8fafc] p-5">
                 {c.repair === "stepper-denominator" && c.stepperRange && (
                   <NumberStepper
