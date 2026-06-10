@@ -16,9 +16,7 @@ export function CasePicker({ solved, onPick }: Props) {
         <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900">
           Choose a shape to investigate
         </h2>
-        <p className="mt-2 text-sm text-neutral-500">
-          Three equivalent-fraction puzzles. Solve them in any order.
-        </p>
+        <div className="mt-2 flex items-center justify-center gap-2"><p className="text-sm text-neutral-500">Three equivalent-fraction puzzles. Solve them in any order.</p><SpeakButton text={`Choose a shape to investigate. Three equivalent-fraction puzzles. Solve them in any order.`} /></div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
