@@ -7,12 +7,24 @@ const STEPS: { id: Exclude<Stage, "solved">; label: string; desc: string }[] = [
   { id: "explain", label: "Explain", desc: "Teach ZED-4 why it was wrong." },
 ];
 
+import { SpeakButton } from "./SpeakButton";
+
 export function CaseStepper({ stage }: { stage: Stage }) {
   const activeIndex =
     stage === "solved" ? STEPS.length : STEPS.findIndex((s) => s.id === stage);
+  const current =
+    stage === "solved"
+      ? { label: "Solved", desc: "Case closed — great work, Detective!" }
+      : STEPS[activeIndex] ?? STEPS[0];
 
   return (
+    <>
+    <div className="mb-2 flex items-center justify-center gap-2 text-xs text-neutral-500">
+      <span><span className="font-bold text-neutral-700">{current.label}:</span> {current.desc}</span>
+      <SpeakButton text={`${current.label}. ${current.desc}`} />
+    </div>
     <ol className="mb-8 grid grid-cols-4 gap-2 sm:gap-4" aria-label="Case progress">
+
       {STEPS.map((step, i) => {
         const state =
           i < activeIndex ? "complete" : i === activeIndex ? "active" : "upcoming";
