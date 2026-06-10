@@ -135,10 +135,6 @@ function SubCaseRunner({
   const [input, setInput] = useState("");
 
   useEffect(() => {
-    if (stage === "detect" && equalized > 0) setStage("repair");
-  }, [equalized, stage]);
-
-  useEffect(() => {
     if (stage === "repair" && equalized >= 0.995) {
       setEqualized(1);
       const t = setTimeout(() => setStage("explain"), 400);
