@@ -61,8 +61,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Brilliant! ZED-4 thought 1/8 was heavier because 8 is a big number. Explain to him why an 8 on the bottom actually makes the block smaller.",
     bubbles: {
-      investigate: "The 1/8 cargo block is way heavier because 8 is a bigger number than 4!",
-      detect: "Glitch Detected! Wait, look at the actual size of the blocks...",
+      investigate:
+        "AND folks, the winner of the heavyweight bout is — 1 OVER 8! Look at that gigantic number 8 on the bottom — eight is huge, four is puny, the call on the floor stands! 1/8 brings the BIG number, so 1/8 brings the BIG weight! I'd bet my circuits on it!",
+      detect:
+        "Detective — the symbol on the display looks wrong. Click it!",
       solved: "Logic repaired. The 1/4 block is heavier!",
     },
     captions: {
@@ -74,7 +76,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: BalanceScaleSVG,
     conceptMastered: "Bigger bottom number means smaller pieces",
-    successBanner: "Logic Repaired: The 1/4 block is heavier.",
+    successBanner: "Logic Repaired!",
   },
   coolant: {
     id: "coolant",
@@ -90,8 +92,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Great fix! ZED-4 has 2 pieces of coolant in both tubes. Why do 2 'thirds' take up more space than 2 'fifths'?",
     bubbles: {
-      investigate: "Tube B has more coolant because fifths are bigger than thirds!",
-      detect: "Glitch Detected! Let me check the fluid levels again...",
+      investigate:
+        "And down the home stretch — Tube B is roaring ahead with 2 over 5 because, ladies and gents, 5 is bigger than 3, and bigger numbers always mean MORE coolant! It's a landslide victory for Tube B! I've called a thousand races and this one isn't even close!",
+      detect:
+        "Detective — the symbol looks wrong. Click the display!",
       solved: "Logic repaired. Thirds are larger than fifths!",
     },
     captions: {
@@ -103,7 +107,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: CoolantTubesSVG,
     conceptMastered: "Same top number — smaller bottom means bigger pieces",
-    successBanner: "Logic Repaired: Thirds are larger than fifths.",
+    successBanner: "Logic Repaired!",
   },
   beams: {
     id: "beams",
@@ -119,8 +123,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Case closed! ZED-4 keeps getting tricked by the bottom numbers. What happens to the size of our pieces the larger the bottom number gets?",
     bubbles: {
-      investigate: "Beam B is much longer because 8 is greater than 4!",
-      detect: "Glitch Detected! Did I measure those backwards?",
+      investigate:
+        "Coming in HOT to the construction site — Beam B is the obvious winner, towering over Beam A! Why? Because 8 is greater than 4 — that's championship-level math! Bigger bottom number, bigger beam, every single time! Take it from your favorite sports robot — this one's a done deal!",
+      detect:
+        "Detective — the symbol on the display doesn't match! Click it!",
       solved: "Logic repaired. The 3/4 beam is longer!",
     },
     captions: {
@@ -132,7 +138,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: MetalBeamsSVG,
     conceptMastered: "Bigger bottom number = smaller pieces, every time",
-    successBanner: "Logic Repaired: The 3/4 beam is longer.",
+    successBanner: "Logic Repaired!",
   },
 };
 

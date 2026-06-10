@@ -49,8 +49,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Great detective work! You fixed my pizza. Can you tell me — why was my first try not fair?",
     bubbles: {
-      investigate: "Look! I served exactly four pieces of pizza!",
-      detect: "Glitch Detected! The pieces don't look fair.",
+      investigate:
+        "Whoa look look look! I served exactly four whole pieces of pizza, one for every robot! Counting all the way to four is a HUGE deal — I am totally, completely sure this is fair sharing!",
+      detect:
+        "Hmm… something here looks wrong. Click on the pizza where the sharing is not fair.",
       solved: "Logic repaired. The case is yours to close.",
     },
     captions: {
@@ -75,8 +77,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Thanks, Detective! You evened out my chocolate. Why was my first try not fair?",
     bubbles: {
-      investigate: "I broke it into thirds! We each get one piece!",
-      detect: "Glitch Detected! Those shares are not fair.",
+      investigate:
+        "Easy peasy! I snapped this chocolate bar into THREE whole pieces, and three is the magic number for thirds! Three friends, three pieces — case closed! I am one hundred percent positively sure this is perfect sharing!",
+      detect:
+        "Hmm… something looks off. Click the chocolate bar where the pieces are split unfairly.",
       solved: "Logic repaired. Thanks, Detective.",
     },
     captions: {
@@ -102,8 +106,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Thanks for centering my canvas! Can you tell me — why was my first try not half?",
     bubbles: {
-      investigate: "I just painted exactly half of the canvas!",
-      detect: "Glitch Detected! The sides do not match.",
+      investigate:
+        "Yes yes yes! I painted ONE side and left ONE side, so that is obviously HALF! One and one — that is the official rule for halves! I am so proud of this — beep boop, perfect work!",
+      detect:
+        "Hmm… something looks off. Click the line that's splitting the canvas unfairly.",
       solved: "Logic repaired. The canvas is balanced.",
     },
     captions: {

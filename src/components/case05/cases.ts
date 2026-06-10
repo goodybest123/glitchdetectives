@@ -67,8 +67,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Excellent fix! ZED-4 added the bottom numbers and accidentally built a mutant 10-slot crate. Explain to him why we never add the bottom numbers when combining pieces.",
     bubbles: {
-      investigate: "I added the top parts AND the bottom slots! We have 3/10!",
-      detect: "Glitch Detected! Why did the output crate suddenly change size?",
+      investigate:
+        "Ding ding ding — easy points for ZED-4! I added the top parts together AND I added the bottom slots together. One plus two on the top is three, five plus five on the bottom is ten — boom, 3 out of 10! I'd like to thank the audience, this category is too easy!",
+      detect:
+        "Detective — the answer looks wrong. Click the number that glitched!",
       solved: "Logic repaired. The crate stays the same size!",
     },
     captions: {
@@ -80,7 +82,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: ConveyorBeltSVG,
     conceptMastered: "Adding like denominators — the whole stays the same size",
-    successBanner: "Logic Repaired: The size of the crate stays the same.",
+    successBanner: "Logic Repaired!",
   },
   coolant: {
     id: "coolant",
@@ -100,8 +102,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Great save! ZED-4 subtracted the bottom numbers and made the whole tank vanish! What does the bottom number represent, and why doesn't it change when we drain coolant?",
     bubbles: {
-      investigate: "I subtracted the tops AND the bottoms! We have 3/0 coolant left!",
-      detect: "Glitch Detected! Wait, where did my tank go?",
+      investigate:
+        "Survey says — JACKPOT! I subtracted straight across! Top: five minus two equals three. Bottom: eight minus eight equals ZERO. So we have 3 out of 0 coolant left. The crowd goes wild, the buzzers light up — round complete!",
+      detect:
+        "Detective — that answer looks impossible. Click the number that glitched!",
       solved: "Logic repaired. The tank is still there!",
     },
     captions: {
@@ -113,7 +117,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: CoolantDrainSVG,
     conceptMastered: "Subtracting like denominators — the container stays the same",
-    successBanner: "Logic Repaired: The tank doesn't disappear just because we used some coolant.",
+    successBanner: "Logic Repaired!",
   },
   assembly: {
     id: "assembly",
@@ -133,8 +137,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Case closed! ZED-4 added the 6s together and built a mutant motherboard. Why must the denominator stay exactly the same when adding these chips?",
     bubbles: {
-      investigate: "5 chips on a 12-sided board! It's perfectly combined!",
-      detect: "Glitch Detected! Did we order the wrong size motherboard?",
+      investigate:
+        "Bonus round bonus round! I added the top chips — 2 plus 3 is 5 — AND I added the bottom sides — 6 plus 6 is 12! So obviously the motherboard upgraded itself to a 12-sided super-board with 5 chips on it. The audience is on their feet — this is my finest work!",
+      detect:
+        "Detective — the answer looks too big. Click the number that glitched!",
       solved: "Logic repaired. The board is the right size!",
     },
     captions: {
@@ -146,7 +152,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: AssemblyLineSVG,
     conceptMastered: "The denominator names the whole — it never changes when combining",
-    successBanner: "Logic Repaired: The board size remains constant.",
+    successBanner: "Logic Repaired!",
   },
 };
 

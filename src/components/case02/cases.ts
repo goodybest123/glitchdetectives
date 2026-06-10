@@ -62,8 +62,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Great detective work! ZED-4 thought the bottom number was just the blank pieces. What does the bottom number actually count?",
     bubbles: {
-      investigate: "I counted 3 painted blocks and 2 blank blocks. The fraction is 3/2!",
-      detect: "Glitch Detected! Did I count the bottom number wrong?",
+      investigate:
+        "Observation log entry forty-seven. I scanned the bar and counted exactly 3 painted blocks on top, then exactly 2 blank blocks on the bottom — therefore the fraction is plainly 3 over 2. My report is filed and stamped. This case is solved.",
+      detect:
+        "Detective — something here looks wrong. Click the number in the fraction that glitched.",
       solved: "Logic repaired. The case is yours to close.",
     },
     captions: {
@@ -81,7 +83,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     repair: "stepper-denominator",
     stepperRange: { min: 1, max: 9 },
     minSteps: 3,
-    successBanner: "Logic Repaired: The bottom number counts ALL the pieces.",
+    successBanner: "Logic Repaired!",
   },
   crate: {
     id: "crate",
@@ -93,8 +95,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Great fix! ZED-4 put the total number of battery slots on the top. Why does the 4 belong on the bottom and the 1 on the top?",
     bubbles: {
-      investigate: "My battery crate is 4/1 full!",
-      detect: "Glitch Detected! Are those numbers in the wrong place?",
+      investigate:
+        "Observation log entry forty-eight. The crate clearly has 4 total slots, so the big number 4 goes on top — the big proud number on top! The 1 battery underneath rides on the bottom like a passenger. My official reading: this crate is 4 over 1 full. I am certain.",
+      detect:
+        "Detective — something here looks upside down. Click the fraction if it looks wrong.",
       solved: "Logic repaired. The crate reads correctly now.",
     },
     captions: {
@@ -111,7 +115,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     glitchTarget: "fraction",
     repair: "swap",
     minSteps: 1,
-    successBanner: "Logic Repaired: The total always goes on the bottom.",
+    successBanner: "Logic Repaired!",
   },
   panels: {
     id: "panels",
@@ -123,8 +127,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     welcomeText:
       "Case closed! The sign asked for the 'active' power, but ZED-4 typed a 2. What mistake did he make when looking at the panels?",
     bubbles: {
-      investigate: "We are generating 2/6 active power!",
-      detect: "Glitch Detected! Did I count the wrong panels?",
+      investigate:
+        "Observation log entry forty-nine. I looked, I scanned, I counted the panels that were NOT glowing — exactly 2 dark ones — and wrote 2 on top. We are clearly generating 2 over 6 active power. Filed under: definitely correct.",
+      detect:
+        "Detective — something looks wrong on the sign. Click the number that glitched.",
       solved: "Logic repaired. The sign reads correctly.",
     },
     captions: {
@@ -142,7 +148,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     repair: "stepper-numerator",
     stepperRange: { min: 0, max: 6 },
     minSteps: 2,
-    successBanner: "Logic Repaired: The top number counts the active pieces.",
+    successBanner: "Logic Repaired!",
   },
 };
 
