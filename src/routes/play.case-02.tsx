@@ -144,7 +144,7 @@ function SubCaseRunner({
 
   // Auto-advance repair → explain when target hit
   useEffect(() => {
-    if ((stage === "repair" || stage === "detect") && atTarget) {
+    if (stage === "repair" && atTarget) {
       const t = setTimeout(() => setStage("explain"), 500);
       return () => clearTimeout(t);
     }
