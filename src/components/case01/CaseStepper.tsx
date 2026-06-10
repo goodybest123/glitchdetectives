@@ -80,5 +80,7 @@ export function CaseStepper({ stage }: { stage: Stage }) {
         );
       })}
     </ol>
+    </>
   );
 }
+
