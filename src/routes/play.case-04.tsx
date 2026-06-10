@@ -293,7 +293,7 @@ function SubCaseRunner({
                     <ComparatorSymbol
                       operator={operator}
                       highlight={stage === "detect" || stage === "repair"}
-                      clickable={stage === "investigate"}
+                      clickable={stage === "investigate" && verdictPassed}
                       onClick={handleSymbolClick}
                       pulseKey={pulseKey}
                     />
@@ -302,8 +302,20 @@ function SubCaseRunner({
               }
             />
 
-            <CaptionLine text={caption} />
+            {stage === "investigate" && !verdictPassed && (
+              <VerdictButtons
+                onGlitch={handleVerdictGlitch}
+                onNoGlitch={handleVerdictNoGlitch}
+                shakeKey={verdictShakeKey}
+                wrongCount={wrongVerdictCount}
+              />
+            )}
+
+            {!(stage === "investigate" && !verdictPassed) && (
+              <CaptionLine text={caption} />
+            )}
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
+
 
             {(stage === "detect" || stage === "repair") && !atTarget && (
               <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
