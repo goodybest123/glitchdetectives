@@ -280,7 +280,8 @@ function SubCaseRunner({
               }
             />
 
-            <p className="mt-6 text-center text-neutral-600">{caption}</p>
+            <CaptionLine text={caption} />
+            {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
             {(stage === "detect" || stage === "repair") && !atTarget && (
               <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
@@ -288,11 +289,7 @@ function SubCaseRunner({
               </div>
             )}
 
-            {(stage === "explain" || stage === "solved") && (
-              <div className="mt-6 rounded-2xl bg-[#dcfce7] px-5 py-4 text-center text-sm font-semibold text-[#166534]">
-                {c.successBanner}
-              </div>
-            )}
+            {(stage === "explain" || stage === "solved") && <SuccessBanner />}
           </div>
 
           {stage === "solved" && (
