@@ -115,6 +115,9 @@ function SubCaseRunner({
   );
 
   const [stage, setStage] = useState<Stage>("investigate");
+  const [verdictPassed, setVerdictPassed] = useState(false);
+  const [wrongVerdictCount, setWrongVerdictCount] = useState(0);
+  const [verdictShakeKey, setVerdictShakeKey] = useState(0);
   const [operator, setOperator] = useState<Operator>(c.wrongOperator);
   const [pulseKey, setPulseKey] = useState(0);
   const [dividersVisible, setDividersVisible] = useState(true);
