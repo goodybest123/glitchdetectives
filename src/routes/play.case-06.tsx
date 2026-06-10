@@ -205,7 +205,14 @@ function SubCaseRunner({
   );
 
   const marks = useMemo(() => {
-    const investigate = stage === "investigate" ? 0 : 5;
+    const investigate =
+      stage === "investigate"
+        ? 0
+        : wrongVerdictCount === 0
+          ? 5
+          : wrongVerdictCount === 1
+            ? 4
+            : 3;
     const detect = stage === "investigate" || stage === "detect" ? 0 : 5;
     const repair = repaired ? 5 : 0;
     let explain = 0;
