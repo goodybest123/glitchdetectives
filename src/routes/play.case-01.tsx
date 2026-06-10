@@ -213,13 +213,12 @@ function SubCaseRunner({
   }, [stage, equalized, studentQuotes]);
 
   const zed =
-    stage === "investigate"
+    stage === "investigate" || stage === "detect" || stage === "repair"
       ? { tone: "neutral" as const, text: c.bubbles.investigate }
-      : stage === "detect" || stage === "repair"
-      ? { tone: "alert" as const, text: c.bubbles.detect }
       : { tone: "happy" as const, text: c.bubbles.solved };
 
   const caption = c.captions[stage];
+  const showDetective = stage === "detect" || stage === "repair";
 
   // Next-case label
   const nextIndex = SUB_CASE_ORDER.indexOf(caseId) + 1;
