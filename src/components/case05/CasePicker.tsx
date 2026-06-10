@@ -1,3 +1,4 @@
+import { SpeakButton } from "@/components/case01/SpeakButton";
 import { SUB_CASE_ORDER, SUB_CASES, type SubCaseId } from "./cases";
 
 type Props = {
