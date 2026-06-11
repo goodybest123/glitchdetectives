@@ -135,6 +135,7 @@ function SubCaseRunner({
   });
 
   const [input, setInput] = useState("");
+  const sfx = useSfx();
 
   useEffect(() => {
     if (stage === "explain") composerRef.current?.focus();
@@ -150,8 +151,10 @@ function SubCaseRunner({
     if (hasSolved) {
       setStage("solved");
       onSolved();
+      sfx("chime");
+      celebrate();
     }
-  }, [messages, stage, onSolved]);
+  }, [messages, stage, onSolved, sfx]);
 
   useEffect(() => {
     if (stage === "solved") {
@@ -171,18 +174,21 @@ function SubCaseRunner({
     if (stage !== "detect") return;
     setStage("repair");
     setPulseKey((k) => k + 1);
+    sfx("ding");
   };
 
   const handleVerdictGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setVerdictPassed(true);
     setStage("detect");
+    sfx("ding");
   };
 
   const handleVerdictNoGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setWrongVerdictCount((n) => n + 1);
     setVerdictShakeKey((k) => k + 1);
+    sfx("error");
   };
 
   const handleRepair = () => {
