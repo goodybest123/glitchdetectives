@@ -18,6 +18,7 @@ import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
+import { useReportRecorder } from "@/hooks/useReportRecorder";
 import { celebrate } from "@/lib/celebrate";
 import {
   SUB_CASES,
