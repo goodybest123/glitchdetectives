@@ -27,13 +27,14 @@ const ACTIVE_CASES: {
   to: "/play/case-01" | "/play/case-02" | "/play/case-03" | "/play/case-04" | "/play/case-05" | "/play/case-06";
   title: string;
   subtitle: string;
+  topic: string;
 }[] = [
-  { to: "/play/case-01", title: "Case 01: Parts of a Whole", subtitle: "Are the slices fair?" },
-  { to: "/play/case-02", title: "Case 02: Naming the Pieces", subtitle: "Top number, bottom number." },
-  { to: "/play/case-03", title: "Case 03: The Shape Shifters", subtitle: "When more pieces means smaller pieces." },
-  { to: "/play/case-04", title: "Case 04: The Scale Weigh-In", subtitle: "Bigger bottom number means smaller pieces." },
-  { to: "/play/case-05", title: "Case 05: Combining Matches", subtitle: "Add the tops — the bottom stays the same." },
-  { to: "/play/case-06", title: "Case 06: The Mismatched Puzzle", subtitle: "When pieces don't match, slice before you add." },
+  { to: "/play/case-01", title: "Case 01: Parts of a Whole", subtitle: "Are the slices fair?", topic: "Parts of a Whole — Fair Sharing" },
+  { to: "/play/case-02", title: "Case 02: Naming the Pieces", subtitle: "Top number, bottom number.", topic: "Numerator & Denominator" },
+  { to: "/play/case-03", title: "Case 03: The Shape Shifters", subtitle: "When more pieces means smaller pieces.", topic: "Equivalent Fractions" },
+  { to: "/play/case-04", title: "Case 04: The Scale Weigh-In", subtitle: "Bigger bottom number means smaller pieces.", topic: "Comparing Fractions" },
+  { to: "/play/case-05", title: "Case 05: Combining Matches", subtitle: "Add the tops — the bottom stays the same.", topic: "Adding & Subtracting — Like Denominators" },
+  { to: "/play/case-06", title: "Case 06: The Mismatched Puzzle", subtitle: "When pieces don't match, slice before you add.", topic: "Adding & Subtracting — Unlike Denominators" },
 ];
 
 
@@ -73,9 +74,14 @@ function PlayPage() {
               to={a.to}
               className="group relative flex flex-col rounded-3xl bg-white p-7 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.18)] ring-1 ring-neutral-100 transition-shadow hover:shadow-[0_12px_40px_-12px_rgba(15,23,42,0.25)] min-h-[280px] text-left"
             >
-              <span className="inline-flex w-fit items-center rounded-full bg-[#ffde59] px-3 py-1 text-[11px] font-bold tracking-wider text-neutral-900">
-                ACTIVE CASE
-              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex w-fit items-center rounded-full bg-[#ffde59] px-3 py-1 text-[11px] font-bold tracking-wider text-neutral-900">
+                  ACTIVE CASE
+                </span>
+                <span className="inline-flex w-fit items-center rounded-full bg-neutral-900 px-3 py-1 text-[11px] font-bold tracking-wider text-white">
+                  {a.topic}
+                </span>
+              </div>
               <div className="mt-6 flex-1">
                 <h2 className="text-2xl font-bold leading-snug text-neutral-900">
                   {a.title}
