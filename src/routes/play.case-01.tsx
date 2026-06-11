@@ -11,6 +11,7 @@ import { CasePicker } from "@/components/case01/CasePicker";
 import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
+import { FractionCompareStrip } from "@/components/shared/FractionCompareStrip";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { useSfx } from "@/hooks/useSfx";
@@ -298,6 +299,22 @@ function SubCaseRunner({
                 pulseKey={pulseKey}
               />
             </div>
+
+            <FractionCompareStrip
+              variant="pizza"
+              caption="The fraction you're sharing"
+              items={[
+                {
+                  fraction:
+                    caseId === "pizza"
+                      ? { n: 1, d: 4 }
+                      : caseId === "chocolate"
+                        ? { n: 1, d: 3 }
+                        : { n: 1, d: 2 },
+                  label: "one fair piece",
+                },
+              ]}
+            />
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
