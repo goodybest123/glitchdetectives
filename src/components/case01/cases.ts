@@ -83,6 +83,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     emoji: "🍫",
     chatEndpoint: "/api/chat/case-01-chocolate",
     sliderLabel: "EQUALIZER TOOL",
+    toolTagline: "Drag to snap the bar into three matching thirds.",
+    toolMinLabel: "Uneven",
+    toolMaxLabel: "Equal thirds",
+    toolHint: "Almost there — keep equalizing until the thirds all match.",
     welcomeText:
       "Thanks, Detective! You evened out my chocolate. Why was my first try not fair?",
     bubbles: {
