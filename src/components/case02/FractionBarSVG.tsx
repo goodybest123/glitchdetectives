@@ -11,7 +11,9 @@ export function FractionBarSVG({
   onClickPart,
   interactive = false,
   pulseKey = 0,
+  glitchTarget,
 }: VisualProps) {
+
   const W = 360;
   const H = 80;
   const gap = 6;
