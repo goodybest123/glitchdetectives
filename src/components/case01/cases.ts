@@ -20,6 +20,10 @@ export type SubCaseDef = {
   emoji: string;
   chatEndpoint: string;
   sliderLabel: string;
+  toolTagline: string;
+  toolMinLabel: string;
+  toolMaxLabel: string;
+  toolHint: string;
   welcomeText: string;
   bubbles: {
     investigate: string;
@@ -36,6 +40,7 @@ export type SubCaseDef = {
   Visual: ComponentType<VisualProps>;
   conceptMastered: string;
 };
+
 
 export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
   pizza: {
