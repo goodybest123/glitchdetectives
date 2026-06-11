@@ -127,3 +127,17 @@ html { scroll-behavior: smooth; }
     line-height: 0.95;
   }
 }
+
+@keyframes glitch-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes tappable-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(253, 230, 138, 0.7); }
+  50% { box-shadow: 0 0 0 6px rgba(253, 230, 138, 0); }
+}
+
