@@ -203,7 +203,7 @@ const FRACTION_LEVELS: FractionLevel[] = [
     ),
     meta: ["Grade 1-2", "6 pages"],
     locked: false,
-    href: "/printables/fractions-level-1-foundations.pdf",
+    href: "/printables/fractions-l1",
     cover: fractionsL1Cover,
   },
   {
