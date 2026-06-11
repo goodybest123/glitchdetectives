@@ -9,11 +9,17 @@ import { MicButton } from "@/components/case01/MicButton";
 import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case06/CasePicker";
 import { EquationDisplay } from "@/components/case06/EquationDisplay";
-import { RepairToolButton } from "@/components/case06/RepairToolButton";
+import { BlueprintSlicer } from "@/components/case06/BlueprintSlicer";
+import { PaintCalibrator } from "@/components/case06/PaintCalibrator";
+import { CircuitSegmenter } from "@/components/case06/CircuitSegmenter";
 import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
+import { SoundToggle } from "@/components/shared/SoundToggle";
+import { useSfx } from "@/hooks/useSfx";
+import { useCaseProgress } from "@/hooks/useProgress";
+import { celebrate } from "@/lib/celebrate";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,
@@ -38,11 +44,7 @@ const SOLVED_TOKEN = "[[CASE_SOLVED]]";
 
 function CaseSixPage() {
   const [activeCase, setActiveCase] = useState<SubCaseId | null>(null);
-  const [solvedMap, setSolvedMap] = useState<Record<SubCaseId, boolean>>({
-    blueprint: false,
-    paint: false,
-    circuit: false,
-  });
+  const { solved: solvedMap, markSolved } = useCaseProgress("case-06", SUB_CASE_ORDER);
 
   if (!activeCase) {
     return (
@@ -57,7 +59,7 @@ function CaseSixPage() {
       <SubCaseRunner
         key={activeCase}
         caseId={activeCase}
-        onSolved={() => setSolvedMap((m) => ({ ...m, [activeCase]: true }))}
+        onSolved={() => markSolved(activeCase)}
         onBackToPicker={() => setActiveCase(null)}
       />
     </PageShell>
@@ -84,7 +86,7 @@ function PageShell({
           <h1 className="text-base sm:text-lg font-bold tracking-tight text-neutral-900">
             {title}
           </h1>
-          <span className="w-[160px]" aria-hidden />
+          <div className="flex w-[160px] items-center justify-end"><SoundToggle /></div>
         </div>
       </header>
       <div className="mx-auto w-full max-w-7xl px-6 py-10 sm:px-10">{children}</div>
@@ -133,6 +135,7 @@ function SubCaseRunner({
   });
 
   const [input, setInput] = useState("");
+  const sfx = useSfx();
 
   useEffect(() => {
     if (stage === "explain") composerRef.current?.focus();
@@ -148,8 +151,10 @@ function SubCaseRunner({
     if (hasSolved) {
       setStage("solved");
       onSolved();
+      sfx("chime");
+      celebrate();
     }
-  }, [messages, stage, onSolved]);
+  }, [messages, stage, onSolved, sfx]);
 
   useEffect(() => {
     if (stage === "solved") {
@@ -169,18 +174,21 @@ function SubCaseRunner({
     if (stage !== "detect") return;
     setStage("repair");
     setPulseKey((k) => k + 1);
+    sfx("ding");
   };
 
   const handleVerdictGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setVerdictPassed(true);
     setStage("detect");
+    sfx("ding");
   };
 
   const handleVerdictNoGlitch = () => {
     if (stage !== "investigate" || verdictPassed) return;
     setWrongVerdictCount((n) => n + 1);
     setVerdictShakeKey((k) => k + 1);
+    sfx("error");
   };
 
   const handleRepair = () => {
@@ -277,12 +285,20 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <div
-              onClick={stage === "detect" ? handleResultClick : undefined}
-              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
-            >
-              <Visual repaired={repaired} pulseKey={pulseKey} />
-            </div>
+            {stage === "repair" && !repaired ? (
+              <div className="rounded-2xl bg-[#fff7ed] p-5">
+                {caseId === "blueprint" && <BlueprintSlicer onComplete={handleRepair} />}
+                {caseId === "paint" && <PaintCalibrator onComplete={handleRepair} />}
+                {caseId === "circuit" && <CircuitSegmenter onComplete={handleRepair} />}
+              </div>
+            ) : (
+              <div
+                onClick={stage === "detect" ? handleResultClick : undefined}
+                className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+              >
+                <Visual repaired={repaired} pulseKey={pulseKey} />
+              </div>
+            )}
 
             <div className="mt-6">
               <EquationDisplay
@@ -309,17 +325,6 @@ function SubCaseRunner({
               <CaptionLine text={caption} />
             )}
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
-
-
-            {stage === "repair" && !repaired && (
-              <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
-                <RepairToolButton
-                  label={c.toolLabel}
-                  hint={c.toolHint}
-                  onClick={handleRepair}
-                />
-              </div>
-            )}
 
             {(stage === "explain" || stage === "solved") && <SuccessBanner />}
           </div>

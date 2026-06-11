@@ -14,6 +14,10 @@ import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
+import { SoundToggle } from "@/components/shared/SoundToggle";
+import { useSfx } from "@/hooks/useSfx";
+import { useCaseProgress } from "@/hooks/useProgress";
+import { celebrate } from "@/lib/celebrate";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,
@@ -38,11 +42,7 @@ const SOLVED_TOKEN = "[[CASE_SOLVED]]";
 
 function CaseFivePage() {
   const [activeCase, setActiveCase] = useState<SubCaseId | null>(null);
-  const [solvedMap, setSolvedMap] = useState<Record<SubCaseId, boolean>>({
-    conveyor: false,
-    coolant: false,
-    assembly: false,
-  });
+  const { solved: solvedMap, markSolved } = useCaseProgress("case-05", SUB_CASE_ORDER);
 
   if (!activeCase) {
     return (
@@ -57,7 +57,7 @@ function CaseFivePage() {
       <SubCaseRunner
         key={activeCase}
         caseId={activeCase}
-        onSolved={() => setSolvedMap((m) => ({ ...m, [activeCase]: true }))}
+        onSolved={() => markSolved(activeCase)}
         onBackToPicker={() => setActiveCase(null)}
       />
     </PageShell>
@@ -84,7 +84,7 @@ function PageShell({
           <h1 className="text-base sm:text-lg font-bold tracking-tight text-neutral-900">
             {title}
           </h1>
-          <span className="w-[160px]" aria-hidden />
+          <div className="flex w-[160px] items-center justify-end"><SoundToggle /></div>
         </div>
       </header>
       <div className="mx-auto w-full max-w-7xl px-6 py-10 sm:px-10">{children}</div>
@@ -122,6 +122,7 @@ function SubCaseRunner({
   const [solvedVisual, setSolvedVisual] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const composerRef = useRef<HTMLTextAreaElement>(null);
+  const sfx = useSfx();
   const reportRef = useRef<HTMLDivElement>(null);
 
   const transport = useRef(
@@ -160,6 +161,8 @@ function SubCaseRunner({
     if (hasSolved) {
       setStage("solved");
       onSolved();
+      sfx("chime");
+      celebrate();
     }
   }, [messages, stage, onSolved]);
 
