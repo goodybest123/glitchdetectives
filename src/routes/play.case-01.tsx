@@ -317,16 +317,49 @@ function SubCaseRunner({
             {(stage === "repair" ||
               stage === "explain" ||
               stage === "solved") && (
-              <div className="mt-8 rounded-2xl bg-[#f8fafc] p-5">
-                <div className="mb-3 flex items-center gap-2">
-                  <label
-                    htmlFor="equalizer"
-                    className="block text-sm font-semibold tracking-wide text-neutral-700"
-                  >
-                    {c.sliderLabel}
-                  </label>
-                  <SpeakButton text={c.sliderLabel} />
+              <div
+                className={`mt-8 rounded-2xl bg-gradient-to-br from-[#dbeafe] to-[#f8fafc] p-5 ring-1 ring-[#bfdbfe] transition-opacity ${
+                  stage === "explain" || stage === "solved" ? "opacity-80" : ""
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span aria-hidden className="text-lg">🛠️</span>
+                      <label
+                        htmlFor="equalizer"
+                        className="text-sm font-bold tracking-wider text-neutral-800"
+                      >
+                        {c.sliderLabel}
+                      </label>
+                      <SpeakButton text={`${c.sliderLabel}. ${c.toolTagline}`} />
+                    </div>
+                    <p className="mt-1 text-xs text-neutral-600">
+                      {c.toolTagline}
+                    </p>
+                  </div>
+                  {equalized >= 0.97 ? (
+                    <span className="shrink-0 rounded-full bg-[#10b981] px-2.5 py-1 text-[10px] font-bold tracking-wider text-white">
+                      ✓ BALANCED
+                    </span>
+                  ) : (
+                    <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[10px] font-bold tracking-wider text-neutral-500 ring-1 ring-neutral-200">
+                      {Math.round(equalized * 100)}%
+                    </span>
+                  )}
                 </div>
+
+                {stage === "repair" && equalized < 0.97 && (
+                  <div className="mt-3 rounded-xl bg-[#fef3c7] px-3 py-2 text-xs font-semibold text-[#92400e] ring-1 ring-[#fcd34d]">
+                    ⚡ Drag the slider to repair the glitch.
+                  </div>
+                )}
+                {(stage === "explain" || stage === "solved") && (
+                  <div className="mt-3 rounded-xl bg-white/70 px-3 py-2 text-xs font-medium text-neutral-500 ring-1 ring-neutral-200">
+                    🔒 Tool locked — explain your reasoning to close the case.
+                  </div>
+                )}
+
                 <input
                   id="equalizer"
                   type="range"
@@ -336,14 +369,20 @@ function SubCaseRunner({
                   value={equalized}
                   onChange={(e) => setEqualized(parseFloat(e.target.value))}
                   disabled={stage === "explain" || stage === "solved"}
-                  className="w-full accent-[#60a5fa]"
+                  className="mt-4 w-full accent-[#2563eb]"
                 />
-                <div className="mt-2 flex justify-between text-xs text-neutral-500">
-                  <span>Unfair</span>
-                  <span>Equal</span>
+                <div className="mt-2 flex justify-between text-xs font-medium text-neutral-600">
+                  <span>{c.toolMinLabel}</span>
+                  <span>{c.toolMaxLabel}</span>
                 </div>
+                {stage === "repair" && equalized > 0.05 && equalized < 0.97 && (
+                  <p className="mt-2 text-center text-xs italic text-neutral-500">
+                    {c.toolHint}
+                  </p>
+                )}
               </div>
             )}
+
 
             {(stage === "explain" || stage === "solved") && <SuccessBanner />}
           </div>

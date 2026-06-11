@@ -20,6 +20,10 @@ export type SubCaseDef = {
   emoji: string;
   chatEndpoint: string;
   sliderLabel: string;
+  toolTagline: string;
+  toolMinLabel: string;
+  toolMaxLabel: string;
+  toolHint: string;
   welcomeText: string;
   bubbles: {
     investigate: string;
@@ -37,6 +41,7 @@ export type SubCaseDef = {
   conceptMastered: string;
 };
 
+
 export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
   pizza: {
     id: "pizza",
@@ -46,6 +51,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     emoji: "🍕",
     chatEndpoint: "/api/chat/case-01",
     sliderLabel: "EQUALIZER TOOL",
+    toolTagline: "Drag to slice the pizza into four equal pieces.",
+    toolMinLabel: "Lopsided",
+    toolMaxLabel: "Fair slices",
+    toolHint: "Almost there — keep equalizing until all four slices match.",
     welcomeText:
       "Great detective work! You fixed my pizza. Can you tell me — why was my first try not fair?",
     bubbles: {
@@ -74,6 +83,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     emoji: "🍫",
     chatEndpoint: "/api/chat/case-01-chocolate",
     sliderLabel: "EQUALIZER TOOL",
+    toolTagline: "Drag to snap the bar into three matching thirds.",
+    toolMinLabel: "Uneven",
+    toolMaxLabel: "Equal thirds",
+    toolHint: "Almost there — keep equalizing until the thirds all match.",
     welcomeText:
       "Thanks, Detective! You evened out my chocolate. Why was my first try not fair?",
     bubbles: {
@@ -103,6 +116,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     emoji: "🎨",
     chatEndpoint: "/api/chat/case-01-canvas",
     sliderLabel: "CENTERING TOOL",
+    toolTagline: "Drag the line until both sides match perfectly.",
+    toolMinLabel: "Off-center",
+    toolMaxLabel: "Perfectly half",
+    toolHint: "Almost there — slide until both halves are exactly the same.",
     welcomeText:
       "Thanks for centering my canvas! Can you tell me — why was my first try not half?",
     bubbles: {
