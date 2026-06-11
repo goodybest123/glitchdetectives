@@ -279,12 +279,20 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <div
-              onClick={stage === "detect" ? handleResultClick : undefined}
-              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
-            >
-              <Visual repaired={repaired} pulseKey={pulseKey} />
-            </div>
+            {stage === "repair" && !repaired ? (
+              <div className="rounded-2xl bg-[#fff7ed] p-5">
+                {caseId === "blueprint" && <BlueprintSlicer onComplete={handleRepair} />}
+                {caseId === "paint" && <PaintCalibrator onComplete={handleRepair} />}
+                {caseId === "circuit" && <CircuitSegmenter onComplete={handleRepair} />}
+              </div>
+            ) : (
+              <div
+                onClick={stage === "detect" ? handleResultClick : undefined}
+                className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+              >
+                <Visual repaired={repaired} pulseKey={pulseKey} />
+              </div>
+            )}
 
             <div className="mt-6">
               <EquationDisplay
@@ -311,17 +319,6 @@ function SubCaseRunner({
               <CaptionLine text={caption} />
             )}
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
-
-
-            {stage === "repair" && !repaired && (
-              <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
-                <RepairToolButton
-                  label={c.toolLabel}
-                  hint={c.toolHint}
-                  onClick={handleRepair}
-                />
-              </div>
-            )}
 
             {(stage === "explain" || stage === "solved") && <SuccessBanner />}
           </div>
