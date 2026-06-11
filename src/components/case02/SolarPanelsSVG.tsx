@@ -91,7 +91,9 @@ export function SolarPanelsSVG({
           onClickPart={onClickPart}
           interactive={interactive}
           size="md"
+          glitchTarget={glitchTarget}
         />
+
       </div>
     </div>
   );
