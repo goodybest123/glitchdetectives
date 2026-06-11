@@ -62,7 +62,9 @@ export function FractionBarSVG({
         highlight={highlight}
         onClickPart={onClickPart}
         interactive={interactive}
+        glitchTarget={glitchTarget}
       />
+
     </div>
   );
 }
