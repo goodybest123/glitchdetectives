@@ -13,6 +13,9 @@ export function CasePicker({ solved, onPick }: Props) {
         <div className="text-xs font-bold tracking-[0.2em] text-[#10b981]">
           CASE FILE 02
         </div>
+        <div className="mt-1 text-sm font-semibold text-neutral-700">
+          Topic: Numerator & Denominator
+        </div>
         <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900">
           Choose a case to investigate
         </h2>
