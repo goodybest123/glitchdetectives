@@ -347,9 +347,9 @@ function SubCaseRunner({
         </section>
 
         {/* Chat panel */}
-        <aside className="lg:sticky lg:top-8 lg:self-start">
+        <aside className="lg:self-stretch">
           <div
-            className={`flex h-[600px] flex-col rounded-3xl bg-white shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100 transition-opacity ${
+            className={`flex h-full min-h-[600px] flex-col rounded-3xl bg-white shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100 transition-opacity ${
               chatEnabled || stage === "solved" ? "opacity-100" : "opacity-50"
             }`}
             aria-disabled={!chatEnabled}
