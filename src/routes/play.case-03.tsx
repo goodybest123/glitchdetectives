@@ -17,6 +17,7 @@ import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
+import { useReportRecorder } from "@/hooks/useReportRecorder";
 import { celebrate } from "@/lib/celebrate";
 import {
   SUB_CASES,
@@ -252,6 +253,19 @@ function SubCaseRunner({
     }
     return { investigate, detect, repair, explain };
   }, [stage, atTarget, attempts, studentQuotes, wrongVerdictCount]);
+
+  useReportRecorder({
+    active: stage === "solved",
+    caseId: "case-03",
+    subId: caseId,
+    caseTitle: "Case 03: The Shape Shifters",
+    subTitle: c.title,
+    emoji: c.emoji,
+    glitchSummary: c.subtitle,
+    conceptMastered: c.conceptMastered,
+    studentQuotes,
+    marks,
+  });
 
   const zed =
     stage === "investigate" || stage === "detect" || (stage === "repair" && !atTarget)

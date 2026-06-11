@@ -14,6 +14,7 @@ import { Route as PlayRouteImport } from './routes/play'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
+import { Route as PlayReportRouteImport } from './routes/play.report'
 import { Route as PlayCase06RouteImport } from './routes/play.case-06'
 import { Route as PlayCase05RouteImport } from './routes/play.case-05'
 import { Route as PlayCase04RouteImport } from './routes/play.case-04'
@@ -63,6 +64,11 @@ const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
   id: '/fractions-l1',
   path: '/fractions-l1',
   getParentRoute: () => PrintablesRoute,
+} as any)
+const PlayReportRoute = PlayReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => PlayRoute,
 } as any)
 const PlayCase06Route = PlayCase06RouteImport.update({
   id: '/case-06',
@@ -195,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/play/case-04': typeof PlayCase04Route
   '/play/case-05': typeof PlayCase05Route
   '/play/case-06': typeof PlayCase06Route
+  '/play/report': typeof PlayReportRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -225,6 +232,7 @@ export interface FileRoutesByTo {
   '/play/case-04': typeof PlayCase04Route
   '/play/case-05': typeof PlayCase05Route
   '/play/case-06': typeof PlayCase06Route
+  '/play/report': typeof PlayReportRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -257,6 +265,7 @@ export interface FileRoutesById {
   '/play/case-04': typeof PlayCase04Route
   '/play/case-05': typeof PlayCase05Route
   '/play/case-06': typeof PlayCase06Route
+  '/play/report': typeof PlayReportRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
     | '/play/case-04'
     | '/play/case-05'
     | '/play/case-06'
+    | '/play/report'
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/play/case-04'
     | '/play/case-05'
     | '/play/case-06'
+    | '/play/report'
     | '/printables/fractions-l1'
     | '/play'
     | '/api/chat/case-01'
@@ -351,6 +362,7 @@ export interface FileRouteTypes {
     | '/play/case-04'
     | '/play/case-05'
     | '/play/case-06'
+    | '/play/report'
     | '/printables/fractions-l1'
     | '/play/'
     | '/api/chat/case-01'
@@ -433,6 +445,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/printables/fractions-l1'
       preLoaderRoute: typeof PrintablesFractionsL1RouteImport
       parentRoute: typeof PrintablesRoute
+    }
+    '/play/report': {
+      id: '/play/report'
+      path: '/report'
+      fullPath: '/play/report'
+      preLoaderRoute: typeof PlayReportRouteImport
+      parentRoute: typeof PlayRoute
     }
     '/play/case-06': {
       id: '/play/case-06'
@@ -612,6 +631,7 @@ interface PlayRouteChildren {
   PlayCase04Route: typeof PlayCase04Route
   PlayCase05Route: typeof PlayCase05Route
   PlayCase06Route: typeof PlayCase06Route
+  PlayReportRoute: typeof PlayReportRoute
   PlayIndexRoute: typeof PlayIndexRoute
 }
 
@@ -622,6 +642,7 @@ const PlayRouteChildren: PlayRouteChildren = {
   PlayCase04Route: PlayCase04Route,
   PlayCase05Route: PlayCase05Route,
   PlayCase06Route: PlayCase06Route,
+  PlayReportRoute: PlayReportRoute,
   PlayIndexRoute: PlayIndexRoute,
 }
 

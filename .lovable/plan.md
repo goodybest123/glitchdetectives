@@ -1,65 +1,95 @@
-# Make every repair hands-on + investor-demo polish
+# Judge-Friendly Diagnostic Report
 
-The Detect stage is already interactive across all 6 cases. The Repair stage is hands-on in Cases 01–05 (slider, steppers, toggles), but Case 06 cheats — a single button silently swaps the visual. This plan turns Case 06 into real tactile manipulations, and adds the polish layer investors and judges expect.
+A new master report page summarizing every glitch the child has tackled across all six case files, with ZED-4's AI verdict on each explanation.
 
-## 1. Case 06 — make all three repairs physical
+## What the judge will see
 
-Remove `RepairToolButton.tsx`. Replace each sub-case's repair with a direct gesture on the SVG. Pointer Events (`onPointerDown/Move/Up`) so it works equally on mouse, trackpad, touch, and pen — no extra libraries.
+Route: `/play/report` (linked from `/play` header and from the "Case Closed" screen of every sub-case).
 
-### Blueprint — Laser Slicer (drag to slice)
-- Detective grabs a glowing "laser" handle above the 1/2 block and drags it down through the block.
-- A dashed orange laser line follows the pointer Y. When it crosses the block's vertical midline (snap zone ±10px), the block visibly cleaves into two 1/4 pieces with a small spark/flash and a click-tick sound.
-- Caption updates: "Drag the laser down through the middle of the big block."
-- After cleave, the right output box morphs from 2/6 → 3/4 with a 400ms slot-fill animation.
+Sections, top to bottom:
+1. **Header strip** — "Detective's Report", child-friendly subtitle, totals (e.g. "14 of 18 glitches solved · 12 marked correct by ZED-4"), and a **Print / Save PDF** button (uses `window.print()` with a print stylesheet).
+2. **At-a-glance grid** — one card per case file (01–06) showing: case title, emoji, sub-cases completed (e.g. 3/3), correctness dots (green/amber/grey).
+3. **Per-glitch rows** — grouped by case file, each row contains:
+   - Glitch summary (one sentence from the case data, e.g. "The 1/2 block is upside-down.").
+   - The child's explanation quote (longest student chat message from Explain stage).
+   - ZED-4 verdict pill: **Correct**, **Almost — needs review**, or **Not attempted**, plus a one-line ZED-4 comment.
+   - Marks bar (Investigate / Detect / Repair / Explain — reuses existing `marks` shape).
+4. **Footer** — "Made with Glitch Detectives" + back link to `/play`.
 
-### Paint Vats — Grid Calibrator (tap to add a grid line)
-- The 1/3 vat shows two faint dashed "snap rails" at the 1/6 and 2/6 marks. Detective taps either rail (or both) to lay in real grid lines.
-- Once the vat has the same 6-row grid as the right vat, the paint redistributes (1/3 → 2/6) with a liquid-fill ease, and the output vat fills from 2/9 → 3/6.
-- Caption: "Tap the dotted line to add a matching grid line."
+Empty / partial states: rows for un-attempted sub-cases show a muted "Not attempted yet" pill instead of marks.
 
-### Circuit Board — Segmenter Tool (tap each slice)
-- The 1/2 power cell shows three faint horizontal "cut here" guides. Detective taps each guide in turn; each tap snaps a real segment line into place with a brief green pulse.
-- After three taps the cell is 4 × 1/8. Then the bottom segment ejects (slides out + dims) to represent the −1/8 subtraction, and the output board fills from 0/6 → 3/8.
-- Caption updates progressively: "Tap each cut line to slice the cell into eighths." → "Now eject one eighth to subtract."
+## How it works
 
-### Shared support
-- New `src/components/case06/RepairCanvas.tsx` wraps the SVG with pointer handlers, snap helpers, and a `onComplete()` callback.
-- Replace `RepairToolButton` usage in `play.case-06.tsx` with the in-SVG gesture. `handleRepair` is called from `onComplete`.
-- A11y: each gesture is also operable by keyboard — focusable handle + Arrow keys + Enter to slice/tap. Visible focus ring.
-- Mobile: `touch-action: none` on the gesture surface, `pointer-events` only on handles, generous 44px hit targets.
+### 1. Capture data per sub-case (localStorage)
 
-## 2. Tighten Repair stages in Cases 01–05
+Extend the existing `gd:progress:v1` store (today only booleans) to a richer record. Bump key to `gd:report:v1` and keep the old key readable for one release.
 
-Keep what works; raise the production value.
+Shape:
+```
+{
+  [caseId]:                 // "case-01" … "case-06"
+    [subCaseId]: {
+      title: string,        // sub-case display title
+      glitchSummary: string,// short one-liner from cases.ts
+      explanation: string,  // longest student message
+      marks: { investigate, detect, repair, explain },
+      verdict: "correct" | "review" | "pending",
+      verdictNote: string,  // ZED-4's one-liner from AI
+      solvedAt: number      // epoch ms
+    }
+}
+```
 
-- Case 01 slider: add tick marks at the 1/N positions and a soft haptic-style snap when each slice becomes equal. The "EQUALIZER" handle gets a subtle glow when within snap distance.
-- Case 02 stepper/swap: add a +1/−1 long-press to step quickly, and animate the visual fraction (bar fill, crate orientation flip, panel grid) with a 250ms spring whenever the number changes.
-- Case 03 comparator toggle: animate the `<` / `>` / `=` symbol with a flip rotation when toggled; show a brief green check when the relation matches reality.
-- Case 04 balance scale: tilt the scale beam to reflect the chosen comparator in real time, even before the answer is confirmed.
-- Case 05 denominator stepper: each step morphs the conveyor/coolant/assembly grid so the child sees the bottom number physically reshape the world.
+Write happens once per sub-case when the child enters the `solved` stage. Each `play.case-0X.tsx` already computes `marks` and `studentQuotes`; we add a small `useEffect` that, on first transition to `solved`, calls `saveReportEntry(caseId, subId, …)`.
 
-## 3. Investor-demo polish (applies to all cases)
+New helper: `src/hooks/useReportStore.ts` with `saveReportEntry`, `getReport`, `clearReport` (all SSR-safe, `typeof window !== "undefined"`). `useCaseProgress` keeps working — it now reads "solved" from the new store.
 
-- **Sound design (toggleable):** light UI ticks on tap, a soft "ding" on correct detect, a satisfying "snap" on repair completion, and a warm chime on Case Solved. Mute toggle in the header (persisted in `localStorage`). Single tiny `useSfx()` hook using `AudioContext` — no audio files needed for v1.
-- **Confetti + screen flash on solved** using `canvas-confetti` (3KB). Triggers once per sub-case completion alongside the existing SuccessBanner.
-- **Progress persistence:** `localStorage` key `gd:progress:v1` stores `{ [caseId]: { [subCaseId]: "solved" } }`. CasePickers already render a solved state — wire them to read/write this store so a judge can refresh the page without losing progress.
-- **Demo Mode toggle** in the header: when on, auto-fills the AI Guide composer with a strong example explanation, lets the presenter ship it with one tap, and adds a "Reset Demo" button that clears progress. Useful on stage where typing is slow.
-- **Micro-interactions everywhere:** hover lift on case-picker cards, focus rings on every interactive element, `prefers-reduced-motion` honored (skip springs, keep state changes), and a single shared `motion` helper so timings stay consistent.
-- **Mobile pass:** verify every gesture in Cases 01–06 at 375px and 414px viewports; bump hit targets to ≥44px; ensure the chat panel collapses gracefully under the case file on small screens (already mostly true — confirm and fix any overflow).
-- **Per-case meta polish:** unique `og:image` already TODO — add a simple gradient-card SVG-to-PNG for each case route's `head()` so social shares look intentional.
-- **Empty/locked state messaging:** the "Unlocks after you repair the logic" line gets a small lock icon and a subtle pulse so judges instantly see chat is gated by mastery, not a bug.
+### 2. ZED-4 AI verdict (Lovable AI Gateway)
 
-## 4. Out of scope (call out explicitly)
-- No backend changes, no AI prompt edits, no new routes, no auth.
-- No new fraction concepts — same six cases, same math.
-- Speech (TTS/mic) already exists and stays as-is.
+New server function `gradeExplanation` in `src/lib/report.functions.ts` using `createServerFn` + `generateText` with `Output.object` schema:
+```
+{ verdict: "correct" | "review", note: string (≤120 chars) }
+```
+Inputs: `{ caseTitle, subTitle, glitchSummary, conceptMastered, childExplanation }`.
+Model: `google/gemini-3-flash-preview` via the existing `src/lib/ai-gateway.ts` helper.
+System prompt frames ZED-4 as an encouraging robot tutor grading a child's fraction explanation; mark "correct" if the explanation captures the core idea, otherwise "review" with a one-line nudge.
 
-## Technical notes
-- New files: `src/components/case06/RepairCanvas.tsx`, `src/components/case06/BlueprintSlicer.tsx`, `src/components/case06/PaintCalibrator.tsx`, `src/components/case06/CircuitSegmenter.tsx`, `src/hooks/useSfx.ts`, `src/hooks/useProgress.ts`, `src/components/shared/DemoModeToggle.tsx`, `src/components/shared/SoundToggle.tsx`.
-- Edited: all six `src/routes/play.case-0X.tsx` (wire progress + sound + confetti), `src/components/case06/cases.ts` (drop `toolLabel/toolHint`, add gesture metadata), each case's existing repair component for the polish pass, `src/styles.css` (snap-glow, segment-pulse keyframes).
-- Deleted: `src/components/case06/RepairToolButton.tsx`.
-- New dependency: `canvas-confetti` (and `@types/canvas-confetti`).
-- No changes to `src/integrations/supabase/*`, no changes to `routeTree.gen.ts`.
+Call site: same `useEffect` that writes the report entry. Optimistic record is written with `verdict: "pending"`, then the AI response patches the record. If the call fails (offline, 429, 402), we leave it as `pending` with `verdictNote: "ZED-4 couldn't grade this right now."` — the row still appears with marks intact.
 
-## Estimated impact
-~12 new files, ~10 edited files, one tiny dependency. Result: every case is end-to-end tactile, with the kind of feel-and-finish judges remember.
+### 3. New route `src/routes/play.report.tsx`
+
+- Loads the report from localStorage on mount (client-only — no loader, so no SSR/auth issues per `auth-protected-server-functions`).
+- Iterates `SUB_CASE_ORDER` for each case (case-01 already exports it; case-02–06 export equivalent metadata in their `cases.ts` — verified during exploration) and renders attempted/non-attempted rows.
+- Includes print stylesheet (extend existing `print:` utilities already used in `DiagnosticReport.tsx`).
+
+### 4. Entry points
+
+- Add a "View Report" button in `src/routes/play.index.tsx` header.
+- Add a secondary "View full report" button inside the existing per-case `DiagnosticReport` action bar.
+- Optional: small "Reset report" link on `/play/report` that clears `gd:report:v1` for demo replays.
+
+## Technical details
+
+**Files created**
+- `src/routes/play.report.tsx` — the master report page (client-rendered).
+- `src/hooks/useReportStore.ts` — localStorage read/write + types.
+- `src/lib/report.functions.ts` — `gradeExplanation` server function (Lovable AI Gateway).
+- `src/components/report/ReportRow.tsx`, `ReportCaseCard.tsx`, `VerdictPill.tsx` — presentational pieces.
+
+**Files edited**
+- `src/routes/play.case-01.tsx` … `play.case-06.tsx` — one `useEffect` on `solved` to call `saveReportEntry` + `gradeExplanation`; add "View full report" link in the report action bar.
+- `src/components/case01/DiagnosticReport.tsx` — add the extra action button (only this file; other cases reuse it or have their own — exploration showed only case-01 hosts `DiagnosticReport`; cases 02–06 import it from `case01/`. Verified.)
+- `src/routes/play.index.tsx` — header "View Report" link.
+- `src/hooks/useProgress.ts` — keep API, but `markSolved` now also writes to the new report store (or the route does it directly; pick one path during build).
+- `src/styles.css` — minor print rules + verdict pill colors.
+
+**Out of scope**
+- No backend tables, no auth, no cross-device sync (per user choice).
+- No edits to existing chat routes or repair mechanics.
+- No new fraction content.
+
+## Acceptance checks
+- Solve at least one sub-case from two different case files, reload, open `/play/report` → both rows appear with the child's quote, marks, and a ZED-4 verdict pill.
+- Disable network during the Explain → Solved transition → row still appears with `pending` verdict and graceful note.
+- Print preview renders cleanly without nav chrome or buttons.
+- "Reset report" empties the page back to all "Not attempted yet" rows.

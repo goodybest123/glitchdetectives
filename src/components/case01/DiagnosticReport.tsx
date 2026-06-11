@@ -175,6 +175,12 @@ export function DiagnosticReport({
           </button>
         )}
         <Link
+          to="/play/report"
+          className="rounded-full bg-[#1e3a8a] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-[#1e40af]"
+        >
+          VIEW FULL REPORT
+        </Link>
+        <Link
           to="/play"
           className="rounded-full bg-[#1f2937] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-black"
         >

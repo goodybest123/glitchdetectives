@@ -45,13 +45,21 @@ function PlayPage() {
     <main className="min-h-screen bg-white">
       <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-10 sm:py-20">
         <header className="mb-12 sm:mb-16">
-          <Link
-            to="/"
-            hash="worlds"
-            className="label-eyebrow text-neutral-500 hover:text-neutral-900 transition-colors"
-          >
-            ← Back to Explore Detective Worlds
-          </Link>
+          <div className="flex items-start justify-between gap-4">
+            <Link
+              to="/"
+              hash="worlds"
+              className="label-eyebrow text-neutral-500 hover:text-neutral-900 transition-colors"
+            >
+              ← Back to Explore Detective Worlds
+            </Link>
+            <Link
+              to="/play/report"
+              className="rounded-full bg-neutral-900 px-4 py-2 text-xs font-bold tracking-wider text-white transition hover:bg-black"
+            >
+              📋 VIEW DETECTIVE'S REPORT
+            </Link>
+          </div>
           <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-neutral-900 leading-[0.95]">
             Fraction Factory:
             <br />
