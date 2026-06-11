@@ -299,6 +299,22 @@ function SubCaseRunner({
               />
             </div>
 
+            <FractionCompareStrip
+              variant="pizza"
+              caption="The fraction you're sharing"
+              items={[
+                {
+                  fraction:
+                    caseId === "pizza"
+                      ? { n: 1, d: 4 }
+                      : caseId === "chocolate"
+                        ? { n: 1, d: 3 }
+                        : { n: 1, d: 2 },
+                  label: "one fair piece",
+                },
+              ]}
+            />
+
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
                 onGlitch={handleVerdictGlitch}

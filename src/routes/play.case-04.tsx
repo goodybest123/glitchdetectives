@@ -324,6 +324,16 @@ function SubCaseRunner({
               />
             </div>
 
+            <FractionCompareStrip
+              variant={c.left.d <= 8 && c.right.d <= 8 ? "pizza" : "bar"}
+              caption="See the pieces — which is bigger?"
+              operators={[solvedVisual ? c.correctOperator : "?"]}
+              items={[
+                { fraction: c.left, tone: "primary", label: "left" },
+                { fraction: c.right, tone: "secondary", label: "right" },
+              ]}
+            />
+
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
                 onGlitch={handleVerdictGlitch}

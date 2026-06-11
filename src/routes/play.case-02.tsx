@@ -336,6 +336,17 @@ function SubCaseRunner({
               />
             </div>
 
+            <FractionCompareStrip
+              variant="bar"
+              caption="What the fraction looks like"
+              items={[
+                {
+                  fraction: { n: numerator, d: denominator },
+                  label: "current reading",
+                },
+              ]}
+            />
+
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons

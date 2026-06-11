@@ -331,6 +331,21 @@ function SubCaseRunner({
               />
             </div>
 
+            <FractionCompareStrip
+              variant="bar"
+              caption={`See the pieces (${c.operator})`}
+              operators={[c.operator, "="]}
+              items={[
+                { fraction: c.left, tone: "primary", label: "left" },
+                { fraction: c.right, tone: "secondary", label: "right" },
+                {
+                  fraction: { n: c.correctNumerator, d: denominator },
+                  tone: "accent",
+                  label: "result",
+                },
+              ]}
+            />
+
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
                 onGlitch={handleVerdictGlitch}
