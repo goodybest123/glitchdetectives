@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { clearReport, useReport, type ReportEntry, type Verdict } from "@/hooks/useReportStore";
+
 import { SUB_CASES as C1, SUB_CASE_ORDER as O1 } from "@/components/case01/cases";
 import { SUB_CASES as C2, SUB_CASE_ORDER as O2 } from "@/components/case02/cases";
 import { SUB_CASES as C3, SUB_CASE_ORDER as O3 } from "@/components/case03/cases";
@@ -136,6 +137,49 @@ function ReportPage() {
     if (typeof window !== "undefined") window.print();
   };
 
+  const reportRef = useRef<HTMLDivElement>(null);
+  const [downloading, setDownloading] = useState(false);
+
+  const onDownloadPdf = async () => {
+    if (!reportRef.current || downloading) return;
+    setDownloading(true);
+    try {
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+        import("html2canvas-pro"),
+        import("jspdf"),
+      ]);
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+      });
+      const pdf = new jsPDF({ unit: "pt", format: "a4" });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const imgW = pageW;
+      const imgH = (canvas.height * imgW) / canvas.width;
+      const imgData = canvas.toDataURL("image/jpeg", 0.92);
+
+      let heightLeft = imgH;
+      let position = 0;
+      pdf.addImage(imgData, "JPEG", 0, position, imgW, imgH);
+      heightLeft -= pageH;
+      while (heightLeft > 0) {
+        position -= pageH;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, imgW, imgH);
+        heightLeft -= pageH;
+      }
+      const date = new Date().toISOString().slice(0, 10);
+      pdf.save(`glitch-detectives-report-${date}.pdf`);
+    } catch (err) {
+      console.error("PDF generation failed", err);
+      if (typeof window !== "undefined") window.alert("Sorry — PDF generation failed. Try Print / Save PDF instead.");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   const onReset = () => {
     if (typeof window === "undefined") return;
     if (window.confirm("Clear the Detective's Report for this browser?")) {
@@ -167,15 +211,24 @@ function ReportPage() {
             <button
               type="button"
               onClick={onPrint}
-              className="rounded-full bg-neutral-900 px-3 py-1.5 text-xs font-bold tracking-wider text-white transition hover:bg-black"
+              className="rounded-full border border-neutral-200 px-3 py-1.5 text-xs font-bold tracking-wider text-neutral-700 transition hover:bg-neutral-50"
             >
-              PRINT / SAVE PDF
+              PRINT
+            </button>
+            <button
+              type="button"
+              onClick={onDownloadPdf}
+              disabled={downloading}
+              className="rounded-full bg-neutral-900 px-3 py-1.5 text-xs font-bold tracking-wider text-white transition hover:bg-black disabled:opacity-60"
+            >
+              {downloading ? "GENERATING…" : "DOWNLOAD PDF"}
             </button>
           </div>
         </div>
       </header>
 
-      <div className="mx-auto w-full max-w-6xl px-6 py-10 sm:px-10">
+
+      <div ref={reportRef} className="mx-auto w-full max-w-6xl px-6 py-10 sm:px-10 bg-[#f8fafc]">
         {/* Hero */}
         <section className="rounded-3xl bg-white p-6 sm:p-10 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100">
           <div className="flex flex-wrap items-start justify-between gap-4">
