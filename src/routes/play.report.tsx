@@ -171,7 +171,24 @@ function ReportPage() {
         heightLeft -= pageH;
       }
       const date = new Date().toISOString().slice(0, 10);
-      pdf.save(`glitch-detectives-report-${date}.pdf`);
+      const filename = `glitch-detectives-report-${date}.pdf`;
+      const blob = pdf.output("blob");
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      // Fallback: if downloads are blocked (e.g. sandboxed preview iframe), open in a new tab.
+      window.setTimeout(() => {
+        try {
+          window.open(url, "_blank", "noopener");
+        } catch {
+          /* ignore */
+        }
+        window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+      }, 400);
     } catch (err) {
       console.error("PDF generation failed", err);
       if (typeof window !== "undefined") window.alert("Sorry — PDF generation failed. Try Print / Save PDF instead.");
