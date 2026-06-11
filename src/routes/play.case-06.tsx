@@ -15,7 +15,6 @@ import { CircuitSegmenter } from "@/components/case06/CircuitSegmenter";
 import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
-import { FractionCompareStrip } from "@/components/shared/FractionCompareStrip";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { useSfx } from "@/hooks/useSfx";
@@ -326,21 +325,6 @@ function SubCaseRunner({
                 onResultClick={handleResultClick}
               />
             </div>
-
-            <FractionCompareStrip
-              variant="bar"
-              caption={
-                repaired
-                  ? "Same-size pieces — now they combine!"
-                  : "Different-size pieces don't combine yet"
-              }
-              operators={[c.operator, "="]}
-              items={[
-                { fraction: displayedLeft, tone: "primary", label: "left" },
-                { fraction: c.right, tone: "secondary", label: "right" },
-                { fraction: displayedResult, tone: "accent", label: "result" },
-              ]}
-            />
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons

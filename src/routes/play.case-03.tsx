@@ -13,7 +13,6 @@ import { ComparatorToggle } from "@/components/case03/ComparatorToggle";
 import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
-import { FractionCompareStrip } from "@/components/shared/FractionCompareStrip";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { useSfx } from "@/hooks/useSfx";
@@ -325,16 +324,6 @@ function SubCaseRunner({
                 }
               />
             </div>
-
-            <FractionCompareStrip
-              variant="pizza"
-              caption="Compare the two amounts"
-              operators={["="]}
-              items={[
-                { fraction: c.left, tone: "primary", label: "left" },
-                { fraction: c.right, tone: "secondary", label: "right" },
-              ]}
-            />
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
