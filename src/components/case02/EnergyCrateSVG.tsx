@@ -11,7 +11,9 @@ export function EnergyCrateSVG({
   onClickPart,
   interactive = false,
   pulseKey = 0,
+  glitchTarget,
 }: VisualProps) {
+
   return (
     <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-10">
       <svg
@@ -71,7 +73,9 @@ export function EnergyCrateSVG({
         highlight={highlight}
         onClickPart={onClickPart}
         interactive={interactive}
+        glitchTarget={glitchTarget}
       />
+
     </div>
   );
 }

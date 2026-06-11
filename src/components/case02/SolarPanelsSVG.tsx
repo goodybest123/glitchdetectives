@@ -11,7 +11,9 @@ export function SolarPanelsSVG({
   onClickPart,
   interactive = false,
   pulseKey = 0,
+  glitchTarget,
 }: VisualProps) {
+
   const W = 380;
   const H = 110;
   const gap = 8;
@@ -89,7 +91,9 @@ export function SolarPanelsSVG({
           onClickPart={onClickPart}
           interactive={interactive}
           size="md"
+          glitchTarget={glitchTarget}
         />
+
       </div>
     </div>
   );

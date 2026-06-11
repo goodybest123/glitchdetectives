@@ -14,7 +14,10 @@ export type VisualProps = {
   onClickPart?: (part: GlitchPart) => void;
   interactive?: boolean;
   pulseKey?: number;
+  /** When interactive, only this part counts as the glitch. */
+  glitchTarget?: GlitchPart;
 };
+
 
 export type RepairKind = "stepper-denominator" | "stepper-numerator" | "swap";
 
