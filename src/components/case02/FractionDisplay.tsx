@@ -29,13 +29,18 @@ export function FractionDisplay({
 
   const handle = (part: GlitchPart) => {
     if (!interactive) return;
-    if (glitchTarget && part !== glitchTarget) {
+    // Crate-style "whole fraction" glitch: any of num/den/bar counts as correct.
+    const isCorrect = glitchTarget
+      ? glitchTarget === "fraction" || part === glitchTarget
+      : true;
+    if (!isCorrect) {
       setWrongPart(part);
       setWrongKey((k) => k + 1);
       return;
     }
-    onClickPart?.(part);
+    onClickPart?.(glitchTarget ?? part);
   };
+
 
   // Style classes for each part
   const partClass = (part: GlitchPart) => {
