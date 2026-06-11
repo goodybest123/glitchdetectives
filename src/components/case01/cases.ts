@@ -51,6 +51,10 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     emoji: "🍕",
     chatEndpoint: "/api/chat/case-01",
     sliderLabel: "EQUALIZER TOOL",
+    toolTagline: "Drag to slice the pizza into four equal pieces.",
+    toolMinLabel: "Lopsided",
+    toolMaxLabel: "Fair slices",
+    toolHint: "Almost there — keep equalizing until all four slices match.",
     welcomeText:
       "Great detective work! You fixed my pizza. Can you tell me — why was my first try not fair?",
     bubbles: {
