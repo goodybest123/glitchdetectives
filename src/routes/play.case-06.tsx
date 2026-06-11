@@ -9,11 +9,17 @@ import { MicButton } from "@/components/case01/MicButton";
 import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case06/CasePicker";
 import { EquationDisplay } from "@/components/case06/EquationDisplay";
-import { RepairToolButton } from "@/components/case06/RepairToolButton";
+import { BlueprintSlicer } from "@/components/case06/BlueprintSlicer";
+import { PaintCalibrator } from "@/components/case06/PaintCalibrator";
+import { CircuitSegmenter } from "@/components/case06/CircuitSegmenter";
 import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
+import { SoundToggle } from "@/components/shared/SoundToggle";
+import { useSfx } from "@/hooks/useSfx";
+import { useCaseProgress } from "@/hooks/useProgress";
+import { celebrate } from "@/lib/celebrate";
 import {
   SUB_CASES,
   SUB_CASE_ORDER,
