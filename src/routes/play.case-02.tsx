@@ -307,10 +307,7 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <div
-              onClick={stage === "detect" ? () => handleGlitchClick(c.glitchTarget) : undefined}
-              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
-            >
+            <div>
               <Visual
                 numerator={numerator}
                 denominator={denominator}
@@ -318,8 +315,10 @@ function SubCaseRunner({
                 onClickPart={handleGlitchClick}
                 interactive={stage === "detect"}
                 pulseKey={pulseKey}
+                glitchTarget={c.glitchTarget}
               />
             </div>
+
 
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
