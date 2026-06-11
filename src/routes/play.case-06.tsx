@@ -44,11 +44,7 @@ const SOLVED_TOKEN = "[[CASE_SOLVED]]";
 
 function CaseSixPage() {
   const [activeCase, setActiveCase] = useState<SubCaseId | null>(null);
-  const [solvedMap, setSolvedMap] = useState<Record<SubCaseId, boolean>>({
-    blueprint: false,
-    paint: false,
-    circuit: false,
-  });
+  const { solved: solvedMap, markSolved } = useCaseProgress("case-06", SUB_CASE_ORDER);
 
   if (!activeCase) {
     return (
@@ -63,7 +59,7 @@ function CaseSixPage() {
       <SubCaseRunner
         key={activeCase}
         caseId={activeCase}
-        onSolved={() => setSolvedMap((m) => ({ ...m, [activeCase]: true }))}
+        onSolved={() => markSolved(activeCase)}
         onBackToPicker={() => setActiveCase(null)}
       />
     </PageShell>
@@ -90,7 +86,7 @@ function PageShell({
           <h1 className="text-base sm:text-lg font-bold tracking-tight text-neutral-900">
             {title}
           </h1>
-          <span className="w-[160px]" aria-hidden />
+          <div className="flex w-[160px] items-center justify-end"><SoundToggle /></div>
         </div>
       </header>
       <div className="mx-auto w-full max-w-7xl px-6 py-10 sm:px-10">{children}</div>
