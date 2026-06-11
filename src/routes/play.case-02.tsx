@@ -13,6 +13,7 @@ import { SwapControl } from "@/components/case02/SwapControl";
 import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
+import { FractionCompareStrip } from "@/components/shared/FractionCompareStrip";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { useSfx } from "@/hooks/useSfx";
