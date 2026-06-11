@@ -180,15 +180,19 @@ function ReportPage() {
       document.body.appendChild(a);
       a.click();
       a.remove();
-      // Fallback: if downloads are blocked (e.g. sandboxed preview iframe), open in a new tab.
-      window.setTimeout(() => {
-        try {
-          window.open(url, "_blank", "noopener");
-        } catch {
-          /* ignore */
-        }
-        window.setTimeout(() => URL.revokeObjectURL(url), 30000);
-      }, 400);
+      // Fallback: inside the embedded preview iframe, downloads are often blocked —
+      // also open the PDF in a new tab so it can be saved from there.
+      const embedded = window.self !== window.top;
+      if (embedded) {
+        window.setTimeout(() => {
+          try {
+            window.open(url, "_blank", "noopener");
+          } catch {
+            /* ignore */
+          }
+        }, 300);
+      }
+      window.setTimeout(() => URL.revokeObjectURL(url), 30000);
     } catch (err) {
       console.error("PDF generation failed", err);
       if (typeof window !== "undefined") window.alert("Sorry — PDF generation failed. Try Print / Save PDF instead.");
