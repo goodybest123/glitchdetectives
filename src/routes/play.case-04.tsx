@@ -249,6 +249,19 @@ function SubCaseRunner({
     return { investigate, detect, repair, explain };
   }, [stage, atTarget, attempts, studentQuotes, wrongVerdictCount]);
 
+  useReportRecorder({
+    active: stage === "solved",
+    caseId: "case-04",
+    subId: caseId,
+    caseTitle: "Case 04: The Scale Weigh-In",
+    subTitle: c.title,
+    emoji: c.emoji,
+    glitchSummary: c.subtitle,
+    conceptMastered: c.conceptMastered,
+    studentQuotes,
+    marks,
+  });
+
   const zed =
     stage === "investigate" || stage === "detect" || (stage === "repair" && !atTarget)
       ? { tone: "neutral" as const, text: c.bubbles.investigate }

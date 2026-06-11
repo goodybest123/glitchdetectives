@@ -239,6 +239,19 @@ function SubCaseRunner({
     return { investigate, detect, repair, explain };
   }, [stage, repaired, studentQuotes, wrongVerdictCount]);
 
+  useReportRecorder({
+    active: stage === "solved",
+    caseId: "case-06",
+    subId: caseId,
+    caseTitle: "Case 06: The Mismatched Puzzle",
+    subTitle: c.title,
+    emoji: c.emoji,
+    glitchSummary: c.subtitle,
+    conceptMastered: c.conceptMastered,
+    studentQuotes,
+    marks,
+  });
+
   const zed =
     stage === "investigate" || stage === "detect" || stage === "repair"
       ? { tone: "neutral" as const, text: c.bubbles.investigate }

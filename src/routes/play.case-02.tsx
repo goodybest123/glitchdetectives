@@ -270,6 +270,19 @@ function SubCaseRunner({
     return { investigate, detect, repair, explain };
   }, [stage, atTarget, stepCount, c.minSteps, studentQuotes, wrongVerdictCount]);
 
+  useReportRecorder({
+    active: stage === "solved",
+    caseId: "case-02",
+    subId: caseId,
+    caseTitle: "Case 02: Naming the Pieces",
+    subTitle: c.title,
+    emoji: c.emoji,
+    glitchSummary: c.subtitle,
+    conceptMastered: c.conceptMastered,
+    studentQuotes,
+    marks,
+  });
+
   const zed =
     stage === "investigate" || stage === "detect" || stage === "repair"
       ? { tone: "neutral" as const, text: c.bubbles.investigate }

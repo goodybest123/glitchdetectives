@@ -235,6 +235,19 @@ function SubCaseRunner({
     return { investigate, detect, repair, explain };
   }, [stage, equalized, studentQuotes, wrongVerdictCount]);
 
+  useReportRecorder({
+    active: stage === "solved",
+    caseId: "case-01",
+    subId: caseId,
+    caseTitle: "Case 01: Parts of a Whole",
+    subTitle: c.title,
+    emoji: c.emoji,
+    glitchSummary: c.subtitle,
+    conceptMastered: c.conceptMastered,
+    studentQuotes,
+    marks,
+  });
+
   const zed =
     stage === "investigate" || stage === "detect" || stage === "repair"
       ? { tone: "neutral" as const, text: c.bubbles.investigate }
