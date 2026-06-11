@@ -73,7 +73,9 @@ export function EnergyCrateSVG({
         highlight={highlight}
         onClickPart={onClickPart}
         interactive={interactive}
+        glitchTarget={glitchTarget}
       />
+
     </div>
   );
 }
