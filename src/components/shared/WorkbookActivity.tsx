@@ -80,6 +80,9 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchCho
       : attempts === 2
         ? "You’re getting closer. Compare each option with the exact part that does not match."
         : "Keep going, Detective. Cross out what is true, then choose the statement that explains the mistake.";
+  const readAllText = `Detective check. What is the glitch? ${choices
+    .map((choice, index) => `Option ${String.fromCharCode(65 + index)}. ${choice.label}`)
+    .join(" ")}`;
 
   return (
     <section className="mb-5 rounded-2xl border-2 border-dashed border-border bg-secondary/50 p-4 sm:p-5">
@@ -88,37 +91,46 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchCho
           <p className="label-eyebrow text-muted-foreground">Detective check</p>
           <h3 className="mt-1 text-base font-black text-foreground">What is the glitch?</h3>
         </div>
-        <span className="rounded-full bg-background px-3 py-1 text-[10px] font-black tracking-wider text-muted-foreground ring-1 ring-border">
-          CHOOSE ONE
-        </span>
+        <div className="flex items-center gap-2">
+          <SpeakButton text={readAllText} size="md" />
+          <span className="rounded-full bg-background px-3 py-1 text-[10px] font-black tracking-wider text-muted-foreground ring-1 ring-border">
+            CHOOSE ONE
+          </span>
+        </div>
       </div>
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         {choices.map((choice, index) => {
           const isWrong = wrongChoice === choice.label;
           return (
-            <Button
-              key={choice.label}
-              type="button"
-              variant={unlocked && choice.correct ? "default" : "outline"}
-              disabled={unlocked}
-              onClick={() => {
-                if (choice.correct) {
-                  setWrongChoice(null);
-                  onUnlock();
-                } else {
-                  setWrongChoice(choice.label);
-                  setAttempts((current) => current + 1);
-                }
-              }}
-              aria-pressed={isWrong}
-              className={`h-auto min-h-12 justify-start whitespace-normal px-4 py-3 text-left font-bold ${isWrong ? "border-destructive bg-destructive/10 text-destructive" : ""}`}
-            >
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-secondary-foreground">
-                {isWrong ? "×" : String.fromCharCode(65 + index)}
-              </span>
-              {choice.label}
-              {isWrong && <span className="ml-auto text-[10px] font-black tracking-wider">TRY AGAIN</span>}
-            </Button>
+            <div key={choice.label} className="flex items-stretch gap-2">
+              <Button
+                type="button"
+                variant={unlocked && choice.correct ? "default" : "outline"}
+                disabled={unlocked}
+                onClick={() => {
+                  if (choice.correct) {
+                    setWrongChoice(null);
+                    onUnlock();
+                  } else {
+                    setWrongChoice(choice.label);
+                    setAttempts((current) => current + 1);
+                  }
+                }}
+                aria-pressed={isWrong}
+                className={`h-auto min-h-12 flex-1 justify-start whitespace-normal px-4 py-3 text-left font-bold ${isWrong ? "border-destructive bg-destructive/10 text-destructive" : ""}`}
+              >
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-secondary-foreground">
+                  {isWrong ? "×" : String.fromCharCode(65 + index)}
+                </span>
+                {choice.label}
+                {isWrong && <span className="ml-auto text-[10px] font-black tracking-wider">TRY AGAIN</span>}
+              </Button>
+              <SpeakButton
+                text={`Option ${String.fromCharCode(65 + index)}. ${choice.label}`}
+                size="md"
+                className="my-auto shrink-0"
+              />
+            </div>
           );
         })}
       </div>
