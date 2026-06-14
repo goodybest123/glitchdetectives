@@ -15,7 +15,8 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
-import { WorkbookActivityPrompt, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -126,6 +127,7 @@ function SubCaseRunner({
   const [denominator, setDenominator] = useState(c.initial.denominator);
   const [pulseKey, setPulseKey] = useState(0);
   const [stepCount, setStepCount] = useState(0);
+  const [glitchUnlocked, setGlitchUnlocked] = useState(false);
   const composerRef = useRef<HTMLTextAreaElement>(null);
   const sfx = useSfx();
   const reportRef = useRef<HTMLDivElement>(null);
@@ -187,7 +189,7 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleGlitchClick = (part: GlitchPart) => {
-    if (stage !== "detect") return;
+    if (stage !== "detect" || !glitchUnlocked) return;
     setStage("repair");
     setPulseKey((k) => k + 1);
     void part;
@@ -329,13 +331,17 @@ function SubCaseRunner({
               detectInstruction={c.captions.investigate} repairInstruction={c.captions.repair}
               toolName={c.repair === "swap" ? "Fraction Flipper" : "Number Corrector"} />
 
+            {stage === "detect" && (
+              <WorkbookGlitchChoices choices={getGlitchChoices("case-02", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} />
+            )}
+
             <div>
               <Visual
                 numerator={numerator}
                 denominator={denominator}
                 highlight={highlight}
                 onClickPart={handleGlitchClick}
-                interactive={stage === "detect"}
+                interactive={stage === "detect" && glitchUnlocked}
                 pulseKey={pulseKey}
                 glitchTarget={c.glitchTarget}
               />

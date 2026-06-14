@@ -16,7 +16,8 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
-import { WorkbookActivityPrompt, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -125,6 +126,7 @@ function SubCaseRunner({
   const [pulseKey, setPulseKey] = useState(0);
   const [solvedVisual, setSolvedVisual] = useState(false);
   const [attempts, setAttempts] = useState(0);
+  const [glitchUnlocked, setGlitchUnlocked] = useState(false);
   const composerRef = useRef<HTMLTextAreaElement>(null);
   const sfx = useSfx();
   const reportRef = useRef<HTMLDivElement>(null);
@@ -183,7 +185,7 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleSymbolClick = () => {
-    if (stage !== "detect") return;
+    if (stage !== "detect" || !glitchUnlocked) return;
     setStage("repair");
     setPulseKey((k) => k + 1);
   };
@@ -304,6 +306,10 @@ function SubCaseRunner({
               detectInstruction={c.captions.investigate} repairInstruction={c.captions.repair}
               toolName="Comparison Dial" />
 
+            {stage === "detect" && (
+              <WorkbookGlitchChoices choices={getGlitchChoices("case-04", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} />
+            )}
+
             <div
               className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
             >
@@ -318,7 +324,7 @@ function SubCaseRunner({
                       <ComparatorSymbol
                         operator={operator}
                         highlight={stage === "detect" || stage === "repair"}
-                        clickable={stage === "detect"}
+                        clickable={stage === "detect" && glitchUnlocked}
                         onClick={handleSymbolClick}
                         pulseKey={pulseKey}
                       />

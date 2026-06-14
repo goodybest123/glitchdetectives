@@ -1,6 +1,7 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { Stage } from "@/components/case01/CaseStepper";
 import { SpeakButton } from "@/components/case01/SpeakButton";
+import { Button } from "@/components/ui/button";
 
 type PromptProps = {
   stage: Stage;
@@ -54,6 +55,69 @@ export function WorkbookActivityPrompt({
         {isDetect ? "Tap the exact part—not the whole picture" : "Watch the model change as you work"}
         <span className="h-px flex-1 border-t border-dashed border-border" />
       </div>
+    </section>
+  );
+}
+
+export type GlitchChoice = {
+  label: string;
+  correct: boolean;
+};
+
+type GlitchChoicesProps = {
+  choices: GlitchChoice[];
+  unlocked: boolean;
+  onUnlock: () => void;
+};
+
+export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchChoicesProps) {
+  const [wrongChoice, setWrongChoice] = useState<string | null>(null);
+
+  return (
+    <section className="mb-5 rounded-2xl border-2 border-dashed border-border bg-secondary/50 p-4 sm:p-5">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="label-eyebrow text-muted-foreground">Detective check</p>
+          <h3 className="mt-1 text-base font-black text-foreground">What is the glitch?</h3>
+        </div>
+        <span className="rounded-full bg-background px-3 py-1 text-[10px] font-black tracking-wider text-muted-foreground ring-1 ring-border">
+          CHOOSE ONE
+        </span>
+      </div>
+      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+        {choices.map((choice, index) => {
+          const isWrong = wrongChoice === choice.label;
+          return (
+            <Button
+              key={choice.label}
+              type="button"
+              variant={unlocked && choice.correct ? "default" : "outline"}
+              disabled={unlocked}
+              onClick={() => {
+                if (choice.correct) {
+                  setWrongChoice(null);
+                  onUnlock();
+                } else {
+                  setWrongChoice(choice.label);
+                }
+              }}
+              className={`h-auto min-h-12 justify-start whitespace-normal px-4 py-3 text-left font-bold ${isWrong ? "border-destructive text-destructive" : ""}`}
+            >
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-secondary-foreground">
+                {String.fromCharCode(65 + index)}
+              </span>
+              {choice.label}
+            </Button>
+          );
+        })}
+      </div>
+      <p className={`mt-3 text-center text-xs font-bold ${wrongChoice ? "text-destructive" : unlocked ? "text-primary" : "text-muted-foreground"}`} aria-live="polite">
+        {wrongChoice
+          ? "Not quite. Look closely at ZED-4’s work and try again."
+          : unlocked
+            ? "✓ Good thinking! Now tap that exact glitch in the picture."
+            : "Pick an answer to unlock the picture."}
+      </p>
     </section>
   );
 }
