@@ -17,7 +17,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
-import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame, WorkbookRepairSubmit } from "@/components/shared/WorkbookActivity";
 import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
@@ -123,6 +123,7 @@ function SubCaseRunner({
   const [wrongVerdictCount, setWrongVerdictCount] = useState(0);
   const [verdictShakeKey, setVerdictShakeKey] = useState(0);
   const [repaired, setRepaired] = useState(false);
+  const [repairReady, setRepairReady] = useState(false);
   const [pulseKey, setPulseKey] = useState(0);
   const [glitchUnlocked, setGlitchUnlocked] = useState(false);
   const composerRef = useRef<HTMLTextAreaElement>(null);
@@ -197,10 +198,7 @@ function SubCaseRunner({
 
   const handleRepair = () => {
     if (stage !== "repair") return;
-    setRepaired(true);
-    setPulseKey((k) => k + 1);
-    const t = setTimeout(() => setStage("explain"), 900);
-    return () => clearTimeout(t);
+    setRepairReady(true);
   };
 
   const isSending = status === "submitted" || status === "streaming";
@@ -316,6 +314,11 @@ function SubCaseRunner({
                 {caseId === "blueprint" && <BlueprintSlicer onComplete={handleRepair} />}
                 {caseId === "paint" && <PaintCalibrator onComplete={handleRepair} />}
                 {caseId === "circuit" && <CircuitSegmenter onComplete={handleRepair} />}
+                <WorkbookRepairSubmit ready={repairReady} onSubmit={() => {
+                  setRepaired(true);
+                  setPulseKey((k) => k + 1);
+                  setStage("explain");
+                }} />
               </WorkbookRepairFrame>
             ) : (
               <div

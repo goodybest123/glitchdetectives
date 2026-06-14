@@ -15,7 +15,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
-import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame, WorkbookRepairSubmit } from "@/components/shared/WorkbookActivity";
 import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
@@ -141,15 +141,6 @@ function SubCaseRunner({
 
   const [input, setInput] = useState("");
   const atTarget = denominator === c.correctDenominator;
-
-  useEffect(() => {
-    if (stage === "repair" && atTarget) {
-      setSolvedVisual(true);
-      setPulseKey((k) => k + 1);
-      const t = setTimeout(() => setStage("explain"), 900);
-      return () => clearTimeout(t);
-    }
-  }, [atTarget, stage]);
 
   useEffect(() => {
     if (stage === "explain") composerRef.current?.focus();
@@ -356,7 +347,7 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {stage === "repair" && !atTarget && (
+            {stage === "repair" && (
               <WorkbookRepairFrame toolName="Denominator Corrector" instruction={c.captions.repair}
                 hint="The pieces combine or leave, but the size of each piece stays the same." progress={`${c.correctNumerator}/${denominator} → ${c.correctNumerator}/${c.correctDenominator}`}>
                 <div className="flex justify-center"><DenominatorStepper
@@ -365,6 +356,11 @@ function SubCaseRunner({
                   max={c.stepperMax}
                   onChange={handleStepperChange}
                 /></div>
+                <WorkbookRepairSubmit ready={atTarget} onSubmit={() => {
+                  setSolvedVisual(true);
+                  setPulseKey((k) => k + 1);
+                  setStage("explain");
+                }} />
               </WorkbookRepairFrame>
             )}
 
