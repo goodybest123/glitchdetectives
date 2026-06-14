@@ -17,6 +17,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
+import { WorkbookActivityPrompt, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -299,15 +300,19 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
+            <WorkbookActivityPrompt stage={stage} emoji={c.emoji} title={c.title}
+              detectInstruction={c.captions.investigate} repairInstruction={c.toolHint}
+              toolName={c.toolLabel} />
+
             {stage === "repair" && !repaired ? (
-              <div className="rounded-2xl bg-[#fff7ed] p-5">
+              <WorkbookRepairFrame toolName={c.toolLabel} instruction={c.toolHint}
+                hint="Make both fractions use equal-sized pieces before calculating." progress="MATCH THE PIECES">
                 {caseId === "blueprint" && <BlueprintSlicer onComplete={handleRepair} />}
                 {caseId === "paint" && <PaintCalibrator onComplete={handleRepair} />}
                 {caseId === "circuit" && <CircuitSegmenter onComplete={handleRepair} />}
-              </div>
+              </WorkbookRepairFrame>
             ) : (
               <div
-                onClick={stage === "detect" ? handleResultClick : undefined}
                 className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
               >
                 <Visual repaired={repaired} pulseKey={pulseKey} />

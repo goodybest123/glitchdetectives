@@ -16,6 +16,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
+import { WorkbookActivityPrompt, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -299,8 +300,11 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
+            <WorkbookActivityPrompt stage={stage} emoji={c.emoji} title={c.title}
+              detectInstruction={c.captions.investigate} repairInstruction={c.captions.repair}
+              toolName="Comparison Dial" />
+
             <div
-              onClick={stage === "detect" ? handleSymbolClick : undefined}
               className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
             >
               <Visual
@@ -340,9 +344,10 @@ function SubCaseRunner({
 
 
             {stage === "repair" && !atTarget && (
-              <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
-                <ComparatorToggle value={operator} onChange={handleOperatorChange} />
-              </div>
+              <WorkbookRepairFrame toolName="Comparison Dial" instruction={c.captions.repair}
+                hint="Use the model to decide which fraction is actually larger." progress={`${c.left.n}/${c.left.d}  ${operator}  ${c.right.n}/${c.right.d}`}>
+                <div className="flex justify-center"><ComparatorToggle value={operator} onChange={handleOperatorChange} /></div>
+              </WorkbookRepairFrame>
             )}
 
             {(stage === "explain" || stage === "solved") && <SuccessBanner />}
