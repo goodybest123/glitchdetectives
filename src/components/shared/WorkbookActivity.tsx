@@ -72,6 +72,14 @@ type GlitchChoicesProps = {
 
 export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchChoicesProps) {
   const [wrongChoice, setWrongChoice] = useState<string | null>(null);
+  const [attempts, setAttempts] = useState(0);
+
+  const supportiveFeedback =
+    attempts <= 1
+      ? "Good detective thinking—check what ZED-4’s numbers or picture actually show, then try again."
+      : attempts === 2
+        ? "You’re getting closer. Compare each option with the exact part that does not match."
+        : "Keep going, Detective. Cross out what is true, then choose the statement that explains the mistake.";
 
   return (
     <section className="mb-5 rounded-2xl border-2 border-dashed border-border bg-secondary/50 p-4 sm:p-5">
@@ -99,21 +107,24 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchCho
                   onUnlock();
                 } else {
                   setWrongChoice(choice.label);
+                  setAttempts((current) => current + 1);
                 }
               }}
-              className={`h-auto min-h-12 justify-start whitespace-normal px-4 py-3 text-left font-bold ${isWrong ? "border-destructive text-destructive" : ""}`}
+              aria-pressed={isWrong}
+              className={`h-auto min-h-12 justify-start whitespace-normal px-4 py-3 text-left font-bold ${isWrong ? "border-destructive bg-destructive/10 text-destructive" : ""}`}
             >
               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-secondary-foreground">
-                {String.fromCharCode(65 + index)}
+                {isWrong ? "×" : String.fromCharCode(65 + index)}
               </span>
               {choice.label}
+              {isWrong && <span className="ml-auto text-[10px] font-black tracking-wider">TRY AGAIN</span>}
             </Button>
           );
         })}
       </div>
       <p className={`mt-3 text-center text-xs font-bold ${wrongChoice ? "text-destructive" : unlocked ? "text-primary" : "text-muted-foreground"}`} aria-live="polite">
         {wrongChoice
-          ? "Not quite. Look closely at ZED-4’s work and try again."
+          ? supportiveFeedback
           : unlocked
             ? "✓ Good thinking! Now tap that exact glitch in the picture."
             : "Pick an answer to unlock the picture."}
