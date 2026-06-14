@@ -1,81 +1,49 @@
-# Interactive Workbook Redesign
 
-## Goal
-Transform every existing challenge across Cases 01–06 from a split game-screen layout into a continuous, child-friendly workbook page while preserving the current fraction content and repair interactions.
+# Add Context to the EQUALIZER TOOL (Case 01)
 
-## Experience
-Each sub-case becomes one scrollable case file:
+The slider in Case 01 currently shows only a tiny `EQUALIZER TOOL` label with `Unfair / Equal` endpoints. The child has no clear instruction telling them *what* the tool does or *how* to use it to repair the glitch. This plan adds a clear, kid-friendly instruction layer to make the repair step obvious — matching the polish level of the other cases for the investor/judge demo.
 
-```text
-CASE FILE #001
-Investigate ZED-4’s Work
-[large existing activity illustration]
-ZED-4 says: “…”
+## Scope
 
-What do you notice?
-[detective notes]
+Only Case 01 (`pizza`, `chocolate`, `canvas`) — the EQUALIZER / CENTERING slider tool. No logic changes, no chat changes, no scoring changes. Pure presentation + microcopy.
 
-Find the Glitch
-[annotation and evidence tools]
+## Changes
 
-Repair ZED-4’s Work
-[existing slider, stepper, drag/drop, or builder]
+### 1. `src/components/case01/cases.ts`
+Add three new optional fields to each `SubCaseDef`:
 
-Model the Correct Answer
-[corrected visual/equation]
+- `toolTagline` — one short line under the tool title (what the tool does).
+  - pizza: `"Drag to slice the pizza into four equal pieces."`
+  - chocolate: `"Drag to snap the bar into three matching thirds."`
+  - canvas: `"Drag the line until both sides match perfectly."`
+- `toolMinLabel` / `toolMaxLabel` — slider endpoint labels overriding the generic `Unfair / Equal`.
+  - pizza: `"Lopsided" → "Fair slices"`
+  - chocolate: `"Uneven" → "Equal thirds"`
+  - canvas: `"Off-center" → "Perfectly half"`
+- `toolHint` — a one-line nudge shown while the slider is mid-drag (not yet at target).
+  - e.g. `"Almost there — keep equalizing until ZED-4 stops complaining."`
 
-Teach ZED-4
-[sentence builder, typing, or speech-to-text]
+### 2. `src/routes/play.case-01.tsx` — tool panel (lines ~317–346)
+Upgrade the slider container into a proper "repair tool" card:
 
-Case Summary
-[evidence, explanation, marks, journal action]
-```
+- **Header row**: tool icon (🛠️) + `EQUALIZER TOOL` title + `SpeakButton`.
+- **Tagline line**: `c.toolTagline` in muted text directly under the title — answers "what does this do?".
+- **Active instruction**: when `stage === "repair"` show a highlighted callout `"⚡ Drag the slider to repair the glitch."` (uses existing `DetectiveCallout` styling for visual consistency).
+- **Slider** unchanged structurally; endpoint labels use `c.toolMinLabel` / `c.toolMaxLabel`.
+- **Progress feedback**: a small live readout under the slider — `"Equalizing… 62%"` while dragging, swapping to a green `"✓ Balanced!"` chip when `equalized >= 0.97`.
+- **Locked state**: when `stage === "explain" || "solved"` the card dims and shows `"Tool locked — explain your reasoning to close the case."` instead of the active instruction.
 
-## Build Plan
+### 3. Visual polish
+- Card background gets a subtle gradient ring (`from-[#dbeafe] to-[#f8fafc]`) to read as a "tool" rather than a plain box, matching the energy of Case 06's BlueprintSlicer / PaintCalibrator.
+- Slider thumb scaled up via accent color already in use; no new tokens.
 
-### 1. Create the shared workbook system
-- Add one reusable workbook page shell used by every case.
-- Replace the current card-and-sidebar composition with a paper-like, full-width vertical document.
-- Add case-file headers, section dividers, stage status, workbook margins, handwritten-note styling, and responsive mobile/desktop layouts.
-- Keep navigation, sound controls, progress, and accessibility support.
+## Out of scope
 
-### 2. Add detective tools
-- Add a notes area for observations before making a verdict.
-- Add simple annotation modes: circle, shade/highlight, and cross-out.
-- Keep annotations scoped to the current sub-case and provide undo/clear controls.
-- Add an evidence tray where the child can save observations made during investigation and repair.
+- Cases 02–06 already have richer interactive repair tools; no changes there.
+- No new SFX, no new routes, no schema/AI changes.
+- Diagnostic Report unchanged.
 
-### 3. Reframe existing mechanics as repairs
-- Preserve every current visual and interaction in Cases 01–06.
-- Present sliders, steppers, swaps, toggles, builders, and drag interactions as tools for repairing ZED-4’s incorrect work.
-- Reveal sections progressively as the child investigates, identifies the glitch, repairs it, and explains the correction.
-- Show the repaired model directly in the workbook flow rather than switching to a separate game state.
+## Files touched
 
-### 4. Build the “Teach ZED-4” section
-- Add age-appropriate sentence starters based on each case’s fraction concept.
-- Allow free typing and browser speech-to-text using the existing microphone capability.
-- Keep transcripts editable before submission.
-- Retain the current AI explanation feedback and solved-case grading behavior.
-
-### 5. Add the Detective Journal
-- Store completed case summaries locally using the existing progress/report storage pattern.
-- Record the case title, repaired concept, saved evidence, child explanation, annotations summary, marks, and completion date.
-- Update the report area into a journal-style collection of completed case files.
-- Keep printable output available for adults and classroom use.
-
-### 6. Migrate all current cases
-- Apply the shared workbook structure to every sub-case in Cases 01–06.
-- Use each case’s existing copy, visual, repair controls, success logic, and AI endpoint.
-- Standardize section labels and interaction states without changing the underlying mathematics.
-
-### 7. Validate the full flow
-- Verify investigate → find glitch → repair → model → teach → journal completion in each case.
-- Check speech-to-text fallback behavior when browser recognition is unavailable.
-- Check saved journal entries and printable summaries.
-- Test desktop and mobile layouts, keyboard use, readable contrast, and annotation controls.
-
-## Technical Approach
-- Extract shared workbook components and hooks rather than duplicating the new layout six times.
-- Keep case-specific visuals and repair logic inside their current case modules.
-- Extend the existing local progress/report records for notes, evidence, transcript, and journal data.
-- No new backend or account requirement; workbook progress remains browser-local as it does now.
+- `src/components/case01/cases.ts` (add 4 microcopy fields × 3 sub-cases)
+- `src/routes/play.case-01.tsx` (replace the slider block ~317–346)

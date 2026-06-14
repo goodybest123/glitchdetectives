@@ -16,7 +16,6 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
-import { WorkbookCaseTools } from "@/components/shared/WorkbookCaseTools";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -76,7 +75,7 @@ function PageShell({
   children: React.ReactNode;
 }) {
   return (
-    <main className="workbook-page min-h-screen">
+    <main className="min-h-screen bg-white">
       <header className="border-b border-neutral-100">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-5 sm:px-10">
           <Link
@@ -91,7 +90,7 @@ function PageShell({
           <div className="flex w-[160px] items-center justify-end"><SoundToggle /></div>
         </div>
       </header>
-      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-10">{children}</div>
+      <div className="mx-auto w-full max-w-7xl px-6 py-10 sm:px-10">{children}</div>
     </main>
   );
 }
@@ -292,10 +291,9 @@ function SubCaseRunner({
         </span>
       </div>
 
-      <div className="workbook-sheet">
-        <section>
-          <div className="workbook-content">
-            <WorkbookCaseTools caseNumber="004" title={c.title} zedClaim={c.bubbles.investigate} storageId={`case-04-${caseId}`} />
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10">
+        <section className="lg:col-span-2">
+          <div className="rounded-3xl bg-white p-6 sm:p-10 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100">
             <CaseStepper stage={stage} />
             <div className="mb-6">
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
@@ -365,7 +363,7 @@ function SubCaseRunner({
           )}
         </section>
 
-        <aside className="workbook-teach-section">
+        <aside className="lg:self-stretch">
           <div
             className={`flex h-full min-h-[600px] flex-col rounded-3xl bg-white shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100 transition-opacity ${
               chatEnabled || stage === "solved" ? "opacity-100" : "opacity-50"
@@ -375,7 +373,7 @@ function SubCaseRunner({
             <div className="flex items-start justify-between gap-2 border-b border-neutral-100 px-5 py-4">
               <div>
                 <h2 className="text-sm font-bold tracking-wider text-neutral-700">
-                  TEACH ZED-4
+                  AI GUIDE
                 </h2>
                 <div className="mt-0.5 flex items-center gap-2"><p className="text-xs text-neutral-500">{stage === "solved" ? "Case closed — great work, Detective!" : chatEnabled ? "Explain your reasoning — type or speak." : "Unlocks after you repair the logic."}</p><SpeakButton text={stage === "solved" ? "Case closed — great work, Detective!" : chatEnabled ? "Explain your reasoning — type or speak." : "Unlocks after you repair the logic."} /></div>
               </div>

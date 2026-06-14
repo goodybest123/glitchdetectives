@@ -75,11 +75,6 @@
   --border: oklch(0.88 0.025 220);
   --input: oklch(0.88 0.025 220);
   --ring: oklch(0.247 0.073 254);
-  --workbook-paper: oklch(0.988 0.012 92);
-  --workbook-ink: oklch(0.29 0.055 250);
-  --workbook-rule: oklch(0.82 0.045 235);
-  --workbook-red: oklch(0.58 0.18 28);
-  --workbook-gold: oklch(0.88 0.15 92);
 }
 
 .dark {
@@ -144,81 +139,5 @@ html { scroll-behavior: smooth; }
 @keyframes tappable-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(253, 230, 138, 0.7); }
   50% { box-shadow: 0 0 0 6px rgba(253, 230, 138, 0); }
-}
-
-@layer components {
-  .workbook-page {
-    background-color: var(--color-muted);
-    background-image: radial-gradient(color-mix(in oklab, var(--foreground) 9%, transparent) 0.7px, transparent 0.7px);
-    background-size: 12px 12px;
-  }
-  .workbook-sheet {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent);
-    border-radius: 0.4rem;
-    background: var(--workbook-paper);
-    box-shadow: 0 18px 50px color-mix(in oklab, var(--foreground) 14%, transparent);
-  }
-  .workbook-sheet::before {
-    content: "";
-    position: absolute;
-    inset: 0 auto 0 2rem;
-    width: 2px;
-    background: color-mix(in oklab, var(--workbook-red) 40%, transparent);
-    pointer-events: none;
-    z-index: 2;
-  }
-  .workbook-content { padding: 2rem 1.25rem 2.5rem 3.25rem; }
-  .workbook-intro { color: var(--workbook-ink); }
-  .workbook-case-heading {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: start;
-    gap: 1rem;
-    border-bottom: 3px solid var(--workbook-ink);
-    padding-bottom: 1.2rem;
-    margin-bottom: 1.5rem;
-  }
-  .workbook-kicker { font-family: var(--font-mono); font-weight: 800; letter-spacing: .18em; font-size: .72rem; }
-  .workbook-case-heading h2 { margin-top: .35rem; font-size: clamp(1.75rem, 4vw, 3rem); line-height: 1; font-weight: 900; }
-  .workbook-case-name { margin-top: .5rem; font-weight: 700; color: var(--color-muted-foreground); }
-  .workbook-stamp { transform: rotate(4deg); border: 2px solid var(--workbook-red); color: var(--workbook-red); padding: .5rem .65rem; font: 800 .65rem/1 var(--font-mono); letter-spacing: .1em; }
-  .workbook-claim { border-left: .4rem solid var(--workbook-gold); background: color-mix(in oklab, var(--workbook-gold) 20%, var(--workbook-paper)); padding: 1rem 1.25rem; font-size: 1.05rem; font-weight: 650; }
-  .workbook-claim span { display: block; font: 800 .65rem/1.8 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
-  .workbook-section-title { display: flex; gap: .8rem; align-items: flex-start; margin: 2.2rem 0 1rem; }
-  .workbook-section-title > span { display: grid; place-items: center; width: 2rem; height: 2rem; flex: none; border-radius: 999px; background: var(--workbook-ink); color: var(--color-primary-foreground); font: 800 .7rem var(--font-mono); }
-  .workbook-section-title h3 { font-size: 1.25rem; line-height: 1.1; font-weight: 900; }
-  .workbook-section-title p { margin-top: .25rem; font-size: .82rem; color: var(--color-muted-foreground); }
-  .workbook-note-input { width: 100%; resize: vertical; border: 0; border-radius: 0; padding: .65rem .4rem; outline: none; color: var(--workbook-ink); background-color: transparent; background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 1.75rem, var(--workbook-rule) 1.8rem); line-height: 1.8rem; }
-  .workbook-note-input:focus { box-shadow: 0 0 0 2px color-mix(in oklab, var(--workbook-gold) 70%, transparent); }
-  .workbook-save-evidence { margin-top: .8rem; display: inline-flex; align-items: center; gap: .45rem; border-radius: 999px; background: var(--workbook-ink); color: var(--color-primary-foreground); padding: .6rem 1rem; font-size: .75rem; font-weight: 800; }
-  .workbook-save-evidence:disabled { opacity: .35; }
-  .workbook-evidence-tray { margin-top: 1rem; border: 1px dashed var(--workbook-rule); padding: .9rem; }
-  .workbook-evidence-tray > strong { font: 800 .67rem var(--font-mono); text-transform: uppercase; letter-spacing: .1em; }
-  .workbook-evidence-tray > div { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: .65rem; align-items: start; margin-top: .65rem; }
-  .workbook-evidence-tray span { display: grid; place-items: center; height: 1.4rem; width: 1.4rem; border-radius: 50%; background: var(--workbook-gold); font-size: .7rem; font-weight: 900; }
-  .workbook-evidence-tray p { min-width: 0; font-size: .85rem; }
-  .workbook-tool-row { display: flex; flex-wrap: wrap; gap: .5rem; }
-  .workbook-tool-row button { display: inline-flex; align-items: center; gap: .35rem; border: 1px solid var(--workbook-rule); padding: .5rem .7rem; background: var(--workbook-paper); font-size: .72rem; font-weight: 750; }
-  .workbook-tool-row button[aria-pressed="true"] { border-color: var(--workbook-ink); background: var(--workbook-gold); }
-  .workbook-tool-row button:disabled { opacity: .35; }
-  .workbook-marking-pad { position: relative; overflow: hidden; min-height: 7rem; margin-top: .65rem; border: 1px dashed var(--workbook-rule); background-image: linear-gradient(var(--workbook-rule) 1px, transparent 1px); background-size: 100% 1.8rem; cursor: crosshair; }
-  .workbook-marking-pad > span { position: absolute; inset: 0; display: grid; place-items: center; padding: 1rem; text-align: center; color: var(--color-muted-foreground); font-size: .78rem; pointer-events: none; }
-  .workbook-mark { position: absolute; display: block; transform: translate(-50%, -50%); pointer-events: none; }
-  .workbook-mark-circle { width: 3rem; height: 2rem; border: 3px solid var(--workbook-red); border-radius: 50%; }
-  .workbook-mark-shade { width: 3.5rem; height: 1rem; background: color-mix(in oklab, var(--workbook-gold) 65%, transparent); transform: translate(-50%, -50%) rotate(-4deg); }
-  .workbook-mark-cross::before, .workbook-mark-cross::after { content: ""; position: absolute; width: 2.5rem; height: 3px; background: var(--workbook-red); transform: translate(-50%, -50%) rotate(45deg); }
-  .workbook-mark-cross::after { transform: translate(-50%, -50%) rotate(-45deg); }
-  .workbook-find-title { border-top: 1px dashed var(--workbook-rule); padding-top: 1.5rem; }
-  .workbook-teach-section { margin: 0 1.25rem 2.5rem 3.25rem; border-top: 3px solid var(--workbook-ink); padding-top: 1.5rem; }
-  .workbook-teach-section::before { content: "05  TEACH ZED-4"; display: block; margin-bottom: .7rem; font: 900 .72rem var(--font-mono); letter-spacing: .15em; color: var(--workbook-red); }
-  .workbook-teach-section > div { min-height: 32rem; box-shadow: none; border-radius: .35rem; border: 1px solid var(--workbook-rule); }
-  @media (max-width: 640px) {
-    .workbook-sheet::before { left: 1rem; }
-    .workbook-content { padding: 1.4rem .85rem 2rem 1.8rem; }
-    .workbook-teach-section { margin: 0 .85rem 2rem 1.8rem; }
-    .workbook-stamp { display: none; }
-  }
 }
 
