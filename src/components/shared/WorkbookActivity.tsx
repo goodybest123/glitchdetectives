@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import type { Stage } from "@/components/case01/CaseStepper";
 import { SpeakButton } from "@/components/case01/SpeakButton";
 import { Button } from "@/components/ui/button";
@@ -71,7 +71,7 @@ type GlitchChoicesProps = {
 };
 
 export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchChoicesProps) {
-  const [wrongChoice, setWrongChoice] = React.useState<string | null>(null);
+  const [wrongChoice, setWrongChoice] = useState<string | null>(null);
 
   return (
     <section className="mb-5 rounded-2xl border-2 border-dashed border-border bg-secondary/50 p-4 sm:p-5">
