@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { Stage } from "@/components/case01/CaseStepper";
 import { SpeakButton } from "@/components/case01/SpeakButton";
 import { Button } from "@/components/ui/button";
@@ -73,6 +73,22 @@ type GlitchChoicesProps = {
 export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchChoicesProps) {
   const [wrongChoice, setWrongChoice] = useState<string | null>(null);
   const [attempts, setAttempts] = useState(0);
+  const [pendingChoice, setPendingChoice] = useState<GlitchChoice | null>(null);
+
+  useEffect(() => {
+    if (!pendingChoice) return;
+    const timer = window.setTimeout(() => {
+      if (pendingChoice.correct) {
+        setWrongChoice(null);
+        onUnlock();
+      } else {
+        setWrongChoice(pendingChoice.label);
+        setAttempts((current) => current + 1);
+      }
+      setPendingChoice(null);
+    }, 900);
+    return () => window.clearTimeout(timer);
+  }, [pendingChoice, onUnlock]);
 
   const supportiveFeedback =
     attempts <= 1
@@ -101,29 +117,25 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchCho
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
         {choices.map((choice, index) => {
           const isWrong = wrongChoice === choice.label;
+          const isChecking = pendingChoice?.label === choice.label;
           return (
             <div key={choice.label} className="flex items-stretch gap-2">
               <Button
                 type="button"
                 variant={unlocked && choice.correct ? "default" : "outline"}
-                disabled={unlocked}
+                disabled={unlocked || pendingChoice !== null}
                 onClick={() => {
-                  if (choice.correct) {
-                    setWrongChoice(null);
-                    onUnlock();
-                  } else {
-                    setWrongChoice(choice.label);
-                    setAttempts((current) => current + 1);
-                  }
+                  setWrongChoice(null);
+                  setPendingChoice(choice);
                 }}
                 aria-pressed={isWrong}
-                className={`h-auto min-h-12 flex-1 justify-start whitespace-normal px-4 py-3 text-left font-bold ${isWrong ? "border-destructive bg-destructive/10 text-destructive" : ""}`}
+                className={`h-auto min-h-12 flex-1 justify-start whitespace-normal px-4 py-3 text-left font-bold ${isWrong ? "border-energy bg-energy/10 text-foreground" : ""}`}
               >
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-black text-secondary-foreground">
-                  {isWrong ? "×" : String.fromCharCode(65 + index)}
+                  {isChecking ? "…" : isWrong ? "↻" : String.fromCharCode(65 + index)}
                 </span>
                 {choice.label}
-                {isWrong && <span className="ml-auto text-[10px] font-black tracking-wider">TRY AGAIN</span>}
+                {isChecking && <span className="ml-auto text-[10px] font-black tracking-wider">THINKING…</span>}
               </Button>
               <SpeakButton
                 text={`Option ${String.fromCharCode(65 + index)}. ${choice.label}`}
@@ -134,14 +146,34 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchCho
           );
         })}
       </div>
-      <p className={`mt-3 text-center text-xs font-bold ${wrongChoice ? "text-destructive" : unlocked ? "text-primary" : "text-muted-foreground"}`} aria-live="polite">
-        {wrongChoice
-          ? supportiveFeedback
+      <div className={`mt-3 rounded-xl px-3 py-2 text-center text-xs font-bold ${wrongChoice ? "bg-energy/15 text-foreground" : "text-muted-foreground"}`} aria-live="polite">
+        {pendingChoice
+          ? "Take a moment, Detective… let’s check your thinking."
+          : wrongChoice
+          ? `Pencil note: ${supportiveFeedback}`
           : unlocked
             ? "✓ Good thinking! Now tap that exact glitch in the picture."
             : "Pick an answer to unlock the picture."}
-      </p>
+      </div>
     </section>
+  );
+}
+
+type RepairSubmitProps = {
+  ready: boolean;
+  onSubmit: () => void;
+};
+
+export function WorkbookRepairSubmit({ ready, onSubmit }: RepairSubmitProps) {
+  return (
+    <div className="mt-4 border-t border-dashed border-border pt-4 text-center">
+      <Button type="button" onClick={onSubmit} disabled={!ready} className="min-h-11 px-6 font-black">
+        ✓ Submit repaired logic
+      </Button>
+      <p className="mt-2 text-xs font-medium text-muted-foreground" aria-live="polite">
+        {ready ? "Your repair is ready. Submit it when you are sure." : "Finish the repair before submitting your logic."}
+      </p>
+    </div>
   );
 }
 
