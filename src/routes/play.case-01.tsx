@@ -13,7 +13,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
-import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame, WorkbookRepairSubmit } from "@/components/shared/WorkbookActivity";
 import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
@@ -138,14 +138,6 @@ function SubCaseRunner({
   });
 
   const [input, setInput] = useState("");
-
-  useEffect(() => {
-    if (stage === "repair" && equalized >= 0.995) {
-      setEqualized(1);
-      const t = setTimeout(() => setStage("explain"), 400);
-      return () => clearTimeout(t);
-    }
-  }, [equalized, stage]);
 
   useEffect(() => {
     if (stage === "explain") composerRef.current?.focus();
@@ -391,6 +383,15 @@ function SubCaseRunner({
                   <span>{c.toolMinLabel}</span>
                   <span>{c.toolMaxLabel}</span>
                 </div>
+                {stage === "repair" && (
+                  <WorkbookRepairSubmit
+                    ready={equalized >= 0.995}
+                    onSubmit={() => {
+                      setEqualized(1);
+                      setStage("explain");
+                    }}
+                  />
+                )}
               </WorkbookRepairFrame>
             )}
 

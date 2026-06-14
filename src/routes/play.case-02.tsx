@@ -15,7 +15,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
-import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame, WorkbookRepairSubmit } from "@/components/shared/WorkbookActivity";
 import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
@@ -146,14 +146,6 @@ function SubCaseRunner({
 
   const atTarget =
     numerator === c.target.numerator && denominator === c.target.denominator;
-
-  // Auto-advance repair → explain when target hit
-  useEffect(() => {
-    if (stage === "repair" && atTarget) {
-      const t = setTimeout(() => setStage("explain"), 500);
-      return () => clearTimeout(t);
-    }
-  }, [atTarget, stage]);
 
   useEffect(() => {
     if (stage === "explain") composerRef.current?.focus();
@@ -363,7 +355,7 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {stage === "repair" && !atTarget && (
+            {stage === "repair" && (
               <WorkbookRepairFrame
                 toolName={c.repair === "swap" ? "Fraction Flipper" : "Number Corrector"}
                 instruction={c.captions.repair}
@@ -391,6 +383,7 @@ function SubCaseRunner({
                   />
                 )}
                 {c.repair === "swap" && <SwapControl onSwap={handleSwap} />}
+                <WorkbookRepairSubmit ready={atTarget} onSubmit={() => setStage("explain")} />
               </WorkbookRepairFrame>
             )}
 

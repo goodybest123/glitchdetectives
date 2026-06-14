@@ -15,7 +15,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
-import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame, WorkbookRepairSubmit } from "@/components/shared/WorkbookActivity";
 import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
@@ -141,20 +141,6 @@ function SubCaseRunner({
 
   const [input, setInput] = useState("");
   const atTarget = operator === "=";
-
-  // When the student picks "=", play the reveal animation, then unlock explain.
-  useEffect(() => {
-    if ((stage === "repair" || stage === "detect") && atTarget) {
-      setDividersVisible(false);
-      setSpinKey((k) => k + 1);
-      const t1 = setTimeout(() => setStage("explain"), 800);
-      const t2 = setTimeout(() => setDividersVisible(true), 2200);
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-      };
-    }
-  }, [atTarget, stage]);
 
   useEffect(() => {
     if (stage === "explain") composerRef.current?.focus();
@@ -350,10 +336,16 @@ function SubCaseRunner({
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
 
-            {stage === "repair" && !atTarget && (
+            {stage === "repair" && (
               <WorkbookRepairFrame toolName="Comparison Dial" instruction={c.captions.repair}
                 hint="Compare the shaded amount, not the size of the numbers." progress={`${c.left.n}/${c.left.d}  ${operator}  ${c.right.n}/${c.right.d}`}>
                 <div className="flex justify-center"><ComparatorToggle value={operator} onChange={handleOperatorChange} /></div>
+                <WorkbookRepairSubmit ready={atTarget} onSubmit={() => {
+                  setDividersVisible(false);
+                  setSpinKey((k) => k + 1);
+                  setStage("explain");
+                  window.setTimeout(() => setDividersVisible(true), 1400);
+                }} />
               </WorkbookRepairFrame>
             )}
 
