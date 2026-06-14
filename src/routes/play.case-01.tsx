@@ -13,7 +13,8 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
-import { WorkbookActivityPrompt, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -121,6 +122,7 @@ function SubCaseRunner({
   const [verdictShakeKey, setVerdictShakeKey] = useState(0);
   const [equalized, setEqualized] = useState(0);
   const [pulseKey, setPulseKey] = useState(0);
+  const [glitchUnlocked, setGlitchUnlocked] = useState(false);
   const composerRef = useRef<HTMLTextAreaElement>(null);
   const sfx = useSfx();
   const reportRef = useRef<HTMLDivElement>(null);
@@ -179,7 +181,7 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleGlitchClick = () => {
-    if (stage !== "detect") return;
+    if (stage !== "detect" || !glitchUnlocked) return;
     setStage("repair");
     setPulseKey((k) => k + 1);
   };
@@ -297,13 +299,17 @@ function SubCaseRunner({
               toolName={c.sliderLabel}
             />
 
+            {stage === "detect" && (
+              <WorkbookGlitchChoices choices={getGlitchChoices("case-01", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} />
+            )}
+
             <div
               className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
             >
               <Visual
                 equalized={equalized}
                 onGlitchClick={handleGlitchClick}
-                interactive={stage === "detect"}
+                interactive={stage === "detect" && glitchUnlocked}
                 pulseKey={pulseKey}
               />
             </div>

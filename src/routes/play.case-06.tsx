@@ -17,7 +17,8 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
-import { WorkbookActivityPrompt, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
+import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -123,6 +124,7 @@ function SubCaseRunner({
   const [verdictShakeKey, setVerdictShakeKey] = useState(0);
   const [repaired, setRepaired] = useState(false);
   const [pulseKey, setPulseKey] = useState(0);
+  const [glitchUnlocked, setGlitchUnlocked] = useState(false);
   const composerRef = useRef<HTMLTextAreaElement>(null);
   const reportRef = useRef<HTMLDivElement>(null);
 
@@ -173,7 +175,7 @@ function SubCaseRunner({
   }, [stage]);
 
   const handleResultClick = () => {
-    if (stage !== "detect") return;
+    if (stage !== "detect" || !glitchUnlocked) return;
     setStage("repair");
     setPulseKey((k) => k + 1);
     sfx("ding");
@@ -304,6 +306,10 @@ function SubCaseRunner({
               detectInstruction={c.captions.investigate} repairInstruction={c.toolHint}
               toolName={c.toolLabel} />
 
+            {stage === "detect" && (
+              <WorkbookGlitchChoices choices={getGlitchChoices("case-06", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} />
+            )}
+
             {stage === "repair" && !repaired ? (
               <WorkbookRepairFrame toolName={c.toolLabel} instruction={c.toolHint}
                 hint="Make both fractions use equal-sized pieces before calculating." progress="MATCH THE PIECES">
@@ -326,7 +332,7 @@ function SubCaseRunner({
                 operator={c.operator}
                 result={displayedResult}
                 resultState={resultState}
-                clickable={stage === "detect"}
+                clickable={stage === "detect" && glitchUnlocked}
                 onResultClick={handleResultClick}
               />
             </div>
