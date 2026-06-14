@@ -15,6 +15,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
+import { WorkbookActivityPrompt, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -311,6 +312,10 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
+            <WorkbookActivityPrompt stage={stage} emoji={c.emoji} title={c.title}
+              detectInstruction={c.captions.investigate} repairInstruction={c.captions.repair}
+              toolName="Denominator Corrector" />
+
             <div
               onClick={stage === "detect" ? handleDenominatorClick : undefined}
               className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
@@ -347,14 +352,15 @@ function SubCaseRunner({
 
 
             {stage === "repair" && !atTarget && (
-              <div className="mt-8 flex justify-center rounded-2xl bg-[#fff7ed] p-5">
-                <DenominatorStepper
+              <WorkbookRepairFrame toolName="Denominator Corrector" instruction={c.captions.repair}
+                hint="The pieces combine or leave, but the size of each piece stays the same." progress={`${c.correctNumerator}/${denominator} → ${c.correctNumerator}/${c.correctDenominator}`}>
+                <div className="flex justify-center"><DenominatorStepper
                   value={denominator}
                   min={c.stepperMin}
                   max={c.stepperMax}
                   onChange={handleStepperChange}
-                />
-              </div>
+                /></div>
+              </WorkbookRepairFrame>
             )}
 
             {(stage === "explain" || stage === "solved") && <SuccessBanner />}

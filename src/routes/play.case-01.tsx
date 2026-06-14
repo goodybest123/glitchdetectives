@@ -13,6 +13,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
+import { WorkbookActivityPrompt, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -287,6 +288,15 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
+            <WorkbookActivityPrompt
+              stage={stage}
+              emoji={c.emoji}
+              title={c.title}
+              detectInstruction={c.captions.investigate}
+              repairInstruction={c.toolTagline}
+              toolName={c.sliderLabel}
+            />
+
             <div
               onClick={stage === "detect" ? handleGlitchClick : undefined}
               className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
@@ -317,10 +327,11 @@ function SubCaseRunner({
             {(stage === "repair" ||
               stage === "explain" ||
               stage === "solved") && (
-              <div
-                className={`mt-8 rounded-2xl bg-gradient-to-br from-[#dbeafe] to-[#f8fafc] p-5 ring-1 ring-[#bfdbfe] transition-opacity ${
-                  stage === "explain" || stage === "solved" ? "opacity-80" : ""
-                }`}
+              <WorkbookRepairFrame
+                toolName={c.sliderLabel}
+                instruction={c.toolTagline}
+                hint={stage === "repair" && equalized > 0.05 && equalized < 0.97 ? c.toolHint : undefined}
+                progress={equalized >= 0.97 ? "✓ BALANCED" : `${Math.round(equalized * 100)}%`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -375,12 +386,7 @@ function SubCaseRunner({
                   <span>{c.toolMinLabel}</span>
                   <span>{c.toolMaxLabel}</span>
                 </div>
-                {stage === "repair" && equalized > 0.05 && equalized < 0.97 && (
-                  <p className="mt-2 text-center text-xs italic text-neutral-500">
-                    {c.toolHint}
-                  </p>
-                )}
-              </div>
+              </WorkbookRepairFrame>
             )}
 
 

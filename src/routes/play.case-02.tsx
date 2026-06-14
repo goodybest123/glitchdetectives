@@ -15,6 +15,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
+import { WorkbookActivityPrompt, WorkbookRepairFrame } from "@/components/shared/WorkbookActivity";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -324,6 +325,10 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
+            <WorkbookActivityPrompt stage={stage} emoji={c.emoji} title={c.title}
+              detectInstruction={c.captions.investigate} repairInstruction={c.captions.repair}
+              toolName={c.repair === "swap" ? "Fraction Flipper" : "Number Corrector"} />
+
             <div>
               <Visual
                 numerator={numerator}
@@ -353,7 +358,12 @@ function SubCaseRunner({
 
 
             {stage === "repair" && !atTarget && (
-              <div className="mt-8 rounded-2xl bg-[#f8fafc] p-5">
+              <WorkbookRepairFrame
+                toolName={c.repair === "swap" ? "Fraction Flipper" : "Number Corrector"}
+                instruction={c.captions.repair}
+                hint={c.glitchTarget === "denominator" ? "The bottom number counts every equal piece." : c.glitchTarget === "numerator" ? "The top number counts only the selected pieces." : "Top tells how many; bottom tells the total."}
+                progress={`${numerator}/${denominator} → ${c.target.numerator}/${c.target.denominator}`}
+              >
                 {c.repair === "stepper-denominator" && c.stepperRange && (
                   <NumberStepper
                     label="Bottom number"
@@ -375,7 +385,7 @@ function SubCaseRunner({
                   />
                 )}
                 {c.repair === "swap" && <SwapControl onSwap={handleSwap} />}
-              </div>
+              </WorkbookRepairFrame>
             )}
 
             {(stage === "explain" || stage === "solved") && <SuccessBanner />}
