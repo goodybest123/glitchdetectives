@@ -305,7 +305,6 @@ function SubCaseRunner({
               toolName="Comparison Dial" />
 
             <div
-              onClick={stage === "detect" ? handleSymbolClick : undefined}
               className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
             >
               <Visual

@@ -298,7 +298,6 @@ function SubCaseRunner({
             />
 
             <div
-              onClick={stage === "detect" ? handleGlitchClick : undefined}
               className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
             >
               <Visual
