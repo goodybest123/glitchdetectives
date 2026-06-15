@@ -11,7 +11,7 @@ type PizzaSVGProps = {
   pulseKey?: number;
 };
 
-const UNEQUAL_ANGLES = [0, 25, 50, 75]; // degrees
+const UNEQUAL_ANGLES = [0, 18, 40, 70]; // degrees — clustered together so 3 slivers + 1 huge slice
 const EQUAL_ANGLES = [0, 90, 180, 270];
 
 const CX = 200;
