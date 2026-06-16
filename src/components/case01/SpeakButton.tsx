@@ -5,6 +5,7 @@ type SpeakButtonProps = {
   text: string;
   className?: string;
   size?: "sm" | "md";
+  rate?: number;
 };
 
 function pickVoice(voices: SpeechSynthesisVoice[]) {
@@ -15,7 +16,7 @@ function pickVoice(voices: SpeechSynthesisVoice[]) {
   return female ?? pool[0];
 }
 
-export function SpeakButton({ text, className = "", size = "sm" }: SpeakButtonProps) {
+export function SpeakButton({ text, className = "", size = "sm", rate = 0.95 }: SpeakButtonProps) {
   const [speaking, setSpeaking] = useState(false);
   const [supported, setSupported] = useState(false);
   const utterRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -47,7 +48,7 @@ export function SpeakButton({ text, className = "", size = "sm" }: SpeakButtonPr
     const u = new SpeechSynthesisUtterance(text);
     const voice = pickVoice(window.speechSynthesis.getVoices());
     if (voice) u.voice = voice;
-    u.rate = 0.95;
+    u.rate = rate;
     u.pitch = 1;
     u.onend = () => setSpeaking(false);
     u.onerror = () => setSpeaking(false);
