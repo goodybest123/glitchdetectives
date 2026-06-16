@@ -208,9 +208,43 @@ const FRACTION_LEVELS: FractionLevel[] = [
   },
   {
     n: 2,
-    title: "Classified",
-    desc: "Mission classified. Equivalence and number-line cases unlock soon.",
-    locked: true,
+    title: "Numerators & Denominators",
+    desc: (
+      <>
+        <strong>Turn math practice into a mystery to solve!</strong>
+        <br />
+        Sam is back — and his fraction logic keeps glitching in new ways. In this interactive workbook, your child becomes the Lead Detective. Instead of boring drills, they investigate Sam's work, spot his mistakes, and teach him the true rules of fractions.
+        <br /><br />
+        <strong>Why Kids & Parents Love It:</strong>
+        <br />
+        The 4-Step Framework: Investigate, Detect, Repair, Explain.
+        <br />
+        <strong>Builds Confidence:</strong> Finding someone else's mistakes removes the fear of failure.
+        <br />
+        <strong>Meaningful Conversations:</strong> The "Explain" step turns quiet practice into deep discussions.
+        <br />
+        <strong>Neuro-Inclusive Design:</strong> Clean, visual, and uncluttered to reduce cognitive overload.
+        <br /><br />
+        <strong>Workbook Details:</strong>
+        <br />
+        Focus: Numerators and Denominators.
+        <br />
+        Understanding fractions within a set of items.
+        <br />
+        Comparing unit fractions.
+        <br />
+        Adding and subtracting fractions with the same denominator.
+        <br />
+        Equivalent Fractions.
+        <br />
+        Fractions on a number line.
+        <br />
+        Best For: Grades 3–5.
+      </>
+    ),
+    meta: ["Grade 3-5"],
+    locked: false,
+    href: "/__l5e/assets-v1/4624ce37-e08f-403d-8ded-0017e0339113/fractions-level-2-numerators-denominators.pdf",
   },
   {
     n: 3,
