@@ -140,6 +140,7 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchCho
               <SpeakButton
                 text={`Option ${String.fromCharCode(65 + index)}. ${choice.label}`}
                 size="md"
+                rate={0.75}
                 className="my-auto shrink-0"
               />
             </div>
