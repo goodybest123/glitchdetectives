@@ -110,14 +110,14 @@ function FractionsL1Page() {
                 style={{ minHeight: "80vh" }}
               >
                 <object
-                  data="/printables/fractions-level-1-foundations.pdf#view=FitH"
-                  type="application/pdf"
+                  data="https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/preview"
+                  type="text/html"
                   className="w-full"
                   style={{ height: "80vh" }}
                   aria-label="Fractions Level 1 workbook PDF preview"
                 >
                   <iframe
-                    src="/printables/fractions-level-1-foundations.pdf"
+                    src="https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/preview"
                     title="Fractions Level 1 workbook PDF preview"
                     className="w-full"
                     style={{ height: "80vh", border: 0 }}
