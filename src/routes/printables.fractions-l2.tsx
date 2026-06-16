@@ -6,7 +6,7 @@ const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
 const MINT = "var(--color-bg-mint)";
 const PDF_URL =
-  "/__l5e/assets-v1/4624ce37-e08f-403d-8ded-0017e0339113/fractions-level-2-numerators-denominators.pdf";
+  "https://drive.google.com/file/d/1oeicJkXs_tzCcE1mORAn0Fn_Sg6-3RpA/view?usp=drive_link";
 
 export const Route = createFileRoute("/printables/fractions-l2")({
   head: () => ({
