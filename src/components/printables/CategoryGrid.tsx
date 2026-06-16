@@ -245,6 +245,7 @@ const FRACTION_LEVELS: FractionLevel[] = [
     meta: ["Grade 3-5"],
     locked: false,
     href: "/__l5e/assets-v1/4624ce37-e08f-403d-8ded-0017e0339113/fractions-level-2-numerators-denominators.pdf",
+    cover: fractionsL1Cover,
   },
   {
     n: 3,
