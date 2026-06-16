@@ -108,7 +108,7 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchCho
           <h3 className="mt-1 text-base font-black text-foreground">What is the glitch?</h3>
         </div>
         <div className="flex items-center gap-2">
-          <SpeakButton text={readAllText} size="md" />
+          <SpeakButton text={readAllText} size="md" rate={0.75} />
           <span className="rounded-full bg-background px-3 py-1 text-[10px] font-black tracking-wider text-muted-foreground ring-1 ring-border">
             CHOOSE ONE
           </span>
