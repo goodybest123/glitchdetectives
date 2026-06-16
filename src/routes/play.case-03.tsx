@@ -294,13 +294,13 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
-            <WorkbookActivityPrompt stage={stage} emoji={c.emoji} title={c.title}
-              detectInstruction={c.captions.investigate} repairInstruction={c.captions.repair}
-              toolName="Comparison Dial" />
-
             {stage === "detect" && (
               <WorkbookGlitchChoices choices={getGlitchChoices("case-03", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} />
             )}
+
+            <WorkbookActivityPrompt stage={stage} emoji={c.emoji} title={c.title}
+              detectInstruction={c.captions.investigate} repairInstruction={c.captions.repair}
+              toolName="Comparison Dial" />
 
             {/* Tanks/beds/disks with comparator in the middle */}
             <div

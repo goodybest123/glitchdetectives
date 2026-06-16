@@ -282,6 +282,10 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
+            {stage === "detect" && (
+              <WorkbookGlitchChoices choices={getGlitchChoices("case-01", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} />
+            )}
+
             <WorkbookActivityPrompt
               stage={stage}
               emoji={c.emoji}
@@ -290,10 +294,6 @@ function SubCaseRunner({
               repairInstruction={c.toolTagline}
               toolName={c.sliderLabel}
             />
-
-            {stage === "detect" && (
-              <WorkbookGlitchChoices choices={getGlitchChoices("case-01", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} />
-            )}
 
             <div
               className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
