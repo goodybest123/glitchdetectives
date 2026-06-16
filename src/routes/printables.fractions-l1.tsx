@@ -76,16 +76,17 @@ function FractionsL1Page() {
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <a
-                    href="/printables/fractions-level-1-foundations.pdf"
-                    download
+                <a
+                    href="https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/view?usp=drive_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
                     style={{ background: BLUE, color: "white" }}
                   >
                     <Download className="w-4 h-4" /> Download PDF
                   </a>
                   <a
-                    href="/printables/fractions-level-1-foundations.pdf"
+                    href="https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/view?usp=drive_link"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs border hover:opacity-80 transition-opacity"
