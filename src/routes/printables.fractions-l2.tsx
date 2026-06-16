@@ -2,12 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Download, ExternalLink, Search, Sparkles } from "lucide-react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/sections";
-import pdfAsset from "@/../public/printables/fractions-level-2-numerators-denominators.pdf.asset.json";
-
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
 const MINT = "var(--color-bg-mint)";
-const PDF_URL = pdfAsset.url;
+const PDF_URL =
+  "/__l5e/assets-v1/4624ce37-e08f-403d-8ded-0017e0339113/fractions-level-2-numerators-denominators.pdf";
 
 export const Route = createFileRoute("/printables/fractions-l2")({
   head: () => ({

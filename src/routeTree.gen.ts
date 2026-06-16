@@ -13,6 +13,7 @@ import { Route as PrintablesRouteImport } from './routes/printables'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
+import { Route as PrintablesFractionsL2RouteImport } from './routes/printables.fractions-l2'
 import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
 import { Route as PlayReportRouteImport } from './routes/play.report'
 import { Route as PlayCase06RouteImport } from './routes/play.case-06'
@@ -59,6 +60,11 @@ const PlayIndexRoute = PlayIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PlayRoute,
+} as any)
+const PrintablesFractionsL2Route = PrintablesFractionsL2RouteImport.update({
+  id: '/fractions-l2',
+  path: '/fractions-l2',
+  getParentRoute: () => PrintablesRoute,
 } as any)
 const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
   id: '/fractions-l1',
@@ -203,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
+  '/printables/fractions-l2': typeof PrintablesFractionsL2Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
   '/api/chat/case-01-canvas': typeof ApiChatCase01CanvasRoute
@@ -234,6 +241,7 @@ export interface FileRoutesByTo {
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
+  '/printables/fractions-l2': typeof PrintablesFractionsL2Route
   '/play': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
   '/api/chat/case-01-canvas': typeof ApiChatCase01CanvasRoute
@@ -267,6 +275,7 @@ export interface FileRoutesById {
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1Route
+  '/printables/fractions-l2': typeof PrintablesFractionsL2Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
   '/api/chat/case-01-canvas': typeof ApiChatCase01CanvasRoute
@@ -301,6 +310,7 @@ export interface FileRouteTypes {
     | '/play/case-06'
     | '/play/report'
     | '/printables/fractions-l1'
+    | '/printables/fractions-l2'
     | '/play/'
     | '/api/chat/case-01'
     | '/api/chat/case-01-canvas'
@@ -332,6 +342,7 @@ export interface FileRouteTypes {
     | '/play/case-06'
     | '/play/report'
     | '/printables/fractions-l1'
+    | '/printables/fractions-l2'
     | '/play'
     | '/api/chat/case-01'
     | '/api/chat/case-01-canvas'
@@ -364,6 +375,7 @@ export interface FileRouteTypes {
     | '/play/case-06'
     | '/play/report'
     | '/printables/fractions-l1'
+    | '/printables/fractions-l2'
     | '/play/'
     | '/api/chat/case-01'
     | '/api/chat/case-01-canvas'
@@ -438,6 +450,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/play/'
       preLoaderRoute: typeof PlayIndexRouteImport
       parentRoute: typeof PlayRoute
+    }
+    '/printables/fractions-l2': {
+      id: '/printables/fractions-l2'
+      path: '/fractions-l2'
+      fullPath: '/printables/fractions-l2'
+      preLoaderRoute: typeof PrintablesFractionsL2RouteImport
+      parentRoute: typeof PrintablesRoute
     }
     '/printables/fractions-l1': {
       id: '/printables/fractions-l1'
@@ -650,10 +669,12 @@ const PlayRouteWithChildren = PlayRoute._addFileChildren(PlayRouteChildren)
 
 interface PrintablesRouteChildren {
   PrintablesFractionsL1Route: typeof PrintablesFractionsL1Route
+  PrintablesFractionsL2Route: typeof PrintablesFractionsL2Route
 }
 
 const PrintablesRouteChildren: PrintablesRouteChildren = {
   PrintablesFractionsL1Route: PrintablesFractionsL1Route,
+  PrintablesFractionsL2Route: PrintablesFractionsL2Route,
 }
 
 const PrintablesRouteWithChildren = PrintablesRoute._addFileChildren(
