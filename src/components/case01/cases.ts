@@ -25,6 +25,10 @@ export type SubCaseDef = {
   toolMaxLabel: string;
   toolHint: string;
   welcomeText: string;
+  /** Slider value (0-1) where the case is mathematically correct. Defaults to 1. */
+  correctTarget: number;
+  /** Tolerance around correctTarget. Defaults to 0.04. */
+  targetTolerance: number;
   bubbles: {
     investigate: string;
     detect: string;
