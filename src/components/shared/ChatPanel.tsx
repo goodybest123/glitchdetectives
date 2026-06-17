@@ -100,7 +100,7 @@ function ChatPanelInner({
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const composerRef = useRef<HTMLTextAreaElement>(null);
-  const composerWrapRef = useRef<HTMLDivElement>(null);
+  const composerWrapRef = useRef<HTMLFormElement>(null);
   const lastStageRef = useRef<Stage | null>(null);
 
   const chatEnabled = stage === "explain";
