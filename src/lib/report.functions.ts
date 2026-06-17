@@ -138,6 +138,8 @@ export const gradeExplanation = createServerFn({ method: "POST" })
         gaps: [],
         nextStep: "Replay this case and try explaining it out loud once more.",
         note: "ZED-4 couldn't grade this right now — try again later.",
+        rubric: [],
+
       };
     }
   });
