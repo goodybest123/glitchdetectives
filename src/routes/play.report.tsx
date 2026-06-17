@@ -461,15 +461,67 @@ function GlitchRow({
           <div className="flex flex-wrap items-center gap-2">
             <h4 className="text-sm font-bold text-neutral-900">{entry.subTitle || sub.title}</h4>
             <VerdictPill verdict={entry.verdict} />
+            {typeof entry.understandingLevel === "number" && (
+              <UnderstandingMeter level={entry.understandingLevel} />
+            )}
           </div>
           <p className="mt-1 text-xs text-neutral-500">
-            <span className="font-semibold text-neutral-600">Glitch:</span> {entry.glitchSummary || sub.subtitle}
+            <span className="font-semibold text-neutral-600">Glitch:</span>{" "}
+            {entry.glitchSummary || sub.subtitle}
           </p>
+          {(entry.conceptMastered || sub.conceptMastered) && (
+            <p className="mt-0.5 text-xs text-neutral-500">
+              <span className="font-semibold text-neutral-600">Concept:</span>{" "}
+              {entry.conceptMastered || sub.conceptMastered}
+            </p>
+          )}
 
           {entry.explanation && (
-            <blockquote className="mt-3 rounded-xl border-l-4 border-[#60a5fa] bg-white px-3 py-2 text-sm italic text-neutral-700">
-              "{entry.explanation}"
-            </blockquote>
+            <div className="mt-3">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-neutral-400">
+                What you said
+              </div>
+              <blockquote className="mt-1 rounded-xl border-l-4 border-[#60a5fa] bg-white px-3 py-2 text-sm italic text-neutral-700">
+                "{entry.explanation}"
+              </blockquote>
+            </div>
+          )}
+
+          {((entry.strengths && entry.strengths.length > 0) ||
+            (entry.gaps && entry.gaps.length > 0)) && (
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              {entry.strengths && entry.strengths.length > 0 && (
+                <div className="rounded-xl bg-[#ecfdf5] px-3 py-2 ring-1 ring-[#bbf7d0]">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-[#166534]">
+                    ✓ Strengths
+                  </div>
+                  <ul className="mt-1 space-y-0.5 text-xs text-neutral-700">
+                    {entry.strengths.map((s, i) => (
+                      <li key={i}>• {s}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {entry.gaps && entry.gaps.length > 0 && (
+                <div className="rounded-xl bg-[#fffbeb] px-3 py-2 ring-1 ring-[#fde68a]">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-[#92400e]">
+                    △ Could be clearer
+                  </div>
+                  <ul className="mt-1 space-y-0.5 text-xs text-neutral-700">
+                    {entry.gaps.map((g, i) => (
+                      <li key={i}>• {g}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+          {entry.nextStep && (
+            <div className="mt-2 rounded-xl bg-[#eef2ff] px-3 py-2 text-xs text-neutral-700 ring-1 ring-[#c7d2fe]">
+              <span className="font-bold text-[#3730a3]">Try next:</span>{" "}
+              {entry.nextStep}
+            </div>
           )}
 
           {entry.verdictNote && (
@@ -488,11 +540,32 @@ function GlitchRow({
 function VerdictPill({ verdict }: { verdict: Verdict | null }) {
   if (verdict === "correct")
     return <Pill className="bg-[#dcfce7] text-[#166534]">✓ Correct</Pill>;
+  if (verdict === "partial")
+    return <Pill className="bg-[#e0e7ff] text-[#3730a3]">Almost there</Pill>;
   if (verdict === "review")
-    return <Pill className="bg-[#fef3c7] text-[#92400e]">Almost — needs review</Pill>;
+    return <Pill className="bg-[#fef3c7] text-[#92400e]">Needs review</Pill>;
   if (verdict === "pending")
     return <Pill className="bg-[#dbeafe] text-[#1e40af]">ZED-4 grading…</Pill>;
   return <Pill className="bg-neutral-100 text-neutral-500">Not attempted yet</Pill>;
+}
+
+function UnderstandingMeter({ level }: { level: number }) {
+  const clamped = Math.max(1, Math.min(5, Math.round(level)));
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5">
+      <span className="text-[9px] font-bold tracking-widest uppercase text-neutral-500">
+        Grasp
+      </span>
+      <span className="flex gap-0.5">
+        {Array.from({ length: 5 }).map((_, k) => (
+          <span
+            key={k}
+            className={`h-1.5 w-1.5 rounded-full ${k < clamped ? "bg-[#10b981]" : "bg-neutral-300"}`}
+          />
+        ))}
+      </span>
+    </span>
+  );
 }
 
 function Pill({ children, className }: { children: React.ReactNode; className: string }) {
