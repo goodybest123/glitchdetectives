@@ -66,6 +66,10 @@ export function useReportRecorder(p: Params) {
         patchReportEntry(p.caseId, p.subId, {
           verdict: res.verdict,
           verdictNote: res.note,
+          understandingLevel: res.understandingLevel,
+          strengths: res.strengths,
+          gaps: res.gaps,
+          nextStep: res.nextStep,
         });
       })
       .catch(() => {

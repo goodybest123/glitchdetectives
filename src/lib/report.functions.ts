@@ -12,13 +12,47 @@ const Input = z.object({
 });
 
 const Schema = z.object({
-  verdict: z.enum(["correct", "review"]),
-  note: z.string().max(160),
+  verdict: z.enum(["correct", "partial", "review"]),
+  understandingLevel: z.number().min(1).max(5),
+  strengths: z.array(z.string()).max(2),
+  gaps: z.array(z.string()).max(2),
+  nextStep: z.string(),
+  note: z.string(),
 });
+
+export type GradeResult = z.infer<typeof Schema>;
+
+function clampNote(s: unknown, max = 160) {
+  return String(s ?? "").slice(0, max);
+}
+
+function normalizeVerdict(v: unknown): "correct" | "partial" | "review" {
+  if (v === "correct") return "correct";
+  if (v === "partial") return "partial";
+  return "review";
+}
+
+function normalize(raw: any): GradeResult {
+  const lvl = Number(raw?.understandingLevel);
+  return {
+    verdict: normalizeVerdict(raw?.verdict),
+    understandingLevel: Number.isFinite(lvl)
+      ? Math.max(1, Math.min(5, Math.round(lvl)))
+      : 3,
+    strengths: Array.isArray(raw?.strengths)
+      ? raw.strengths.slice(0, 2).map((x: unknown) => clampNote(x, 120))
+      : [],
+    gaps: Array.isArray(raw?.gaps)
+      ? raw.gaps.slice(0, 2).map((x: unknown) => clampNote(x, 120))
+      : [],
+    nextStep: clampNote(raw?.nextStep, 160),
+    note: clampNote(raw?.note, 160),
+  };
+}
 
 export const gradeExplanation = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => Input.parse(input))
-  .handler(async ({ data }) => {
+  .handler(async ({ data }): Promise<GradeResult> => {
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("Missing LOVABLE_API_KEY");
 
@@ -26,17 +60,21 @@ export const gradeExplanation = createServerFn({ method: "POST" })
     const model = gateway("google/gemini-3-flash-preview");
 
     const system =
-      "You are ZED-4, a friendly robot tutor grading a young detective's explanation about fractions. " +
-      "Mark 'correct' if the child captured the core fraction idea (even with kid words). " +
-      "Mark 'review' only if the explanation misses the main idea or contradicts it. " +
-      "Note must be ONE short, warm sentence (max 20 words) addressed to the child as ZED-4.";
+      "You are ZED-4, a friendly robot tutor giving a young detective (kid) a diagnostic on their fraction explanation. " +
+      "Use warm, simple, kid-friendly language. Be specific to what the child actually wrote. " +
+      "verdict: 'correct' if they captured the core idea, 'partial' if close but missing a key piece, 'review' if main idea missed or wrong. " +
+      "understandingLevel: 1–5 (1=way off, 3=partial, 5=clear and complete). " +
+      "strengths: 1–2 short bullets naming what the child got right (≤14 words each). " +
+      "gaps: 0–2 short bullets naming what's missing or fuzzy (≤14 words each). " +
+      "nextStep: ONE concrete practice tip the child can try (≤22 words). " +
+      "note: ONE warm sentence to the child as ZED-4 (≤20 words).";
 
     const prompt =
       `Case: ${data.caseTitle} — ${data.subTitle}\n` +
-      `Concept: ${data.conceptMastered}\n` +
+      `Concept being learned: ${data.conceptMastered}\n` +
       `The glitch was: ${data.glitchSummary}\n` +
       `Child's explanation: "${data.childExplanation}"\n` +
-      `Grade the explanation.`;
+      `Give the diagnostic.`;
 
     try {
       const { experimental_output } = await generateText({
@@ -45,27 +83,32 @@ export const gradeExplanation = createServerFn({ method: "POST" })
         prompt,
         experimental_output: Output.object({ schema: Schema }),
       });
-      return experimental_output;
-    } catch (err) {
+      return normalize(experimental_output);
+    } catch {
       // Fallback: ask for plain JSON and parse manually
       try {
         const { text } = await generateText({
           model,
           system:
             system +
-            ' Respond ONLY with compact JSON: {"verdict":"correct"|"review","note":"<<=20 words>"}. No prose, no markdown.',
+            ' Respond ONLY with compact JSON of shape ' +
+            '{"verdict":"correct"|"partial"|"review","understandingLevel":1-5,' +
+            '"strengths":["..."],"gaps":["..."],"nextStep":"...","note":"..."}. ' +
+            "No prose, no markdown fences.",
           prompt,
         });
         const match = text.match(/\{[\s\S]*\}/);
         if (match) {
           const parsed = JSON.parse(match[0]);
-          const verdict = parsed.verdict === "correct" ? "correct" : "review";
-          const note = String(parsed.note ?? "").slice(0, 160);
-          return { verdict, note };
+          return normalize(parsed);
         }
       } catch {}
       return {
-        verdict: "review" as const,
+        verdict: "review",
+        understandingLevel: 3,
+        strengths: [],
+        gaps: [],
+        nextStep: "Replay this case and try explaining it out loud once more.",
         note: "ZED-4 couldn't grade this right now — try again later.",
       };
     }

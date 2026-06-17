@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const STORAGE_KEY = "gd:report:v1";
+const STORAGE_KEY = "gd:report:v2";
 
 export type ReportMarks = {
   investigate: number;
@@ -9,7 +9,7 @@ export type ReportMarks = {
   explain: number;
 };
 
-export type Verdict = "correct" | "review" | "pending";
+export type Verdict = "correct" | "partial" | "review" | "pending";
 
 export type ReportEntry = {
   caseId: string;
@@ -24,6 +24,10 @@ export type ReportEntry = {
   verdict: Verdict;
   verdictNote: string;
   solvedAt: number;
+  understandingLevel?: number;
+  strengths?: string[];
+  gaps?: string[];
+  nextStep?: string;
 };
 
 export type ReportMap = Record<string, Record<string, ReportEntry>>;

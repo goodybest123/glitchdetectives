@@ -197,6 +197,9 @@ function ReportPage() {
           </div>
         </section>
 
+        {/* Roadmap */}
+        <RoadmapSection cases={CASES} report={report} />
+
         {/* Per-case sections */}
         <div className="mt-8 space-y-8">
           {CASES.map((c) => (
@@ -212,6 +215,159 @@ function ReportPage() {
         </footer>
       </div>
     </main>
+  );
+}
+
+type RoadmapItem = {
+  caseId: string;
+  caseNumber: string;
+  caseTitle: string;
+  subId: string;
+  subTitle: string;
+  emoji: string;
+  concept: string;
+  nextStep?: string;
+};
+
+function RoadmapSection({
+  cases,
+  report,
+}: {
+  cases: CaseMeta[];
+  report: ReturnType<typeof useReport>;
+}) {
+  const mastered: RoadmapItem[] = [];
+  const focus: RoadmapItem[] = [];
+  const replay: RoadmapItem[] = [];
+
+  for (const c of cases) {
+    for (const s of c.subs) {
+      const entry = report[c.id]?.[s.id];
+      const item: RoadmapItem = {
+        caseId: c.id,
+        caseNumber: c.number,
+        caseTitle: c.title,
+        subId: s.id,
+        subTitle: s.title,
+        emoji: s.emoji,
+        concept: s.conceptMastered,
+        nextStep: entry?.nextStep,
+      };
+      if (entry?.verdict === "correct") mastered.push(item);
+      else if (entry?.verdict === "partial" || entry?.verdict === "review")
+        focus.push(item);
+      else if (!entry) replay.push(item);
+    }
+  }
+  const suggestedReplay = [...focus, ...replay].slice(0, 3);
+
+  if (mastered.length === 0 && focus.length === 0 && suggestedReplay.length === 0)
+    return null;
+
+  return (
+    <section className="mt-8 grid gap-4 md:grid-cols-3">
+      <RoadmapCard
+        title="Concepts mastered"
+        tone="green"
+        emptyText="No concepts marked correct yet — keep going!"
+      >
+        {mastered.length > 0 && (
+          <ul className="space-y-1.5 text-sm">
+            {mastered.map((m) => (
+              <li key={`${m.caseId}-${m.subId}`} className="flex gap-2">
+                <span className="mt-0.5 text-[#10b981]">✓</span>
+                <span className="text-neutral-700">{m.concept}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </RoadmapCard>
+
+      <RoadmapCard
+        title="Focus areas"
+        tone="amber"
+        emptyText="Nothing flagged — nice work!"
+      >
+        {focus.length > 0 && (
+          <ul className="space-y-2.5 text-sm">
+            {focus.map((f) => (
+              <li key={`${f.caseId}-${f.subId}`}>
+                <div className="flex gap-2">
+                  <span className="mt-0.5 text-[#f59e0b]">△</span>
+                  <span className="text-neutral-800 font-medium">{f.concept}</span>
+                </div>
+                {f.nextStep && (
+                  <p className="ml-6 mt-0.5 text-xs text-neutral-500">
+                    Try: {f.nextStep}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </RoadmapCard>
+
+      <RoadmapCard
+        title="Suggested next"
+        tone="blue"
+        emptyText="All caught up — replay any case to deepen mastery."
+      >
+        {suggestedReplay.length > 0 && (
+          <ul className="space-y-1.5 text-sm print:hidden">
+            {suggestedReplay.map((r) => (
+              <li key={`${r.caseId}-${r.subId}`}>
+                <Link
+                  to={`/play/${r.caseId}` as any}
+                  className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-neutral-700 transition hover:bg-[#dbeafe]"
+                >
+                  <span className="text-base">{r.emoji}</span>
+                  <span className="flex-1">
+                    <span className="font-semibold">Case {r.caseNumber}</span> · {r.subTitle}
+                  </span>
+                  <span className="text-[#1e40af]">→</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </RoadmapCard>
+    </section>
+  );
+}
+
+function RoadmapCard({
+  title,
+  tone,
+  emptyText,
+  children,
+}: {
+  title: string;
+  tone: "green" | "amber" | "blue";
+  emptyText: string;
+  children?: React.ReactNode;
+}) {
+  const ring =
+    tone === "green"
+      ? "ring-[#bbf7d0]"
+      : tone === "amber"
+        ? "ring-[#fde68a]"
+        : "ring-[#bfdbfe]";
+  const label =
+    tone === "green"
+      ? "text-[#166534]"
+      : tone === "amber"
+        ? "text-[#92400e]"
+        : "text-[#1e40af]";
+  const hasContent = !!children;
+  return (
+    <div className={`rounded-3xl bg-white p-5 ring-1 ${ring} shadow-[0_8px_30px_-12px_rgba(15,23,42,0.12)] print:break-inside-avoid`}>
+      <div className={`text-[10px] font-bold tracking-[0.18em] uppercase ${label}`}>
+        {title}
+      </div>
+      <div className="mt-3">
+        {hasContent ? children : <p className="text-xs text-neutral-400">{emptyText}</p>}
+      </div>
+    </div>
   );
 }
 
@@ -251,11 +407,13 @@ function CaseSection({ meta, report }: { meta: CaseMeta; report: ReturnType<type
               const color =
                 v === "correct"
                   ? "bg-[#10b981]"
-                  : v === "review"
-                    ? "bg-[#f59e0b]"
-                    : v === "pending"
-                      ? "bg-[#60a5fa]"
-                      : "bg-neutral-200";
+                  : v === "partial"
+                    ? "bg-[#6366f1]"
+                    : v === "review"
+                      ? "bg-[#f59e0b]"
+                      : v === "pending"
+                        ? "bg-[#60a5fa]"
+                        : "bg-neutral-200";
               return <span key={s.id} className={`h-2.5 w-2.5 rounded-full ${color}`} />;
             })}
           </div>
@@ -305,15 +463,67 @@ function GlitchRow({
           <div className="flex flex-wrap items-center gap-2">
             <h4 className="text-sm font-bold text-neutral-900">{entry.subTitle || sub.title}</h4>
             <VerdictPill verdict={entry.verdict} />
+            {typeof entry.understandingLevel === "number" && (
+              <UnderstandingMeter level={entry.understandingLevel} />
+            )}
           </div>
           <p className="mt-1 text-xs text-neutral-500">
-            <span className="font-semibold text-neutral-600">Glitch:</span> {entry.glitchSummary || sub.subtitle}
+            <span className="font-semibold text-neutral-600">Glitch:</span>{" "}
+            {entry.glitchSummary || sub.subtitle}
           </p>
+          {(entry.conceptMastered || sub.conceptMastered) && (
+            <p className="mt-0.5 text-xs text-neutral-500">
+              <span className="font-semibold text-neutral-600">Concept:</span>{" "}
+              {entry.conceptMastered || sub.conceptMastered}
+            </p>
+          )}
 
           {entry.explanation && (
-            <blockquote className="mt-3 rounded-xl border-l-4 border-[#60a5fa] bg-white px-3 py-2 text-sm italic text-neutral-700">
-              "{entry.explanation}"
-            </blockquote>
+            <div className="mt-3">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-neutral-400">
+                What you said
+              </div>
+              <blockquote className="mt-1 rounded-xl border-l-4 border-[#60a5fa] bg-white px-3 py-2 text-sm italic text-neutral-700">
+                "{entry.explanation}"
+              </blockquote>
+            </div>
+          )}
+
+          {((entry.strengths && entry.strengths.length > 0) ||
+            (entry.gaps && entry.gaps.length > 0)) && (
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              {entry.strengths && entry.strengths.length > 0 && (
+                <div className="rounded-xl bg-[#ecfdf5] px-3 py-2 ring-1 ring-[#bbf7d0]">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-[#166534]">
+                    ✓ Strengths
+                  </div>
+                  <ul className="mt-1 space-y-0.5 text-xs text-neutral-700">
+                    {entry.strengths.map((s, i) => (
+                      <li key={i}>• {s}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {entry.gaps && entry.gaps.length > 0 && (
+                <div className="rounded-xl bg-[#fffbeb] px-3 py-2 ring-1 ring-[#fde68a]">
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-[#92400e]">
+                    △ Could be clearer
+                  </div>
+                  <ul className="mt-1 space-y-0.5 text-xs text-neutral-700">
+                    {entry.gaps.map((g, i) => (
+                      <li key={i}>• {g}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+          {entry.nextStep && (
+            <div className="mt-2 rounded-xl bg-[#eef2ff] px-3 py-2 text-xs text-neutral-700 ring-1 ring-[#c7d2fe]">
+              <span className="font-bold text-[#3730a3]">Try next:</span>{" "}
+              {entry.nextStep}
+            </div>
           )}
 
           {entry.verdictNote && (
@@ -332,11 +542,32 @@ function GlitchRow({
 function VerdictPill({ verdict }: { verdict: Verdict | null }) {
   if (verdict === "correct")
     return <Pill className="bg-[#dcfce7] text-[#166534]">✓ Correct</Pill>;
+  if (verdict === "partial")
+    return <Pill className="bg-[#e0e7ff] text-[#3730a3]">Almost there</Pill>;
   if (verdict === "review")
-    return <Pill className="bg-[#fef3c7] text-[#92400e]">Almost — needs review</Pill>;
+    return <Pill className="bg-[#fef3c7] text-[#92400e]">Needs review</Pill>;
   if (verdict === "pending")
     return <Pill className="bg-[#dbeafe] text-[#1e40af]">ZED-4 grading…</Pill>;
   return <Pill className="bg-neutral-100 text-neutral-500">Not attempted yet</Pill>;
+}
+
+function UnderstandingMeter({ level }: { level: number }) {
+  const clamped = Math.max(1, Math.min(5, Math.round(level)));
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5">
+      <span className="text-[9px] font-bold tracking-widest uppercase text-neutral-500">
+        Grasp
+      </span>
+      <span className="flex gap-0.5">
+        {Array.from({ length: 5 }).map((_, k) => (
+          <span
+            key={k}
+            className={`h-1.5 w-1.5 rounded-full ${k < clamped ? "bg-[#10b981]" : "bg-neutral-300"}`}
+          />
+        ))}
+      </span>
+    </span>
+  );
 }
 
 function Pill({ children, className }: { children: React.ReactNode; className: string }) {
