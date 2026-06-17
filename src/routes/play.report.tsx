@@ -197,6 +197,9 @@ function ReportPage() {
           </div>
         </section>
 
+        {/* Roadmap */}
+        <RoadmapSection cases={CASES} report={report} />
+
         {/* Per-case sections */}
         <div className="mt-8 space-y-8">
           {CASES.map((c) => (
@@ -212,6 +215,159 @@ function ReportPage() {
         </footer>
       </div>
     </main>
+  );
+}
+
+type RoadmapItem = {
+  caseId: string;
+  caseNumber: string;
+  caseTitle: string;
+  subId: string;
+  subTitle: string;
+  emoji: string;
+  concept: string;
+  nextStep?: string;
+};
+
+function RoadmapSection({
+  cases,
+  report,
+}: {
+  cases: CaseMeta[];
+  report: ReturnType<typeof useReport>;
+}) {
+  const mastered: RoadmapItem[] = [];
+  const focus: RoadmapItem[] = [];
+  const replay: RoadmapItem[] = [];
+
+  for (const c of cases) {
+    for (const s of c.subs) {
+      const entry = report[c.id]?.[s.id];
+      const item: RoadmapItem = {
+        caseId: c.id,
+        caseNumber: c.number,
+        caseTitle: c.title,
+        subId: s.id,
+        subTitle: s.title,
+        emoji: s.emoji,
+        concept: s.conceptMastered,
+        nextStep: entry?.nextStep,
+      };
+      if (entry?.verdict === "correct") mastered.push(item);
+      else if (entry?.verdict === "partial" || entry?.verdict === "review")
+        focus.push(item);
+      else if (!entry) replay.push(item);
+    }
+  }
+  const suggestedReplay = [...focus, ...replay].slice(0, 3);
+
+  if (mastered.length === 0 && focus.length === 0 && suggestedReplay.length === 0)
+    return null;
+
+  return (
+    <section className="mt-8 grid gap-4 md:grid-cols-3">
+      <RoadmapCard
+        title="Concepts mastered"
+        tone="green"
+        emptyText="No concepts marked correct yet — keep going!"
+      >
+        {mastered.length > 0 && (
+          <ul className="space-y-1.5 text-sm">
+            {mastered.map((m) => (
+              <li key={`${m.caseId}-${m.subId}`} className="flex gap-2">
+                <span className="mt-0.5 text-[#10b981]">✓</span>
+                <span className="text-neutral-700">{m.concept}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </RoadmapCard>
+
+      <RoadmapCard
+        title="Focus areas"
+        tone="amber"
+        emptyText="Nothing flagged — nice work!"
+      >
+        {focus.length > 0 && (
+          <ul className="space-y-2.5 text-sm">
+            {focus.map((f) => (
+              <li key={`${f.caseId}-${f.subId}`}>
+                <div className="flex gap-2">
+                  <span className="mt-0.5 text-[#f59e0b]">△</span>
+                  <span className="text-neutral-800 font-medium">{f.concept}</span>
+                </div>
+                {f.nextStep && (
+                  <p className="ml-6 mt-0.5 text-xs text-neutral-500">
+                    Try: {f.nextStep}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </RoadmapCard>
+
+      <RoadmapCard
+        title="Suggested next"
+        tone="blue"
+        emptyText="All caught up — replay any case to deepen mastery."
+      >
+        {suggestedReplay.length > 0 && (
+          <ul className="space-y-1.5 text-sm print:hidden">
+            {suggestedReplay.map((r) => (
+              <li key={`${r.caseId}-${r.subId}`}>
+                <Link
+                  to={`/play/${r.caseId}` as any}
+                  className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-neutral-700 transition hover:bg-[#dbeafe]"
+                >
+                  <span className="text-base">{r.emoji}</span>
+                  <span className="flex-1">
+                    <span className="font-semibold">Case {r.caseNumber}</span> · {r.subTitle}
+                  </span>
+                  <span className="text-[#1e40af]">→</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </RoadmapCard>
+    </section>
+  );
+}
+
+function RoadmapCard({
+  title,
+  tone,
+  emptyText,
+  children,
+}: {
+  title: string;
+  tone: "green" | "amber" | "blue";
+  emptyText: string;
+  children?: React.ReactNode;
+}) {
+  const ring =
+    tone === "green"
+      ? "ring-[#bbf7d0]"
+      : tone === "amber"
+        ? "ring-[#fde68a]"
+        : "ring-[#bfdbfe]";
+  const label =
+    tone === "green"
+      ? "text-[#166534]"
+      : tone === "amber"
+        ? "text-[#92400e]"
+        : "text-[#1e40af]";
+  const hasContent = !!children && (children as any)?.props?.children?.length !== 0;
+  return (
+    <div className={`rounded-3xl bg-white p-5 ring-1 ${ring} shadow-[0_8px_30px_-12px_rgba(15,23,42,0.12)] print:break-inside-avoid`}>
+      <div className={`text-[10px] font-bold tracking-[0.18em] uppercase ${label}`}>
+        {title}
+      </div>
+      <div className="mt-3">
+        {hasContent ? children : <p className="text-xs text-neutral-400">{emptyText}</p>}
+      </div>
+    </div>
   );
 }
 
