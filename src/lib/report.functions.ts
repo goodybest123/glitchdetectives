@@ -38,12 +38,35 @@ export const gradeExplanation = createServerFn({ method: "POST" })
       `Child's explanation: "${data.childExplanation}"\n` +
       `Grade the explanation.`;
 
-    const { experimental_output } = await generateText({
-      model,
-      system,
-      prompt,
-      experimental_output: Output.object({ schema: Schema }),
-    });
-
-    return experimental_output;
+    try {
+      const { experimental_output } = await generateText({
+        model,
+        system,
+        prompt,
+        experimental_output: Output.object({ schema: Schema }),
+      });
+      return experimental_output;
+    } catch (err) {
+      // Fallback: ask for plain JSON and parse manually
+      try {
+        const { text } = await generateText({
+          model,
+          system:
+            system +
+            ' Respond ONLY with compact JSON: {"verdict":"correct"|"review","note":"<<=20 words>"}. No prose, no markdown.',
+          prompt,
+        });
+        const match = text.match(/\{[\s\S]*\}/);
+        if (match) {
+          const parsed = JSON.parse(match[0]);
+          const verdict = parsed.verdict === "correct" ? "correct" : "review";
+          const note = String(parsed.note ?? "").slice(0, 160);
+          return { verdict, note };
+        }
+      } catch {}
+      return {
+        verdict: "review" as const,
+        note: "ZED-4 couldn't grade this right now — try again later.",
+      };
+    }
   });
