@@ -358,7 +358,7 @@ function RoadmapCard({
       : tone === "amber"
         ? "text-[#92400e]"
         : "text-[#1e40af]";
-  const hasContent = !!children && (children as any)?.props?.children?.length !== 0;
+  const hasContent = !!children;
   return (
     <div className={`rounded-3xl bg-white p-5 ring-1 ${ring} shadow-[0_8px_30px_-12px_rgba(15,23,42,0.12)] print:break-inside-avoid`}>
       <div className={`text-[10px] font-bold tracking-[0.18em] uppercase ${label}`}>
