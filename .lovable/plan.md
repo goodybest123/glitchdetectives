@@ -1,29 +1,59 @@
-## Goals
-
-1. After the child picks the correct glitch option, the visual + repair tool should be in view immediately — no scrolling required.
-2. The correct option must not always be "A". Spread it across A, B, C, D across sub-cases and (where possible) randomize per session.
+## Goal
+Turn the Diagnostic Report from a one-line verdict into a clear, kid-friendly diagnostic that shows **how** the child explained each concept, **what they got right**, **where they're shaky**, and **what to practice next** — both per glitch and as an overall roadmap.
 
 ## Changes
 
-### 1. Scroll-to-repair on correct pick (all 6 cases)
+### 1. Richer AI grading (`src/lib/report.functions.ts`)
+Expand `gradeExplanation` to return a structured diagnostic instead of just `{verdict, note}`:
+- `verdict`: `correct | partial | review` (add a middle tier so "almost there" isn't lumped with wrong)
+- `understandingLevel`: 1–5 (how well the core idea came through)
+- `strengths`: 1–2 short bullets ("You named the whole and the parts")
+- `gaps`: 0–2 short bullets ("Didn't mention that parts must be equal")
+- `nextStep`: one concrete practice suggestion ("Try drawing 3 equal slices and naming each as 1/3")
+- `note`: existing one-sentence ZED-4 message (kept for backward compat)
 
-Currently the repair tool only auto-scrolls when `stage` becomes `"repair"`, which happens after the child clicks the glitched object — one step after picking the correct multiple-choice option. On smaller laptops/Chromebooks/tablets the highlighted object often sits below the fold once the choices expand.
+Keep the plain-JSON fallback already in place; widen it to the new shape. Tighten the schema to stay within Gemini's constrained-decoding limits (short field names, no enums beyond verdict, bounded array lengths).
 
-- In `src/components/shared/WorkbookActivity.tsx` (`WorkbookGlitchChoices`), add an `onCorrect` callback fired the moment the child picks the right option (in addition to the existing `onUnlock`).
-- In each `src/routes/play.case-0{1..6}.tsx`, pass `onCorrect={() => repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}` and also scroll once more when `stage === "detect"` becomes true with `glitchUnlocked`, so the highlighted visual is centered before the child clicks it.
-- Tighten the visual+repair grid wrapper so on `detect` stage it already reserves space (no layout jump when repair appears).
+### 2. Store the new fields (`src/hooks/useReportStore.ts`)
+Extend `ReportEntry` and `Verdict` with the new optional fields. Old localStorage entries keep working (all new fields optional). Bump `STORAGE_KEY` to `gd:report:v2` so stale v1 entries don't render half-empty diagnostics.
 
-### 2. Shuffle correct answer position (A/B/C/D)
+### 3. Wire grading result through (`src/hooks/useReportRecorder.ts`)
+Pass the new fields from `gradeExplanation` into `patchReportEntry`. No behavior change for the recording trigger.
 
-`src/components/shared/glitchChoices.ts` currently returns each sub-case's choices with the correct one first. `WorkbookGlitchChoices` renders them in order and labels them A, B, C, D — so the correct answer is always A.
+### 4. Expanded per-glitch card (`src/routes/play.report.tsx` → `GlitchRow`)
+For each solved glitch, render:
+- Header: emoji, title, verdict pill (now 3 tiers), understanding meter (1–5 dots)
+- **Glitch** (what was wrong) — already shown
+- **Concept** (what this glitch teaches) — pulled from `conceptMastered`, currently unused in UI
+- **What you said** — the child's quote (already shown)
+- **ZED-4's read** — two-column block:
+  - ✓ Strengths (green bullets)
+  - △ Could be clearer (amber bullets)
+- **Try next** — one-line practice suggestion in a highlighted box
+- Marks row stays at the bottom
 
-- Update `glitchChoices.ts`: each entry already marks `isCorrect`. Add a deterministic per-sub-case `correctIndex` (0–3) chosen to spread correct answers across positions (e.g. case-01 pizza→A, chocolate→C, canvas→B; case-02 bar→D, crate→A, panels→C; etc.). Reorder the `choices` array so the correct one sits at that index. This keeps it stable per sub-case (no re-render flicker, no hydration mismatch from SSR) while ensuring variety across the app.
-- Verify `WorkbookGlitchChoices` reads `isCorrect` (not array index) when validating the click — if it currently assumes index 0, fix to use `choice.isCorrect`.
+Empty/legacy entries (no AI diagnostic yet) fall back to today's single-line note.
 
-### Files touched
+### 5. Roadmap section on the report (`play.report.tsx`)
+Add a new section above the per-case list:
+- **Concepts mastered** — list of `conceptMastered` strings from glitches graded `correct`
+- **Focus areas** — list of concepts from glitches graded `partial` or `review`, each with the AI's `nextStep`
+- **Suggested replay path** — first 3 unattempted or `review` sub-cases, as `<Link>`s back into `/play/case-XX`
 
-- `src/components/shared/WorkbookActivity.tsx` — add `onCorrect` prop, use `isCorrect` for validation.
-- `src/components/shared/glitchChoices.ts` — reorder choices so correct index varies A/B/C/D across sub-cases.
-- `src/routes/play.case-01.tsx` … `play.case-06.tsx` — wire `onCorrect` to `repairRef.scrollIntoView`.
+This gives the child (and a parent reading along) a clear "you've got this / work on this / do this next" roadmap.
 
-No backend, AI, or content changes; only frontend layout + choice ordering.
+### 6. Verdict pill + meter components
+- `VerdictPill` gains a `partial` variant (blue/indigo "Almost there").
+- Small `UnderstandingMeter` component (5 dots, filled by `understandingLevel`).
+
+## Technical notes
+- Schema kept small to avoid Gemini "too many states" errors: `verdict` enum only, other fields are plain strings/numbers with bounded arrays (`max(2)`).
+- All new `ReportEntry` fields are optional; the UI renders gracefully when missing so existing saved reports still display.
+- Storage key bump avoids confusing partial-shape rows from earlier sessions.
+- No backend/schema changes; purely client + existing server function.
+
+## Files touched
+- `src/lib/report.functions.ts` — expanded schema + fallback
+- `src/hooks/useReportStore.ts` — extended `ReportEntry`, `Verdict`, bumped key
+- `src/hooks/useReportRecorder.ts` — forward new fields
+- `src/routes/play.report.tsx` — richer `GlitchRow`, new roadmap section, updated pills/meter
