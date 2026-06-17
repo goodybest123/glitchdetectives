@@ -5,8 +5,10 @@ type Props = {
   pulseKey?: number;
 };
 
-const UNEQUAL = 0.15;
-const EQUAL = 0.5;
+// Slider 0 → far-left, 0.5 → centered (correct), 1 → far-right
+const LEFT = 0.15;
+const CENTER = 0.5;
+const RIGHT = 0.85;
 
 const W = 400;
 const H = 240;
@@ -18,7 +20,9 @@ export function CanvasSVG({
   interactive = false,
   pulseKey = 0,
 }: Props) {
-  const pos = UNEQUAL + (EQUAL - UNEQUAL) * equalized;
+  const pos = equalized <= 0.5
+    ? LEFT + (CENTER - LEFT) * (equalized / 0.5)
+    : CENTER + (RIGHT - CENTER) * ((equalized - 0.5) / 0.5);
   const innerW = W - PAD * 2;
   const innerH = H - PAD * 2;
   const dividerX = PAD + pos * innerW;
