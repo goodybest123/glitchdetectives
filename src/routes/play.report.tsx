@@ -384,6 +384,16 @@ function Stat({ label, value, tone }: { label: string; value: string; tone: "blu
 function CaseSection({ meta, report }: { meta: CaseMeta; report: ReturnType<typeof useReport> }) {
   const entries = report[meta.id] ?? {};
   const solvedCount = meta.subs.filter((s) => entries[s.id]).length;
+  let rubricMet = 0;
+  let rubricTotal = 0;
+  for (const s of meta.subs) {
+    const r = entries[s.id]?.rubric;
+    if (r && r.length) {
+      rubricTotal += r.length;
+      rubricMet += r.filter((x) => x.score === "met").length;
+    }
+  }
+
 
   return (
     <section className="rounded-3xl bg-white p-6 sm:p-8 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.12)] ring-1 ring-neutral-100 print:shadow-none print:ring-0 print:break-inside-avoid">
@@ -401,6 +411,12 @@ function CaseSection({ meta, report }: { meta: CaseMeta; report: ReturnType<type
           <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-bold text-neutral-600">
             {solvedCount}/{meta.subs.length} solved
           </span>
+          {rubricTotal > 0 && (
+            <span className="rounded-full bg-[#ecfdf5] px-3 py-1 text-xs font-bold text-[#166534]">
+              {rubricMet}/{rubricTotal} key ideas met
+            </span>
+          )}
+
           <div className="flex gap-1.5">
             {meta.subs.map((s) => {
               const v = entries[s.id]?.verdict;
@@ -519,6 +535,11 @@ function GlitchRow({
             </div>
           )}
 
+          {entry.rubric && entry.rubric.length > 0 && (
+            <RubricBlock rubric={entry.rubric} />
+          )}
+
+
           {entry.nextStep && (
             <div className="mt-2 rounded-xl bg-[#eef2ff] px-3 py-2 text-xs text-neutral-700 ring-1 ring-[#c7d2fe]">
               <span className="font-bold text-[#3730a3]">Try next:</span>{" "}
@@ -607,3 +628,59 @@ function MarksRow({ marks }: { marks: ReportEntry["marks"] }) {
     </div>
   );
 }
+
+function RubricBlock({
+  rubric,
+}: {
+  rubric: NonNullable<ReportEntry["rubric"]>;
+}) {
+  const met = rubric.filter((r) => r.score === "met").length;
+  const partial = rubric.filter((r) => r.score === "partial").length;
+  const missing = rubric.filter((r) => r.score === "missing").length;
+  return (
+    <div className="mt-3 rounded-2xl border border-neutral-100 bg-white p-3 print:break-inside-avoid">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-100 pb-2">
+        <div className="text-[10px] font-bold tracking-widest uppercase text-neutral-500">
+          Explanation Rubric
+        </div>
+        <div className="text-[10px] font-semibold tabular-nums text-neutral-500">
+          <span className="text-[#166534]">{met} met</span>
+          {" · "}
+          <span className="text-[#92400e]">{partial} partial</span>
+          {" · "}
+          <span className="text-[#991b1b]">{missing} missing</span>
+        </div>
+      </div>
+      <ul className="mt-2 space-y-1.5">
+        {rubric.map((r, i) => {
+          const chip =
+            r.score === "met"
+              ? "bg-[#dcfce7] text-[#166534]"
+              : r.score === "partial"
+                ? "bg-[#fef3c7] text-[#92400e]"
+                : "bg-[#fee2e2] text-[#991b1b]";
+          const icon =
+            r.score === "met" ? "✓" : r.score === "partial" ? "◐" : "✗";
+          const label =
+            r.score === "met" ? "Met" : r.score === "partial" ? "Partial" : "Missing";
+          return (
+            <li key={i} className="flex items-start gap-2.5 text-xs">
+              <span
+                className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wider ${chip}`}
+              >
+                <span aria-hidden="true">{icon}</span> {label}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="font-semibold text-neutral-800">{r.criterion}</div>
+                {r.evidence && (
+                  <div className="text-[11px] text-neutral-500">{r.evidence}</div>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
