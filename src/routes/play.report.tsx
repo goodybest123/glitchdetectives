@@ -407,11 +407,13 @@ function CaseSection({ meta, report }: { meta: CaseMeta; report: ReturnType<type
               const color =
                 v === "correct"
                   ? "bg-[#10b981]"
-                  : v === "review"
-                    ? "bg-[#f59e0b]"
-                    : v === "pending"
-                      ? "bg-[#60a5fa]"
-                      : "bg-neutral-200";
+                  : v === "partial"
+                    ? "bg-[#6366f1]"
+                    : v === "review"
+                      ? "bg-[#f59e0b]"
+                      : v === "pending"
+                        ? "bg-[#60a5fa]"
+                        : "bg-neutral-200";
               return <span key={s.id} className={`h-2.5 w-2.5 rounded-full ${color}`} />;
             })}
           </div>
