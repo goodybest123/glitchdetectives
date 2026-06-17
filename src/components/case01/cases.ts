@@ -59,6 +59,8 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     toolMinLabel: "Lopsided",
     toolMaxLabel: "Fair slices",
     toolHint: "Almost there — keep equalizing until all four slices match.",
+    correctTarget: 1,
+    targetTolerance: 0.04,
     welcomeText:
       "Great detective work! You fixed my pizza. Can you tell me — why was my first try not fair?",
     bubbles: {
