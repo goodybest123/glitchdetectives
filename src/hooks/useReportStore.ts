@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const STORAGE_KEY = "gd:report:v3";
+const STORAGE_KEY = "gd:report:v4";
 
 export type ReportMarks = {
   investigate: number;
@@ -29,6 +29,15 @@ export type ReportEntry = {
   gaps?: string[];
   nextStep?: string;
   rubric?: { criterion: string; score: "met" | "partial" | "missing"; evidence: string }[];
+  insights?: {
+    dimension:
+      | "Conceptual Understanding"
+      | "Reasoning & Justification"
+      | "Vocabulary & Precision"
+      | "Problem Decomposition";
+    level: "Emerging" | "Developing" | "Secure";
+    evidence: string;
+  }[];
 };
 
 
