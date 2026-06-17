@@ -21,6 +21,37 @@ const CHOICES: Record<string, GlitchChoice[]> = {
   "case-06:circuit": [{ label: "Different-sized fraction pieces were subtracted before making equal-sized pieces", correct: true }, { label: "Fractions can be subtracted directly whenever the top number is larger", correct: false }, { label: "Only the top numbers need to be subtracted; piece sizes do not matter", correct: false }, { label: "Eighth-size and fourth-size pieces can be removed from each other directly", correct: false }],
 };
 
+// Spread the correct answer position across A/B/C/D so it isn't always option A.
+const CORRECT_INDEX: Record<string, number> = {
+  "case-01:pizza": 0,
+  "case-01:chocolate": 2,
+  "case-01:canvas": 1,
+  "case-02:bar": 3,
+  "case-02:crate": 1,
+  "case-02:panels": 2,
+  "case-03:tanks": 0,
+  "case-03:garden": 3,
+  "case-03:disks": 1,
+  "case-04:cargo": 2,
+  "case-04:coolant": 3,
+  "case-04:beams": 0,
+  "case-05:conveyor": 1,
+  "case-05:coolant": 2,
+  "case-05:assembly": 3,
+  "case-06:blueprint": 0,
+  "case-06:paint": 2,
+  "case-06:circuit": 1,
+};
+
 export function getGlitchChoices(caseNumber: string, subCase: string) {
-  return CHOICES[`${caseNumber}:${subCase}`] ?? [];
+  const key = `${caseNumber}:${subCase}`;
+  const original = CHOICES[key];
+  if (!original) return [];
+  const correct = original.find((c) => c.correct);
+  if (!correct) return original;
+  const wrongs = original.filter((c) => !c.correct);
+  const targetIndex = Math.min(Math.max(CORRECT_INDEX[key] ?? 0, 0), original.length - 1);
+  const reordered: typeof original = [...wrongs];
+  reordered.splice(targetIndex, 0, correct);
+  return reordered;
 }

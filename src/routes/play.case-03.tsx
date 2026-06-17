@@ -294,7 +294,7 @@ function SubCaseRunner({
             </div>
 
             {stage === "detect" && (
-              <WorkbookGlitchChoices choices={getGlitchChoices("case-03", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} />
+              <WorkbookGlitchChoices choices={getGlitchChoices("case-03", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} onCorrect={() => setTimeout(() => repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 100)} />
             )}
 
             <WorkbookActivityPrompt stage={stage} emoji={c.emoji} title={c.title}
