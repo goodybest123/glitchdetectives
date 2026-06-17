@@ -11,6 +11,12 @@ const Input = z.object({
   childExplanation: z.string().min(1),
 });
 
+const RubricItem = z.object({
+  criterion: z.string(),
+  score: z.enum(["met", "partial", "missing"]),
+  evidence: z.string(),
+});
+
 const Schema = z.object({
   verdict: z.enum(["correct", "partial", "review"]),
   understandingLevel: z.number().min(1).max(5),
@@ -18,7 +24,9 @@ const Schema = z.object({
   gaps: z.array(z.string()).max(2),
   nextStep: z.string(),
   note: z.string(),
+  rubric: z.array(RubricItem).min(3).max(4),
 });
+
 
 export type GradeResult = z.infer<typeof Schema>;
 
@@ -30,6 +38,21 @@ function normalizeVerdict(v: unknown): "correct" | "partial" | "review" {
   if (v === "correct") return "correct";
   if (v === "partial") return "partial";
   return "review";
+}
+
+function normalizeScore(s: unknown): "met" | "partial" | "missing" {
+  if (s === "met") return "met";
+  if (s === "partial") return "partial";
+  return "missing";
+}
+
+function normalizeRubric(r: unknown): GradeResult["rubric"] {
+  if (!Array.isArray(r)) return [];
+  return r.slice(0, 4).map((item: any) => ({
+    criterion: clampNote(item?.criterion, 80),
+    score: normalizeScore(item?.score),
+    evidence: clampNote(item?.evidence, 140),
+  })).filter((x) => x.criterion);
 }
 
 function normalize(raw: any): GradeResult {
@@ -47,8 +70,10 @@ function normalize(raw: any): GradeResult {
       : [],
     nextStep: clampNote(raw?.nextStep, 160),
     note: clampNote(raw?.note, 160),
+    rubric: normalizeRubric(raw?.rubric),
   };
 }
+
 
 export const gradeExplanation = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => Input.parse(input))
@@ -67,7 +92,10 @@ export const gradeExplanation = createServerFn({ method: "POST" })
       "strengths: 1–2 short bullets naming what the child got right (≤14 words each). " +
       "gaps: 0–2 short bullets naming what's missing or fuzzy (≤14 words each). " +
       "nextStep: ONE concrete practice tip the child can try (≤22 words). " +
-      "note: ONE warm sentence to the child as ZED-4 (≤20 words).";
+      "note: ONE warm sentence to the child as ZED-4 (≤20 words). " +
+      "rubric: EXACTLY 3 or 4 key-idea criteria for THIS concept (e.g. for Fair Sharing: 'Splits the whole', 'Parts are equal size', 'Names the fraction', 'Fixes the glitch'). " +
+      "For each: criterion (≤6 words), score ('met'|'partial'|'missing'), evidence (≤18 words quoting/paraphrasing what the child said, or 'Not mentioned' if missing).";
+
 
     const prompt =
       `Case: ${data.caseTitle} — ${data.subTitle}\n` +
