@@ -187,7 +187,7 @@ function ReportPage() {
                 Detective's Report
               </h2>
               <p className="mt-2 max-w-xl text-sm text-neutral-500">
-                A summary of every glitch the detective tackled, what they told ZED-4, and how ZED-4 graded it.
+                Real-time critical-thinking insights from your child's reasoning — for parents and educators.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -539,6 +539,9 @@ function GlitchRow({
             <RubricBlock rubric={entry.rubric} />
           )}
 
+          {entry.insights && entry.insights.length > 0 && (
+            <CognitiveInsights insights={entry.insights} />
+          )}
 
           {entry.nextStep && (
             <div className="mt-2 rounded-xl bg-[#eef2ff] px-3 py-2 text-xs text-neutral-700 ring-1 ring-[#c7d2fe]">
@@ -552,8 +555,6 @@ function GlitchRow({
               <span className="font-bold text-[#1e3a8a]">ZED-4:</span> {entry.verdictNote}
             </div>
           )}
-
-          <MarksRow marks={entry.marks} />
         </div>
       </div>
     </li>
