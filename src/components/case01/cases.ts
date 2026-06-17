@@ -93,6 +93,8 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     toolMinLabel: "Uneven",
     toolMaxLabel: "Equal thirds",
     toolHint: "Almost there — keep equalizing until the thirds all match.",
+    correctTarget: 1,
+    targetTolerance: 0.04,
     welcomeText:
       "Thanks, Detective! You evened out my chocolate. Why was my first try not fair?",
     bubbles: {
