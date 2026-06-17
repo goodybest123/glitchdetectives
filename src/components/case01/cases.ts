@@ -25,6 +25,10 @@ export type SubCaseDef = {
   toolMaxLabel: string;
   toolHint: string;
   welcomeText: string;
+  /** Slider value (0-1) where the case is mathematically correct. Defaults to 1. */
+  correctTarget: number;
+  /** Tolerance around correctTarget. Defaults to 0.04. */
+  targetTolerance: number;
   bubbles: {
     investigate: string;
     detect: string;
@@ -55,6 +59,8 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     toolMinLabel: "Lopsided",
     toolMaxLabel: "Fair slices",
     toolHint: "Almost there — keep equalizing until all four slices match.",
+    correctTarget: 1,
+    targetTolerance: 0.04,
     welcomeText:
       "Great detective work! You fixed my pizza. Can you tell me — why was my first try not fair?",
     bubbles: {
@@ -87,6 +93,8 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     toolMinLabel: "Uneven",
     toolMaxLabel: "Equal thirds",
     toolHint: "Almost there — keep equalizing until the thirds all match.",
+    correctTarget: 1,
+    targetTolerance: 0.04,
     welcomeText:
       "Thanks, Detective! You evened out my chocolate. Why was my first try not fair?",
     bubbles: {
@@ -116,10 +124,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     emoji: "🎨",
     chatEndpoint: "/api/chat/case-01-canvas",
     sliderLabel: "CENTERING TOOL",
-    toolTagline: "Drag the line until both sides match perfectly.",
-    toolMinLabel: "Off-center",
-    toolMaxLabel: "Perfectly half",
-    toolHint: "Almost there — slide until both halves are exactly the same.",
+    toolTagline: "Drag the line until it sits in the middle.",
+    toolMinLabel: "Off-center left",
+    toolMaxLabel: "Off-center right",
+    toolHint: "Slide toward the middle until both halves are exactly the same.",
+    correctTarget: 0.5,
+    targetTolerance: 0.04,
     welcomeText:
       "Thanks for centering my canvas! Can you tell me — why was my first try not half?",
     bubbles: {

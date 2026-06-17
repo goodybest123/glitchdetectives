@@ -5,7 +5,6 @@ import { DefaultChatTransport, type UIMessage } from "ai";
 import { ZedBubble } from "@/components/case01/ZedBubble";
 import { CaseStepper, type Stage } from "@/components/case01/CaseStepper";
 import { SpeakButton } from "@/components/case01/SpeakButton";
-import { MicButton } from "@/components/case01/MicButton";
 import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case04/CasePicker";
 import { FractionDisplayLine } from "@/components/case04/FractionDisplayLine";
@@ -16,6 +15,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
+import { ChatPanel } from "@/components/shared/ChatPanel";
 import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame, WorkbookRepairSubmit } from "@/components/shared/WorkbookActivity";
 import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
@@ -79,20 +79,15 @@ function PageShell({
   return (
     <main className="min-h-screen bg-white">
       <header className="border-b border-neutral-100">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-5 sm:px-10">
-          <Link
-            to="/play"
-            className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
-          >
-            ← Back to Active Cases
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-3 py-2.5 sm:px-6 sm:py-3 lg:px-10">
+          <Link to="/play" className="text-xs sm:text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900">
+            ← Back
           </Link>
-          <h1 className="text-base sm:text-lg font-bold tracking-tight text-neutral-900">
-            {title}
-          </h1>
-          <div className="flex w-[160px] items-center justify-end"><SoundToggle /></div>
+          <h1 className="text-sm sm:text-base font-bold tracking-tight text-neutral-900 truncate px-2">{title}</h1>
+          <div className="flex w-[80px] sm:w-[120px] items-center justify-end"><SoundToggle /></div>
         </div>
       </header>
-      <div className="mx-auto w-full max-w-7xl px-6 py-10 sm:px-10">{children}</div>
+      <div className="mx-auto w-full max-w-7xl px-3 py-3 sm:px-6 sm:py-5 lg:px-10">{children}</div>
     </main>
   );
 }
@@ -127,9 +122,9 @@ function SubCaseRunner({
   const [solvedVisual, setSolvedVisual] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [glitchUnlocked, setGlitchUnlocked] = useState(false);
-  const composerRef = useRef<HTMLTextAreaElement>(null);
   const sfx = useSfx();
   const reportRef = useRef<HTMLDivElement>(null);
+  const repairRef = useRef<HTMLDivElement>(null);
 
   const transport = useRef(new DefaultChatTransport({ api: c.chatEndpoint })).current;
 
@@ -139,12 +134,7 @@ function SubCaseRunner({
     transport,
   });
 
-  const [input, setInput] = useState("");
   const atTarget = operator === c.correctOperator;
-
-  useEffect(() => {
-    if (stage === "explain") composerRef.current?.focus();
-  }, [stage]);
 
   useEffect(() => {
     if (stage !== "explain") return;
@@ -175,6 +165,16 @@ function SubCaseRunner({
     }
   }, [stage]);
 
+  useEffect(() => {
+    if (stage === "repair") {
+      const t = setTimeout(
+        () => repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
+        100,
+      );
+      return () => clearTimeout(t);
+    }
+  }, [stage]);
+
   const handleSymbolClick = () => {
     if (stage !== "detect" || !glitchUnlocked) return;
     setStage("repair");
@@ -200,7 +200,6 @@ function SubCaseRunner({
   };
 
   const isSending = status === "submitted" || status === "streaming";
-  const chatEnabled = stage === "explain";
 
   const studentQuotes = useMemo(
     () =>
@@ -272,7 +271,7 @@ function SubCaseRunner({
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-2 flex items-center justify-between">
         <button
           type="button"
           onClick={onBackToPicker}
@@ -285,9 +284,9 @@ function SubCaseRunner({
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10">
-        <section className="lg:col-span-2">
-          <div className="rounded-3xl bg-white p-6 sm:p-10 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6">
+        <section>
+          <div ref={repairRef} className="rounded-2xl bg-white p-3 sm:p-5 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100">
             <CaseStepper stage={stage} />
             <div className="mb-6">
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
@@ -370,131 +369,13 @@ function SubCaseRunner({
           )}
         </section>
 
-        <aside className="lg:self-stretch">
-          <div
-            className={`flex h-full min-h-[600px] flex-col rounded-3xl bg-white shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100 transition-opacity ${
-              chatEnabled || stage === "solved" ? "opacity-100" : "opacity-50"
-            }`}
-            aria-disabled={!chatEnabled}
-          >
-            <div className="flex items-start justify-between gap-2 border-b border-neutral-100 px-5 py-4">
-              <div>
-                <h2 className="text-sm font-bold tracking-wider text-neutral-700">
-                  AI GUIDE
-                </h2>
-                <div className="mt-0.5 flex items-center gap-2"><p className="text-xs text-neutral-500">{stage === "solved" ? "Case closed — great work, Detective!" : chatEnabled ? "Explain your reasoning — type or speak." : "Unlocks after you repair the logic."}</p><SpeakButton text={stage === "solved" ? "Case closed — great work, Detective!" : chatEnabled ? "Explain your reasoning — type or speak." : "Unlocks after you repair the logic."} /></div>
-              </div>
-            </div>
-
-            <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
-              {chatEnabled || stage === "solved" ? (
-                messages.map((m) => {
-                  const raw = m.parts
-                    .map((p) => (p.type === "text" ? p.text : ""))
-                    .join("");
-                  const text = raw.replace(SOLVED_TOKEN, "").trim();
-                  if (!text) return null;
-                  const isUser = m.role === "user";
-                  return (
-                    <div
-                      key={m.id}
-                      className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
-                    >
-                      <div
-                        className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
-                          isUser
-                            ? "bg-[#1f2937] text-white"
-                            : "bg-[#eaf2ff] text-neutral-800"
-                        }`}
-                      >
-                        {text}
-                      </div>
-                      {!isUser && (
-                        <div className="mt-1.5 ml-1">
-                          <SpeakButton text={text} />
-                        </div>
-                      )}
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="flex h-full items-center justify-center text-center text-sm text-neutral-400">
-                  Complete the repair to unlock the chat.
-                </div>
-              )}
-              {isSending && (
-                <div className="text-xs italic text-neutral-400">
-                  AI Guide is thinking…
-                </div>
-              )}
-            </div>
-
-            {stage === "solved" ? (
-              <div className="border-t border-neutral-100 p-4">
-                <button
-                  type="button"
-                  onClick={() =>
-                    reportRef.current?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    })
-                  }
-                  className="w-full rounded-full bg-[#10b981] px-4 py-2.5 text-xs font-bold tracking-wider text-white transition-colors hover:bg-[#0ea371]"
-                >
-                  VIEW DIAGNOSTIC REPORT
-                </button>
-              </div>
-            ) : (
-              <form
-                className="border-t border-neutral-100 p-4"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const text = input.trim();
-                  if (!text || !chatEnabled || isSending) return;
-                  sendMessage({ text });
-                  setInput("");
-                }}
-              >
-                <textarea
-                  ref={composerRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      (e.currentTarget.form as HTMLFormElement).requestSubmit();
-                    }
-                  }}
-                  disabled={!chatEnabled || isSending}
-                  rows={2}
-                  placeholder={
-                    chatEnabled
-                      ? "Type your reasoning, or tap the mic to speak…"
-                      : "Locked until repair is complete"
-                  }
-                  className="w-full resize-none rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-[#fb923c] focus:outline-none focus:ring-2 focus:ring-[#fed7aa] disabled:bg-neutral-50"
-                />
-                <div className="mt-2 flex items-center justify-between gap-2">
-                  <MicButton
-                    disabled={!chatEnabled || isSending}
-                    onTranscript={(t, isFinal) => {
-                      if (isFinal) {
-                        setInput((prev) => (prev ? prev.trimEnd() + " " : "") + t);
-                      }
-                    }}
-                  />
-                  <button
-                    type="submit"
-                    disabled={!chatEnabled || isSending || !input.trim()}
-                    className="rounded-full bg-[#1f2937] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-black disabled:bg-neutral-300"
-                  >
-                    SUBMIT EVIDENCE
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </aside>
+        <ChatPanel
+          stage={stage}
+          messages={messages}
+          isSending={isSending}
+          onSend={(text) => sendMessage({ text })}
+          onViewReport={() => reportRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+        />
       </div>
     </>
   );
