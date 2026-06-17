@@ -71,6 +71,8 @@ export function useReportRecorder(p: Params) {
           gaps: res.gaps,
           nextStep: res.nextStep,
           rubric: res.rubric,
+          insights: res.insights,
+
 
         });
       })

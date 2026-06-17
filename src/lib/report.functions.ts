@@ -17,6 +17,19 @@ const RubricItem = z.object({
   evidence: z.string(),
 });
 
+const DIMENSIONS = [
+  "Conceptual Understanding",
+  "Reasoning & Justification",
+  "Vocabulary & Precision",
+  "Problem Decomposition",
+] as const;
+
+const InsightItem = z.object({
+  dimension: z.enum(DIMENSIONS),
+  level: z.enum(["Emerging", "Developing", "Secure"]),
+  evidence: z.string(),
+});
+
 const Schema = z.object({
   verdict: z.enum(["correct", "partial", "review"]),
   understandingLevel: z.number().min(1).max(5),
@@ -25,6 +38,7 @@ const Schema = z.object({
   nextStep: z.string(),
   note: z.string(),
   rubric: z.array(RubricItem).min(3).max(4),
+  insights: z.array(InsightItem).length(4),
 });
 
 
@@ -46,6 +60,12 @@ function normalizeScore(s: unknown): "met" | "partial" | "missing" {
   return "missing";
 }
 
+function normalizeLevel(l: unknown): "Emerging" | "Developing" | "Secure" {
+  if (l === "Secure") return "Secure";
+  if (l === "Developing") return "Developing";
+  return "Emerging";
+}
+
 function normalizeRubric(r: unknown): GradeResult["rubric"] {
   if (!Array.isArray(r)) return [];
   return r.slice(0, 4).map((item: any) => ({
@@ -53,6 +73,22 @@ function normalizeRubric(r: unknown): GradeResult["rubric"] {
     score: normalizeScore(item?.score),
     evidence: clampNote(item?.evidence, 140),
   })).filter((x) => x.criterion);
+}
+
+function normalizeInsights(r: unknown): GradeResult["insights"] {
+  const arr = Array.isArray(r) ? r : [];
+  const byDim = new Map<string, any>();
+  for (const item of arr) {
+    if (item && typeof item.dimension === "string") byDim.set(item.dimension, item);
+  }
+  return DIMENSIONS.map((dim) => {
+    const raw = byDim.get(dim);
+    return {
+      dimension: dim,
+      level: normalizeLevel(raw?.level),
+      evidence: clampNote(raw?.evidence, 160) || "Not mentioned in explanation.",
+    };
+  });
 }
 
 function normalize(raw: any): GradeResult {
@@ -71,6 +107,7 @@ function normalize(raw: any): GradeResult {
     nextStep: clampNote(raw?.nextStep, 160),
     note: clampNote(raw?.note, 160),
     rubric: normalizeRubric(raw?.rubric),
+    insights: normalizeInsights(raw?.insights),
   };
 }
 
@@ -85,16 +122,23 @@ export const gradeExplanation = createServerFn({ method: "POST" })
     const model = gateway("google/gemini-3-flash-preview");
 
     const system =
-      "You are ZED-4, a friendly robot tutor giving a young detective (kid) a diagnostic on their fraction explanation. " +
-      "Use warm, simple, kid-friendly language. Be specific to what the child actually wrote. " +
+      "You are ZED-4, a tutor producing a critical-thinking diagnostic on a child's fraction explanation for parents and educators. " +
+      "Be specific to what the child actually wrote — no generic praise. " +
       "verdict: 'correct' if they captured the core idea, 'partial' if close but missing a key piece, 'review' if main idea missed or wrong. " +
       "understandingLevel: 1–5 (1=way off, 3=partial, 5=clear and complete). " +
       "strengths: 1–2 short bullets naming what the child got right (≤14 words each). " +
       "gaps: 0–2 short bullets naming what's missing or fuzzy (≤14 words each). " +
       "nextStep: ONE concrete practice tip the child can try (≤22 words). " +
       "note: ONE warm sentence to the child as ZED-4 (≤20 words). " +
-      "rubric: EXACTLY 3 or 4 key-idea criteria for THIS concept (e.g. for Fair Sharing: 'Splits the whole', 'Parts are equal size', 'Names the fraction', 'Fixes the glitch'). " +
-      "For each: criterion (≤6 words), score ('met'|'partial'|'missing'), evidence (≤18 words quoting/paraphrasing what the child said, or 'Not mentioned' if missing).";
+      "rubric: EXACTLY 3 or 4 key-idea criteria for THIS concept. For each: criterion (≤6 words), score ('met'|'partial'|'missing'), evidence (≤18 words quoting/paraphrasing the child, or 'Not mentioned'). " +
+      "insights: EXACTLY 4 items, one for each of these dimensions in this order — " +
+      "'Conceptual Understanding' (grasp of the core idea), " +
+      "'Reasoning & Justification' (does the child explain WHY, not just what), " +
+      "'Vocabulary & Precision' (accurate math terms: numerator, denominator, equal, whole, etc.), " +
+      "'Problem Decomposition' (breaks the glitch into steps before fixing). " +
+      "For each insight: level is 'Emerging' (absent/unclear), 'Developing' (partially shown), or 'Secure' (clearly demonstrated). " +
+      "evidence is ≤22 words referencing the child's actual words, or 'Not mentioned in explanation.' if absent. " +
+      "Use adult-facing, neutral, observational language in insights — this is for parents and educators.";
 
 
     const prompt =
@@ -121,7 +165,9 @@ export const gradeExplanation = createServerFn({ method: "POST" })
             system +
             ' Respond ONLY with compact JSON of shape ' +
             '{"verdict":"correct"|"partial"|"review","understandingLevel":1-5,' +
-            '"strengths":["..."],"gaps":["..."],"nextStep":"...","note":"..."}. ' +
+            '"strengths":["..."],"gaps":["..."],"nextStep":"...","note":"...",' +
+            '"rubric":[{"criterion":"...","score":"met|partial|missing","evidence":"..."}],' +
+            '"insights":[{"dimension":"Conceptual Understanding|Reasoning & Justification|Vocabulary & Precision|Problem Decomposition","level":"Emerging|Developing|Secure","evidence":"..."}]}. ' +
             "No prose, no markdown fences.",
           prompt,
         });
@@ -139,7 +185,7 @@ export const gradeExplanation = createServerFn({ method: "POST" })
         nextStep: "Replay this case and try explaining it out loud once more.",
         note: "ZED-4 couldn't grade this right now — try again later.",
         rubric: [],
-
+        insights: normalizeInsights([]),
       };
     }
   });
