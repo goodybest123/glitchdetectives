@@ -278,7 +278,14 @@ function SubCaseRunner({
                 choices={getGlitchChoices("case-01", caseId)}
                 unlocked={glitchUnlocked}
                 onUnlock={() => setGlitchUnlocked(true)}
+                onCorrect={() =>
+                  setTimeout(
+                    () => repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
+                    100,
+                  )
+                }
               />
+
             )}
 
             <WorkbookActivityPrompt
