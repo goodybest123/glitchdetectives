@@ -124,10 +124,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     emoji: "🎨",
     chatEndpoint: "/api/chat/case-01-canvas",
     sliderLabel: "CENTERING TOOL",
-    toolTagline: "Drag the line until both sides match perfectly.",
-    toolMinLabel: "Off-center",
-    toolMaxLabel: "Perfectly half",
-    toolHint: "Almost there — slide until both halves are exactly the same.",
+    toolTagline: "Drag the line until it sits in the middle.",
+    toolMinLabel: "Off-center left",
+    toolMaxLabel: "Off-center right",
+    toolHint: "Slide toward the middle until both halves are exactly the same.",
+    correctTarget: 0.5,
+    targetTolerance: 0.04,
     welcomeText:
       "Thanks for centering my canvas! Can you tell me — why was my first try not half?",
     bubbles: {
