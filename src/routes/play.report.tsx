@@ -600,32 +600,46 @@ function Pill({ children, className }: { children: React.ReactNode; className: s
   );
 }
 
-function MarksRow({ marks }: { marks: ReportEntry["marks"] }) {
-  const items = [
-    { label: "Investigate", v: marks.investigate },
-    { label: "Detect", v: marks.detect },
-    { label: "Repair", v: marks.repair },
-    { label: "Explain", v: marks.explain },
-  ];
-  const total = items.reduce((s, i) => s + i.v, 0);
+function CognitiveInsights({
+  insights,
+}: {
+  insights: NonNullable<ReportEntry["insights"]>;
+}) {
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-neutral-100 pt-2.5 text-[11px]">
-      {items.map((i) => (
-        <div key={i.label} className="flex items-center gap-1.5 text-neutral-500">
-          <span className="font-semibold uppercase tracking-wider">{i.label}</span>
-          <span className="flex gap-0.5">
-            {Array.from({ length: 5 }).map((_, k) => (
-              <span
-                key={k}
-                className={`h-1.5 w-1.5 rounded-full ${k < i.v ? "bg-[#10b981]" : "bg-neutral-200"}`}
-              />
-            ))}
-          </span>
+    <div className="mt-3 rounded-2xl border border-neutral-100 bg-white p-3 print:break-inside-avoid">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-100 pb-2">
+        <div className="text-[10px] font-bold tracking-widest uppercase text-neutral-500">
+          Cognitive Insights
         </div>
-      ))}
-      <span className="ml-auto rounded-full bg-neutral-900 px-2 py-0.5 text-[10px] font-bold text-white">
-        {total}/20
-      </span>
+        <div className="text-[10px] font-medium uppercase tracking-wider text-neutral-400">
+          For parents &amp; educators
+        </div>
+      </div>
+      <ul className="mt-2 space-y-1.5">
+        {insights.map((it, i) => {
+          const chip =
+            it.level === "Secure"
+              ? "bg-[#dcfce7] text-[#166534]"
+              : it.level === "Developing"
+                ? "bg-[#fef3c7] text-[#92400e]"
+                : "bg-[#e2e8f0] text-[#475569]";
+          return (
+            <li key={i} className="flex items-start gap-2.5 text-xs">
+              <span
+                className={`inline-flex w-[88px] shrink-0 items-center justify-center rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wider ${chip}`}
+              >
+                {it.level}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="font-semibold text-neutral-800">{it.dimension}</div>
+                {it.evidence && (
+                  <div className="text-[11px] text-neutral-500">{it.evidence}</div>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
