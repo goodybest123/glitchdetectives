@@ -63,9 +63,10 @@ type GlitchChoicesProps = {
   choices: GlitchChoice[];
   unlocked: boolean;
   onUnlock: () => void;
+  onCorrect?: () => void;
 };
 
-export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchChoicesProps) {
+export function WorkbookGlitchChoices({ choices, unlocked, onUnlock, onCorrect }: GlitchChoicesProps) {
   const [wrongChoice, setWrongChoice] = useState<string | null>(null);
   const [attempts, setAttempts] = useState(0);
   const [pendingChoice, setPendingChoice] = useState<GlitchChoice | null>(null);
@@ -76,6 +77,7 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchCho
       if (pendingChoice.correct) {
         setWrongChoice(null);
         onUnlock();
+        onCorrect?.();
       } else {
         setWrongChoice(pendingChoice.label);
         setAttempts((current) => current + 1);
@@ -83,7 +85,8 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock }: GlitchCho
       setPendingChoice(null);
     }, 900);
     return () => window.clearTimeout(timer);
-  }, [pendingChoice, onUnlock]);
+  }, [pendingChoice, onUnlock, onCorrect]);
+
 
   const supportiveFeedback =
     attempts <= 1
