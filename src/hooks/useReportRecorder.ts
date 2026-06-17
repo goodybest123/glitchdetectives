@@ -70,6 +70,8 @@ export function useReportRecorder(p: Params) {
           strengths: res.strengths,
           gaps: res.gaps,
           nextStep: res.nextStep,
+          rubric: res.rubric,
+
         });
       })
       .catch(() => {

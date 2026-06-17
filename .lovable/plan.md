@@ -1,59 +1,56 @@
-## Goal
-Turn the Diagnostic Report from a one-line verdict into a clear, kid-friendly diagnostic that shows **how** the child explained each concept, **what they got right**, **where they're shaky**, and **what to practice next** — both per glitch and as an overall roadmap.
+## Add Explanation Rubric to the Detective's Report
 
-## Changes
+Goal: For each solved glitch, show a clear rubric that scores how well the child's explanation hit the key ideas for that concept, with specific strengths and improvement areas tied to those criteria.
 
-### 1. Richer AI grading (`src/lib/report.functions.ts`)
-Expand `gradeExplanation` to return a structured diagnostic instead of just `{verdict, note}`:
-- `verdict`: `correct | partial | review` (add a middle tier so "almost there" isn't lumped with wrong)
-- `understandingLevel`: 1–5 (how well the core idea came through)
-- `strengths`: 1–2 short bullets ("You named the whole and the parts")
-- `gaps`: 0–2 short bullets ("Didn't mention that parts must be equal")
-- `nextStep`: one concrete practice suggestion ("Try drawing 3 equal slices and naming each as 1/3")
-- `note`: existing one-sentence ZED-4 message (kept for backward compat)
+### 1. Extend AI grading to return per-criterion scores (`src/lib/report.functions.ts`)
 
-Keep the plain-JSON fallback already in place; widen it to the new shape. Tighten the schema to stay within Gemini's constrained-decoding limits (short field names, no enums beyond verdict, bounded array lengths).
+Expand the `gradeExplanation` output schema with a `rubric` array — one entry per key idea for the concept:
 
-### 2. Store the new fields (`src/hooks/useReportStore.ts`)
-Extend `ReportEntry` and `Verdict` with the new optional fields. Old localStorage entries keep working (all new fields optional). Bump `STORAGE_KEY` to `gd:report:v2` so stale v1 entries don't render half-empty diagnostics.
+```ts
+rubric: z.array(z.object({
+  criterion: z.string(),     // e.g. "Names equal parts"
+  score: z.enum(["met", "partial", "missing"]),
+  evidence: z.string(),      // ≤18 words: what the child said (or didn't) for this idea
+})).min(3).max(4)
+```
 
-### 3. Wire grading result through (`src/hooks/useReportRecorder.ts`)
-Pass the new fields from `gradeExplanation` into `patchReportEntry`. No behavior change for the recording trigger.
+Update the system prompt so ZED-4 derives 3–4 key-idea criteria from the `conceptMastered` + `glitchSummary` (e.g. for Fair Sharing: "Whole is split", "Parts are equal", "Names the fraction", "Connects to the glitch"). Each criterion is scored against the child's actual words. Existing `strengths` / `gaps` / `nextStep` / `note` stay — strengths/gaps become a short human summary; rubric is the structured detail. Add safe defaults in the plain-JSON fallback and the final hard fallback (empty rubric is allowed).
 
-### 4. Expanded per-glitch card (`src/routes/play.report.tsx` → `GlitchRow`)
-For each solved glitch, render:
-- Header: emoji, title, verdict pill (now 3 tiers), understanding meter (1–5 dots)
-- **Glitch** (what was wrong) — already shown
-- **Concept** (what this glitch teaches) — pulled from `conceptMastered`, currently unused in UI
-- **What you said** — the child's quote (already shown)
-- **ZED-4's read** — two-column block:
-  - ✓ Strengths (green bullets)
-  - △ Could be clearer (amber bullets)
-- **Try next** — one-line practice suggestion in a highlighted box
-- Marks row stays at the bottom
+### 2. Persist rubric on the report entry (`src/hooks/useReportStore.ts`)
 
-Empty/legacy entries (no AI diagnostic yet) fall back to today's single-line note.
+Add optional field:
 
-### 5. Roadmap section on the report (`play.report.tsx`)
-Add a new section above the per-case list:
-- **Concepts mastered** — list of `conceptMastered` strings from glitches graded `correct`
-- **Focus areas** — list of concepts from glitches graded `partial` or `review`, each with the AI's `nextStep`
-- **Suggested replay path** — first 3 unattempted or `review` sub-cases, as `<Link>`s back into `/play/case-XX`
+```ts
+rubric?: { criterion: string; score: "met" | "partial" | "missing"; evidence: string }[]
+```
 
-This gives the child (and a parent reading along) a clear "you've got this / work on this / do this next" roadmap.
+Bump `STORAGE_KEY` to `gd:report:v3` so stale v2 entries don't render a half-empty rubric.
 
-### 6. Verdict pill + meter components
-- `VerdictPill` gains a `partial` variant (blue/indigo "Almost there").
-- Small `UnderstandingMeter` component (5 dots, filled by `understandingLevel`).
+### 3. Forward rubric through the recorder (`src/hooks/useReportRecorder.ts`)
 
-## Technical notes
-- Schema kept small to avoid Gemini "too many states" errors: `verdict` enum only, other fields are plain strings/numbers with bounded arrays (`max(2)`).
-- All new `ReportEntry` fields are optional; the UI renders gracefully when missing so existing saved reports still display.
-- Storage key bump avoids confusing partial-shape rows from earlier sessions.
-- No backend/schema changes; purely client + existing server function.
+Pass the new `rubric` field from `gradeExplanation`'s result into `patchReportEntry` alongside the existing diagnostic fields.
 
-## Files touched
-- `src/lib/report.functions.ts` — expanded schema + fallback
-- `src/hooks/useReportStore.ts` — extended `ReportEntry`, `Verdict`, bumped key
-- `src/hooks/useReportRecorder.ts` — forward new fields
-- `src/routes/play.report.tsx` — richer `GlitchRow`, new roadmap section, updated pills/meter
+### 4. Render the rubric in the report (`src/routes/play.report.tsx`)
+
+Inside `GlitchRow`, when `entry.rubric?.length`, render a new "Explanation Rubric" block under the existing strengths/gaps grid:
+
+- Header row: "Explanation Rubric" + a small score summary (e.g. `2 met · 1 partial · 1 missing`).
+- A compact table/list, one row per criterion:
+  - status chip: green ✓ Met / amber ◐ Partial / red ✗ Missing
+  - criterion name (bold)
+  - one-line evidence ("You said: …" or "Not mentioned")
+- Print-friendly (no hover, `break-inside-avoid`).
+
+The existing `strengths` and `gaps` blocks stay as a quick human-readable summary above the rubric. `nextStep` "Try next" callout stays below.
+
+### 5. Surface in the per-case header
+
+In `CaseSection`, next to the existing `solvedCount`, add a small "rubric coverage" indicator only for entries that have a rubric: total `met` count across the case (e.g. `7/12 key ideas met`). Skip silently when no rubric data exists yet.
+
+### Files
+- `src/lib/report.functions.ts` — add `rubric` to schema, prompt, normalize, fallback
+- `src/hooks/useReportStore.ts` — extend `ReportEntry`, bump key to `v3`
+- `src/hooks/useReportRecorder.ts` — pass `rubric` through
+- `src/routes/play.report.tsx` — render rubric block in `GlitchRow`, coverage chip in `CaseSection`
+
+No changes to per-case end screens (`DiagnosticReport.tsx`) — the rubric lives in the full Detective's Report only, keeping the in-case wrap-up uncluttered.
