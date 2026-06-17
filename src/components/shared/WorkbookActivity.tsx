@@ -26,34 +26,29 @@ export function WorkbookActivityPrompt({
   const instruction = isDetect ? detectInstruction : repairInstruction;
 
   return (
-    <section className="relative mb-5 overflow-hidden rounded-2xl border-2 border-dashed border-border bg-background px-4 py-4 sm:px-5">
+    <section className="relative mb-3 overflow-hidden rounded-xl border-2 border-dashed border-border bg-background px-3 py-2.5 sm:px-4">
       <div className="pointer-events-none absolute inset-0 grid-bg opacity-40" />
-      <div className="relative flex items-start gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-energy text-xl shadow-sm">
+      <div className="relative flex items-start gap-2.5">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-energy text-base shadow-sm">
           {isDetect ? "🔎" : "🛠️"}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="label-eyebrow text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="label-eyebrow text-[10px] text-muted-foreground">
               {emoji} {title}
             </span>
-            <span className="rounded-full bg-primary px-2.5 py-1 text-[10px] font-black tracking-widest text-primary-foreground">
+            <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-black tracking-widest text-primary-foreground">
               {isDetect ? "DETECT" : "REPAIR"}
             </span>
           </div>
-          <div className="mt-2 flex items-start gap-2">
-            <p className="flex-1 text-sm font-bold leading-relaxed text-foreground sm:text-base">
+          <div className="mt-1 flex items-start gap-2">
+            <p className="flex-1 text-xs font-bold leading-snug text-foreground sm:text-sm">
               {isDetect ? "Circle the glitch: " : `${toolName}: `}
               <span className="font-medium">{instruction}</span>
             </p>
             <SpeakButton text={`${isDetect ? "Detect" : toolName}. ${instruction}`} />
           </div>
         </div>
-      </div>
-      <div className="relative mt-3 flex items-center gap-2 text-[11px] font-semibold text-muted-foreground">
-        <span className="h-px flex-1 border-t border-dashed border-border" />
-        {isDetect ? "Tap the exact part—not the whole picture" : "Watch the model change as you work"}
-        <span className="h-px flex-1 border-t border-dashed border-border" />
       </div>
     </section>
   );
