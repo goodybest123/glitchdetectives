@@ -1,10 +1,8 @@
 # Glitch Detectives — 3-Minute Demo Video Script
 
-Format: founder first-person voiceover + on-screen action, two columns.
-Total: ~3:00 at ~150 wpm (~450 words spoken).
-Leading angle: critical thinking in the AI era → product loop → cognitive insights → neurodivergent-inclusive → workbook loop → close.
-
-Deliverable below is the full script. After your approval I'll save it as `docs/demo-script.md` in the repo so you can edit/print it.
+**Format:** Founder first-person voiceover + on-screen action
+**Total runtime:** ~3:00 at ~150 wpm (~450 words spoken)
+**Leading angle:** Critical thinking in the AI era → product loop → cognitive insights → neurodivergent-inclusive → workbook loop → close
 
 ---
 
@@ -40,7 +38,7 @@ Deliverable below is the full script. After your approval I'll save it as `docs/
 |---|---|
 | "We designed this for every kind of learner. No timers. No punishing red Xs. Calm colours, big targets, multimodal input — voice, text, tap. It's neurodivergent-inclusive by default, not as an add-on." | Scroll the "Neurodivergent" section of the landing page; show the calm UI of a case (no countdown, no buzzer). |
 
-## 2:25 – 2:50 · The workbook loop *(your live workbook reveal)*
+## 2:25 – 2:50 · The workbook loop *(live workbook reveal)*
 
 | Voiceover | On-screen |
 |---|---|
@@ -54,7 +52,9 @@ Deliverable below is the full script. After your approval I'll save it as `docs/
 
 ---
 
-## Notes for delivery
-- Pace: ~150 wpm. If you run long, the easiest cut is the second half of section 0:20–0:45 (one sentence).
-- Workbook cue at 2:25 is the only off-screen moment — rehearse the hand-off so the printed page is already in frame.
-- Recommend recording screen at 1920×1080, 30 fps; voiceover after, synced to cues.
+## Delivery notes
+
+- **Pace:** ~150 wpm. If you run long, the easiest cut is the second sentence of section 0:20–0:45.
+- **Workbook cue at 2:25** is the only off-screen moment — rehearse the hand-off so the printed page is already in frame.
+- **Recording:** screen capture at 1920×1080, 30 fps; record voiceover separately and sync to cues in post.
+- **Tone:** calm, confident, founder-with-conviction. Slow down on the words *investigate*, *reasoning*, and *why*.
