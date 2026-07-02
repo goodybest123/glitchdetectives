@@ -1,31 +1,47 @@
 ## Goal
-Produce a rubric-by-rubric self-assessment of Glitch Detectives against the 2026 BuildVerse Hackathon rubric, saved as `docs/rubric-self-assessment.md` so you can reference it during judging.
+Lift the two weakest rubric rows (Version Control + Code Readability & Documentation) with docs a judge will actually open. No source-code refactors — pure documentation.
 
-## Deliverable
-A single markdown doc with one section per rubric criterion. Each section contains:
-- **Score (self-rated /5)** — honest, not inflated
-- **Evidence** — concrete file paths / features that support the score
-- **Gaps** — what a judge could reasonably mark down
-- **Quick win** — a small fix (if any) that could raise the score before submission
+## Deliverables
 
-## Sections (mirroring the rubric)
+### 1. `README.md` (repo root) — the judge's landing page
+- One-line pitch + tagline ("Don't solve. Investigate. Detect. Repair.")
+- Live URL: https://glitchdetectives.lovable.app
+- 3-sentence "why it exists" (AI-era critical thinking, role reversal, neurodivergent-inclusive)
+- Screenshot placeholders: landing, a case in play, the Cognitive Insights report, a workbook page
+- **How it works** — the 4-step loop, one paragraph
+- **Tech stack** — TanStack Start (React 19, Vite 7), TypeScript strict, Tailwind v4, Lovable Cloud (Supabase), Lovable AI Gateway (Gemini), Cloudflare Workers runtime
+- **Run locally** — `bun install`, `bun dev`, env vars needed
+- **Project structure** — 8-line tree with one-line descriptions
+- **Links** — demo video, architecture doc, self-assessment
+- License: MIT (safe hackathon default)
+- **No founder name / no personal contact** — kept anonymous per your call
 
-**Code Quality & Technical Execution**
-1. Code Structure & Organisation — routes in `src/routes/`, per-case components in `src/components/caseNN/`, shared UI in `src/components/shared/`, hooks in `src/hooks/`, server logic in `*.functions.ts` / `src/routes/api/chat/*`. Note the clean separation and the one weak spot (case folders duplicate patterns instead of a shared abstraction).
-2. Functionality & Completeness — 6 cases live, `/play`, `/play/report`, `/printables`, ZED-4 grading, voice input, TTS, workbook PDFs.
-3. Use of Version Control — flag as the biggest unknown; recommend checking README + commit hygiene before judging.
-4. Code Readability & Documentation — TypeScript strict, Zod validators, purposeful comments in `useReportRecorder`, `report.functions.ts`, `server.ts`. Gap: no top-level architecture doc.
+### 2. `docs/ARCHITECTURE.md` — the "another developer can understand it" doc
+- **Runtime topology** ASCII diagram: browser → TanStack Router → server fn / API route → Lovable AI Gateway → Zod-normalised response → localStorage report store → `/play/report`
+- **Routing map** — table of every route in `src/routes/` with purpose
+- **The 6 cases** — table: case id, concept, folder, chat endpoint
+- **AI grading pipeline** — walk through `useReportRecorder` → `gradeExplanation` → structured output → Zod normalise → fallback JSON → safe defaults
+- **Report data model** — `ReportEntry` shape, storage key, versioning note
+- **Server runtime constraints** — Cloudflare Worker + `nodejs_compat`, why we avoid Node-only packages
+- **Auth** — Supabase middleware (`requireSupabaseAuth`, `attachSupabaseAuth`) and where it's used (or not used yet)
+- **Extending** — how to add Case 07 in 5 steps
 
-**AI Integration & Usage**
-5. Depth of AI Integration — AI is the product's core loop: ZED-4 makes the glitch, child explains, `gradeExplanation` server fn produces the Cognitive Insights report (4 dimensions × 3 levels + rubric + evidence). Cite `src/lib/report.functions.ts`, `src/routes/api/chat/*`.
-6. Quality of AI Outputs — structured output via `Output.object({ schema })`, Zod-normalized, fallback JSON parse, safe defaults on failure. Gap: no eval harness / no sample outputs shown to judges.
+### 3. `docs/CONTRIBUTING.md` — signals a maintained repo
+- Branching convention (`main` protected, `feat/*`, `fix/*`)
+- Conventional Commits style (`feat:`, `fix:`, `docs:`, `chore:`)
+- PR checklist (typecheck passes, screenshot for UI, updated docs)
+- Local dev + how to run a single route
 
-**Product Viability & Design**
-7. User Experience & Interface — neurodivergent-inclusive: no timers, no red Xs, TTS on every caption (`CaptionLine`, `DetectiveCallout`, `SuccessBanner`), multimodal input (voice/text/tap), calm palette, printable workbook parity.
+### 4. Light JSDoc pass on public boundaries only (no logic changes)
+- `src/lib/report.functions.ts` — what the server fn does, inputs, outputs, failure modes
+- `src/hooks/useReportStore.ts` — storage contract, versioning key
+- `src/hooks/useReportRecorder.ts` — when it fires, idempotency guarantee
+- `src/router.tsx` — how routes get registered
 
-## Closing section
-- **Top 3 things to say out loud during judging** (mapped to weakest rubric rows so you pre-empt them).
-- **Top 3 quick wins before submission** (e.g. README polish, add a short `ARCHITECTURE.md`, drop a screenshot of a real Cognitive Insights report into the repo).
+Files already well-commented (leave alone): `src/server.ts`, `src/components/shared/*`.
 
 ## Out of scope
-No code changes, no README rewrite, no commit history edits. This turn only produces the assessment doc; you can ask me to act on any quick win afterward.
+- Rewriting git history / squashing / tagging — Lovable commits per turn; if you want a `v1.0-hackathon` tag, do it in GitHub after this lands (or ask and I'll give exact CLI steps).
+- Branch protection rules — GitHub-side setting.
+- Refactoring `case01`–`case06`.
+- Actual screenshot capture — I'll leave `![...](docs/samples/*.png)` placeholders with one-line capture instructions.
