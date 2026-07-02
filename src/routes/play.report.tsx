@@ -1,3 +1,12 @@
+/**
+ * `/play/report` — the Detective's Report.
+ *
+ * Client-only page (`ssr: false`) because it reads `ReportEntry[]` from
+ * `localStorage` via `useReport()`. Composes case metadata from every
+ * `SUB_CASES` map (case01..case06) so the page can list *every* sub-case,
+ * marked with the child's own verdict/marks when solved, or "not attempted
+ * yet" when empty. `clearReport()` wipes storage from the reset button.
+ */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { clearReport, useReport, type ReportEntry, type Verdict } from "@/hooks/useReportStore";

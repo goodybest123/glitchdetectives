@@ -1,3 +1,7 @@
+/**
+ * SoundToggle — header speaker icon that mutes/unmutes SFX. Backed by
+ * `useSoundMuted`, which persists to localStorage (`gd:sound:v1`).
+ */
 import { useSoundMuted } from "@/hooks/useSfx";
 
 export function SoundToggle() {

@@ -1,3 +1,15 @@
+/**
+ * Tiny Web Audio synth for UI sound effects. Five named tones — tick, ding,
+ * snap, chime, error — synthesised on the fly (no audio files to ship).
+ *
+ * Exports:
+ *  - `useSfx()` returns a `play(name)` function. Muted state is respected.
+ *  - `useSoundMuted()` returns `[muted, setMuted]` backed by localStorage
+ *    (`gd:sound:v1`) and synced across tabs via the `storage` event.
+ *
+ * All calls are wrapped in try/catch and no-op if the AudioContext is
+ * unavailable (SSR, old Safari, autoplay-blocked contexts).
+ */
 import { useCallback, useEffect, useState } from "react";
 
 type SfxName = "tick" | "ding" | "snap" | "chime" | "error";

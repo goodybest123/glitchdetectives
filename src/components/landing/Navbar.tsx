@@ -1,3 +1,7 @@
+/**
+ * Landing-page top navbar. Anchors to on-page sections (`#how-it-works`,
+ * `#worlds`, etc.) plus a "Try for free" CTA that jumps to `/play`.
+ */
 import { Link } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 

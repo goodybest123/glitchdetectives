@@ -1,3 +1,11 @@
+/**
+ * Multiple-choice "which glitch is it?" data for every sub-case.
+ *
+ * Keyed by `"<caseId>:<subCaseId>"` (e.g. `"case-01:pizza"`). Each entry has
+ * exactly one `correct: true` choice. `CORRECT_INDEX` reshuffles the correct
+ * answer across A/B/C/D so the right answer isn't always option A — call
+ * `getGlitchChoices()` (defined below) to get the display-ordered array.
+ */
 import type { GlitchChoice } from "./WorkbookActivity";
 
 const CHOICES: Record<string, GlitchChoice[]> = {

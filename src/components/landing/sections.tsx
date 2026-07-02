@@ -1,3 +1,11 @@
+/**
+ * Landing-page sections barrel.
+ *
+ * Every named export (`Hero`, `ProblemSection`, `HowItWorks`, `WorldsSection`,
+ * `RoleReversal`, `Printables`, `Neurodivergent`, `Benefits`, `Testimonials`,
+ * `FinalCTA`, `Footer`) is one full-width section of the home page. They are
+ * composed in order by `src/routes/index.tsx`, separated by `WaveDivider`s.
+ */
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {

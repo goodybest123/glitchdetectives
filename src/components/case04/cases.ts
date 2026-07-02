@@ -1,3 +1,4 @@
+/** Case 04 sub-case definitions. See `case01/cases.ts` for the shape. */
 import type { ComponentType, ReactNode } from "react";
 import { BalanceScaleSVG } from "./BalanceScaleSVG";
 import { CoolantTubesSVG } from "./CoolantTubesSVG";

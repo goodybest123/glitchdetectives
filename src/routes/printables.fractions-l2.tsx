@@ -1,3 +1,7 @@
+/**
+ * `/printables/fractions-l2` — Fractions, Level 2 printables page. Same
+ * shape as the L1 page with harder worksheets.
+ */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Download, ExternalLink, Search, Sparkles } from "lucide-react";
 import { Navbar } from "@/components/landing/Navbar";

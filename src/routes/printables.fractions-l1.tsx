@@ -1,3 +1,7 @@
+/**
+ * `/printables/fractions-l1` — Fractions, Level 1 printables page. Renders
+ * the printable worksheets pulled from `public/printables/`.
+ */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Download, ExternalLink, Search, Sparkles } from "lucide-react";
 import { Navbar } from "@/components/landing/Navbar";

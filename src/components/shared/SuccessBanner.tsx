@@ -1,3 +1,7 @@
+/**
+ * SuccessBanner — celebratory green banner shown once the child reaches the
+ * Explain/Solved stage. Announces the next step ("now explain why").
+ */
 import { SpeakButton } from "@/components/case01/SpeakButton";
 
 /**

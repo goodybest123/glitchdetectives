@@ -1,3 +1,14 @@
+/**
+ * TanStack Start bootstrap.
+ *
+ * Registers two middlewares on the Start instance:
+ *  - `attachSupabaseAuth` (functionMiddleware): attaches the current user's
+ *    Supabase bearer token to every server-function call so `requireSupabaseAuth`
+ *    can validate the session on the server.
+ *  - `errorMiddleware` (requestMiddleware): converts uncaught SSR errors into
+ *    the branded 500 HTML page. Re-throws framework HTTPErrors (they carry
+ *    `statusCode`) so redirects and 404s still work.
+ */
 import { createStart, createMiddleware } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";

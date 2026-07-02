@@ -1,3 +1,8 @@
+/**
+ * VerdictButtons — the first decision in every case: "Is there a glitch?
+ * Yes / No". Wrong picks shake (via `shakeKey`) and increment
+ * `wrongCount`; the correct pick advances the stage to Detect.
+ */
 import { useEffect, useState } from "react";
 import { SpeakButton } from "@/components/case01/SpeakButton";
 

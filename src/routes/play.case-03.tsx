@@ -1,3 +1,7 @@
+/**
+ * `/play/case-03` — The Shape Shifters (Equivalent Fractions).
+ * Same loop as case-01; see `play.case-01.tsx` for the full walkthrough.
+ */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";

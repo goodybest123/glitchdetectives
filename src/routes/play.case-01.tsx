@@ -1,3 +1,25 @@
+/**
+ * `/play/case-01` — Case 01: Parts of a Whole (Fair Sharing).
+ *
+ * Two-mode page:
+ *   1. `CasePicker` when no sub-case is selected.
+ *   2. `SubCaseRunner` (the full Investigate → Detect → Repair → Explain
+ *      loop) once a sub-case is picked.
+ *
+ * `SubCaseRunner` orchestrates:
+ *   - `stage` state machine (investigate | detect | repair | explain | solved).
+ *   - The verdict buttons (was there a glitch? yes/no).
+ *   - The multiple-choice "which glitch is it?" step.
+ *   - A slider that repairs the visual (`equalized` 0..1, target from case def).
+ *   - `useChat` with the case-specific `/api/chat/case-01*` endpoint for the
+ *     free-text explanation dialogue. The AI ends its final message with
+ *     `[[CASE_SOLVED]]` when the child has explained the concept — that token
+ *     flips `stage` to "solved", fires confetti, and records a `ReportEntry`
+ *     via `useReportRecorder`.
+ *   - `marks` (0–5 per stage) fed into the Diagnostic Report.
+ *
+ * Cases 02–06 follow the same structure with different visuals + prompts.
+ */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";

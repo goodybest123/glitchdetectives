@@ -1,3 +1,16 @@
+/**
+ * Workbook-styled activity primitives shared across every case.
+ *
+ * Exports:
+ *  - `WorkbookActivityPrompt` — top-of-card stage headline + instruction.
+ *  - `WorkbookGlitchChoices`  — the four A/B/C/D multiple-choice cards for
+ *    the Detect stage. Wrong picks shake; the correct pick fires `onCorrect`
+ *    which the parent uses to advance to Repair.
+ *  - `WorkbookRepairFrame` / `WorkbookRepairSubmit` — the "worksheet"-style
+ *    wrapper around each case's repair tool (slider, stepper, etc.), plus
+ *    the "Submit repair" button gated on `ready`.
+ *  - `GlitchChoice` — the choice shape used by `glitchChoices.ts`.
+ */
 import { useEffect, useState, type ReactNode } from "react";
 import type { Stage } from "@/components/case01/CaseStepper";
 import { SpeakButton } from "@/components/case01/SpeakButton";

@@ -1,3 +1,8 @@
+/**
+ * `/printables` — Printables Library landing. Lists the maths "worlds"
+ * (Fractions live; others "coming soon") and links into per-topic pages
+ * such as `/printables/fractions-l1`.
+ */
 import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/sections";

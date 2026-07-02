@@ -1,3 +1,8 @@
+/**
+ * DetectiveCallout — the yellow "detective hint" bubble shown during the
+ * Detect/Repair stages. Wraps the text with a `SpeakButton` so it can be
+ * read aloud via the Web Speech API.
+ */
 import { SpeakButton } from "@/components/case01/SpeakButton";
 
 type Props = {
