@@ -1,3 +1,4 @@
+/** Case 06 sub-case definitions. See `case01/cases.ts` for the shape. */
 import type { ComponentType } from "react";
 import { BlueprintSVG } from "./BlueprintSVG";
 import { PaintVatsSVG } from "./PaintVatsSVG";

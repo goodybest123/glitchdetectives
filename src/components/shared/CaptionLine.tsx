@@ -1,3 +1,7 @@
+/**
+ * CaptionLine — one-line stage caption ("Look for the glitch…", "Fix the
+ * slider…", etc.) shown under the ZED-4 bubble. Speakable via SpeakButton.
+ */
 import { SpeakButton } from "@/components/case01/SpeakButton";
 
 type Props = {

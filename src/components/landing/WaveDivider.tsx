@@ -1,3 +1,8 @@
+/**
+ * WaveDivider — decorative SVG wave used between landing-page sections to
+ * blend one background colour into the next. Renders a single path from
+ * `fromColor` (top) to `toColor` (bottom).
+ */
 export function WaveDivider({
   fromColor,
   toColor,
