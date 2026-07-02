@@ -1,7 +1,24 @@
+/**
+ * gradeExplanation — server function that turns a child's free-text
+ * explanation into a Cognitive Insights diagnostic for parents and educators.
+ *
+ * Input  (Zod-validated): caseTitle, subTitle, glitchSummary,
+ *                         conceptMastered, childExplanation.
+ * Output (GradeResult):   verdict, understandingLevel (1–5), strengths[],
+ *                         gaps[], nextStep, note, rubric[3–4], insights[4].
+ *
+ * Failure modes:
+ *   1. Structured output call fails → retry with plain-JSON prompt + regex parse.
+ *   2. Both AI calls fail          → return safe defaults with a friendly note.
+ *   3. Missing LOVABLE_API_KEY     → throws (surfaced by the caller as a retry note).
+ *
+ * Runs inside a Cloudflare Worker; env vars are read at handler time.
+ */
 import { createServerFn } from "@tanstack/react-start";
 import { generateText, Output } from "ai";
 import { z } from "zod";
 import { createLovableAiGatewayProvider } from "./ai-gateway";
+
 
 const Input = z.object({
   caseTitle: z.string(),
