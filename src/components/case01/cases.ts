@@ -1,3 +1,15 @@
+/**
+ * Case 01 sub-case definitions (pizza, chocolate, canvas).
+ *
+ * `SUB_CASES` is the single source of truth for each sub-case: the SVG
+ * `Visual` component, the ZED-4 bubble copy, the slider tool labels, the
+ * `correctTarget` (0..1) that the slider must land on to solve, and the
+ * chat endpoint that drives the "explain" step. `SUB_CASE_ORDER` fixes the
+ * display order in the picker and controls "next case" navigation.
+ *
+ * Every case folder (`case02/cases.ts` … `case06/cases.ts`) exports the
+ * same three symbols with the same shape — only the content differs.
+ */
 import type { ComponentType } from "react";
 import { PizzaSVG } from "./PizzaSVG";
 import { ChocolateSVG } from "./ChocolateSVG";

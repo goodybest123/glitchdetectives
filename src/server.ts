@@ -1,3 +1,14 @@
+/**
+ * Cloudflare Worker entry point.
+ *
+ * Wraps TanStack Start's SSR handler with two safety nets:
+ *  1. A try/catch around the handler so uncaught throws become a branded 500
+ *     page instead of a raw stack trace.
+ *  2. `normalizeCatastrophicSsrResponse` — h3 (used internally by TanStack) can
+ *     swallow in-handler throws into a generic JSON 500 body; we detect that
+ *     shape, log the real error captured out-of-band by `error-capture.ts`,
+ *     and replace the response with our own branded HTML.
+ */
 import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";

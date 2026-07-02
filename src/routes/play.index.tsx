@@ -1,3 +1,11 @@
+/**
+ * `/play` — Active Cases dashboard.
+ *
+ * Grid of six playable case files (case-01 .. case-06). `ACTIVE_CASES` is the
+ * source of truth for which cases exist; `PENDING_CASES` is a stub array for
+ * future "locked / coming soon" cards. A revealed pending card shows a small
+ * "coming soon" pill via `revealedId` state.
+ */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Lock } from "lucide-react";

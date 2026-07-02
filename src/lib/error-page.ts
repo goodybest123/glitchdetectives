@@ -1,3 +1,8 @@
+/**
+ * Renders the plain-HTML branded 500 error page used by `server.ts` and the
+ * `errorMiddleware` in `start.ts`. Kept as a raw string (no JSX) so it works
+ * even when the React SSR pipeline has already failed.
+ */
 export function renderErrorPage(): string {
   return `<!doctype html>
 <html lang="en">

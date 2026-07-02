@@ -1,3 +1,11 @@
+/**
+ * `useCaseProgress` — per-device tracker for which sub-cases the child has
+ * solved inside a case. Persists to `localStorage` under `gd:progress:v1`.
+ *
+ * Shape: `{ [caseId]: { [subCaseId]: true } }`. Idempotent: `markSolved` is
+ * a no-op if the sub-case is already solved. SSR-safe (returns `{}` when
+ * `window` is undefined).
+ */
 import { useCallback, useEffect, useState } from "react";
 
 const STORAGE_KEY = "gd:progress:v1";

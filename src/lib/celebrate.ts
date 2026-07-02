@@ -1,3 +1,8 @@
+/**
+ * Fires a three-burst confetti celebration (bottom-left, bottom-right, then a
+ * bigger centre burst 180ms later). Client-only: guards against SSR by
+ * checking for `window`. Used when a case is solved.
+ */
 import confetti from "canvas-confetti";
 
 export function celebrate() {
