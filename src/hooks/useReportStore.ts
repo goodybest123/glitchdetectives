@@ -1,3 +1,14 @@
+/**
+ * useReportStore — on-device store for Cognitive Insights entries.
+ *
+ * Storage contract:
+ *   key   = "gd:report:v4"  (bump the suffix to invalidate old shapes)
+ *   value = ReportMap = { [caseId]: { [subId]: ReportEntry } }
+ *
+ * Writes dispatch a "gd:report:change" window event so the report page
+ * updates live without a reload. There is no server persistence yet —
+ * the report is per-device by design for the hackathon build.
+ */
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "gd:report:v4";

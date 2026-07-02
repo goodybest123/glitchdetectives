@@ -20,8 +20,17 @@ type Params = {
   marks: ReportEntry["marks"];
 };
 
-// Records a single judge-report entry on the first transition to "solved",
-// then asks ZED-4 (Lovable AI) to grade the child's explanation.
+/**
+ * useReportRecorder — records a single Cognitive Insights entry on the
+ * first transition to "solved", then asks ZED-4 (Lovable AI Gateway) to
+ * grade the child's free-text explanation.
+ *
+ * Idempotency: guarded by an internal ref so re-renders never double-save.
+ * The entry is written to localStorage with verdict "pending" immediately,
+ * then patched in-place once the server function returns. If the AI call
+ * fails, the entry is patched with a child-friendly retry note instead of
+ * being deleted — the report page never shows an empty row.
+ */
 export function useReportRecorder(p: Params) {
   const grade = useServerFn(gradeExplanation);
   const savedRef = useRef(false);
