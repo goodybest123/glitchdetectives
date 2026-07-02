@@ -1,60 +1,31 @@
-# Glitch Detectives — 3-Minute Demo Video Script
+## Goal
+Produce a rubric-by-rubric self-assessment of Glitch Detectives against the 2026 BuildVerse Hackathon rubric, saved as `docs/rubric-self-assessment.md` so you can reference it during judging.
 
-Format: founder first-person voiceover + on-screen action, two columns.
-Total: ~3:00 at ~150 wpm (~450 words spoken).
-Leading angle: critical thinking in the AI era → product loop → cognitive insights → neurodivergent-inclusive → workbook loop → close.
+## Deliverable
+A single markdown doc with one section per rubric criterion. Each section contains:
+- **Score (self-rated /5)** — honest, not inflated
+- **Evidence** — concrete file paths / features that support the score
+- **Gaps** — what a judge could reasonably mark down
+- **Quick win** — a small fix (if any) that could raise the score before submission
 
-Deliverable below is the full script. After your approval I'll save it as `docs/demo-script.md` in the repo so you can edit/print it.
+## Sections (mirroring the rubric)
 
----
+**Code Quality & Technical Execution**
+1. Code Structure & Organisation — routes in `src/routes/`, per-case components in `src/components/caseNN/`, shared UI in `src/components/shared/`, hooks in `src/hooks/`, server logic in `*.functions.ts` / `src/routes/api/chat/*`. Note the clean separation and the one weak spot (case folders duplicate patterns instead of a shared abstraction).
+2. Functionality & Completeness — 6 cases live, `/play`, `/play/report`, `/printables`, ZED-4 grading, voice input, TTS, workbook PDFs.
+3. Use of Version Control — flag as the biggest unknown; recommend checking README + commit hygiene before judging.
+4. Code Readability & Documentation — TypeScript strict, Zod validators, purposeful comments in `useReportRecorder`, `report.functions.ts`, `server.ts`. Gap: no top-level architecture doc.
 
-## 0:00 – 0:20 · Hook: the problem
+**AI Integration & Usage**
+5. Depth of AI Integration — AI is the product's core loop: ZED-4 makes the glitch, child explains, `gradeExplanation` server fn produces the Cognitive Insights report (4 dimensions × 3 levels + rubric + evidence). Cite `src/lib/report.functions.ts`, `src/routes/api/chat/*`.
+6. Quality of AI Outputs — structured output via `Output.object({ schema })`, Zod-normalized, fallback JSON parse, safe defaults on failure. Gap: no eval harness / no sample outputs shown to judges.
 
-| Voiceover (founder) | On-screen |
-|---|---|
-| "In the AI era, kids can get any answer in one tap. The risk isn't that they won't solve maths — it's that they'll stop **thinking**. I built Glitch Detectives so children don't just answer problems… they investigate them." | Landing hero of glitchdetectives.lovable.app — slow scroll over the "Don't solve. Investigate. Detect. Repair." headline. |
+**Product Viability & Design**
+7. User Experience & Interface — neurodivergent-inclusive: no timers, no red Xs, TTS on every caption (`CaptionLine`, `DetectiveCallout`, `SuccessBanner`), multimodal input (voice/text/tap), calm palette, printable workbook parity.
 
-## 0:20 – 0:45 · The flip
+## Closing section
+- **Top 3 things to say out loud during judging** (mapped to weakest rubric rows so you pre-empt them).
+- **Top 3 quick wins before submission** (e.g. README polish, add a short `ARCHITECTURE.md`, drop a screenshot of a real Cognitive Insights report into the repo).
 
-| Voiceover | On-screen |
-|---|---|
-| "We flipped the classroom. The AI makes the mistake. The child becomes the detective who finds it, repairs it, and explains **why** to the robot. That single move turns maths from recall into reasoning." | Scroll into the "Role Reversal" section; hover the four-step loop: Investigate → Detect → Repair → Explain. |
-
-## 0:45 – 1:25 · How it works (live case)
-
-| Voiceover | On-screen |
-|---|---|
-| "Here's one of our fraction cases. ZED-4, our AI, confidently slices a pizza wrong. The child sees the glitch, picks the real fraction, and then — this is the important part — they **speak or type their reasoning** back to ZED-4." | Open `/play` → pick Case 01 (pizza). Show ZED-4's wrong slice, child selecting correct fraction, then the mic + text explanation box. |
-| "No multiple choice for the thinking step. They have to put the idea into their own words. That's where real understanding lives." | Show the child typing/speaking an explanation; ZED-4 reacts. |
-
-## 1:25 – 2:00 · The Cognitive Insights report
-
-| Voiceover | On-screen |
-|---|---|
-| "And this is what parents and educators actually see. Not a score. Not a grade. A **Cognitive Insights report** that reads the child's own words and tells you, qualitatively, where their thinking is strong and where it's still forming." | Navigate to `/play/report`. Pan slowly across the four rows: Conceptual Understanding, Reasoning & Justification, Vocabulary & Precision, Problem Decomposition — each with Emerging / Developing / Secure and the evidence line. |
-| "So instead of 'they got 8 out of 10,' you see *why* they got it — the vocabulary they used, the steps they decomposed, the reasoning they justified." | Highlight one evidence line on screen. |
-
-## 2:00 – 2:25 · Built for every brain
-
-| Voiceover | On-screen |
-|---|---|
-| "We designed this for every kind of learner. No timers. No punishing red Xs. Calm colours, big targets, multimodal input — voice, text, tap. It's neurodivergent-inclusive by default, not as an add-on." | Scroll the "Neurodivergent" section of the landing page; show the calm UI of a case (no countdown, no buzzer). |
-
-## 2:25 – 2:50 · The workbook loop *(your live workbook reveal)*
-
-| Voiceover | On-screen |
-|---|---|
-| "And the loop doesn't stay on a screen. Every digital case has a matching printable workbook page — same glitch, same reasoning prompt. Kids investigate offline, bring their explanation back into the app, and ZED-4 reads it. Screen and paper, working as one." | **[CUE: hold up the printed workbook to camera — flip through 2–3 pages: a glitch page, a "write your reasoning" page, and the matching digital case on the laptop beside it.]** Then cut to `/printables`. |
-
-## 2:50 – 3:00 · Close
-
-| Voiceover | On-screen |
-|---|---|
-| "Glitch Detectives. We're not teaching kids to beat the AI. We're teaching them to out-think it. Thank you." | Return to landing hero; logo + tagline hold on screen. |
-
----
-
-## Notes for delivery
-- Pace: ~150 wpm. If you run long, the easiest cut is the second half of section 0:20–0:45 (one sentence).
-- Workbook cue at 2:25 is the only off-screen moment — rehearse the hand-off so the printed page is already in frame.
-- Recommend recording screen at 1920×1080, 30 fps; voiceover after, synced to cues.
+## Out of scope
+No code changes, no README rewrite, no commit history edits. This turn only produces the assessment doc; you can ask me to act on any quick win afterward.
