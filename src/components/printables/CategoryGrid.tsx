@@ -347,17 +347,28 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
           </div>
         )}
 
-        <div className="mt-7">
+        <div className="mt-7 flex flex-wrap gap-3">
           {!locked && lvl.href ? (
-            <a
-              href={lvl.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
-              style={{ background: BLUE, color: "white" }}
-            >
-              VIEW AND DOWNLOAD CASE FILE <ArrowRight className="w-4 h-4" />
-            </a>
+            <>
+              <a
+                href={lvl.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
+                style={{ background: BLUE, color: "white" }}
+              >
+                VIEW AND DOWNLOAD CASE FILE <ArrowRight className="w-4 h-4" />
+              </a>
+              {lvl.previewTo && (
+                <Link
+                  to={lvl.previewTo}
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs border hover:opacity-80 transition-opacity"
+                  style={{ borderColor: BLUE, color: BLUE }}
+                >
+                  Preview pages
+                </Link>
+              )}
+            </>
           ) : (
             <span
               aria-disabled="true"
