@@ -24,7 +24,7 @@ const YELLOW = "var(--color-brand-yellow)";
 const MINT = "var(--color-bg-mint)";
 const MUTED = "color-mix(in oklab, var(--color-brand-blue) 72%, transparent)";
 
-export const Route = createFileRoute("/printables/fractions-l1")({
+export const Route = createFileRoute("/printables/fractions-l1/")({
   head: () => ({
     meta: [
       { title: "Fractions Foundations Collection — Glitch Detectives Printables" },
