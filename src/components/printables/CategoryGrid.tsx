@@ -318,7 +318,7 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
       {/* Body */}
       <div className="p-7 flex flex-col flex-1">
         <p className="label-eyebrow" style={{ color: locked ? "#94a3b8" : MUTED }}>
-          Level {lvl.n}
+          {lvl.badge}
         </p>
         <h3
           className="text-2xl font-black uppercase tracking-tight mt-1"
