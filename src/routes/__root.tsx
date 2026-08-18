@@ -6,8 +6,11 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  useRouterState,
 } from "@tanstack/react-router";
 
+import { Navbar } from "@/components/landing/Navbar";
+import { Footer } from "@/components/landing/sections";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -72,37 +75,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Glitch Detective" },
+      { title: "Glitch Detectives" },
       {
         name: "description",
         content:
-          "In a world where AI generates answers instantly, the most valuable skill is knowing how to evaluate, verify, and reason.",
+          "A reasoning-first K-6 maths company. Children investigate AI mistakes, repair them, and explain their thinking.",
       },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Glitch Detective" },
+      { name: "author", content: "Glitch Detectives" },
+      { property: "og:title", content: "Glitch Detectives" },
       {
         property: "og:description",
         content:
-          "In a world where AI generates answers instantly, the most valuable skill is knowing how to evaluate, verify, and reason.",
+          "A reasoning-first K-6 maths company. Children investigate AI mistakes, repair them, and explain their thinking.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Glitch Detective" },
+      { name: "twitter:site", content: "@glitchdetectives" },
+      { name: "twitter:title", content: "Glitch Detectives" },
       {
         name: "twitter:description",
         content:
-          "In a world where AI generates answers instantly, the most valuable skill is knowing how to evaluate, verify, and reason.",
-      },
-      {
-        property: "og:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/057ef7e6-0be8-44ac-b9f8-ae18fa890625/id-preview-d59699f3--6ff681f6-c26d-4148-a77d-0b29760e0936.lovable.app-1779173118289.png",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/057ef7e6-0be8-44ac-b9f8-ae18fa890625/id-preview-d59699f3--6ff681f6-c26d-4148-a77d-0b29760e0936.lovable.app-1779173118289.png",
+          "A reasoning-first K-6 maths company. Children investigate AI mistakes, repair them, and explain their thinking.",
       },
     ],
     links: [
@@ -134,10 +127,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isFullscreenGameplay = pathname.startsWith("/play/case-");
 
   return (
     <QueryClientProvider client={queryClient}>
+      {!isFullscreenGameplay && <Navbar />}
       <Outlet />
+      {!isFullscreenGameplay && <Footer />}
     </QueryClientProvider>
   );
 }

@@ -111,20 +111,20 @@ export function Hero() {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#worlds"
+            <Link
+              to="/products"
               className="px-6 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
               style={{ background: MINT, color: BLUE }}
             >
               Explore the Worlds <ArrowRight className="w-4 h-4" />
-            </a>
-            <a
-              href="#printables"
+            </Link>
+            <Link
+              to="/printables"
               className="px-6 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
               style={{ background: YELLOW, color: BLUE }}
             >
               Explore the Printables <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
 
           <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80">
@@ -799,12 +799,12 @@ export function FinalCTA() {
           >
             Explore the Worlds <ArrowRight className="w-4 h-4" />
           </Link>
-          <a
-            href="#printables"
+          <Link
+            to="/printables"
             className="px-7 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 bg-white text-[var(--color-brand-blue)] hover:scale-105 transition-transform"
           >
             Explore the Printables <ArrowRight className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
@@ -816,7 +816,7 @@ export function Footer() {
   return (
     <footer style={{ backgroundColor: BLUE, color: "white" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 flex flex-col sm:flex-row gap-8 items-start sm:items-center justify-between">
-        <div className="flex items-center gap-3">
+        <Link to="/" className="flex items-center gap-3 group">
           <div className="w-11 h-11 rounded-full bg-[var(--color-brand-yellow)] flex items-center justify-center">
             <Search className="w-5 h-5 text-[var(--color-brand-blue)]" strokeWidth={3} />
           </div>
@@ -824,15 +824,28 @@ export function Footer() {
             <div className="text-xl font-black tracking-tight">GLITCH</div>
             <div className="text-[10px] font-semibold tracking-[0.35em]">DETECTIVES</div>
           </div>
-        </div>
+        </Link>
         <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm uppercase tracking-wider font-semibold text-white/80">
-          {["About Us", "Contact", "Terms", "Privacy"].map((l) => (
-            <li key={l}>
-              <a href="#" className="hover:text-white">
-                {l}
-              </a>
-            </li>
-          ))}
+          <li>
+            <Link to="/about" className="hover:text-white">
+              About
+            </Link>
+          </li>
+          <li>
+            <Link to="/products" className="hover:text-white">
+              Products
+            </Link>
+          </li>
+          <li>
+            <Link to="/contact" className="hover:text-white">
+              Contact
+            </Link>
+          </li>
+          <li>
+            <Link to="/printables" className="hover:text-white">
+              Printables
+            </Link>
+          </li>
         </ul>
         <div className="flex items-center gap-3">
           {[Facebook, Twitter, Instagram, Youtube].map((Ic, i) => (

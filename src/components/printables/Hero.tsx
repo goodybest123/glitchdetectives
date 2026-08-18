@@ -10,7 +10,6 @@ export function PrintablesHero() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 pb-20 lg:pt-12 lg:pb-28">
         <Link
           to="/"
-          hash="printables"
           className="inline-flex items-center gap-2 text-sm font-semibold mb-8 hover:opacity-80"
           style={{ color: BLUE }}
         >

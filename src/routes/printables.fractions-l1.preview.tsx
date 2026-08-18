@@ -4,8 +4,6 @@
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Download } from "lucide-react";
-import { Navbar } from "@/components/landing/Navbar";
-import { Footer } from "@/components/landing/sections";
 import { PagePreviewGallery } from "@/components/printables/PagePreviewGallery";
 import {
   COLLECTION_PDF_URL,
@@ -45,7 +43,6 @@ export const Route = createFileRoute("/printables/fractions-l1/preview")({
 function PreviewPage() {
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
       <main>
         <section style={{ background: MINT }}>
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 lg:py-20">
@@ -122,7 +119,6 @@ function PreviewPage() {
             </div>
           </div>
         </section>
-        <Footer />
       </main>
     </div>
   );
