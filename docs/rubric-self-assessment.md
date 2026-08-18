@@ -44,40 +44,41 @@ Honest read of the project against the JAF 2026 rubric. Scores are self-rated /5
 
 ---
 
-### 1.3 Use of Version Control — **unknown, likely 3/5**
+### 1.3 Use of Version Control — **4/5**
 
 **Evidence**
 
-- Repo is Lovable-managed → GitHub sync is available but commits are per-turn ("agent" style), not human-authored feature commits.
-- No `README.md` was surfaced in project context.
+- Real, human-readable `README.md` at root: pitch, live URL, tech stack, setup steps, architecture overview, screenshots, AI output example, and rubric-relevant evidence table.
+- `docs/ARCHITECTURE.md` — runtime topology, routing map, AI grading pipeline, data flow.
+- `docs/CONTRIBUTING.md` — branching (`feat/`, `fix/`) and Conventional Commits standards.
+- `docs/security-posture.md` — full threat model, input validation, AI safety, and privacy controls.
+- `docs/demo-script.md` and `docs/rubric-self-assessment.md` show documentation is maintained as a first-class concern.
 
-**Gaps (judge will notice)**
+**Gaps**
 
-- Commit history reads as AI turns, not feature milestones.
-- Likely no branching strategy, no PRs, no CHANGELOG.
+- Commit history remains Lovable-managed turn commits, not human-authored feature milestones.
+- No release tag / CHANGELOG yet.
 
-**Quick win** (highest ROI on the whole rubric):
-
-1. Write a real `README.md`: what it is, why it exists, how to run, tech stack, screenshots, live URL (`https://glitchdetectives.lovable.app`), demo video link.
-2. Add a short `docs/ARCHITECTURE.md` (routes, server functions, AI flow diagram).
-3. Squash-tag a `v1.0-hackathon` release so judges land on a clean commit.
+**Quick win**: tag `v1.0-hackathon` on the current `main` and add a one-line `CHANGELOG.md`.
 
 ---
 
-### 1.4 Code Readability & Documentation — **3.5/5**
+### 1.4 Code Readability & Documentation — **4.5/5**
 
 **Evidence**
 
 - Strict TypeScript (`tsconfig.json` `strict: true`), Zod validation on every server fn input.
-- Purposeful comments where non-obvious: `useReportRecorder.ts` (first-transition guard), `server.ts` (h3 swallow-500 explainer), `report.functions.ts` (fallback JSON parse), shared components have "why this exists" headers.
-- Semantic naming: `DetectiveCallout` explicitly says "child voice, never ZED-4" in its JSDoc.
+- Purposeful comments and JSDoc headers on public boundaries: server entrypoints (`server.ts`, `start.ts`, `router.tsx`), hooks (`useReportStore`, `useReportRecorder`, `useProgress`), shared components, all 6 case routes, and case definition files.
+- `eslint` now passes with **0 errors**; remaining warnings are only in auto-generated shadcn/ui primitives and pre-existing `useEffect` dependency hints.
+- Server function contract is documented in `docs/ARCHITECTURE.md` and `docs/security-posture.md`.
+- Input validation helper (`src/lib/chat-validation.ts`) is documented with its security bounds.
 
 **Gaps**
 
-- No top-level architecture doc.
-- Server function contract (input/output shapes for grading) is only readable by opening the file.
+- No inline architecture diagram (ASCII only).
+- No auto-generated API docs.
 
-**Quick win**: `docs/ARCHITECTURE.md` with a 1-page diagram of client → server fn → AI Gateway → Zod-normalised report.
+**Quick win**: add a Mermaid diagram to `docs/ARCHITECTURE.md` if the platform supports rendering it.
 
 ---
 
