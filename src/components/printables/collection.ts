@@ -58,9 +58,9 @@ export const WHATS_INSIDE = [
   },
 ] as const;
 
-/** Google Drive location of the full workbook download. */
+/** Selar purchase/download page for the full workbook. */
 export const COLLECTION_PDF_URL =
-  "https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/view?usp=drive_link";
+  "https://selar.com/glitchdetectives-fractions1";
 
 /** Sample pages rendered from the workbook PDF (served from /public). */
 export const PREVIEW_PAGES = [1, 2, 3, 4, 5].map((n) => ({
