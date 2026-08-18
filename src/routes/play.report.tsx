@@ -323,7 +323,7 @@ function RoadmapSection({
             {suggestedReplay.map((r) => (
               <li key={`${r.caseId}-${r.subId}`}>
                 <Link
-                  to={`/play/${r.caseId}` as any}
+                  to={`/play/${r.caseId}`}
                   className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-neutral-700 transition hover:bg-[#dbeafe]"
                 >
                   <span className="text-base">{r.emoji}</span>

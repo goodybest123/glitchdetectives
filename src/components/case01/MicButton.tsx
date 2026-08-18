@@ -1,6 +1,40 @@
 import { useEffect, useRef, useState } from "react";
 import { Mic, MicOff } from "lucide-react";
 
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  [index: number]: { transcript: string };
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+}
+
+interface SpeechRecognitionInstance extends EventTarget {
+  lang: string;
+  interimResults: boolean;
+  continuous: boolean;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+  start(): void;
+  stop(): void;
+}
+
+interface SpeechRecognitionConstructor {
+  new (): SpeechRecognitionInstance;
+}
+
 type MicButtonProps = {
   onTranscript: (text: string, isFinal: boolean) => void;
   disabled?: boolean;
@@ -9,11 +43,12 @@ type MicButtonProps = {
   silenceMs?: number;
 };
 
-type SRConstructor = new () => any;
-
-function getRecognition(): SRConstructor | null {
+function getRecognition(): SpeechRecognitionConstructor | null {
   if (typeof window === "undefined") return null;
-  const w = window as any;
+  const w = window as unknown as {
+    SpeechRecognition?: SpeechRecognitionConstructor;
+    webkitSpeechRecognition?: SpeechRecognitionConstructor;
+  };
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
@@ -26,7 +61,7 @@ export function MicButton({
   const [supported, setSupported] = useState(false);
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const recRef = useRef<any>(null);
+  const recRef = useRef<SpeechRecognitionInstance | null>(null);
   const userStoppedRef = useRef(false);
   const silenceTimerRef = useRef<number | null>(null);
 
@@ -74,7 +109,7 @@ export function MicButton({
     // continuous keeps the recognizer running across pauses so kids can think mid-sentence.
     rec.continuous = true;
 
-    rec.onresult = (e: any) => {
+    rec.onresult = (e: SpeechRecognitionEvent) => {
       let interim = "";
       let finalText = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -86,7 +121,7 @@ export function MicButton({
       else if (interim) onTranscript(interim, false);
       resetSilenceTimer();
     };
-    rec.onerror = (e: any) => {
+    rec.onerror = (e: SpeechRecognitionErrorEvent) => {
       if (e.error === "not-allowed") {
         setError("Microphone access blocked.");
         userStoppedRef.current = true;

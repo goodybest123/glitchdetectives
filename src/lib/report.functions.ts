@@ -85,19 +85,21 @@ function normalizeRubric(r: unknown): GradeResult["rubric"] {
   if (!Array.isArray(r)) return [];
   return r
     .slice(0, 4)
-    .map((item: any) => ({
-      criterion: clampNote(item?.criterion, 80),
-      score: normalizeScore(item?.score),
-      evidence: clampNote(item?.evidence, 140),
+    .map((item) => ({
+      criterion: clampNote((item as Record<string, unknown>)?.criterion, 80),
+      score: normalizeScore((item as Record<string, unknown>)?.score),
+      evidence: clampNote((item as Record<string, unknown>)?.evidence, 140),
     }))
     .filter((x) => x.criterion);
 }
 
 function normalizeInsights(r: unknown): GradeResult["insights"] {
   const arr = Array.isArray(r) ? r : [];
-  const byDim = new Map<string, any>();
+  const byDim = new Map<string, Record<string, unknown>>();
   for (const item of arr) {
-    if (item && typeof item.dimension === "string") byDim.set(item.dimension, item);
+    if (item && typeof item === "object" && typeof (item as Record<string, unknown>).dimension === "string") {
+      byDim.set((item as Record<string, unknown>).dimension as string, item as Record<string, unknown>);
+    }
   }
   return DIMENSIONS.map((dim) => {
     const raw = byDim.get(dim);
@@ -109,21 +111,22 @@ function normalizeInsights(r: unknown): GradeResult["insights"] {
   });
 }
 
-function normalize(raw: any): GradeResult {
-  const lvl = Number(raw?.understandingLevel);
+function normalize(raw: unknown): GradeResult {
+  const typed = raw as Record<string, unknown>;
+  const lvl = Number(typed?.understandingLevel);
   return {
-    verdict: normalizeVerdict(raw?.verdict),
+    verdict: normalizeVerdict(typed?.verdict),
     understandingLevel: Number.isFinite(lvl) ? Math.max(1, Math.min(5, Math.round(lvl))) : 3,
-    strengths: Array.isArray(raw?.strengths)
-      ? raw.strengths.slice(0, 2).map((x: unknown) => clampNote(x, 120))
+    strengths: Array.isArray(typed?.strengths)
+      ? typed.strengths.slice(0, 2).map((x: unknown) => clampNote(x, 120))
       : [],
-    gaps: Array.isArray(raw?.gaps)
-      ? raw.gaps.slice(0, 2).map((x: unknown) => clampNote(x, 120))
+    gaps: Array.isArray(typed?.gaps)
+      ? typed.gaps.slice(0, 2).map((x: unknown) => clampNote(x, 120))
       : [],
-    nextStep: clampNote(raw?.nextStep, 160),
-    note: clampNote(raw?.note, 160),
-    rubric: normalizeRubric(raw?.rubric),
-    insights: normalizeInsights(raw?.insights),
+    nextStep: clampNote(typed?.nextStep, 160),
+    note: clampNote(typed?.note, 160),
+    rubric: normalizeRubric(typed?.rubric),
+    insights: normalizeInsights(typed?.insights),
   };
 }
 
@@ -190,7 +193,9 @@ export const gradeExplanation = createServerFn({ method: "POST" })
           const parsed = JSON.parse(match[0]);
           return normalize(parsed);
         }
-      } catch {}
+      } catch {
+        // Both structured output and JSON fallback failed; safe defaults follow.
+      }
       return {
         verdict: "review",
         understandingLevel: 3,
