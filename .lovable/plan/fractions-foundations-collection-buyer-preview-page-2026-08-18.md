@@ -17,6 +17,7 @@ New copy on the card and on the `/printables/fractions-l1` detail page:
 Badges: Grades 1–2 · Fractions · 21 Pages · Instant Digital Download · Free
 
 Body sections:
+
 - Intro: complete printable workbook combining Levels 1 and 2; children become Lead Detectives who investigate mistakes, repair misconceptions and explain their thinking.
 - "Become the Lead Detective and Solve Fraction Mysteries" — the Sam narrative and the investigate / detect / repair / explain framing; reasoning-first rather than memorisation.
 - "What's Inside":

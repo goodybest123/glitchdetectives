@@ -1,11 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { gradeExplanation } from "@/lib/report.functions";
-import {
-  patchReportEntry,
-  saveReportEntry,
-  type ReportEntry,
-} from "@/hooks/useReportStore";
+import { patchReportEntry, saveReportEntry, type ReportEntry } from "@/hooks/useReportStore";
 
 type Params = {
   active: boolean; // true once the sub-case enters the "solved" stage
@@ -39,8 +35,7 @@ export function useReportRecorder(p: Params) {
     if (!p.active || savedRef.current) return;
     savedRef.current = true;
 
-    const explanation =
-      [...p.studentQuotes].sort((a, b) => b.length - a.length)[0] ?? "";
+    const explanation = [...p.studentQuotes].sort((a, b) => b.length - a.length)[0] ?? "";
 
     const base: ReportEntry = {
       caseId: p.caseId,
@@ -81,8 +76,6 @@ export function useReportRecorder(p: Params) {
           nextStep: res.nextStep,
           rubric: res.rubric,
           insights: res.insights,
-
-
         });
       })
       .catch(() => {

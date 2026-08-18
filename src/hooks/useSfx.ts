@@ -20,13 +20,21 @@ let ctx: AudioContext | null = null;
 function getCtx(): AudioContext | null {
   if (typeof window === "undefined") return null;
   if (ctx) return ctx;
-  const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  const AC =
+    window.AudioContext ??
+    (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
   if (!AC) return null;
   ctx = new AC();
   return ctx;
 }
 
-function tone(freq: number, duration: number, type: OscillatorType = "sine", gain = 0.08, delay = 0) {
+function tone(
+  freq: number,
+  duration: number,
+  type: OscillatorType = "sine",
+  gain = 0.08,
+  delay = 0,
+) {
   const ac = getCtx();
   if (!ac) return;
   if (ac.state === "suspended") ac.resume().catch(() => {});

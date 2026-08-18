@@ -40,9 +40,7 @@ export function useCaseProgress<S extends string>(caseId: string, subCaseIds: re
   // Sync on mount in case storage changed since first render (SSR).
   useEffect(() => {
     const stored = read()[caseId] ?? {};
-    setSolved(
-      Object.fromEntries(subCaseIds.map((id) => [id, !!stored[id]])) as Record<S, boolean>,
-    );
+    setSolved(Object.fromEntries(subCaseIds.map((id) => [id, !!stored[id]])) as Record<S, boolean>);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [caseId]);
 

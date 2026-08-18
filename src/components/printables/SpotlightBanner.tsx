@@ -9,10 +9,11 @@ export function SpotlightBanner() {
   return (
     <section style={{ background: "var(--color-bg-mint)" }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-20 lg:pb-24">
-        <div
-          className="relative bg-white rounded-[32px] border border-black/5 shadow-sm overflow-hidden p-6 sm:p-10 lg:p-14"
-        >
-          <div className="pointer-events-none absolute -top-24 -right-20 w-72 h-72 rounded-full blur-3xl opacity-50" style={{ background: MINT }} />
+        <div className="relative bg-white rounded-[32px] border border-black/5 shadow-sm overflow-hidden p-6 sm:p-10 lg:p-14">
+          <div
+            className="pointer-events-none absolute -top-24 -right-20 w-72 h-72 rounded-full blur-3xl opacity-50"
+            style={{ background: MINT }}
+          />
 
           <div className="relative grid lg:grid-cols-[minmax(0,260px)_1fr] gap-10 lg:gap-14 items-center">
             {/* Workbook cover placeholder */}

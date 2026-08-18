@@ -17,7 +17,14 @@ export function CoolantDrainSVG({ solved, pulseKey }: VisualProps) {
       <svg viewBox={`0 0 ${W} ${H}`} className="h-[260px] w-full max-w-[480px]">
         {/* Drain pipe (left) */}
         <rect x={40} y={tankY + tankH - 30} width={80} height={14} rx={4} fill="#cbd5e1" />
-        <text x={80} y={tankY + tankH + 10} textAnchor="middle" fontSize="11" fontWeight="700" fill="#64748b">
+        <text
+          x={80}
+          y={tankY + tankH + 10}
+          textAnchor="middle"
+          fontSize="11"
+          fontWeight="700"
+          fill="#64748b"
+        >
           DRAIN
         </text>
 

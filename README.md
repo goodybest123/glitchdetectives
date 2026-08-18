@@ -31,7 +31,7 @@
 
 ## Description
 
-Glitch Detectives is a browser-based, reasoning-first maths platform for children aged 5–12. Every case follows the same four-step loop — **Investigate → Detect → Repair → Explain** — and ends with the child speaking or typing back to ZED-4 *why* the answer is what it is. That explanation is graded by an AI into a qualitative **Cognitive Insights** report across four dimensions, so parents and educators can read the child's own reasoning instead of tallying a score.
+Glitch Detectives is a browser-based, reasoning-first maths platform for children aged 5–12. Every case follows the same four-step loop — **Investigate → Detect → Repair → Explain** — and ends with the child speaking or typing back to ZED-4 _why_ the answer is what it is. That explanation is graded by an AI into a qualitative **Cognitive Insights** report across four dimensions, so parents and educators can read the child's own reasoning instead of tallying a score.
 
 ## Why it exists
 
@@ -39,12 +39,12 @@ In the AI era, kids can get any answer in one tap. The risk isn't that they won'
 
 ## Screenshots
 
-| Page | Screenshot |
-| --- | --- |
-| Landing (`/`) | ![Landing](docs/samples/landing.png) |
-| Case in play (`/play/case-01`) | ![Case in play](docs/samples/case-in-play.png) |
+| Page                                | Screenshot                                                 |
+| ----------------------------------- | ---------------------------------------------------------- |
+| Landing (`/`)                       | ![Landing](docs/samples/landing.png)                       |
+| Case in play (`/play/case-01`)      | ![Case in play](docs/samples/case-in-play.png)             |
 | Detective's Report (`/play/report`) | ![Cognitive Insights](docs/samples/cognitive-insights.png) |
-| Printables Library (`/printables`) | ![Workbook](docs/samples/workbook.png) |
+| Printables Library (`/printables`)  | ![Workbook](docs/samples/workbook.png)                     |
 
 ## Prerequisites
 
@@ -112,18 +112,18 @@ Full deep-dive: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Tech stack
 
-| Layer | Choice |
-| --- | --- |
-| Framework | [TanStack Start](https://tanstack.com/start) v1 (React 19, Vite 7, SSR) |
-| Language | TypeScript (`strict: true`) |
-| Styling | Tailwind CSS v4 (`@import` native, no config file) + shadcn/ui |
-| Animation | Framer Motion, `canvas-confetti` |
-| Backend | Lovable Cloud (managed Supabase — Postgres, Auth, RLS) |
-| AI | Lovable AI Gateway → `google/gemini-3-flash-preview` via the `ai` SDK |
-| Validation | Zod on every server-function boundary |
-| Voice | Web Speech API (TTS + speech recognition) |
-| Runtime | Cloudflare Workers (`nodejs_compat`) |
-| Package manager | Bun |
+| Layer           | Choice                                                                  |
+| --------------- | ----------------------------------------------------------------------- |
+| Framework       | [TanStack Start](https://tanstack.com/start) v1 (React 19, Vite 7, SSR) |
+| Language        | TypeScript (`strict: true`)                                             |
+| Styling         | Tailwind CSS v4 (`@import` native, no config file) + shadcn/ui          |
+| Animation       | Framer Motion, `canvas-confetti`                                        |
+| Backend         | Lovable Cloud (managed Supabase — Postgres, Auth, RLS)                  |
+| AI              | Lovable AI Gateway → `google/gemini-3-flash-preview` via the `ai` SDK   |
+| Validation      | Zod on every server-function boundary                                   |
+| Voice           | Web Speech API (TTS + speech recognition)                               |
+| Runtime         | Cloudflare Workers (`nodejs_compat`)                                    |
+| Package manager | Bun                                                                     |
 
 ## Project structure
 
@@ -177,24 +177,24 @@ A typical successful call to the `gradeExplanation` server function returns:
     {
       "dimension": "Conceptual Understanding",
       "score": "strong",
-      "evidence": "You said 'four equal slices means each person gets 1/4' — that's the whole idea of a fraction."
+      "evidence": "You said 'four equal slices means each person gets 1/4' — that's the whole idea of a fraction.",
     },
     {
       "dimension": "Reasoning & Justification",
       "score": "developing",
-      "evidence": "You jumped to the answer without saying why the slices had to be equal size."
+      "evidence": "You jumped to the answer without saying why the slices had to be equal size.",
     },
     {
       "dimension": "Vocabulary & Precision",
       "score": "strong",
-      "evidence": "You used 'equal', 'quarter', and 'whole' correctly."
+      "evidence": "You used 'equal', 'quarter', and 'whole' correctly.",
     },
     {
       "dimension": "Problem Decomposition",
       "score": "emerging",
-      "evidence": "Try breaking the problem into steps next time: what is the whole? how many people? how big is each part?"
-    }
-  ]
+      "evidence": "Try breaking the problem into steps next time: what is the whole? how many people? how big is each part?",
+    },
+  ],
 }
 ```
 
@@ -209,15 +209,15 @@ Required environment variables (server-side only):
 
 Mapped to the **2026 BuildVerse Hackathon Edition 1 Rubric**:
 
-| Rubric row | Where to look |
-| --- | --- |
-| Code Structure & Organisation | `src/routes/`, `src/components/case0X/`, `src/hooks/`, `src/lib/` — clear separation of routing, per-case UI, hooks, and server logic. |
-| Functionality & Completeness | Six playable cases, working AI grader, printable library, persistent per-device report. See [Screenshots](#screenshots). |
-| Use of Version Control | Conventional commits, `main`-only-deployable branch policy, docs in [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md). |
-| Code Readability & Documentation | JSDoc on all public boundaries (`report.functions.ts`, `useReportStore.ts`, `useReportRecorder.ts`, `router.tsx`); this README + `docs/ARCHITECTURE.md`. |
-| AI Integration Depth | Free-text explanation → Gemini structured output → Zod-validated four-dimension insights. The AI *is* the product surface, not a bolt-on. See [AI output example](#ai-output-example). |
-| Quality of AI Outputs | Structured JSON with per-dimension evidence quoted from the child's own words; graceful fallback on failure. |
-| User Experience & Interface | Calm, neurodivergent-inclusive palette; low cognitive load; voice + keyboard input; workbooks for off-screen practice. See landing and case screenshots. |
+| Rubric row                       | Where to look                                                                                                                                                                          |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Code Structure & Organisation    | `src/routes/`, `src/components/case0X/`, `src/hooks/`, `src/lib/` — clear separation of routing, per-case UI, hooks, and server logic.                                                 |
+| Functionality & Completeness     | Six playable cases, working AI grader, printable library, persistent per-device report. See [Screenshots](#screenshots).                                                               |
+| Use of Version Control           | Conventional commits, `main`-only-deployable branch policy, docs in [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md).                                                                    |
+| Code Readability & Documentation | JSDoc on all public boundaries (`report.functions.ts`, `useReportStore.ts`, `useReportRecorder.ts`, `router.tsx`); this README + `docs/ARCHITECTURE.md`.                               |
+| AI Integration Depth             | Free-text explanation → Gemini structured output → Zod-validated four-dimension insights. The AI _is_ the product surface, not a bolt-on. See [AI output example](#ai-output-example). |
+| Quality of AI Outputs            | Structured JSON with per-dimension evidence quoted from the child's own words; graceful fallback on failure.                                                                           |
+| User Experience & Interface      | Calm, neurodivergent-inclusive palette; low cognitive load; voice + keyboard input; workbooks for off-screen practice. See landing and case screenshots.                               |
 
 Full self-score: [`docs/rubric-self-assessment.md`](docs/rubric-self-assessment.md).
 

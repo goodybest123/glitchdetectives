@@ -35,7 +35,16 @@ function Tank({
             <stop offset="100%" stopColor="#3b82f6" />
           </linearGradient>
         </defs>
-        <rect x={4} y={6} width={W - 8} height={H} rx={10} fill="#f8fafc" stroke="#cbd5e1" strokeWidth={2} />
+        <rect
+          x={4}
+          y={6}
+          width={W - 8}
+          height={H}
+          rx={10}
+          fill="#f8fafc"
+          stroke="#cbd5e1"
+          strokeWidth={2}
+        />
         <rect
           x={6}
           y={6 + (H - fillHeight)}

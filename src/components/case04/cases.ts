@@ -64,8 +64,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "AND folks, the winner of the heavyweight bout is — 1 OVER 8! Look at that gigantic number 8 on the bottom — eight is huge, four is puny, the call on the floor stands! 1/8 brings the BIG number, so 1/8 brings the BIG weight! I'd bet my circuits on it!",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The 1/4 block is heavier!",
     },
     captions: {
@@ -95,8 +94,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "And down the home stretch — Tube B is roaring ahead with 2 over 5 because, ladies and gents, 5 is bigger than 3, and bigger numbers always mean MORE coolant! It's a landslide victory for Tube B! I've called a thousand races and this one isn't even close!",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. Thirds are larger than fifths!",
     },
     captions: {
@@ -126,8 +124,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Coming in HOT to the construction site — Beam B is the obvious winner, towering over Beam A! Why? Because 8 is greater than 4 — that's championship-level math! Bigger bottom number, bigger beam, every single time! Take it from your favorite sports robot — this one's a done deal!",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The 3/4 beam is longer!",
     },
     captions: {

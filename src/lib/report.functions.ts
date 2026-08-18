@@ -19,7 +19,6 @@ import { generateText, Output } from "ai";
 import { z } from "zod";
 import { createLovableAiGatewayProvider } from "./ai-gateway";
 
-
 const Input = z.object({
   caseTitle: z.string(),
   subTitle: z.string(),
@@ -58,7 +57,6 @@ const Schema = z.object({
   insights: z.array(InsightItem).length(4),
 });
 
-
 export type GradeResult = z.infer<typeof Schema>;
 
 function clampNote(s: unknown, max = 160) {
@@ -85,11 +83,14 @@ function normalizeLevel(l: unknown): "Emerging" | "Developing" | "Secure" {
 
 function normalizeRubric(r: unknown): GradeResult["rubric"] {
   if (!Array.isArray(r)) return [];
-  return r.slice(0, 4).map((item: any) => ({
-    criterion: clampNote(item?.criterion, 80),
-    score: normalizeScore(item?.score),
-    evidence: clampNote(item?.evidence, 140),
-  })).filter((x) => x.criterion);
+  return r
+    .slice(0, 4)
+    .map((item: any) => ({
+      criterion: clampNote(item?.criterion, 80),
+      score: normalizeScore(item?.score),
+      evidence: clampNote(item?.evidence, 140),
+    }))
+    .filter((x) => x.criterion);
 }
 
 function normalizeInsights(r: unknown): GradeResult["insights"] {
@@ -112,9 +113,7 @@ function normalize(raw: any): GradeResult {
   const lvl = Number(raw?.understandingLevel);
   return {
     verdict: normalizeVerdict(raw?.verdict),
-    understandingLevel: Number.isFinite(lvl)
-      ? Math.max(1, Math.min(5, Math.round(lvl)))
-      : 3,
+    understandingLevel: Number.isFinite(lvl) ? Math.max(1, Math.min(5, Math.round(lvl))) : 3,
     strengths: Array.isArray(raw?.strengths)
       ? raw.strengths.slice(0, 2).map((x: unknown) => clampNote(x, 120))
       : [],
@@ -127,7 +126,6 @@ function normalize(raw: any): GradeResult {
     insights: normalizeInsights(raw?.insights),
   };
 }
-
 
 export const gradeExplanation = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => Input.parse(input))
@@ -157,7 +155,6 @@ export const gradeExplanation = createServerFn({ method: "POST" })
       "evidence is ≤22 words referencing the child's actual words, or 'Not mentioned in explanation.' if absent. " +
       "Use adult-facing, neutral, observational language in insights — this is for parents and educators.";
 
-
     const prompt =
       `Case: ${data.caseTitle} — ${data.subTitle}\n` +
       `Concept being learned: ${data.conceptMastered}\n` +
@@ -180,7 +177,7 @@ export const gradeExplanation = createServerFn({ method: "POST" })
           model,
           system:
             system +
-            ' Respond ONLY with compact JSON of shape ' +
+            " Respond ONLY with compact JSON of shape " +
             '{"verdict":"correct"|"partial"|"review","understandingLevel":1-5,' +
             '"strengths":["..."],"gaps":["..."],"nextStep":"...","note":"...",' +
             '"rubric":[{"criterion":"...","score":"met|partial|missing","evidence":"..."}],' +

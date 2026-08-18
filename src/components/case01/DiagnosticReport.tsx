@@ -35,11 +35,9 @@ export function DiagnosticReport({
   onTryAnother,
   nextCaseLabel = "Case 02 — comparing fair shares.",
 }: Props) {
-  const total =
-    marks.investigate + marks.detect + marks.repair + marks.explain;
+  const total = marks.investigate + marks.detect + marks.repair + marks.explain;
   const maxTotal = MAX_PER_STEP * 4;
-  const evidenceStatement =
-    [...studentQuotes].sort((a, b) => b.length - a.length)[0] ?? "";
+  const evidenceStatement = [...studentQuotes].sort((a, b) => b.length - a.length)[0] ?? "";
 
   const thanks =
     "Thank you for teaching me, Detective. You helped me learn what fair sharing really means.";
@@ -55,9 +53,7 @@ export function DiagnosticReport({
     >
       <header className="flex items-start justify-between gap-4 border-b border-neutral-100 pb-5">
         <div>
-          <div className="text-xs font-bold tracking-[0.2em] text-[#10b981]">
-            CASE CLOSED
-          </div>
+          <div className="text-xs font-bold tracking-[0.2em] text-[#10b981]">CASE CLOSED</div>
           <h2 className="mt-1 text-2xl font-bold tracking-tight text-neutral-900">
             Diagnostic Report
           </h2>
@@ -79,9 +75,7 @@ export function DiagnosticReport({
       {/* Marks */}
       <div className="mt-6 rounded-2xl border border-neutral-100 bg-[#f8fafc] p-5">
         <div className="flex items-center justify-between border-b border-neutral-200/70 pb-3">
-          <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">
-            Marks
-          </div>
+          <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Marks</div>
           <span className="rounded-full bg-[#dcfce7] px-3 py-1 text-sm font-bold text-[#166534]">
             {total} / {maxTotal}
           </span>
@@ -98,8 +92,6 @@ export function DiagnosticReport({
         </div>
       </div>
 
-
-
       {/* Concept mastered */}
       <div className="mt-6">
         <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">
@@ -110,7 +102,6 @@ export function DiagnosticReport({
           <SpeakButton text={`Concept mastered. ${conceptMastered}`} />
         </div>
       </div>
-
 
       {/* Evidence */}
       <div className="mt-6">
@@ -143,7 +134,9 @@ export function DiagnosticReport({
           </div>
           <ul className="mt-2 space-y-1 text-sm text-neutral-600">
             {studentQuotes.map((q, i) => (
-              <li key={i} className="leading-snug">• {q}</li>
+              <li key={i} className="leading-snug">
+                • {q}
+              </li>
             ))}
           </ul>
         </div>
@@ -151,10 +144,12 @@ export function DiagnosticReport({
 
       {/* Next */}
       <div className="mt-6 flex items-center gap-2 rounded-2xl bg-[#fff4cc] px-5 py-4 text-sm text-[#7c5e10]">
-        <span><span className="font-bold">Next up: </span>{nextCaseLabel}</span>
+        <span>
+          <span className="font-bold">Next up: </span>
+          {nextCaseLabel}
+        </span>
         <SpeakButton text={`Next up. ${nextCaseLabel}`} />
       </div>
-
 
       {/* Actions */}
       <div className="mt-6 flex flex-wrap items-center justify-end gap-3 print:hidden">
@@ -194,7 +189,13 @@ export function DiagnosticReport({
 function CheckDot() {
   return (
     <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10b981] text-white">
-      <svg viewBox="0 0 20 20" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3">
+      <svg
+        viewBox="0 0 20 20"
+        className="h-3 w-3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+      >
         <path d="M5 10l3 3 7-7" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </span>

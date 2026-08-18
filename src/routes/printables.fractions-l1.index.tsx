@@ -77,9 +77,7 @@ function FractionsCollectionPage() {
                 </div>
                 <div className="text-white">
                   <div className="text-[10px] font-mono tracking-[0.3em] opacity-70">FRACTIONS</div>
-                  <div className="text-2xl font-black uppercase leading-none mt-1">
-                    Foundations
-                  </div>
+                  <div className="text-2xl font-black uppercase leading-none mt-1">Foundations</div>
                 </div>
               </div>
 
@@ -169,7 +167,10 @@ function FractionsCollectionPage() {
                     <p className="mt-2 text-sm" style={{ color: MUTED }}>
                       {block.lead}
                     </p>
-                    <ul className="mt-3 space-y-1.5 text-sm leading-relaxed" style={{ color: MUTED }}>
+                    <ul
+                      className="mt-3 space-y-1.5 text-sm leading-relaxed"
+                      style={{ color: MUTED }}
+                    >
                       {block.items.map((i) => (
                         <li key={i} className="flex gap-2">
                           <span aria-hidden style={{ color: YELLOW }}>

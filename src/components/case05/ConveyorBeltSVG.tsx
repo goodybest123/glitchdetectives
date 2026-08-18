@@ -35,15 +35,7 @@ export function ConveyorBeltSVG({ solved, pulseKey }: VisualProps) {
           {solved ? (
             <Crate x={315} y={30} slots={5} filled={3} label="3/5" highlight />
           ) : (
-            <Crate
-              x={315}
-              y={30}
-              slots={10}
-              filled={3}
-              label="3/10"
-              tiny
-              wrongTint
-            />
+            <Crate x={315} y={30} slots={10} filled={3} label="3/10" tiny wrongTint />
           )}
         </g>
       </svg>

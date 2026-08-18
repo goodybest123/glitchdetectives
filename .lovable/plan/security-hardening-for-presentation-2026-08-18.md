@@ -14,12 +14,14 @@ Run a full security audit and fix the findings before today's presentation, then
 ## Plan
 
 ### 1. Dependency remediation
+
 - Review the exact TanStack versions and the `seroval` advisory.
 - If a safe upgrade path exists (patch or minor version bump that resolves the advisory), update `package.json`, regenerate the lockfile, and run `bun install`.
 - Verify the build still passes and the route tree works after the upgrade.
 - If the vulnerable version is locked by Lovable's template and cannot be safely upgraded without breaking the framework, record the risk and mitigation in `docs/security-posture.md` and propose ignoring the scanner warning with a clear explanation.
 
 ### 2. Backend security verification
+
 - Re-run the Supabase/security scanner after any dependency changes.
 - Confirm that no `public` tables were added without RLS grants since the last scan.
 - Review `src/routes/api/chat/*.ts` for:
@@ -29,6 +31,7 @@ Run a full security audit and fix the findings before today's presentation, then
 - Review `src/lib/report.functions.ts` (AI grading) for input size limits and safe fallback handling.
 
 ### 3. AI safety & child-safety checks
+
 - Verify every system prompt in `src/routes/api/chat/case-*.ts` prohibits:
   - giving direct answers to the child,
   - collecting personal information,
@@ -38,16 +41,19 @@ Run a full security audit and fix the findings before today's presentation, then
 - Document the AI safety layers in `docs/security-posture.md`.
 
 ### 4. Privacy review
+
 - Confirm no sign-up, no PII fields, and no telemetry scripts are present in the client bundle.
 - Document that progress and reports live only in the browser's `localStorage` and are never transmitted to the backend except the explicit AI grading request (which contains only the case metadata and the child's explanation, no name or identifier).
 - Review external links (Seler workbook, Google Drive) to ensure they open in a new tab and do not embed tracking.
 
 ### 5. Security headers & published-site posture
+
 - Check the published response headers for basic protections (TLS, `X-Content-Type-Options`, `Referrer-Policy`).
 - Note that a Content Security Policy is not currently in place; decide whether adding one is feasible before the presentation or should be documented as a post-launch improvement.
 - Confirm the published site is HTTPS-only and the custom domain (if any) is not in scope.
 
 ### 6. Documentation for judges
+
 - Create `docs/security-posture.md` with:
   - One-paragraph summary of the architecture (Cloudflare Workers + Lovable Cloud + AI Gateway).
   - List of active security controls (no accounts, localStorage-only data, structured Zod outputs, prompt guardrails, input validation).
@@ -56,6 +62,7 @@ Run a full security audit and fix the findings before today's presentation, then
 - Add a short "Security & Privacy" section to the README or a link to the new doc.
 
 ### 7. Final verification
+
 - Run the build after dependency changes.
 - Re-run dependency and security scans.
 - Smoke-test the published preview: confirm the landing page, a case, the report, and the printables page still load correctly.

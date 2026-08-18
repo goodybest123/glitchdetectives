@@ -14,9 +14,17 @@ export const Route = createFileRoute("/printables/")({
   head: () => ({
     meta: [
       { title: "Printables Library — Glitch Detectives" },
-      { name: "description", content: "Calm, hands-on, off-screen maths reasoning printables for K–6. Investigate, detect, and repair — together, away from the screen." },
+      {
+        name: "description",
+        content:
+          "Calm, hands-on, off-screen maths reasoning printables for K–6. Investigate, detect, and repair — together, away from the screen.",
+      },
       { property: "og:title", content: "The Glitch Detective Printables Library" },
-      { property: "og:description", content: "Low-stimulation, neuro-inclusive maths printables for K–6 families who love screen-free learning." },
+      {
+        property: "og:description",
+        content:
+          "Low-stimulation, neuro-inclusive maths printables for K–6 families who love screen-free learning.",
+      },
     ],
   }),
   component: PrintablesPage,

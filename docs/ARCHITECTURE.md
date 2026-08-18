@@ -37,27 +37,27 @@ Everything server-side runs on Cloudflare Workers with `nodejs_compat`. There is
 
 Routes are file-based under `src/routes/`. The Vite plugin generates `routeTree.gen.ts` — never edit it by hand.
 
-| Route | File | Purpose |
-| --- | --- | --- |
-| `/` | `routes/index.tsx` | Landing page (hero, sections, workbook CTA) |
-| `/play` | `routes/play.tsx` + `play.index.tsx` | Case picker |
-| `/play/case-0N` | `routes/play.case-0N.tsx` (N = 1–6) | The four-step loop for a specific case |
-| `/play/report` | `routes/play.report.tsx` | Adult-facing Cognitive Insights report |
-| `/printables` | `routes/printables.tsx` + `printables.fractions-l*.tsx` | Workbook download pages |
-| `/api/chat/case-*` | `routes/api/chat/*.ts` | In-scene chat endpoints ZED-4 talks through |
+| Route              | File                                                    | Purpose                                     |
+| ------------------ | ------------------------------------------------------- | ------------------------------------------- |
+| `/`                | `routes/index.tsx`                                      | Landing page (hero, sections, workbook CTA) |
+| `/play`            | `routes/play.tsx` + `play.index.tsx`                    | Case picker                                 |
+| `/play/case-0N`    | `routes/play.case-0N.tsx` (N = 1–6)                     | The four-step loop for a specific case      |
+| `/play/report`     | `routes/play.report.tsx`                                | Adult-facing Cognitive Insights report      |
+| `/printables`      | `routes/printables.tsx` + `printables.fractions-l*.tsx` | Workbook download pages                     |
+| `/api/chat/case-*` | `routes/api/chat/*.ts`                                  | In-scene chat endpoints ZED-4 talks through |
 
 ## The 6 cases
 
 Each case owns its own folder with SVG glitches, a case picker, a stepper, and a `cases.ts` data file that describes each sub-case (glitch summary, correct answer, concept).
 
-| Case | Concept | Folder | Chat endpoints |
-| --- | --- | --- | --- |
-| 01 | Parts of a whole | `components/case01/` | `case-01.ts`, `case-01-canvas.ts`, `case-01-chocolate.ts` |
-| 02 | Numerator vs denominator | `components/case02/` | `case-02-bar.ts`, `case-02-crate.ts`, `case-02-panels.ts` |
-| 03 | Comparing fractions | `components/case03/` | `case-03-tanks.ts`, `case-03-garden.ts`, `case-03-disks.ts` |
-| 04 | Equivalence | `components/case04/` | `case-04-beams.ts`, `case-04-coolant.ts`, `case-04-cargo.ts` |
-| 05 | Common denominators | `components/case05/` | `case-05-assembly.ts`, `case-05-conveyor.ts`, `case-05-coolant.ts` |
-| 06 | Multi-step reasoning | `components/case06/` | `case-06-blueprint.ts`, `case-06-circuit.ts`, `case-06-paint.ts` |
+| Case | Concept                  | Folder               | Chat endpoints                                                     |
+| ---- | ------------------------ | -------------------- | ------------------------------------------------------------------ |
+| 01   | Parts of a whole         | `components/case01/` | `case-01.ts`, `case-01-canvas.ts`, `case-01-chocolate.ts`          |
+| 02   | Numerator vs denominator | `components/case02/` | `case-02-bar.ts`, `case-02-crate.ts`, `case-02-panels.ts`          |
+| 03   | Comparing fractions      | `components/case03/` | `case-03-tanks.ts`, `case-03-garden.ts`, `case-03-disks.ts`        |
+| 04   | Equivalence              | `components/case04/` | `case-04-beams.ts`, `case-04-coolant.ts`, `case-04-cargo.ts`       |
+| 05   | Common denominators      | `components/case05/` | `case-05-assembly.ts`, `case-05-conveyor.ts`, `case-05-coolant.ts` |
+| 06   | Multi-step reasoning     | `components/case06/` | `case-06-blueprint.ts`, `case-06-circuit.ts`, `case-06-paint.ts`   |
 
 ## AI grading pipeline
 
@@ -79,8 +79,8 @@ Storage key: `gd:report:v4`. Bumping the version invalidates old shapes.
 
 ```ts
 type ReportEntry = {
-  caseId: string;      // "case-01"
-  subId: string;       // "pizza"
+  caseId: string; // "case-01"
+  subId: string; // "pizza"
   caseTitle: string;
   subTitle: string;
   emoji: string;
@@ -92,12 +92,12 @@ type ReportEntry = {
   verdictNote: string;
   solvedAt: number;
   // AI-added on patch:
-  understandingLevel?: number;    // 1–5
+  understandingLevel?: number; // 1–5
   strengths?: string[];
   gaps?: string[];
   nextStep?: string;
-  rubric?: { criterion; score: "met"|"partial"|"missing"; evidence }[];
-  insights?: { dimension; level: "Emerging"|"Developing"|"Secure"; evidence }[];
+  rubric?: { criterion; score: "met" | "partial" | "missing"; evidence }[];
+  insights?: { dimension; level: "Emerging" | "Developing" | "Secure"; evidence }[];
 };
 ```
 

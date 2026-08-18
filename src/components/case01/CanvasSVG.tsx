@@ -14,15 +14,11 @@ const W = 400;
 const H = 240;
 const PAD = 24;
 
-export function CanvasSVG({
-  equalized,
-  onGlitchClick,
-  interactive = false,
-  pulseKey = 0,
-}: Props) {
-  const pos = equalized <= 0.5
-    ? LEFT + (CENTER - LEFT) * (equalized / 0.5)
-    : CENTER + (RIGHT - CENTER) * ((equalized - 0.5) / 0.5);
+export function CanvasSVG({ equalized, onGlitchClick, interactive = false, pulseKey = 0 }: Props) {
+  const pos =
+    equalized <= 0.5
+      ? LEFT + (CENTER - LEFT) * (equalized / 0.5)
+      : CENTER + (RIGHT - CENTER) * ((equalized - 0.5) / 0.5);
   const innerW = W - PAD * 2;
   const innerH = H - PAD * 2;
   const dividerX = PAD + pos * innerW;

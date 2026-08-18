@@ -20,8 +20,7 @@ export function AssemblyLineSVG({ solved, pulseKey }: VisualProps) {
     const a = (i / slots) * Math.PI * 2 - Math.PI / 2;
     pts.push({ x: cx + Math.cos(a) * radius, y: cy + Math.sin(a) * radius });
   }
-  const polyD =
-    pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ") + " Z";
+  const polyD = pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ") + " Z";
 
   return (
     <div className="flex flex-col items-center">
@@ -66,14 +65,7 @@ export function AssemblyLineSVG({ solved, pulseKey }: VisualProps) {
           );
         })}
 
-        <text
-          x={cx}
-          y={H - 12}
-          textAnchor="middle"
-          fontSize="13"
-          fontWeight="800"
-          fill="#475569"
-        >
+        <text x={cx} y={H - 12} textAnchor="middle" fontSize="13" fontWeight="800" fill="#475569">
           MOTHERBOARD ({slots} SIDES)
         </text>
       </svg>

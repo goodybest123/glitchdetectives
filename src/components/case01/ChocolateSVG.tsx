@@ -48,7 +48,14 @@ export function ChocolateSVG({
         </defs>
 
         {/* Foil background */}
-        <rect x={PAD - 8} y={PAD + 20 - 8} width={innerW + 16} height={H - 40 + 16} rx={10} fill="#e9eef5" />
+        <rect
+          x={PAD - 8}
+          y={PAD + 20 - 8}
+          width={innerW + 16}
+          height={H - 40 + 16}
+          rx={10}
+          fill="#e9eef5"
+        />
 
         {/* Chocolate segments */}
         {[0, 1, 2].map((i) => (
@@ -93,15 +100,17 @@ export function ChocolateSVG({
         ))}
 
         {/* Three friend icons under the bar */}
-        {[xs[0] + (xs[1] - xs[0]) / 2, xs[1] + (xs[2] - xs[1]) / 2, xs[2] + (xs[3] - xs[2]) / 2].map(
-          (cx, i) => (
-            <g key={i} style={{ transition: "all 400ms ease" }} pointerEvents="none">
-              <rect x={cx - 8} y={H + 20} width={16} height={14} rx={3} fill="#64748b" />
-              <circle cx={cx - 3} cy={H + 26} r={1.6} fill="#a5f3fc" />
-              <circle cx={cx + 3} cy={H + 26} r={1.6} fill="#a5f3fc" />
-            </g>
-          ),
-        )}
+        {[
+          xs[0] + (xs[1] - xs[0]) / 2,
+          xs[1] + (xs[2] - xs[1]) / 2,
+          xs[2] + (xs[3] - xs[2]) / 2,
+        ].map((cx, i) => (
+          <g key={i} style={{ transition: "all 400ms ease" }} pointerEvents="none">
+            <rect x={cx - 8} y={H + 20} width={16} height={14} rx={3} fill="#64748b" />
+            <circle cx={cx - 3} cy={H + 26} r={1.6} fill="#a5f3fc" />
+            <circle cx={cx + 3} cy={H + 26} r={1.6} fill="#a5f3fc" />
+          </g>
+        ))}
 
         {interactive && (
           <rect

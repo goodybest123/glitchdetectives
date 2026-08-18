@@ -9,7 +9,10 @@ type Props = { onComplete: () => void };
 export function CircuitSegmenter({ onComplete }: Props) {
   const W = 480;
   const H = 240;
-  const cellX = 30, cellY = 40, cellW = 130, cellH = 160;
+  const cellX = 30,
+    cellY = 40,
+    cellW = 130,
+    cellH = 160;
   const [cuts, setCuts] = useState<[boolean, boolean, boolean]>([false, false, false]);
   const [ejected, setEjected] = useState(false);
   const completedRef = useRef(false);
@@ -40,7 +43,10 @@ export function CircuitSegmenter({ onComplete }: Props) {
 
   return (
     <div className="flex flex-col items-center">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-[240px] w-full max-w-[500px] touch-none select-none">
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="h-[240px] w-full max-w-[500px] touch-none select-none"
+      >
         <rect x={10} y={10} width={W - 20} height={H - 20} rx={14} fill="#0f172a" />
         <g stroke="#1e293b" strokeWidth={1} fill="none">
           <path d="M 20 60 L 200 60 L 200 200" />
@@ -49,10 +55,38 @@ export function CircuitSegmenter({ onComplete }: Props) {
 
         {/* LEFT: power cell */}
         <g>
-          <rect x={cellX} y={cellY} width={cellW} height={cellH} rx={10} fill={allCut ? "none" : "#34d399"} stroke="#10b981" strokeWidth={2.5} />
-          {!allCut && <rect x={cellX + 6} y={cellY + 6} width={cellW - 12} height={10} rx={4} fill="#6ee7b7" opacity={0.8} />}
+          <rect
+            x={cellX}
+            y={cellY}
+            width={cellW}
+            height={cellH}
+            rx={10}
+            fill={allCut ? "none" : "#34d399"}
+            stroke="#10b981"
+            strokeWidth={2.5}
+          />
           {!allCut && (
-            <text x={cellX + cellW / 2} y={cellY + cellH / 2 + 8} textAnchor="middle" fontSize="24" fontWeight="900" fill="#064e3b">1/2</text>
+            <rect
+              x={cellX + 6}
+              y={cellY + 6}
+              width={cellW - 12}
+              height={10}
+              rx={4}
+              fill="#6ee7b7"
+              opacity={0.8}
+            />
+          )}
+          {!allCut && (
+            <text
+              x={cellX + cellW / 2}
+              y={cellY + cellH / 2 + 8}
+              textAnchor="middle"
+              fontSize="24"
+              fontWeight="900"
+              fill="#064e3b"
+            >
+              1/2
+            </text>
           )}
 
           {/* Once cut, render four segments (with bottom ejected after Eject) */}
@@ -62,9 +96,35 @@ export function CircuitSegmenter({ onComplete }: Props) {
               const sy = cellY + i * segH;
               const removed = ejected && i === 3;
               return (
-                <g key={i} style={{ transition: "transform 500ms ease, opacity 500ms ease", transform: removed ? `translate(60px,0)` : undefined, opacity: removed ? 0.25 : 1 }}>
-                  <rect x={cellX + 4} y={sy + 3} width={cellW - 8} height={segH - 6} rx={4} fill={removed ? "#1e293b" : "#34d399"} stroke={removed ? "#475569" : "#10b981"} strokeWidth={1.5} strokeDasharray={removed ? "4 3" : undefined} />
-                  <text x={cellX + cellW / 2} y={sy + segH / 2 + 5} textAnchor="middle" fontSize="12" fontWeight="800" fill={removed ? "#64748b" : "#064e3b"}>1/8</text>
+                <g
+                  key={i}
+                  style={{
+                    transition: "transform 500ms ease, opacity 500ms ease",
+                    transform: removed ? `translate(60px,0)` : undefined,
+                    opacity: removed ? 0.25 : 1,
+                  }}
+                >
+                  <rect
+                    x={cellX + 4}
+                    y={sy + 3}
+                    width={cellW - 8}
+                    height={segH - 6}
+                    rx={4}
+                    fill={removed ? "#1e293b" : "#34d399"}
+                    stroke={removed ? "#475569" : "#10b981"}
+                    strokeWidth={1.5}
+                    strokeDasharray={removed ? "4 3" : undefined}
+                  />
+                  <text
+                    x={cellX + cellW / 2}
+                    y={sy + segH / 2 + 5}
+                    textAnchor="middle"
+                    fontSize="12"
+                    fontWeight="800"
+                    fill={removed ? "#64748b" : "#064e3b"}
+                  >
+                    1/8
+                  </text>
                 </g>
               );
             })}
@@ -78,7 +138,15 @@ export function CircuitSegmenter({ onComplete }: Props) {
             return (
               <g key={k}>
                 {isCut ? (
-                  <line x1={cellX + 4} y1={y} x2={cellX + cellW - 4} y2={y} stroke="#fbbf24" strokeWidth={2} style={{ animation: "tappable-pulse 500ms ease-out" }} />
+                  <line
+                    x1={cellX + 4}
+                    y1={y}
+                    x2={cellX + cellW - 4}
+                    y2={y}
+                    stroke="#fbbf24"
+                    strokeWidth={2}
+                    style={{ animation: "tappable-pulse 500ms ease-out" }}
+                  />
                 ) : (
                   <g
                     role="button"
@@ -96,27 +164,78 @@ export function CircuitSegmenter({ onComplete }: Props) {
                     }}
                     style={{ cursor: "pointer", outline: "none" }}
                   >
-                    <rect x={cellX - 4} y={y - 12} width={cellW + 8} height={24} fill="transparent" />
-                    <line x1={cellX + 4} y1={y} x2={cellX + cellW - 4} y2={y} stroke="#fbbf24" strokeWidth={1.5} strokeDasharray="4 3" style={{ animation: "tappable-pulse 1.4s ease-in-out infinite" }} />
-                    <circle cx={cellX + cellW + 8} cy={y} r={5} fill="#fbbf24" stroke="#b45309" strokeWidth={1} />
+                    <rect
+                      x={cellX - 4}
+                      y={y - 12}
+                      width={cellW + 8}
+                      height={24}
+                      fill="transparent"
+                    />
+                    <line
+                      x1={cellX + 4}
+                      y1={y}
+                      x2={cellX + cellW - 4}
+                      y2={y}
+                      stroke="#fbbf24"
+                      strokeWidth={1.5}
+                      strokeDasharray="4 3"
+                      style={{ animation: "tappable-pulse 1.4s ease-in-out infinite" }}
+                    />
+                    <circle
+                      cx={cellX + cellW + 8}
+                      cy={y}
+                      r={5}
+                      fill="#fbbf24"
+                      stroke="#b45309"
+                      strokeWidth={1}
+                    />
                   </g>
                 )}
               </g>
             );
           })}
 
-        <text x={195} y={130} textAnchor="middle" fontSize="32" fontWeight="900" fill="#cbd5e1">−</text>
+        <text x={195} y={130} textAnchor="middle" fontSize="32" fontWeight="900" fill="#cbd5e1">
+          −
+        </text>
 
         {/* Chip */}
         <g>
-          <rect x={220} y={108} width={56} height={44} rx={4} fill="#fde68a" stroke="#ca8a04" strokeWidth={2} />
+          <rect
+            x={220}
+            y={108}
+            width={56}
+            height={44}
+            rx={4}
+            fill="#fde68a"
+            stroke="#ca8a04"
+            strokeWidth={2}
+          />
           {Array.from({ length: 4 }).map((_, i) => (
-            <line key={`t${i}`} x1={228 + i * 12} y1={102} x2={228 + i * 12} y2={108} stroke="#ca8a04" strokeWidth={1.5} />
+            <line
+              key={`t${i}`}
+              x1={228 + i * 12}
+              y1={102}
+              x2={228 + i * 12}
+              y2={108}
+              stroke="#ca8a04"
+              strokeWidth={1.5}
+            />
           ))}
           {Array.from({ length: 4 }).map((_, i) => (
-            <line key={`b${i}`} x1={228 + i * 12} y1={152} x2={228 + i * 12} y2={158} stroke="#ca8a04" strokeWidth={1.5} />
+            <line
+              key={`b${i}`}
+              x1={228 + i * 12}
+              y1={152}
+              x2={228 + i * 12}
+              y2={158}
+              stroke="#ca8a04"
+              strokeWidth={1.5}
+            />
           ))}
-          <text x={248} y={135} textAnchor="middle" fontSize="13" fontWeight="900" fill="#713f12">1/8</text>
+          <text x={248} y={135} textAnchor="middle" fontSize="13" fontWeight="900" fill="#713f12">
+            1/8
+          </text>
         </g>
 
         <g>
@@ -154,25 +273,70 @@ export function CircuitSegmenter({ onComplete }: Props) {
   );
 }
 
-function OutputBoard({ x, y, slots, filled, label, tone, tiny }: { x: number; y: number; slots: number; filled: number; label: string; tone: "good" | "bad"; tiny?: boolean }) {
+function OutputBoard({
+  x,
+  y,
+  slots,
+  filled,
+  label,
+  tone,
+  tiny,
+}: {
+  x: number;
+  y: number;
+  slots: number;
+  filled: number;
+  label: string;
+  tone: "good" | "bad";
+  tiny?: boolean;
+}) {
   const w = tiny ? 80 : 110;
   const segH = tiny ? 14 : 160 / slots;
   const h = segH * slots;
   const border = tone === "good" ? "#10b981" : "#f97316";
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={8} fill="#0b1220" stroke={border} strokeWidth={2.5} />
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={8}
+        fill="#0b1220"
+        stroke={border}
+        strokeWidth={2.5}
+      />
       {Array.from({ length: slots }).map((_, i) => {
         const sy = y + i * segH;
         const isFilled = i >= slots - filled;
         return (
           <g key={i}>
             <line x1={x} y1={sy} x2={x + w} y2={sy} stroke="#1e293b" strokeWidth={1} />
-            {isFilled && <rect x={x + 3} y={sy + 2} width={w - 6} height={segH - 4} rx={2} fill="#34d399" stroke="#10b981" strokeWidth={1} />}
+            {isFilled && (
+              <rect
+                x={x + 3}
+                y={sy + 2}
+                width={w - 6}
+                height={segH - 4}
+                rx={2}
+                fill="#34d399"
+                stroke="#10b981"
+                strokeWidth={1}
+              />
+            )}
           </g>
         );
       })}
-      <text x={x + w / 2} y={y + h + 18} textAnchor="middle" fontSize="13" fontWeight="800" fill="#e2e8f0">{label}</text>
+      <text
+        x={x + w / 2}
+        y={y + h + 18}
+        textAnchor="middle"
+        fontSize="13"
+        fontWeight="800"
+        fill="#e2e8f0"
+      >
+        {label}
+      </text>
     </g>
   );
 }

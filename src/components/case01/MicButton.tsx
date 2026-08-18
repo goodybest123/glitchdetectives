@@ -14,10 +14,15 @@ type SRConstructor = new () => any;
 function getRecognition(): SRConstructor | null {
   if (typeof window === "undefined") return null;
   const w = window as any;
-  return (w.SpeechRecognition ?? w.webkitSpeechRecognition) ?? null;
+  return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
-export function MicButton({ onTranscript, disabled, onListeningChange, silenceMs = 5000 }: MicButtonProps) {
+export function MicButton({
+  onTranscript,
+  disabled,
+  onListeningChange,
+  silenceMs = 5000,
+}: MicButtonProps) {
   const [supported, setSupported] = useState(false);
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +42,11 @@ export function MicButton({ onTranscript, disabled, onListeningChange, silenceMs
   useEffect(() => {
     return () => {
       if (silenceTimerRef.current) window.clearTimeout(silenceTimerRef.current);
-      try { recRef.current?.stop(); } catch { /* noop */ }
+      try {
+        recRef.current?.stop();
+      } catch {
+        /* noop */
+      }
     };
   }, []);
 
@@ -47,7 +56,11 @@ export function MicButton({ onTranscript, disabled, onListeningChange, silenceMs
     if (silenceTimerRef.current) window.clearTimeout(silenceTimerRef.current);
     silenceTimerRef.current = window.setTimeout(() => {
       userStoppedRef.current = true;
-      try { recRef.current?.stop(); } catch { /* noop */ }
+      try {
+        recRef.current?.stop();
+      } catch {
+        /* noop */
+      }
       setListening(false);
     }, silenceMs);
   };
@@ -84,7 +97,12 @@ export function MicButton({ onTranscript, disabled, onListeningChange, silenceMs
     rec.onend = () => {
       // If the user hasn't tapped stop and we're still within silence window, restart transparently.
       if (!userStoppedRef.current) {
-        try { rec.start(); return; } catch { /* fallthrough */ }
+        try {
+          rec.start();
+          return;
+        } catch {
+          /* fallthrough */
+        }
       }
       setListening(false);
     };
@@ -109,7 +127,11 @@ export function MicButton({ onTranscript, disabled, onListeningChange, silenceMs
   const stop = () => {
     userStoppedRef.current = true;
     if (silenceTimerRef.current) window.clearTimeout(silenceTimerRef.current);
-    try { recRef.current?.stop(); } catch { /* noop */ }
+    try {
+      recRef.current?.stop();
+    } catch {
+      /* noop */
+    }
     setListening(false);
   };
 
@@ -129,7 +151,9 @@ export function MicButton({ onTranscript, disabled, onListeningChange, silenceMs
       >
         {listening ? <MicOff size={16} /> : <Mic size={16} />}
       </button>
-      {listening && <span className="text-[11px] font-medium text-red-600">Listening… tap to stop</span>}
+      {listening && (
+        <span className="text-[11px] font-medium text-red-600">Listening… tap to stop</span>
+      )}
       {error && <span className="text-xs text-red-600">{error}</span>}
     </div>
   );

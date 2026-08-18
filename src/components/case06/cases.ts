@@ -72,8 +72,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Standard engineering procedure — I've run the simulation twice and the numbers line up. I added the tops, 1 plus 1 equals 2, then I added the bottoms, 2 plus 4 equals 6. Final answer: 2 over 6. Everything fits in the box. Filed under: completely solved.",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. All pieces are the same size now!",
     },
     captions: {
@@ -84,8 +83,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       solved: "Case closed. Read your diagnostic report below.",
     },
     Visual: BlueprintSVG,
-    conceptMastered:
-      "Adding unlike denominators — pieces must be the same size first",
+    conceptMastered: "Adding unlike denominators — pieces must be the same size first",
     successBanner: "Logic Repaired!",
   },
   paint: {
@@ -108,8 +106,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Routine paint-mix protocol — I verified the math against my schematics. Top numbers: 1 plus 1 makes 2. Bottom numbers: 3 plus 6 makes 9. Therefore the combined vat reads 2 over 9. The blueprint is signed, sealed, and frankly elegant. I do not make mistakes.",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The vats use the same grid now!",
     },
     captions: {
@@ -120,8 +117,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       solved: "Case closed. Read your diagnostic report below.",
     },
     Visual: PaintVatsSVG,
-    conceptMastered:
-      "Adding unlike denominators — the vats need the same measuring grid",
+    conceptMastered: "Adding unlike denominators — the vats need the same measuring grid",
     successBanner: "Logic Repaired!",
   },
   circuit: {
@@ -144,8 +140,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Performing power-cell subtraction by the book. Top: 1 minus 1 is 0. Bottom: 2 minus 8 — I'll round that to 6 for engineering safety. Final reading: 0 over 6 power remaining. Everything checks out. I have run the diagnostics twice, and frankly that should be enough.",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. Power is safe — 3/8 left!",
     },
     captions: {
@@ -156,8 +151,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       solved: "Case closed. Read your diagnostic report below.",
     },
     Visual: CircuitBoardSVG,
-    conceptMastered:
-      "Subtracting unlike denominators — same-size pieces before taking any away",
+    conceptMastered: "Subtracting unlike denominators — same-size pieces before taking any away",
     successBanner: "Logic Repaired!",
   },
 };

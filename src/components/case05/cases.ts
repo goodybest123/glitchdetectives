@@ -70,8 +70,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Ding ding ding — easy points for ZED-4! I added the top parts together AND I added the bottom slots together. One plus two on the top is three, five plus five on the bottom is ten — boom, 3 out of 10! I'd like to thank the audience, this category is too easy!",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The crate stays the same size!",
     },
     captions: {
@@ -105,8 +104,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Survey says — JACKPOT! I subtracted straight across! Top: five minus two equals three. Bottom: eight minus eight equals ZERO. So we have 3 out of 0 coolant left. The crowd goes wild, the buzzers light up — round complete!",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The tank is still there!",
     },
     captions: {
@@ -140,8 +138,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Bonus round bonus round! I added the top chips — 2 plus 3 is 5 — AND I added the bottom sides — 6 plus 6 is 12! So obviously the motherboard upgraded itself to a 12-sided super-board with 5 chips on it. The audience is on their feet — this is my finest work!",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The board is the right size!",
     },
     captions: {

@@ -57,7 +57,6 @@ export type SubCaseDef = {
   conceptMastered: string;
 };
 
-
 export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
   pizza: {
     id: "pizza",
@@ -78,13 +77,11 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Whoa look look look! I served exactly four whole pieces of pizza, one for every robot! Counting all the way to four is a HUGE deal — I am totally, completely sure this is fair sharing!",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The case is yours to close.",
     },
     captions: {
-      investigate:
-        "Scan ZED-4's logic. Click on the pizza where the sharing is not fair.",
+      investigate: "Scan ZED-4's logic. Click on the pizza where the sharing is not fair.",
       detect: "Click on the glitch.",
       repair: "Keep going — make all four parts the same size.",
       explain: "The chat panel is now open. Tell ZED-4 why it wasn't fair.",
@@ -107,22 +104,18 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     toolHint: "Almost there — keep equalizing until the thirds all match.",
     correctTarget: 1,
     targetTolerance: 0.04,
-    welcomeText:
-      "Thanks, Detective! You evened out my chocolate. Why was my first try not fair?",
+    welcomeText: "Thanks, Detective! You evened out my chocolate. Why was my first try not fair?",
     bubbles: {
       investigate:
         "Easy peasy! I snapped this chocolate bar into THREE whole pieces, and three is the magic number for thirds! Three friends, three pieces — case closed! I am one hundred percent positively sure this is perfect sharing!",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. Thanks, Detective.",
     },
     captions: {
-      investigate:
-        "Click the chocolate bar where the pieces are split unfairly.",
+      investigate: "Click the chocolate bar where the pieces are split unfairly.",
       detect: "Click on the glitch.",
       repair: "Keep going — three pieces, all the same size.",
-      explain:
-        "The chat panel is open. Tell ZED-4 why those pieces weren't real thirds.",
+      explain: "The chat panel is open. Tell ZED-4 why those pieces weren't real thirds.",
       solved: "Case closed. Read your diagnostic report below.",
     },
     Visual: ChocolateSVG,
@@ -142,22 +135,18 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     toolHint: "Slide toward the middle until both halves are exactly the same.",
     correctTarget: 0.5,
     targetTolerance: 0.04,
-    welcomeText:
-      "Thanks for centering my canvas! Can you tell me — why was my first try not half?",
+    welcomeText: "Thanks for centering my canvas! Can you tell me — why was my first try not half?",
     bubbles: {
       investigate:
         "Yes yes yes! I painted ONE side and left ONE side, so that is obviously HALF! One and one — that is the official rule for halves! I am so proud of this — beep boop, perfect work!",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The canvas is balanced.",
     },
     captions: {
-      investigate:
-        "Click the line that's splitting the canvas unfairly.",
+      investigate: "Click the line that's splitting the canvas unfairly.",
       detect: "Click on the glitch.",
       repair: "Keep going — make both sides match.",
-      explain:
-        "The chat panel is open. Tell ZED-4 what 'half' really means.",
+      explain: "The chat panel is open. Tell ZED-4 what 'half' really means.",
       solved: "Case closed. Read your diagnostic report below.",
     },
     Visual: CanvasSVG,

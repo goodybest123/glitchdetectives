@@ -23,8 +23,12 @@ export function Navbar() {
             <Search className="w-5 h-5 text-[var(--color-brand-blue)]" strokeWidth={3} />
           </div>
           <div className="leading-none">
-            <div className="text-[var(--color-brand-blue)] text-xl font-black tracking-tight">GLITCH</div>
-            <div className="text-[var(--color-brand-blue)] text-[10px] font-semibold tracking-[0.35em]">DETECTIVES</div>
+            <div className="text-[var(--color-brand-blue)] text-xl font-black tracking-tight">
+              GLITCH
+            </div>
+            <div className="text-[var(--color-brand-blue)] text-[10px] font-semibold tracking-[0.35em]">
+              DETECTIVES
+            </div>
           </div>
         </Link>
         <ul className="hidden md:flex items-center gap-8">
@@ -40,7 +44,6 @@ export function Navbar() {
               Printables
             </Link>
           </li>
-
         </ul>
         <Link
           to="/play"

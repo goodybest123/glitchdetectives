@@ -1,7 +1,15 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import {
-  ArrowLeft, ArrowRight, CircleDot, Clock, Layers, Lock, PieChart, Plus, Shapes,
+  ArrowLeft,
+  ArrowRight,
+  CircleDot,
+  Clock,
+  Layers,
+  Lock,
+  PieChart,
+  Plus,
+  Shapes,
   type LucideIcon,
 } from "lucide-react";
 import fractionsL1Cover from "@/assets/fractions-level-1-cover.png";
@@ -31,11 +39,42 @@ type Category = {
 };
 
 const CATEGORIES: Category[] = [
-  { title: "Fractions", desc: "Equal parts, halves, quarters, and equivalence.", count: "8 printables", bg: "#e8f9f5", icon: PieChart, live: true },
-  { title: "Addition", desc: "Number bonds, regrouping, and gentle word problems.", count: "Coming soon", bg: "#fff4d6", icon: Plus },
-  { title: "Geometry", desc: "Shapes, symmetry, angles, and spatial reasoning.", count: "Coming soon", bg: "#ece8ff", icon: Shapes },
-  { title: "Decimals", desc: "Tenths, hundredths, and place value across the dot.", count: "Coming soon", bg: "#e3f1ff", icon: CircleDot },
-  { title: "Place Value", desc: "Ones, tens, hundreds — building and breaking numbers.", count: "Coming soon", bg: "#ffe8ee", icon: Layers },
+  {
+    title: "Fractions",
+    desc: "Equal parts, halves, quarters, and equivalence.",
+    count: "8 printables",
+    bg: "#e8f9f5",
+    icon: PieChart,
+    live: true,
+  },
+  {
+    title: "Addition",
+    desc: "Number bonds, regrouping, and gentle word problems.",
+    count: "Coming soon",
+    bg: "#fff4d6",
+    icon: Plus,
+  },
+  {
+    title: "Geometry",
+    desc: "Shapes, symmetry, angles, and spatial reasoning.",
+    count: "Coming soon",
+    bg: "#ece8ff",
+    icon: Shapes,
+  },
+  {
+    title: "Decimals",
+    desc: "Tenths, hundredths, and place value across the dot.",
+    count: "Coming soon",
+    bg: "#e3f1ff",
+    icon: CircleDot,
+  },
+  {
+    title: "Place Value",
+    desc: "Ones, tens, hundreds — building and breaking numbers.",
+    count: "Coming soon",
+    bg: "#ffe8ee",
+    icon: Layers,
+  },
 ];
 
 const TABS: TabKey[] = ["All", "Fractions", "Addition", "Geometry", "Decimals", "Place Value"];
@@ -50,8 +89,8 @@ export function CategoryGrid() {
     active === "Fractions"
       ? "Follow the fraction case files in order."
       : active === "All"
-      ? "Each topic opens into a calm collection of detective-style sheets."
-      : `Browse ${active.toLowerCase()} printables.`;
+        ? "Each topic opens into a calm collection of detective-style sheets."
+        : `Browse ${active.toLowerCase()} printables.`;
 
   return (
     <section className="bg-white">
@@ -67,7 +106,9 @@ export function CategoryGrid() {
           </button>
         )}
         <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="label-eyebrow" style={{ color: BLUE }}>Browse by Topic</span>
+          <span className="label-eyebrow" style={{ color: BLUE }}>
+            Browse by Topic
+          </span>
           <h2 className="heading-black uppercase text-3xl sm:text-4xl mt-3" style={{ color: BLUE }}>
             Choose a maths world
           </h2>
@@ -116,7 +157,11 @@ function FilterTabs({ active, onChange }: { active: TabKey; onChange: (t: TabKey
             style={
               isActive
                 ? { background: BLUE, color: "white", borderColor: BLUE }
-                : { background: "transparent", color: MUTED, borderColor: "color-mix(in oklab, var(--color-brand-blue) 15%, transparent)" }
+                : {
+                    background: "transparent",
+                    color: MUTED,
+                    borderColor: "color-mix(in oklab, var(--color-brand-blue) 15%, transparent)",
+                  }
             }
           >
             {t}
@@ -127,7 +172,13 @@ function FilterTabs({ active, onChange }: { active: TabKey; onChange: (t: TabKey
   );
 }
 
-function CategoryCard({ category: c, onActivate }: { category: Category; onActivate?: () => void }) {
+function CategoryCard({
+  category: c,
+  onActivate,
+}: {
+  category: Category;
+  onActivate?: () => void;
+}) {
   const Icon = c.icon;
   const interactive = Boolean(onActivate);
   return (
@@ -239,7 +290,6 @@ const FRACTION_LEVELS: FractionLevel[] = [
   },
 ];
 
-
 function FractionLearningPath() {
   return (
     <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-10">
@@ -283,9 +333,7 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
             className="w-24 h-24 rounded-full flex items-center justify-center"
             style={{
               background: locked ? "rgba(30,41,59,0.06)" : "rgba(255,222,89,0.18)",
-              border: locked
-                ? "2px dashed rgba(30,41,59,0.25)"
-                : `2px dashed ${YELLOW}`,
+              border: locked ? "2px dashed rgba(30,41,59,0.25)" : `2px dashed ${YELLOW}`,
             }}
           >
             <PieChart

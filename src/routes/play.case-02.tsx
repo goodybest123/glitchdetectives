@@ -20,7 +20,12 @@ import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { ChatPanel } from "@/components/shared/ChatPanel";
-import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame, WorkbookRepairSubmit } from "@/components/shared/WorkbookActivity";
+import {
+  WorkbookActivityPrompt,
+  WorkbookGlitchChoices,
+  WorkbookRepairFrame,
+  WorkbookRepairSubmit,
+} from "@/components/shared/WorkbookActivity";
 import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
@@ -66,31 +71,30 @@ function CaseTwoPage() {
       <SubCaseRunner
         key={activeCase}
         caseId={activeCase}
-        onSolved={() =>
-          markSolved(activeCase)
-        }
+        onSolved={() => markSolved(activeCase)}
         onBackToPicker={() => setActiveCase(null)}
       />
     </PageShell>
   );
 }
 
-function PageShell({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function PageShell({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <main className="min-h-screen bg-white">
       <header className="border-b border-neutral-100">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-3 py-2.5 sm:px-6 sm:py-3 lg:px-10">
-          <Link to="/play" className="text-xs sm:text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900">
+          <Link
+            to="/play"
+            className="text-xs sm:text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+          >
             ← Back
           </Link>
-          <h1 className="text-sm sm:text-base font-bold tracking-tight text-neutral-900 truncate px-2">{title}</h1>
-          <div className="flex w-[80px] sm:w-[120px] items-center justify-end"><SoundToggle /></div>
+          <h1 className="text-sm sm:text-base font-bold tracking-tight text-neutral-900 truncate px-2">
+            {title}
+          </h1>
+          <div className="flex w-[80px] sm:w-[120px] items-center justify-end">
+            <SoundToggle />
+          </div>
         </div>
       </header>
       <div className="mx-auto w-full max-w-7xl px-3 py-3 sm:px-6 sm:py-5 lg:px-10">{children}</div>
@@ -132,9 +136,7 @@ function SubCaseRunner({
   const reportRef = useRef<HTMLDivElement>(null);
   const repairRef = useRef<HTMLDivElement>(null);
 
-  const transport = useRef(
-    new DefaultChatTransport({ api: c.chatEndpoint }),
-  ).current;
+  const transport = useRef(new DefaultChatTransport({ api: c.chatEndpoint })).current;
 
   const { messages, sendMessage, status } = useChat({
     id: `case-02-${caseId}`,
@@ -142,9 +144,7 @@ function SubCaseRunner({
     transport,
   });
 
-
-  const atTarget =
-    numerator === c.target.numerator && denominator === c.target.denominator;
+  const atTarget = numerator === c.target.numerator && denominator === c.target.denominator;
 
   useEffect(() => {
     if (stage !== "explain") return;
@@ -231,7 +231,10 @@ function SubCaseRunner({
       messages
         .filter((m) => m.role === "user")
         .map((m) =>
-          m.parts.map((p) => (p.type === "text" ? p.text : "")).join("").trim(),
+          m.parts
+            .map((p) => (p.type === "text" ? p.text : ""))
+            .join("")
+            .trim(),
         )
         .filter(Boolean),
     [messages],
@@ -239,13 +242,7 @@ function SubCaseRunner({
 
   const marks = useMemo(() => {
     const investigate =
-      stage === "investigate"
-        ? 0
-        : wrongVerdictCount === 0
-          ? 5
-          : wrongVerdictCount === 1
-            ? 4
-            : 3;
+      stage === "investigate" ? 0 : wrongVerdictCount === 0 ? 5 : wrongVerdictCount === 1 ? 4 : 3;
     const detect = stage === "investigate" || stage === "detect" ? 0 : 5;
     let repair = 0;
     if (atTarget) {
@@ -317,19 +314,38 @@ function SubCaseRunner({
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6">
         {/* Case file */}
         <section>
-          <div ref={repairRef} className="rounded-2xl bg-white p-3 sm:p-5 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100">
+          <div
+            ref={repairRef}
+            className="rounded-2xl bg-white p-3 sm:p-5 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100"
+          >
             <CaseStepper stage={stage} />
             <div className="mb-6">
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
             {stage === "detect" && (
-              <WorkbookGlitchChoices choices={getGlitchChoices("case-02", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} onCorrect={() => setTimeout(() => repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 100)} />
+              <WorkbookGlitchChoices
+                choices={getGlitchChoices("case-02", caseId)}
+                unlocked={glitchUnlocked}
+                onUnlock={() => setGlitchUnlocked(true)}
+                onCorrect={() =>
+                  setTimeout(
+                    () =>
+                      repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
+                    100,
+                  )
+                }
+              />
             )}
 
-            <WorkbookActivityPrompt stage={stage} emoji={c.emoji} title={c.title}
-              detectInstruction={c.captions.investigate} repairInstruction={c.captions.repair}
-              toolName={c.repair === "swap" ? "Fraction Flipper" : "Number Corrector"} />
+            <WorkbookActivityPrompt
+              stage={stage}
+              emoji={c.emoji}
+              title={c.title}
+              detectInstruction={c.captions.investigate}
+              repairInstruction={c.captions.repair}
+              toolName={c.repair === "swap" ? "Fraction Flipper" : "Number Corrector"}
+            />
 
             <div>
               <Visual
@@ -343,7 +359,6 @@ function SubCaseRunner({
               />
             </div>
 
-
             {stage === "investigate" && !verdictPassed && (
               <VerdictButtons
                 onGlitch={handleVerdictGlitch}
@@ -353,17 +368,20 @@ function SubCaseRunner({
               />
             )}
 
-            {!(stage === "investigate" && !verdictPassed) && (
-              <CaptionLine text={caption} />
-            )}
+            {!(stage === "investigate" && !verdictPassed) && <CaptionLine text={caption} />}
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
-
 
             {stage === "repair" && (
               <WorkbookRepairFrame
                 toolName={c.repair === "swap" ? "Fraction Flipper" : "Number Corrector"}
                 instruction={c.captions.repair}
-                hint={c.glitchTarget === "denominator" ? "The bottom number counts every equal piece." : c.glitchTarget === "numerator" ? "The top number counts only the selected pieces." : "Top tells how many; bottom tells the total."}
+                hint={
+                  c.glitchTarget === "denominator"
+                    ? "The bottom number counts every equal piece."
+                    : c.glitchTarget === "numerator"
+                      ? "The top number counts only the selected pieces."
+                      : "Top tells how many; bottom tells the total."
+                }
                 progress={`${numerator}/${denominator} → ${c.target.numerator}/${c.target.denominator}`}
               >
                 {c.repair === "stepper-denominator" && c.stepperRange && (
@@ -415,7 +433,9 @@ function SubCaseRunner({
           messages={messages}
           isSending={isSending}
           onSend={(text) => sendMessage({ text })}
-          onViewReport={() => reportRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          onViewReport={() =>
+            reportRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
         />
       </div>
     </>
