@@ -149,6 +149,7 @@ src/
 docs/
 ├── ARCHITECTURE.md            Deep-dive tour
 ├── CONTRIBUTING.md            Branching, commits, PR checklist
+├── security-posture.md        Security posture, threat model, AI safety guardrails
 ├── demo-script.md             3-minute demo VO
 ├── rubric-self-assessment.md  Self-score against the BuildVerse rubric
 └── samples/                   Screenshots used in this README
