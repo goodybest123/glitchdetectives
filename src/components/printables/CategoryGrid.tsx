@@ -5,6 +5,15 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import fractionsL1Cover from "@/assets/fractions-level-1-cover.png";
+import {
+  COLLECTION_BADGES,
+  COLLECTION_INTRO,
+  COLLECTION_PDF_URL,
+  COLLECTION_PITCH,
+  COLLECTION_PITCH_HEADING,
+  WHATS_INSIDE,
+  WHATS_INSIDE_INTRO,
+} from "./collection";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
@@ -165,95 +174,71 @@ function CategoryCard({ category: c, onActivate }: { category: Category; onActiv
 /* ---------------- Fraction Learning Path ---------------- */
 
 type FractionLevel = {
-  n: 1 | 2 | 3;
+  n: 1 | 3;
+  /** Short label shown on the tile and above the title. */
+  badge: string;
   title: string;
   desc: ReactNode;
   meta?: string[];
   locked: boolean;
   href?: string;
+  /** Internal route with the buyer-facing page preview. */
+  previewTo?: string;
   cover?: string;
 };
 
 const FRACTION_LEVELS: FractionLevel[] = [
   {
     n: 1,
-    title: "Foundations",
+    badge: "Levels 1 & 2",
+    title: "Fractions — Foundations Collection",
     desc: (
       <>
-        <strong>Turn math practice into a mystery to solve!</strong>
+        <strong>Includes Levels 1 &amp; 2 Missions.</strong>
         <br />
-        Sam is trying to share with his friends, but his math logic keeps glitching. In this interactive workbook, your child becomes the Lead Detective. Instead of boring drills, they investigate Sam's work, spot his mistakes, and teach him the true rules of fractions.
-        <br /><br />
-        <strong>Why Kids & Parents Love It:</strong>
+        {COLLECTION_INTRO}
         <br />
-        The 4-Step Framework: Investigate, Detect, Repair, Explain.
         <br />
-        <strong>Builds Confidence:</strong> Finding someone else's mistakes removes the fear of failure.
+        <strong>{COLLECTION_PITCH_HEADING}</strong>
         <br />
-        <strong>Meaningful Conversations:</strong> The "Explain" step turns quiet practice into deep discussions.
+        {COLLECTION_PITCH[0]}
         <br />
-        <strong>Neuro-Inclusive Design:</strong> Clean, visual, and uncluttered to reduce cognitive overload.
-        <br /><br />
-        <strong>Workbook Details:</strong>
         <br />
-        Focus: Halves, Quarters, & Equal Shares.
+        {COLLECTION_PITCH[1]}
         <br />
-        Best For: Grades 1 & 2 (or a visual reboot for older kids).
+        <br />
+        {COLLECTION_PITCH[2]}
+        <br />
+        <br />
+        <strong>What&apos;s Inside</strong>
+        <br />
+        {WHATS_INSIDE_INTRO}
+        {WHATS_INSIDE.map((block) => (
+          <span key={block.title} className="block mt-3">
+            <strong>{block.title}</strong>
+            <br />
+            {block.lead}
+            <br />
+            {block.items.join(" · ")}
+          </span>
+        ))}
       </>
     ),
-    meta: ["Grade 1-2", "6 pages"],
+    meta: COLLECTION_BADGES,
     locked: false,
-    href: "https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/view?usp=drive_link",
-    cover: fractionsL1Cover,
-  },
-  {
-    n: 2,
-    title: "Numerators & Denominators",
-    desc: (
-      <>
-        <strong>Turn math practice into a mystery to solve!</strong>
-        <br />
-        Sam is back — and his fraction logic keeps glitching in new ways. In this interactive workbook, your child becomes the Lead Detective. Instead of boring drills, they investigate Sam's work, spot his mistakes, and teach him the true rules of fractions.
-        <br /><br />
-        <strong>Why Kids & Parents Love It:</strong>
-        <br />
-        The 4-Step Framework: Investigate, Detect, Repair, Explain.
-        <br />
-        <strong>Builds Confidence:</strong> Finding someone else's mistakes removes the fear of failure.
-        <br />
-        <strong>Meaningful Conversations:</strong> The "Explain" step turns quiet practice into deep discussions.
-        <br />
-        <strong>Neuro-Inclusive Design:</strong> Clean, visual, and uncluttered to reduce cognitive overload.
-        <br /><br />
-        <strong>Workbook Details:</strong>
-        <br />
-        Focus: Numerators and Denominators.
-        <br />
-        Understanding fractions within a set of items.
-        <br />
-        Comparing unit fractions.
-        <br />
-        Adding and subtracting fractions with the same denominator.
-        <br />
-        Equivalent Fractions.
-        <br />
-        Fractions on a number line.
-        <br />
-        Best For: Grades 3–5.
-      </>
-    ),
-    meta: ["Grade 3-5"],
-    locked: false,
-    href: "https://drive.google.com/file/d/1oeicJkXs_tzCcE1mORAn0Fn_Sg6-3RpA/view?usp=drive_link",
+    href: COLLECTION_PDF_URL,
+    previewTo: "/printables/fractions-l1/preview",
     cover: fractionsL1Cover,
   },
   {
     n: 3,
+    badge: "Level 3",
     title: "Classified",
     desc: "Mission classified. Comparison and pathway cases unlock soon.",
     locked: true,
   },
 ];
+
 
 function FractionLearningPath() {
   return (
@@ -318,7 +303,7 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
             color: locked ? "#64748b" : BLUE,
           }}
         >
-          Level {lvl.n}
+          {lvl.badge}
         </span>
 
         {locked && (
@@ -333,7 +318,7 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
       {/* Body */}
       <div className="p-7 flex flex-col flex-1">
         <p className="label-eyebrow" style={{ color: locked ? "#94a3b8" : MUTED }}>
-          Level {lvl.n}
+          {lvl.badge}
         </p>
         <h3
           className="text-2xl font-black uppercase tracking-tight mt-1"
@@ -362,17 +347,28 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
           </div>
         )}
 
-        <div className="mt-7">
+        <div className="mt-7 flex flex-wrap gap-3">
           {!locked && lvl.href ? (
-            <a
-              href={lvl.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
-              style={{ background: BLUE, color: "white" }}
-            >
-              VIEW AND DOWNLOAD CASE FILE <ArrowRight className="w-4 h-4" />
-            </a>
+            <>
+              <a
+                href={lvl.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
+                style={{ background: BLUE, color: "white" }}
+              >
+                VIEW AND DOWNLOAD CASE FILE <ArrowRight className="w-4 h-4" />
+              </a>
+              {lvl.previewTo && (
+                <Link
+                  to={lvl.previewTo}
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs border hover:opacity-80 transition-opacity"
+                  style={{ borderColor: BLUE, color: BLUE }}
+                >
+                  Preview pages
+                </Link>
+              )}
+            </>
           ) : (
             <span
               aria-disabled="true"
