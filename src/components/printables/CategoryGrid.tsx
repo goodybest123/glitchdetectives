@@ -303,7 +303,7 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
             color: locked ? "#64748b" : BLUE,
           }}
         >
-          Level {lvl.n}
+          {lvl.badge}
         </span>
 
         {locked && (
