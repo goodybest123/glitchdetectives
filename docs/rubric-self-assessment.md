@@ -136,9 +136,9 @@ Honest read of the project against the JAF 2026 rubric. Scores are self-rated /5
 
 ---
 
-## Overall self-score: **~28 / 35 (80%)**
+## Overall self-score: **~30.5 / 35 (87%)**
 
-Weighted toward the AI rows (where the product is strongest) and the UX row (where the neurodivergent angle is a genuine differentiator). The version-control row is the drag.
+Weighted toward the AI rows (where the product is strongest) and the UX + documentation rows (where the neurodivergent angle and security posture are genuine differentiators). Version control remains the only drag because the commit history is still Lovable-managed.
 
 ---
 
@@ -146,13 +146,13 @@ Weighted toward the AI rows (where the product is strongest) and the UX row (whe
 
 1. **"AI is the antagonist, not the assistant."** Pre-empts the "is this just a ChatGPT wrapper?" reflex. Point at `gradeExplanation` + the role-reversal loop.
 2. **"The report is qualitative, not a score."** Show `/play/report` on a real explanation — the 4-dimension cognitive insight is the moat vs. any generic math app.
-3. **"Neurodivergent-inclusive by default."** No timers, no red Xs, TTS on every line, voice or text — say it early, before the judge assumes it's an add-on.
+3. **"Privacy-first by design: no child accounts, no PII, all progress stays local."** Back it up with `docs/security-posture.md` and the input-validation helper.
 
 ## Top 3 quick wins before submission
 
-1. **Write a proper `README.md`** (live URL, demo video, screenshots, stack, run instructions). This alone lifts row 1.3 from 3 → 4.5.
-2. **Add `docs/ARCHITECTURE.md`** with a 1-page flow: child → server fn → Lovable AI Gateway (Gemini) → Zod-normalised report → localStorage → `/play/report`.
-3. **Drop 2–3 real Cognitive Insights screenshots** in `docs/samples/` and link them from README + demo script. Evidence beats claims.
+1. **Tag `v1.0-hackathon`** and add a one-line `CHANGELOG.md` — the only remaining version-control gap.
+2. **Run an accessibility pass** (axe / Lighthouse) on `/play/case-01` and paste the pass report into `docs/`.
+3. **Capture a short demo video** (or 3–4 GIFs) of the Case → Explain → Report flow and embed in README.
 
 ## Out of scope for this doc
 
