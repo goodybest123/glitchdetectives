@@ -23,9 +23,10 @@
 10. [Development scripts](#development-scripts)
 11. [AI output example](#ai-output-example)
 12. [Rubric-relevant evidence](#rubric-relevant-evidence)
-13. [Docs](#docs)
-14. [Contributing](#contributing)
-15. [License](#license)
+13. [Security](#security)
+14. [Docs](#docs)
+15. [Contributing](#contributing)
+16. [License](#license)
 
 ---
 
@@ -221,10 +222,17 @@ Mapped to the **2026 BuildVerse Hackathon Edition 1 Rubric**:
 
 Full self-score: [`docs/rubric-self-assessment.md`](docs/rubric-self-assessment.md).
 
+## Security
+
+Glitch Detectives is designed as a privacy-first, low-risk educational app: no child accounts, no PII collection, and all progress stays in the browser's `localStorage`. AI endpoints are protected by input validation, message length caps, and strict system prompts that prevent ZED-4 from giving answers or leaving the educational context.
+
+Full security posture, threat model, and reproduction checklist: [`docs/security-posture.md`](docs/security-posture.md).
+
 ## Docs
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime topology, routing map, AI grading pipeline, extending with a new case
 - [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) — branching, commits, PR checklist
+- [`docs/security-posture.md`](docs/security-posture.md) — security posture, threat model, and AI safety guardrails
 - [`docs/demo-script.md`](docs/demo-script.md) — 3-minute demo video script
 - [`docs/rubric-self-assessment.md`](docs/rubric-self-assessment.md) — honest score against the BuildVerse rubric
 
