@@ -39,7 +39,8 @@ export const Route = createFileRoute("/api/chat/case-03-tanks")({
     handlers: {
       POST: async ({ request }) => {
         const key = process.env.LOVABLE_API_KEY;
-        if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });        const messages = validateChatMessages(await request.json());
+        if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
+        const messages = validateChatMessages(await request.json());
         if (messages instanceof Response) return messages;
         const gateway = createLovableAiGatewayProvider(key);
         const result = streamText({

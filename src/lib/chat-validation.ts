@@ -53,20 +53,18 @@ export function validateChatMessages(body: unknown): UIMessage[] | Response {
     }
 
     if (content.length > MAX_MESSAGE_LENGTH) {
-      return new Response(
-        `Message too long (max ${MAX_MESSAGE_LENGTH} characters)`,
-        { status: 400 }
-      );
+      return new Response(`Message too long (max ${MAX_MESSAGE_LENGTH} characters)`, {
+        status: 400,
+      });
     }
 
     totalLength += content.length;
   }
 
   if (totalLength > MAX_TOTAL_LENGTH) {
-    return new Response(
-      `Total message length exceeds ${MAX_TOTAL_LENGTH} characters`,
-      { status: 400 }
-    );
+    return new Response(`Total message length exceeds ${MAX_TOTAL_LENGTH} characters`, {
+      status: 400,
+    });
   }
 
   return messages as UIMessage[];
