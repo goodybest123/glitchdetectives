@@ -14,9 +14,7 @@ export function NumberStepper({ label, value, min, max, target, onChange }: Prop
 
   return (
     <div className="flex items-center justify-center gap-4">
-      <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">
-        {label}
-      </span>
+      <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">{label}</span>
       <button
         type="button"
         onClick={dec}

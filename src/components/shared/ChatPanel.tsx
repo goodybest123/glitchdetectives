@@ -66,8 +66,14 @@ function ChatPanelDrawer(props: Props) {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-black/40" onClick={() => setOpen(false)}>
-          <div className="mt-auto h-[85vh] rounded-t-3xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 flex flex-col bg-black/40"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="mt-auto h-[85vh] rounded-t-3xl bg-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-2">
               <h2 className="text-sm font-bold tracking-wider text-neutral-700">AI GUIDE</h2>
               <button
@@ -129,8 +135,7 @@ function ChatPanelInner({
     });
   }, [messages.length, visible]);
 
-  const heightClass =
-    variant === "drawer" ? "h-full" : "h-[min(78vh,720px)]";
+  const heightClass = variant === "drawer" ? "h-full" : "h-[min(78vh,720px)]";
 
   return (
     <div

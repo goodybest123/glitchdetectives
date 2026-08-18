@@ -3,9 +3,21 @@ import type { VisualProps } from "./cases";
 export function MemoryDisksSVG({ dividersVisible, spinKey = 0, middleSlot }: VisualProps) {
   return (
     <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-4">
-      <Disk divisions={4} filled={3} label="3/4" dividersVisible={dividersVisible} spinKey={spinKey} />
+      <Disk
+        divisions={4}
+        filled={3}
+        label="3/4"
+        dividersVisible={dividersVisible}
+        spinKey={spinKey}
+      />
       <div>{middleSlot}</div>
-      <Disk divisions={8} filled={6} label="6/8" dividersVisible={dividersVisible} spinKey={spinKey} />
+      <Disk
+        divisions={8}
+        filled={6}
+        label="6/8"
+        dividersVisible={dividersVisible}
+        spinKey={spinKey}
+      />
     </div>
   );
 }

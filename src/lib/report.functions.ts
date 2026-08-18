@@ -19,13 +19,12 @@ import { generateText, Output } from "ai";
 import { z } from "zod";
 import { createLovableAiGatewayProvider } from "./ai-gateway";
 
-
 const Input = z.object({
-  caseTitle: z.string(),
-  subTitle: z.string(),
-  glitchSummary: z.string(),
-  conceptMastered: z.string(),
-  childExplanation: z.string().min(1),
+  caseTitle: z.string().min(1).max(100),
+  subTitle: z.string().min(1).max(120),
+  glitchSummary: z.string().min(1).max(200),
+  conceptMastered: z.string().min(1).max(200),
+  childExplanation: z.string().min(1).max(2000),
 });
 
 const RubricItem = z.object({
@@ -58,7 +57,6 @@ const Schema = z.object({
   insights: z.array(InsightItem).length(4),
 });
 
-
 export type GradeResult = z.infer<typeof Schema>;
 
 function clampNote(s: unknown, max = 160) {
@@ -85,18 +83,30 @@ function normalizeLevel(l: unknown): "Emerging" | "Developing" | "Secure" {
 
 function normalizeRubric(r: unknown): GradeResult["rubric"] {
   if (!Array.isArray(r)) return [];
-  return r.slice(0, 4).map((item: any) => ({
-    criterion: clampNote(item?.criterion, 80),
-    score: normalizeScore(item?.score),
-    evidence: clampNote(item?.evidence, 140),
-  })).filter((x) => x.criterion);
+  return r
+    .slice(0, 4)
+    .map((item) => ({
+      criterion: clampNote((item as Record<string, unknown>)?.criterion, 80),
+      score: normalizeScore((item as Record<string, unknown>)?.score),
+      evidence: clampNote((item as Record<string, unknown>)?.evidence, 140),
+    }))
+    .filter((x) => x.criterion);
 }
 
 function normalizeInsights(r: unknown): GradeResult["insights"] {
   const arr = Array.isArray(r) ? r : [];
-  const byDim = new Map<string, any>();
+  const byDim = new Map<string, Record<string, unknown>>();
   for (const item of arr) {
-    if (item && typeof item.dimension === "string") byDim.set(item.dimension, item);
+    if (
+      item &&
+      typeof item === "object" &&
+      typeof (item as Record<string, unknown>).dimension === "string"
+    ) {
+      byDim.set(
+        (item as Record<string, unknown>).dimension as string,
+        item as Record<string, unknown>,
+      );
+    }
   }
   return DIMENSIONS.map((dim) => {
     const raw = byDim.get(dim);
@@ -108,29 +118,27 @@ function normalizeInsights(r: unknown): GradeResult["insights"] {
   });
 }
 
-function normalize(raw: any): GradeResult {
-  const lvl = Number(raw?.understandingLevel);
+function normalize(raw: unknown): GradeResult {
+  const typed = raw as Record<string, unknown>;
+  const lvl = Number(typed?.understandingLevel);
   return {
-    verdict: normalizeVerdict(raw?.verdict),
-    understandingLevel: Number.isFinite(lvl)
-      ? Math.max(1, Math.min(5, Math.round(lvl)))
-      : 3,
-    strengths: Array.isArray(raw?.strengths)
-      ? raw.strengths.slice(0, 2).map((x: unknown) => clampNote(x, 120))
+    verdict: normalizeVerdict(typed?.verdict),
+    understandingLevel: Number.isFinite(lvl) ? Math.max(1, Math.min(5, Math.round(lvl))) : 3,
+    strengths: Array.isArray(typed?.strengths)
+      ? typed.strengths.slice(0, 2).map((x: unknown) => clampNote(x, 120))
       : [],
-    gaps: Array.isArray(raw?.gaps)
-      ? raw.gaps.slice(0, 2).map((x: unknown) => clampNote(x, 120))
+    gaps: Array.isArray(typed?.gaps)
+      ? typed.gaps.slice(0, 2).map((x: unknown) => clampNote(x, 120))
       : [],
-    nextStep: clampNote(raw?.nextStep, 160),
-    note: clampNote(raw?.note, 160),
-    rubric: normalizeRubric(raw?.rubric),
-    insights: normalizeInsights(raw?.insights),
+    nextStep: clampNote(typed?.nextStep, 160),
+    note: clampNote(typed?.note, 160),
+    rubric: normalizeRubric(typed?.rubric),
+    insights: normalizeInsights(typed?.insights),
   };
 }
 
-
 export const gradeExplanation = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => Input.parse(input))
+  .validator((input: unknown) => Input.parse(input))
   .handler(async ({ data }): Promise<GradeResult> => {
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("Missing LOVABLE_API_KEY");
@@ -157,7 +165,6 @@ export const gradeExplanation = createServerFn({ method: "POST" })
       "evidence is ≤22 words referencing the child's actual words, or 'Not mentioned in explanation.' if absent. " +
       "Use adult-facing, neutral, observational language in insights — this is for parents and educators.";
 
-
     const prompt =
       `Case: ${data.caseTitle} — ${data.subTitle}\n` +
       `Concept being learned: ${data.conceptMastered}\n` +
@@ -180,7 +187,7 @@ export const gradeExplanation = createServerFn({ method: "POST" })
           model,
           system:
             system +
-            ' Respond ONLY with compact JSON of shape ' +
+            " Respond ONLY with compact JSON of shape " +
             '{"verdict":"correct"|"partial"|"review","understandingLevel":1-5,' +
             '"strengths":["..."],"gaps":["..."],"nextStep":"...","note":"...",' +
             '"rubric":[{"criterion":"...","score":"met|partial|missing","evidence":"..."}],' +
@@ -193,7 +200,9 @@ export const gradeExplanation = createServerFn({ method: "POST" })
           const parsed = JSON.parse(match[0]);
           return normalize(parsed);
         }
-      } catch {}
+      } catch {
+        // Both structured output and JSON fallback failed; safe defaults follow.
+      }
       return {
         verdict: "review",
         understandingLevel: 3,

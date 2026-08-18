@@ -63,8 +63,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Trivial! By the universally accepted Law of Bigger Bottom Numbers, 4 is mathematically superior to 2, which means Tank B is mathematically more full. The numbers don't lie — the bigger the bottom, the bigger the fuel. I'd publish this in a textbook.",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. Both tanks hold the same fuel!",
     },
     captions: {
@@ -93,8 +92,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Elementary horticulture, really. By my exclusive theorem — the More-Rows-More-Plants Principle — a bed cut into 6 rows must therefore grow strictly more plants than a bed cut into only 3. The number 6 is BIGGER than 3, and bigger numbers mean bigger gardens. Quod erat demonstrandum.",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. Both beds grow the same plants!",
     },
     captions: {
@@ -123,8 +121,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "A clear application of my patented Bigger-Slice-Count Conjecture: Disk B has SIX slices of data, and six is famously larger than three. Therefore Disk B is storing strictly more data. The math is bulletproof. I have circuits for this kind of thing.",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. Both disks store the same data!",
     },
     captions: {

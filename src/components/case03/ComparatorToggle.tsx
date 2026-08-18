@@ -24,9 +24,7 @@ export function ComparatorToggle({ value, onChange, disabled = false }: Props) {
               disabled={disabled}
               onClick={() => onChange(op)}
               className={`flex h-12 w-14 items-center justify-center rounded-full text-2xl font-black transition-colors ${
-                active
-                  ? "bg-[#1f2937] text-white shadow"
-                  : "text-neutral-600 hover:bg-neutral-100"
+                active ? "bg-[#1f2937] text-white shadow" : "text-neutral-600 hover:bg-neutral-100"
               } disabled:opacity-50`}
               aria-pressed={active}
               aria-label={`Set comparator to ${op}`}

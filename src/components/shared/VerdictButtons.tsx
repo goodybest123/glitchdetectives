@@ -14,8 +14,7 @@ type Props = {
   disabled?: boolean;
 };
 
-const PROMPT =
-  "Your verdict, Detective. Is ZED-4's logic glitched, or is it correct?";
+const PROMPT = "Your verdict, Detective. Is ZED-4's logic glitched, or is it correct?";
 
 /**
  * Two big kid-friendly buttons. The child gives a verdict BEFORE clicking the
@@ -42,9 +41,7 @@ export function VerdictButtons({
   return (
     <div className="mt-6 rounded-2xl border border-[#e5e7eb] bg-[#f8fafc] p-5">
       <div className="mb-3 flex items-start gap-2">
-        <p className="flex-1 text-sm font-semibold text-neutral-700">
-          {PROMPT}
-        </p>
+        <p className="flex-1 text-sm font-semibold text-neutral-700">{PROMPT}</p>
         <SpeakButton text={PROMPT} />
       </div>
 

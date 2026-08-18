@@ -10,16 +10,21 @@ export function CasePicker({ solved, onPick }: Props) {
   return (
     <div className="rounded-3xl bg-white p-6 sm:p-10 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100">
       <div className="mb-6 text-center">
-        <div className="text-xs font-bold tracking-[0.2em] text-[#ea580c]">
-          CASE FILE 05
-        </div>
+        <div className="text-xs font-bold tracking-[0.2em] text-[#ea580c]">CASE FILE 05</div>
         <div className="mt-1 text-sm font-semibold text-neutral-700">
           Topic: Adding & Subtracting — Like Denominators
         </div>
         <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900">
           Choose a combining puzzle
         </h2>
-        <div className="mt-2 flex items-center justify-center gap-2"><p className="text-sm text-neutral-500">Three like-denominator puzzles. Solve them in any order.</p><SpeakButton text={`Choose a combining puzzle. Three like-denominator puzzles. Solve them in any order.`} /></div>
+        <div className="mt-2 flex items-center justify-center gap-2">
+          <p className="text-sm text-neutral-500">
+            Three like-denominator puzzles. Solve them in any order.
+          </p>
+          <SpeakButton
+            text={`Choose a combining puzzle. Three like-denominator puzzles. Solve them in any order.`}
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -38,7 +43,13 @@ export function CasePicker({ solved, onPick }: Props) {
                   aria-label="Solved"
                   className="absolute right-3 top-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#10b981] text-white shadow"
                 >
-                  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3">
+                  <svg
+                    viewBox="0 0 20 20"
+                    className="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                  >
                     <path d="M5 10l3 3 7-7" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>

@@ -36,7 +36,16 @@ function Tube({
           </linearGradient>
         </defs>
         {/* Tube body */}
-        <rect x={6} y={8} width={W - 12} height={H} rx={W / 2 - 6} fill="#f8fafc" stroke="#cbd5e1" strokeWidth={2} />
+        <rect
+          x={6}
+          y={8}
+          width={W - 12}
+          height={H}
+          rx={W / 2 - 6}
+          fill="#f8fafc"
+          stroke="#cbd5e1"
+          strokeWidth={2}
+        />
         {/* Fluid */}
         <g
           key={pulseKey}

@@ -32,19 +32,54 @@ type PendingCase = {
 const PENDING_CASES: PendingCase[] = [];
 
 const ACTIVE_CASES: {
-  to: "/play/case-01" | "/play/case-02" | "/play/case-03" | "/play/case-04" | "/play/case-05" | "/play/case-06";
+  to:
+    | "/play/case-01"
+    | "/play/case-02"
+    | "/play/case-03"
+    | "/play/case-04"
+    | "/play/case-05"
+    | "/play/case-06";
   title: string;
   subtitle: string;
   topic: string;
 }[] = [
-  { to: "/play/case-01", title: "Case 01: Parts of a Whole", subtitle: "Are the slices fair?", topic: "Parts of a Whole — Fair Sharing" },
-  { to: "/play/case-02", title: "Case 02: Naming the Pieces", subtitle: "Top number, bottom number.", topic: "Numerator & Denominator" },
-  { to: "/play/case-03", title: "Case 03: The Shape Shifters", subtitle: "When more pieces means smaller pieces.", topic: "Equivalent Fractions" },
-  { to: "/play/case-04", title: "Case 04: The Scale Weigh-In", subtitle: "Bigger bottom number means smaller pieces.", topic: "Comparing Fractions" },
-  { to: "/play/case-05", title: "Case 05: Combining Matches", subtitle: "Add the tops — the bottom stays the same.", topic: "Adding & Subtracting — Like Denominators" },
-  { to: "/play/case-06", title: "Case 06: The Mismatched Puzzle", subtitle: "When pieces don't match, slice before you add.", topic: "Adding & Subtracting — Unlike Denominators" },
+  {
+    to: "/play/case-01",
+    title: "Case 01: Parts of a Whole",
+    subtitle: "Are the slices fair?",
+    topic: "Parts of a Whole — Fair Sharing",
+  },
+  {
+    to: "/play/case-02",
+    title: "Case 02: Naming the Pieces",
+    subtitle: "Top number, bottom number.",
+    topic: "Numerator & Denominator",
+  },
+  {
+    to: "/play/case-03",
+    title: "Case 03: The Shape Shifters",
+    subtitle: "When more pieces means smaller pieces.",
+    topic: "Equivalent Fractions",
+  },
+  {
+    to: "/play/case-04",
+    title: "Case 04: The Scale Weigh-In",
+    subtitle: "Bigger bottom number means smaller pieces.",
+    topic: "Comparing Fractions",
+  },
+  {
+    to: "/play/case-05",
+    title: "Case 05: Combining Matches",
+    subtitle: "Add the tops — the bottom stays the same.",
+    topic: "Adding & Subtracting — Like Denominators",
+  },
+  {
+    to: "/play/case-06",
+    title: "Case 06: The Mismatched Puzzle",
+    subtitle: "When pieces don't match, slice before you add.",
+    topic: "Adding & Subtracting — Unlike Denominators",
+  },
 ];
-
 
 function PlayPage() {
   const [revealedId, setRevealedId] = useState<string | null>(null);
@@ -74,8 +109,7 @@ function PlayPage() {
             <span className="text-neutral-700">Active Cases</span>
           </h1>
           <p className="mt-5 max-w-xl text-base text-neutral-500">
-            Choose your investigation. Take your time — there are no timers
-            and no scores here.
+            Choose your investigation. Take your time — there are no timers and no scores here.
           </p>
         </header>
 
@@ -99,9 +133,7 @@ function PlayPage() {
                 </span>
               </div>
               <div className="mt-6 flex-1">
-                <h2 className="text-2xl font-bold leading-snug text-neutral-900">
-                  {a.title}
-                </h2>
+                <h2 className="text-2xl font-bold leading-snug text-neutral-900">{a.title}</h2>
                 <p className="mt-2 text-base text-neutral-500">{a.subtitle}</p>
               </div>
               <span className="mt-8 inline-flex w-fit items-center gap-2 text-sm font-bold tracking-wider text-neutral-900 transition-transform group-hover:translate-x-1">
@@ -126,16 +158,11 @@ function PlayPage() {
                 <div className="flex flex-1 items-center justify-center py-6">
                   <button
                     type="button"
-                    onClick={() =>
-                      setRevealedId(isRevealed ? null : c.id)
-                    }
+                    onClick={() => setRevealedId(isRevealed ? null : c.id)}
                     aria-label={`${c.title} — locked. Coming soon.`}
                     className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-sm transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
                   >
-                    <Lock
-                      className="h-8 w-8 text-neutral-400"
-                      strokeWidth={1.75}
-                    />
+                    <Lock className="h-8 w-8 text-neutral-400" strokeWidth={1.75} />
                     {isRevealed && (
                       <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-neutral-900 px-3 py-1 text-[11px] font-semibold tracking-wider text-white">
                         COMING SOON
@@ -144,9 +171,7 @@ function PlayPage() {
                   </button>
                 </div>
 
-                <h2 className="text-lg font-bold leading-snug text-neutral-700">
-                  {c.title}
-                </h2>
+                <h2 className="text-lg font-bold leading-snug text-neutral-700">{c.title}</h2>
               </article>
             );
           })}

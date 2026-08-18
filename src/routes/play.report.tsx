@@ -196,11 +196,16 @@ function ReportPage() {
                 Detective's Report
               </h2>
               <p className="mt-2 max-w-xl text-sm text-neutral-500">
-                Real-time critical-thinking insights from your child's reasoning — for parents and educators.
+                Real-time critical-thinking insights from your child's reasoning — for parents and
+                educators.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Stat label="Glitches Solved" value={`${totals.attempted}/${totals.total}`} tone="blue" />
+              <Stat
+                label="Glitches Solved"
+                value={`${totals.attempted}/${totals.total}`}
+                tone="blue"
+              />
               <Stat label="Marked Correct by ZED-4" value={`${totals.correct}`} tone="green" />
             </div>
           </div>
@@ -263,15 +268,13 @@ function RoadmapSection({
         nextStep: entry?.nextStep,
       };
       if (entry?.verdict === "correct") mastered.push(item);
-      else if (entry?.verdict === "partial" || entry?.verdict === "review")
-        focus.push(item);
+      else if (entry?.verdict === "partial" || entry?.verdict === "review") focus.push(item);
       else if (!entry) replay.push(item);
     }
   }
   const suggestedReplay = [...focus, ...replay].slice(0, 3);
 
-  if (mastered.length === 0 && focus.length === 0 && suggestedReplay.length === 0)
-    return null;
+  if (mastered.length === 0 && focus.length === 0 && suggestedReplay.length === 0) return null;
 
   return (
     <section className="mt-8 grid gap-4 md:grid-cols-3">
@@ -292,11 +295,7 @@ function RoadmapSection({
         )}
       </RoadmapCard>
 
-      <RoadmapCard
-        title="Focus areas"
-        tone="amber"
-        emptyText="Nothing flagged — nice work!"
-      >
+      <RoadmapCard title="Focus areas" tone="amber" emptyText="Nothing flagged — nice work!">
         {focus.length > 0 && (
           <ul className="space-y-2.5 text-sm">
             {focus.map((f) => (
@@ -306,9 +305,7 @@ function RoadmapSection({
                   <span className="text-neutral-800 font-medium">{f.concept}</span>
                 </div>
                 {f.nextStep && (
-                  <p className="ml-6 mt-0.5 text-xs text-neutral-500">
-                    Try: {f.nextStep}
-                  </p>
+                  <p className="ml-6 mt-0.5 text-xs text-neutral-500">Try: {f.nextStep}</p>
                 )}
               </li>
             ))}
@@ -326,7 +323,15 @@ function RoadmapSection({
             {suggestedReplay.map((r) => (
               <li key={`${r.caseId}-${r.subId}`}>
                 <Link
-                  to={`/play/${r.caseId}` as any}
+                  to={
+                    `/play/${r.caseId}` as
+                      | "/play/case-01"
+                      | "/play/case-02"
+                      | "/play/case-03"
+                      | "/play/case-04"
+                      | "/play/case-05"
+                      | "/play/case-06"
+                  }
                   className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-neutral-700 transition hover:bg-[#dbeafe]"
                 >
                   <span className="text-base">{r.emoji}</span>
@@ -356,23 +361,15 @@ function RoadmapCard({
   children?: React.ReactNode;
 }) {
   const ring =
-    tone === "green"
-      ? "ring-[#bbf7d0]"
-      : tone === "amber"
-        ? "ring-[#fde68a]"
-        : "ring-[#bfdbfe]";
+    tone === "green" ? "ring-[#bbf7d0]" : tone === "amber" ? "ring-[#fde68a]" : "ring-[#bfdbfe]";
   const label =
-    tone === "green"
-      ? "text-[#166534]"
-      : tone === "amber"
-        ? "text-[#92400e]"
-        : "text-[#1e40af]";
+    tone === "green" ? "text-[#166534]" : tone === "amber" ? "text-[#92400e]" : "text-[#1e40af]";
   const hasContent = !!children;
   return (
-    <div className={`rounded-3xl bg-white p-5 ring-1 ${ring} shadow-[0_8px_30px_-12px_rgba(15,23,42,0.12)] print:break-inside-avoid`}>
-      <div className={`text-[10px] font-bold tracking-[0.18em] uppercase ${label}`}>
-        {title}
-      </div>
+    <div
+      className={`rounded-3xl bg-white p-5 ring-1 ${ring} shadow-[0_8px_30px_-12px_rgba(15,23,42,0.12)] print:break-inside-avoid`}
+    >
+      <div className={`text-[10px] font-bold tracking-[0.18em] uppercase ${label}`}>{title}</div>
       <div className="mt-3">
         {hasContent ? children : <p className="text-xs text-neutral-400">{emptyText}</p>}
       </div>
@@ -402,7 +399,6 @@ function CaseSection({ meta, report }: { meta: CaseMeta; report: ReturnType<type
       rubricMet += r.filter((x) => x.score === "met").length;
     }
   }
-
 
   return (
     <section className="rounded-3xl bg-white p-6 sm:p-8 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.12)] ring-1 ring-neutral-100 print:shadow-none print:ring-0 print:break-inside-avoid">
@@ -454,13 +450,7 @@ function CaseSection({ meta, report }: { meta: CaseMeta; report: ReturnType<type
   );
 }
 
-function GlitchRow({
-  sub,
-  entry,
-}: {
-  sub: CaseMeta["subs"][number];
-  entry?: ReportEntry;
-}) {
+function GlitchRow({ sub, entry }: { sub: CaseMeta["subs"][number]; entry?: ReportEntry }) {
   if (!entry) {
     return (
       <li className="flex items-start gap-4 rounded-2xl border border-dashed border-neutral-200 bg-neutral-50/60 p-4">
@@ -544,9 +534,7 @@ function GlitchRow({
             </div>
           )}
 
-          {entry.rubric && entry.rubric.length > 0 && (
-            <RubricBlock rubric={entry.rubric} />
-          )}
+          {entry.rubric && entry.rubric.length > 0 && <RubricBlock rubric={entry.rubric} />}
 
           {entry.insights && entry.insights.length > 0 && (
             <CognitiveInsights insights={entry.insights} />
@@ -554,8 +542,7 @@ function GlitchRow({
 
           {entry.nextStep && (
             <div className="mt-2 rounded-xl bg-[#eef2ff] px-3 py-2 text-xs text-neutral-700 ring-1 ring-[#c7d2fe]">
-              <span className="font-bold text-[#3730a3]">Try next:</span>{" "}
-              {entry.nextStep}
+              <span className="font-bold text-[#3730a3]">Try next:</span> {entry.nextStep}
             </div>
           )}
 
@@ -571,8 +558,7 @@ function GlitchRow({
 }
 
 function VerdictPill({ verdict }: { verdict: Verdict | null }) {
-  if (verdict === "correct")
-    return <Pill className="bg-[#dcfce7] text-[#166534]">✓ Correct</Pill>;
+  if (verdict === "correct") return <Pill className="bg-[#dcfce7] text-[#166534]">✓ Correct</Pill>;
   if (verdict === "partial")
     return <Pill className="bg-[#e0e7ff] text-[#3730a3]">Almost there</Pill>;
   if (verdict === "review")
@@ -586,9 +572,7 @@ function UnderstandingMeter({ level }: { level: number }) {
   const clamped = Math.max(1, Math.min(5, Math.round(level)));
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5">
-      <span className="text-[9px] font-bold tracking-widest uppercase text-neutral-500">
-        Grasp
-      </span>
+      <span className="text-[9px] font-bold tracking-widest uppercase text-neutral-500">Grasp</span>
       <span className="flex gap-0.5">
         {Array.from({ length: 5 }).map((_, k) => (
           <span
@@ -603,17 +587,15 @@ function UnderstandingMeter({ level }: { level: number }) {
 
 function Pill({ children, className }: { children: React.ReactNode; className: string }) {
   return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wider ${className}`}>
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wider ${className}`}
+    >
       {children}
     </span>
   );
 }
 
-function CognitiveInsights({
-  insights,
-}: {
-  insights: NonNullable<ReportEntry["insights"]>;
-}) {
+function CognitiveInsights({ insights }: { insights: NonNullable<ReportEntry["insights"]> }) {
   return (
     <div className="mt-3 rounded-2xl border border-neutral-100 bg-white p-3 print:break-inside-avoid">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-100 pb-2">
@@ -641,9 +623,7 @@ function CognitiveInsights({
               </span>
               <div className="min-w-0 flex-1">
                 <div className="font-semibold text-neutral-800">{it.dimension}</div>
-                {it.evidence && (
-                  <div className="text-[11px] text-neutral-500">{it.evidence}</div>
-                )}
+                {it.evidence && <div className="text-[11px] text-neutral-500">{it.evidence}</div>}
               </div>
             </li>
           );
@@ -653,11 +633,7 @@ function CognitiveInsights({
   );
 }
 
-function RubricBlock({
-  rubric,
-}: {
-  rubric: NonNullable<ReportEntry["rubric"]>;
-}) {
+function RubricBlock({ rubric }: { rubric: NonNullable<ReportEntry["rubric"]> }) {
   const met = rubric.filter((r) => r.score === "met").length;
   const partial = rubric.filter((r) => r.score === "partial").length;
   const missing = rubric.filter((r) => r.score === "missing").length;
@@ -683,10 +659,8 @@ function RubricBlock({
               : r.score === "partial"
                 ? "bg-[#fef3c7] text-[#92400e]"
                 : "bg-[#fee2e2] text-[#991b1b]";
-          const icon =
-            r.score === "met" ? "✓" : r.score === "partial" ? "◐" : "✗";
-          const label =
-            r.score === "met" ? "Met" : r.score === "partial" ? "Partial" : "Missing";
+          const icon = r.score === "met" ? "✓" : r.score === "partial" ? "◐" : "✗";
+          const label = r.score === "met" ? "Met" : r.score === "partial" ? "Partial" : "Missing";
           return (
             <li key={i} className="flex items-start gap-2.5 text-xs">
               <span
@@ -696,9 +670,7 @@ function RubricBlock({
               </span>
               <div className="min-w-0 flex-1">
                 <div className="font-semibold text-neutral-800">{r.criterion}</div>
-                {r.evidence && (
-                  <div className="text-[11px] text-neutral-500">{r.evidence}</div>
-                )}
+                {r.evidence && <div className="text-[11px] text-neutral-500">{r.evidence}</div>}
               </div>
             </li>
           );
@@ -707,4 +679,3 @@ function RubricBlock({
     </div>
   );
 }
-

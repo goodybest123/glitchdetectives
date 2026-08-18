@@ -57,7 +57,6 @@ function PreviewPage() {
               <ArrowLeft className="w-4 h-4" /> Back to workbook
             </Link>
 
-
             <span
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
               style={{ background: YELLOW, color: BLUE }}
@@ -74,8 +73,8 @@ function PreviewPage() {
               {COLLECTION_SUBTITLE}
             </p>
             <p className="mt-4 max-w-2xl text-base leading-relaxed" style={{ color: MUTED }}>
-              Here are the first {PREVIEW_PAGES.length} pages exactly as they print. Tap any page
-              to zoom in.
+              Here are the first {PREVIEW_PAGES.length} pages exactly as they print. Tap any page to
+              zoom in.
             </p>
 
             <div className="mt-10">
@@ -89,10 +88,16 @@ function PreviewPage() {
               <div className="mt-6 grid sm:grid-cols-2 gap-8">
                 {WHATS_INSIDE.map((block) => (
                   <div key={block.title}>
-                    <h3 className="text-base font-black uppercase tracking-tight" style={{ color: BLUE }}>
+                    <h3
+                      className="text-base font-black uppercase tracking-tight"
+                      style={{ color: BLUE }}
+                    >
                       {block.title}
                     </h3>
-                    <ul className="mt-3 space-y-1.5 text-sm leading-relaxed" style={{ color: MUTED }}>
+                    <ul
+                      className="mt-3 space-y-1.5 text-sm leading-relaxed"
+                      style={{ color: MUTED }}
+                    >
                       {block.items.map((i) => (
                         <li key={i} className="flex gap-2">
                           <span aria-hidden style={{ color: YELLOW }}>

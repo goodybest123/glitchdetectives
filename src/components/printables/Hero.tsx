@@ -24,7 +24,8 @@ export function PrintablesHero() {
             className="heading-black uppercase text-4xl sm:text-5xl lg:text-6xl mt-5"
             style={{ color: BLUE }}
           >
-            The Glitch Detective<br /> Printables Library
+            The Glitch Detective
+            <br /> Printables Library
           </h1>
           <p
             className="mt-6 mx-auto max-w-2xl text-base sm:text-lg leading-relaxed"

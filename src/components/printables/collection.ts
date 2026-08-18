@@ -5,8 +5,7 @@
  */
 
 export const COLLECTION_TITLE = "Glitch Detectives: Fractions";
-export const COLLECTION_SUBTITLE =
-  "Foundations Collection (Includes Levels 1 & 2 Missions)";
+export const COLLECTION_SUBTITLE = "Foundations Collection (Includes Levels 1 & 2 Missions)";
 
 export const COLLECTION_INTRO =
   "This complete printable workbook combines Levels 1 and 2 fraction missions into one resource. Children become Lead Detectives who investigate mathematical mistakes, repair misconceptions, and explain their thinking, developing a strong conceptual understanding of fractions.";
@@ -19,8 +18,7 @@ export const COLLECTION_BADGES = [
   "Free",
 ];
 
-export const COLLECTION_PITCH_HEADING =
-  "Become the Lead Detective and Solve Fraction Mysteries";
+export const COLLECTION_PITCH_HEADING = "Become the Lead Detective and Solve Fraction Mysteries";
 
 export const COLLECTION_PITCH = [
   "Instead of completing repetitive fraction exercises, children become Lead Detectives helping a character named Sam uncover mathematical glitches.",
@@ -59,8 +57,7 @@ export const WHATS_INSIDE = [
 ] as const;
 
 /** Selar purchase/download page for the full workbook. */
-export const COLLECTION_PDF_URL =
-  "https://selar.com/glitchdetectives-fractions1";
+export const COLLECTION_PDF_URL = "https://selar.com/glitchdetectives-fractions1";
 
 /** Sample pages rendered from the workbook PDF (served from /public). */
 export const PREVIEW_PAGES = [1, 2, 3, 4, 5].map((n) => ({

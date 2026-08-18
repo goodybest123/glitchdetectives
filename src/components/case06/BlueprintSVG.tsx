@@ -11,7 +11,17 @@ export function BlueprintSVG({ repaired, pulseKey }: VisualProps) {
     <div className="flex flex-col items-center">
       <svg viewBox={`0 0 ${W} ${H}`} className="h-[240px] w-full max-w-[500px]">
         {/* Factory mat */}
-        <rect x={10} y={10} width={W - 20} height={H - 20} rx={14} fill="#f8fafc" stroke="#e2e8f0" strokeWidth={1.5} strokeDasharray="6 4" />
+        <rect
+          x={10}
+          y={10}
+          width={W - 20}
+          height={H - 20}
+          rx={14}
+          fill="#f8fafc"
+          stroke="#e2e8f0"
+          strokeWidth={1.5}
+          strokeDasharray="6 4"
+        />
 
         {/* LEFT: the big 1/2 block, sliced when repaired */}
         <g key={`left-${pulseKey ?? 0}-${repaired}`} style={{ transition: "transform 600ms ease" }}>
@@ -20,7 +30,16 @@ export function BlueprintSVG({ repaired, pulseKey }: VisualProps) {
               <Block x={30} y={70} w={70} h={110} label="1/4" />
               <Block x={108} y={70} w={70} h={110} label="1/4" />
               {/* Laser line memory */}
-              <line x1={104} y1={62} x2={104} y2={188} stroke="#f97316" strokeWidth={1} strokeDasharray="3 3" opacity={0.7} />
+              <line
+                x1={104}
+                y1={62}
+                x2={104}
+                y2={188}
+                stroke="#f97316"
+                strokeWidth={1}
+                strokeDasharray="3 3"
+                opacity={0.7}
+              />
             </>
           ) : (
             <Block x={30} y={50} w={148} h={150} label="1/2" big />
@@ -28,7 +47,9 @@ export function BlueprintSVG({ repaired, pulseKey }: VisualProps) {
         </g>
 
         {/* PLUS / MINUS sign */}
-        <text x={205} y={130} textAnchor="middle" fontSize="34" fontWeight="900" fill="#334155">+</text>
+        <text x={205} y={130} textAnchor="middle" fontSize="34" fontWeight="900" fill="#334155">
+          +
+        </text>
 
         {/* RIGHT: small 1/4 block */}
         <Block x={228} y={92} w={72} h={70} label="1/4" />
@@ -69,7 +90,16 @@ function Block({
 }) {
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={8} fill="#bfdbfe" stroke="#3b82f6" strokeWidth={2.5} />
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={8}
+        fill="#bfdbfe"
+        stroke="#3b82f6"
+        strokeWidth={2.5}
+      />
       <rect x={x + 4} y={y + 4} width={w - 8} height={6} rx={3} fill="#93c5fd" opacity={0.7} />
       <text
         x={x + w / 2}
@@ -126,7 +156,16 @@ function OutputBox({
         const isFilled = i < filled;
         return (
           <g key={i}>
-            <rect x={x + 8} y={sy} width={innerW} height={slotH} rx={3} fill="none" stroke="#e5e7eb" strokeWidth={1} />
+            <rect
+              x={x + 8}
+              y={sy}
+              width={innerW}
+              height={slotH}
+              rx={3}
+              fill="none"
+              stroke="#e5e7eb"
+              strokeWidth={1}
+            />
             {isFilled && (
               <rect
                 x={x + 10}
@@ -142,7 +181,14 @@ function OutputBox({
           </g>
         );
       })}
-      <text x={x + boxW / 2} y={y + boxH + 18} textAnchor="middle" fontSize="13" fontWeight="800" fill="#475569">
+      <text
+        x={x + boxW / 2}
+        y={y + boxH + 18}
+        textAnchor="middle"
+        fontSize="13"
+        fontWeight="800"
+        fill="#475569"
+      >
         {label}
       </text>
     </g>

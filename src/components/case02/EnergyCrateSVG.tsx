@@ -13,7 +13,6 @@ export function EnergyCrateSVG({
   pulseKey = 0,
   glitchTarget,
 }: VisualProps) {
-
   return (
     <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-10">
       <svg
@@ -59,9 +58,7 @@ export function EnergyCrateSVG({
               />
               {/* Battery cap */}
               <rect x={x + 12} y={28} width={16} height={8} rx={2} fill="#94a3b8" />
-              {filled && (
-                <circle cx={x + 20} cy={70} r={6} fill="#ffffff" opacity={0.5} />
-              )}
+              {filled && <circle cx={x + 20} cy={70} r={6} fill="#ffffff" opacity={0.5} />}
             </g>
           );
         })}
@@ -75,7 +72,6 @@ export function EnergyCrateSVG({
         interactive={interactive}
         glitchTarget={glitchTarget}
       />
-
     </div>
   );
 }

@@ -54,7 +54,8 @@ To reset the on-device report while iterating:
 
 ```js
 // paste in the browser console
-localStorage.removeItem("gd:report:v4"); location.reload();
+localStorage.removeItem("gd:report:v4");
+location.reload();
 ```
 
 ## When in doubt

@@ -11,8 +11,8 @@ export function ZedBubble({ message, tone = "neutral", speakable = false }: ZedB
     tone === "alert"
       ? "bg-[#fff4d6] border-[#f5d97a]"
       : tone === "happy"
-      ? "bg-[#e6f7ec] border-[#a8d8b9]"
-      : "bg-[#eaf2ff] border-[#c8d9f0]";
+        ? "bg-[#e6f7ec] border-[#a8d8b9]"
+        : "bg-[#eaf2ff] border-[#c8d9f0]";
 
   return (
     <div className="flex items-start gap-3">

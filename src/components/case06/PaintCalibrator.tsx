@@ -39,7 +39,10 @@ export function PaintCalibrator({ onComplete }: Props) {
   };
 
   // Left vat geometry (matches PaintVatsSVG)
-  const lx = 30, ly = 40, lw = 110, lh = 170;
+  const lx = 30,
+    ly = 40,
+    lw = 110,
+    lh = 170;
   // Three 1/3 sections initially → row heights 56.67. Snap rails at midpoints.
   const railY1 = ly + lh * (1 / 6); // upper rail
   const railY2 = ly + lh * (3 / 6); // middle rail (within section 2)
@@ -53,7 +56,10 @@ export function PaintCalibrator({ onComplete }: Props) {
 
   return (
     <div className="flex flex-col items-center">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-[260px] w-full max-w-[500px] touch-none select-none">
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="h-[260px] w-full max-w-[500px] touch-none select-none"
+      >
         {/* LEFT vat */}
         <g>
           {done ? (
@@ -67,17 +73,31 @@ export function PaintCalibrator({ onComplete }: Props) {
         {!done && (
           <g>
             {!addedTop && (
-              <SnapRail x={lx} y={upperRailY} w={lw} onTap={onTapTop} ariaLabel="Add upper grid line" />
+              <SnapRail
+                x={lx}
+                y={upperRailY}
+                w={lw}
+                onTap={onTapTop}
+                ariaLabel="Add upper grid line"
+              />
             )}
             {addedTop && <RealLine x={lx} y={upperRailY} w={lw} />}
             {!addedBottom && (
-              <SnapRail x={lx} y={lowerRailY} w={lw} onTap={onTapBottom} ariaLabel="Add lower grid line" />
+              <SnapRail
+                x={lx}
+                y={lowerRailY}
+                w={lw}
+                onTap={onTapBottom}
+                ariaLabel="Add lower grid line"
+              />
             )}
             {addedBottom && <RealLine x={lx} y={lowerRailY} w={lw} />}
           </g>
         )}
 
-        <text x={170} y={150} textAnchor="middle" fontSize="32" fontWeight="900" fill="#334155">+</text>
+        <text x={170} y={150} textAnchor="middle" fontSize="32" fontWeight="900" fill="#334155">
+          +
+        </text>
 
         {/* RIGHT vat (1/6) */}
         <Vat x={195} y={40} sections={6} filled={1} label="1/6" />
@@ -96,13 +116,27 @@ export function PaintCalibrator({ onComplete }: Props) {
         )}
       </svg>
       <p className="mt-2 text-center text-xs font-medium text-neutral-500">
-        {done ? "Grids match! Now both vats measure the same way." : `Tap the dotted line${addedTop || addedBottom ? "" : "s"} to add a matching grid line.`}
+        {done
+          ? "Grids match! Now both vats measure the same way."
+          : `Tap the dotted line${addedTop || addedBottom ? "" : "s"} to add a matching grid line.`}
       </p>
     </div>
   );
 }
 
-function SnapRail({ x, y, w, onTap, ariaLabel }: { x: number; y: number; w: number; onTap: () => void; ariaLabel: string }) {
+function SnapRail({
+  x,
+  y,
+  w,
+  onTap,
+  ariaLabel,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  onTap: () => void;
+  ariaLabel: string;
+}) {
   return (
     <g
       role="button"
@@ -122,17 +156,52 @@ function SnapRail({ x, y, w, onTap, ariaLabel }: { x: number; y: number; w: numb
     >
       {/* Big hit area */}
       <rect x={x - 4} y={y - 12} width={w + 8} height={24} fill="transparent" />
-      <line x1={x - 4} y1={y} x2={x + w + 4} y2={y} stroke="#f59e0b" strokeWidth={2} strokeDasharray="4 3" style={{ animation: "tappable-pulse 1.6s ease-in-out infinite" }} />
+      <line
+        x1={x - 4}
+        y1={y}
+        x2={x + w + 4}
+        y2={y}
+        stroke="#f59e0b"
+        strokeWidth={2}
+        strokeDasharray="4 3"
+        style={{ animation: "tappable-pulse 1.6s ease-in-out infinite" }}
+      />
       <circle cx={x + w + 12} cy={y} r={6} fill="#fbbf24" stroke="#b45309" strokeWidth={1.5} />
     </g>
   );
 }
 
 function RealLine({ x, y, w }: { x: number; y: number; w: number }) {
-  return <line x1={x} y1={y} x2={x + w} y2={y} stroke="#475569" strokeWidth={1.5} style={{ animation: "tappable-pulse 600ms ease-out" }} />;
+  return (
+    <line
+      x1={x}
+      y1={y}
+      x2={x + w}
+      y2={y}
+      stroke="#475569"
+      strokeWidth={1.5}
+      style={{ animation: "tappable-pulse 600ms ease-out" }}
+    />
+  );
 }
 
-function Vat({ x, y, sections, filled, label, tone, puddle }: { x: number; y: number; sections: number; filled: number; label: string; tone?: "good" | "bad"; puddle?: boolean }) {
+function Vat({
+  x,
+  y,
+  sections,
+  filled,
+  label,
+  tone,
+  puddle,
+}: {
+  x: number;
+  y: number;
+  sections: number;
+  filled: number;
+  label: string;
+  tone?: "good" | "bad";
+  puddle?: boolean;
+}) {
   const w = 110;
   const h = 170;
   const border = tone === "good" ? "#10b981" : tone === "bad" ? "#f97316" : "#475569";
@@ -141,20 +210,64 @@ function Vat({ x, y, sections, filled, label, tone, puddle }: { x: number; y: nu
   const rowH = h / sections;
   return (
     <g>
-      <path d={`M ${x} ${y} L ${x} ${y + h} L ${x + w} ${y + h} L ${x + w} ${y} M ${x - 4} ${y} L ${x + w + 4} ${y}`} stroke={border} strokeWidth={3} fill="none" strokeLinecap="round" />
+      <path
+        d={`M ${x} ${y} L ${x} ${y + h} L ${x + w} ${y + h} L ${x + w} ${y} M ${x - 4} ${y} L ${x + w + 4} ${y}`}
+        stroke={border}
+        strokeWidth={3}
+        fill="none"
+        strokeLinecap="round"
+      />
       <rect x={x} y={y} width={w} height={h} fill="#f8fafc" />
       {Array.from({ length: sections - 1 }).map((_, i) => (
-        <line key={`r${i}`} x1={x} y1={y + (i + 1) * rowH} x2={x + w} y2={y + (i + 1) * rowH} stroke="#cbd5e1" strokeWidth={1} />
+        <line
+          key={`r${i}`}
+          x1={x}
+          y1={y + (i + 1) * rowH}
+          x2={x + w}
+          y2={y + (i + 1) * rowH}
+          stroke="#cbd5e1"
+          strokeWidth={1}
+        />
       ))}
       {puddle
         ? Array.from({ length: filled }).map((_, i) => (
-            <ellipse key={i} cx={x + 25 + i * 30} cy={y + h - 8} rx={10} ry={3} fill={fillColor} stroke={fillStroke} strokeWidth={1.5} />
+            <ellipse
+              key={i}
+              cx={x + 25 + i * 30}
+              cy={y + h - 8}
+              rx={10}
+              ry={3}
+              fill={fillColor}
+              stroke={fillStroke}
+              strokeWidth={1.5}
+            />
           ))
         : Array.from({ length: filled }).map((_, i) => {
             const sy = y + h - (i + 1) * rowH + 2;
-            return <rect key={i} x={x + 2} y={sy} width={w - 4} height={rowH - 4} rx={2} fill={fillColor} stroke={fillStroke} strokeWidth={1.5} />;
+            return (
+              <rect
+                key={i}
+                x={x + 2}
+                y={sy}
+                width={w - 4}
+                height={rowH - 4}
+                rx={2}
+                fill={fillColor}
+                stroke={fillStroke}
+                strokeWidth={1.5}
+              />
+            );
           })}
-      <text x={x + w / 2} y={y + h + 22} textAnchor="middle" fontSize="14" fontWeight="800" fill="#475569">{label}</text>
+      <text
+        x={x + w / 2}
+        y={y + h + 22}
+        textAnchor="middle"
+        fontSize="14"
+        fontWeight="800"
+        fill="#475569"
+      >
+        {label}
+      </text>
     </g>
   );
 }

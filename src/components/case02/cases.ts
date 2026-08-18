@@ -19,7 +19,6 @@ export type VisualProps = {
   glitchTarget?: GlitchPart;
 };
 
-
 export type RepairKind = "stepper-denominator" | "stepper-numerator" | "swap";
 
 export type SubCaseDef = {
@@ -68,8 +67,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Observation log entry forty-seven. I scanned the bar and counted exactly 3 painted blocks on top, then exactly 2 blank blocks on the bottom — therefore the fraction is plainly 3 over 2. My report is filed and stamped. This case is solved.",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The case is yours to close.",
     },
     captions: {
@@ -101,8 +99,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Observation log entry forty-eight. The crate clearly has 4 total slots, so the big number 4 goes on top — the big proud number on top! The 1 battery underneath rides on the bottom like a passenger. My official reading: this crate is 4 over 1 full. I am certain.",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The crate reads correctly now.",
     },
     captions: {
@@ -133,8 +130,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     bubbles: {
       investigate:
         "Observation log entry forty-nine. I looked, I scanned, I counted the panels that were NOT glowing — exactly 2 dark ones — and wrote 2 on top. We are clearly generating 2 over 6 active power. Filed under: definitely correct.",
-      detect:
-        "Click on the glitch.",
+      detect: "Click on the glitch.",
       solved: "Logic repaired. The sign reads correctly.",
     },
     captions: {

@@ -5,9 +5,24 @@ const BLUE = "var(--color-brand-blue)";
 type Benefit = { icon: LucideIcon; title: string; line: string; bg: string };
 
 const BENEFITS: Benefit[] = [
-  { icon: Brain, title: "Low Cognitive Load", line: "Calm layouts, one task per page, no distractions.", bg: "#e8f9f5" },
-  { icon: MessageCircle, title: "Sparks Conversation", line: "Each sheet ends with a “talk it through” prompt.", bg: "#fff4d6" },
-  { icon: Sparkles, title: "Builds Confidence", line: "Small wins, visible progress, no red pens.", bg: "#ece8ff" },
+  {
+    icon: Brain,
+    title: "Low Cognitive Load",
+    line: "Calm layouts, one task per page, no distractions.",
+    bg: "#e8f9f5",
+  },
+  {
+    icon: MessageCircle,
+    title: "Sparks Conversation",
+    line: "Each sheet ends with a “talk it through” prompt.",
+    bg: "#fff4d6",
+  },
+  {
+    icon: Sparkles,
+    title: "Builds Confidence",
+    line: "Small wins, visible progress, no red pens.",
+    bg: "#ece8ff",
+  },
 ];
 
 export function BenefitsRow() {
@@ -25,7 +40,10 @@ export function BenefitsRow() {
                 >
                   <Icon className="w-7 h-7" style={{ color: BLUE }} strokeWidth={2} />
                 </div>
-                <h3 className="mt-5 text-lg font-black uppercase tracking-tight" style={{ color: BLUE }}>
+                <h3
+                  className="mt-5 text-lg font-black uppercase tracking-tight"
+                  style={{ color: BLUE }}
+                >
                   {b.title}
                 </h3>
                 <p

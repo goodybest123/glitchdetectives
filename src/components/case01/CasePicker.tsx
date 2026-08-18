@@ -10,9 +10,7 @@ export function CasePicker({ solved, onPick }: Props) {
   return (
     <div className="rounded-3xl bg-white p-6 sm:p-10 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100">
       <div className="mb-6 text-center">
-        <div className="text-xs font-bold tracking-[0.2em] text-[#10b981]">
-          CASE FILE 01
-        </div>
+        <div className="text-xs font-bold tracking-[0.2em] text-[#10b981]">CASE FILE 01</div>
         <div className="mt-1 text-sm font-semibold text-neutral-700">
           Topic: Parts of a Whole — Fair Sharing
         </div>
@@ -26,7 +24,6 @@ export function CasePicker({ solved, onPick }: Props) {
           <SpeakButton text="Choose a case to investigate. Three sharing puzzles. Solve them in any order." />
         </div>
       </div>
-
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {SUB_CASE_ORDER.map((id, i) => {
@@ -44,7 +41,13 @@ export function CasePicker({ solved, onPick }: Props) {
                   aria-label="Solved"
                   className="absolute right-3 top-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#10b981] text-white shadow"
                 >
-                  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3">
+                  <svg
+                    viewBox="0 0 20 20"
+                    className="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                  >
                     <path d="M5 10l3 3 7-7" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>

@@ -35,17 +35,18 @@ import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { ChatPanel } from "@/components/shared/ChatPanel";
-import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame, WorkbookRepairSubmit } from "@/components/shared/WorkbookActivity";
+import {
+  WorkbookActivityPrompt,
+  WorkbookGlitchChoices,
+  WorkbookRepairFrame,
+  WorkbookRepairSubmit,
+} from "@/components/shared/WorkbookActivity";
 import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
 import { celebrate } from "@/lib/celebrate";
-import {
-  SUB_CASES,
-  SUB_CASE_ORDER,
-  type SubCaseId,
-} from "@/components/case01/cases";
+import { SUB_CASES, SUB_CASE_ORDER, type SubCaseId } from "@/components/case01/cases";
 
 export const Route = createFileRoute("/play/case-01")({
   head: () => ({
@@ -92,11 +93,18 @@ function PageShell({ title, children }: { title: string; children: React.ReactNo
     <main className="min-h-screen bg-white">
       <header className="border-b border-neutral-100">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-3 py-2.5 sm:px-6 sm:py-3 lg:px-10">
-          <Link to="/play" className="text-xs sm:text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900">
+          <Link
+            to="/play"
+            className="text-xs sm:text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+          >
             ← Back
           </Link>
-          <h1 className="text-sm sm:text-base font-bold tracking-tight text-neutral-900 truncate px-2">{title}</h1>
-          <div className="flex w-[80px] sm:w-[120px] items-center justify-end"><SoundToggle /></div>
+          <h1 className="text-sm sm:text-base font-bold tracking-tight text-neutral-900 truncate px-2">
+            {title}
+          </h1>
+          <div className="flex w-[80px] sm:w-[120px] items-center justify-end">
+            <SoundToggle />
+          </div>
         </div>
       </header>
       <div className="mx-auto w-full max-w-7xl px-3 py-3 sm:px-6 sm:py-5 lg:px-10">{children}</div>
@@ -212,7 +220,12 @@ function SubCaseRunner({
     () =>
       messages
         .filter((m) => m.role === "user")
-        .map((m) => m.parts.map((p) => (p.type === "text" ? p.text : "")).join("").trim())
+        .map((m) =>
+          m.parts
+            .map((p) => (p.type === "text" ? p.text : ""))
+            .join("")
+            .trim(),
+        )
         .filter(Boolean),
     [messages],
   );
@@ -302,12 +315,12 @@ function SubCaseRunner({
                 onUnlock={() => setGlitchUnlocked(true)}
                 onCorrect={() =>
                   setTimeout(
-                    () => repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
+                    () =>
+                      repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
                     100,
                   )
                 }
               />
-
             )}
 
             <WorkbookActivityPrompt
@@ -324,7 +337,13 @@ function SubCaseRunner({
               ref={repairRef}
               className={`grid gap-3 ${stage === "repair" || stage === "explain" || stage === "solved" ? "sm:grid-cols-2 sm:items-start" : "grid-cols-1"}`}
             >
-              <div className={stage === "detect" ? "cursor-pointer rounded-xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}>
+              <div
+                className={
+                  stage === "detect"
+                    ? "cursor-pointer rounded-xl ring-2 ring-[#fcd34d] ring-offset-2 transition"
+                    : ""
+                }
+              >
                 <Visual
                   equalized={equalized}
                   onGlitchClick={handleGlitchClick}
@@ -343,8 +362,13 @@ function SubCaseRunner({
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span aria-hidden className="text-lg">🛠️</span>
-                        <label htmlFor="equalizer" className="text-xs font-bold tracking-wider text-neutral-800">
+                        <span aria-hidden className="text-lg">
+                          🛠️
+                        </span>
+                        <label
+                          htmlFor="equalizer"
+                          className="text-xs font-bold tracking-wider text-neutral-800"
+                        >
                           {c.sliderLabel}
                         </label>
                         <SpeakButton text={`${c.sliderLabel}. ${c.toolTagline}`} />

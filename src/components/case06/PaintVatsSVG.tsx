@@ -21,7 +21,9 @@ export function PaintVatsSVG({ repaired, pulseKey }: VisualProps) {
           )}
         </g>
 
-        <text x={170} y={150} textAnchor="middle" fontSize="32" fontWeight="900" fill="#334155">+</text>
+        <text x={170} y={150} textAnchor="middle" fontSize="32" fontWeight="900" fill="#334155">
+          +
+        </text>
 
         {/* RIGHT vat (1/6) */}
         <Vat x={195} y={40} sections={6} filled={1} label="1/6" />
@@ -113,43 +115,48 @@ function Vat({
         ))}
 
       {/* Fill */}
-      {puddle ? (
-        // Tiny puddles at the bottom for the wrong-answer vat
-        Array.from({ length: filled }).map((_, i) => (
-          <ellipse
-            key={i}
-            cx={x + 25 + i * 30}
-            cy={y + h - 8}
-            rx={10}
-            ry={3}
-            fill={fillColor}
-            stroke={fillStroke}
-            strokeWidth={1.5}
-          />
-        ))
-      ) : (
-        Array.from({ length: filled }).map((_, i) => {
-          const col = i % cols;
-          const rowFromBottom = Math.floor(i / cols);
-          const sx = x + col * colW + 2;
-          const sy = y + h - (rowFromBottom + 1) * rowH + 2;
-          return (
-            <rect
+      {puddle
+        ? // Tiny puddles at the bottom for the wrong-answer vat
+          Array.from({ length: filled }).map((_, i) => (
+            <ellipse
               key={i}
-              x={sx}
-              y={sy}
-              width={colW - 4}
-              height={rowH - 4}
-              rx={2}
+              cx={x + 25 + i * 30}
+              cy={y + h - 8}
+              rx={10}
+              ry={3}
               fill={fillColor}
               stroke={fillStroke}
               strokeWidth={1.5}
             />
-          );
-        })
-      )}
+          ))
+        : Array.from({ length: filled }).map((_, i) => {
+            const col = i % cols;
+            const rowFromBottom = Math.floor(i / cols);
+            const sx = x + col * colW + 2;
+            const sy = y + h - (rowFromBottom + 1) * rowH + 2;
+            return (
+              <rect
+                key={i}
+                x={sx}
+                y={sy}
+                width={colW - 4}
+                height={rowH - 4}
+                rx={2}
+                fill={fillColor}
+                stroke={fillStroke}
+                strokeWidth={1.5}
+              />
+            );
+          })}
 
-      <text x={x + w / 2} y={y + h + 22} textAnchor="middle" fontSize="14" fontWeight="800" fill="#475569">
+      <text
+        x={x + w / 2}
+        y={y + h + 22}
+        textAnchor="middle"
+        fontSize="14"
+        fontWeight="800"
+        fill="#475569"
+      >
         {label}
       </text>
     </g>

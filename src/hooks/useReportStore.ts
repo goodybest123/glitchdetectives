@@ -51,7 +51,6 @@ export type ReportEntry = {
   }[];
 };
 
-
 export type ReportMap = Record<string, Record<string, ReportEntry>>;
 
 function read(): ReportMap {
@@ -82,11 +81,7 @@ export function saveReportEntry(entry: ReportEntry) {
   write(all);
 }
 
-export function patchReportEntry(
-  caseId: string,
-  subId: string,
-  patch: Partial<ReportEntry>,
-) {
+export function patchReportEntry(caseId: string, subId: string, patch: Partial<ReportEntry>) {
   const all = read();
   const caseMap = { ...(all[caseId] ?? {}) };
   const prev = caseMap[subId];

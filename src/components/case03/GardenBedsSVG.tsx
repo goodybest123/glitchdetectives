@@ -34,7 +34,16 @@ function Bed({
             <stop offset="100%" stopColor="#22c55e" />
           </linearGradient>
         </defs>
-        <rect x={2} y={2} width={W - 4} height={H - 4} rx={10} fill="#fef3c7" stroke="#d6c39a" strokeWidth={2} />
+        <rect
+          x={2}
+          y={2}
+          width={W - 4}
+          height={H - 4}
+          rx={10}
+          fill="#fef3c7"
+          stroke="#d6c39a"
+          strokeWidth={2}
+        />
         <rect
           x={6}
           y={H - 4 - fillHeight}

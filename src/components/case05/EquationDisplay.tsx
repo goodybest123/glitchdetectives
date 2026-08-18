@@ -41,11 +41,7 @@ export function EquationDisplay({
 }
 
 function Op({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="text-3xl sm:text-4xl font-black text-neutral-700">
-      {children}
-    </span>
-  );
+  return <span className="text-3xl sm:text-4xl font-black text-neutral-700">{children}</span>;
 }
 
 function FractionText({ n, d }: { n: number; d: number }) {

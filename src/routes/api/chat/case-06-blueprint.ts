@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
+import { validateChatMessages } from "@/lib/chat-validation";
 
 const SYSTEM_PROMPT = `You are ZED-4's friendly AI Guide — a warm, curious robot helper for a Grade 1 child (age 6).
 
@@ -40,10 +41,8 @@ export const Route = createFileRoute("/api/chat/case-06-blueprint")({
       POST: async ({ request }) => {
         const key = process.env.LOVABLE_API_KEY;
         if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
-        const { messages } = (await request.json()) as { messages: UIMessage[] };
-        if (!Array.isArray(messages)) {
-          return new Response("Messages are required", { status: 400 });
-        }
+        const messages = validateChatMessages(await request.json());
+        if (messages instanceof Response) return messages;
         const gateway = createLovableAiGatewayProvider(key);
         const result = streamText({
           model: gateway("google/gemini-3-flash-preview"),

@@ -23,7 +23,9 @@ export function CircuitBoardSVG({ repaired, pulseKey }: VisualProps) {
           {repaired ? <PowerCellSegmented x={30} y={40} /> : <PowerCellSolid x={30} y={40} />}
         </g>
 
-        <text x={195} y={130} textAnchor="middle" fontSize="32" fontWeight="900" fill="#cbd5e1">−</text>
+        <text x={195} y={130} textAnchor="middle" fontSize="32" fontWeight="900" fill="#cbd5e1">
+          −
+        </text>
 
         {/* RIGHT: 1/8 microchip */}
         <Chip x={220} y={108} />
@@ -52,9 +54,25 @@ function PowerCellSolid({ x, y }: { x: number; y: number }) {
   const h = 160;
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={10} fill="#34d399" stroke="#10b981" strokeWidth={2.5} />
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={10}
+        fill="#34d399"
+        stroke="#10b981"
+        strokeWidth={2.5}
+      />
       <rect x={x + 6} y={y + 6} width={w - 12} height={10} rx={4} fill="#6ee7b7" opacity={0.8} />
-      <text x={x + w / 2} y={y + h / 2 + 8} textAnchor="middle" fontSize="24" fontWeight="900" fill="#064e3b">
+      <text
+        x={x + w / 2}
+        y={y + h / 2 + 8}
+        textAnchor="middle"
+        fontSize="24"
+        fontWeight="900"
+        fill="#064e3b"
+      >
         1/2
       </text>
     </g>
@@ -69,7 +87,16 @@ function PowerCellSegmented({ x, y }: { x: number; y: number }) {
   const removedIdx = 3;
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={10} fill="none" stroke="#10b981" strokeWidth={2.5} />
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={10}
+        fill="none"
+        stroke="#10b981"
+        strokeWidth={2.5}
+      />
       {Array.from({ length: 4 }).map((_, i) => {
         const sy = y + i * segH;
         const removed = i === removedIdx;
@@ -108,14 +135,46 @@ function Chip({ x, y }: { x: number; y: number }) {
   const h = 44;
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={4} fill="#fde68a" stroke="#ca8a04" strokeWidth={2} />
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={4}
+        fill="#fde68a"
+        stroke="#ca8a04"
+        strokeWidth={2}
+      />
       {Array.from({ length: 4 }).map((_, i) => (
-        <line key={`t${i}`} x1={x + 8 + i * 12} y1={y - 6} x2={x + 8 + i * 12} y2={y} stroke="#ca8a04" strokeWidth={1.5} />
+        <line
+          key={`t${i}`}
+          x1={x + 8 + i * 12}
+          y1={y - 6}
+          x2={x + 8 + i * 12}
+          y2={y}
+          stroke="#ca8a04"
+          strokeWidth={1.5}
+        />
       ))}
       {Array.from({ length: 4 }).map((_, i) => (
-        <line key={`b${i}`} x1={x + 8 + i * 12} y1={y + h} x2={x + 8 + i * 12} y2={y + h + 6} stroke="#ca8a04" strokeWidth={1.5} />
+        <line
+          key={`b${i}`}
+          x1={x + 8 + i * 12}
+          y1={y + h}
+          x2={x + 8 + i * 12}
+          y2={y + h + 6}
+          stroke="#ca8a04"
+          strokeWidth={1.5}
+        />
       ))}
-      <text x={x + w / 2} y={y + h / 2 + 5} textAnchor="middle" fontSize="13" fontWeight="900" fill="#713f12">
+      <text
+        x={x + w / 2}
+        y={y + h / 2 + 5}
+        textAnchor="middle"
+        fontSize="13"
+        fontWeight="900"
+        fill="#713f12"
+      >
         1/8
       </text>
     </g>
@@ -140,12 +199,21 @@ function OutputBoard({
   tiny?: boolean;
 }) {
   const w = tiny ? 80 : 110;
-  const segH = tiny ? 14 : (160 / slots);
+  const segH = tiny ? 14 : 160 / slots;
   const h = segH * slots;
   const border = tone === "good" ? "#10b981" : "#f97316";
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={8} fill="#0b1220" stroke={border} strokeWidth={2.5} />
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={8}
+        fill="#0b1220"
+        stroke={border}
+        strokeWidth={2.5}
+      />
       {Array.from({ length: slots }).map((_, i) => {
         const sy = y + i * segH;
         const isFilled = i >= slots - filled; // fill from bottom
@@ -167,7 +235,14 @@ function OutputBoard({
           </g>
         );
       })}
-      <text x={x + w / 2} y={y + h + 18} textAnchor="middle" fontSize="13" fontWeight="800" fill="#e2e8f0">
+      <text
+        x={x + w / 2}
+        y={y + h + 18}
+        textAnchor="middle"
+        fontSize="13"
+        fontWeight="800"
+        fill="#e2e8f0"
+      >
         {label}
       </text>
     </g>

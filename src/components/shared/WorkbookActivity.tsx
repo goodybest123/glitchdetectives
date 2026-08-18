@@ -79,7 +79,12 @@ type GlitchChoicesProps = {
   onCorrect?: () => void;
 };
 
-export function WorkbookGlitchChoices({ choices, unlocked, onUnlock, onCorrect }: GlitchChoicesProps) {
+export function WorkbookGlitchChoices({
+  choices,
+  unlocked,
+  onUnlock,
+  onCorrect,
+}: GlitchChoicesProps) {
   const [wrongChoice, setWrongChoice] = useState<string | null>(null);
   const [attempts, setAttempts] = useState(0);
   const [pendingChoice, setPendingChoice] = useState<GlitchChoice | null>(null);
@@ -99,7 +104,6 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock, onCorrect }
     }, 900);
     return () => window.clearTimeout(timer);
   }, [pendingChoice, onUnlock, onCorrect]);
-
 
   const supportiveFeedback =
     attempts <= 1
@@ -146,7 +150,9 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock, onCorrect }
                   {isChecking ? "…" : isWrong ? "↻" : String.fromCharCode(65 + index)}
                 </span>
                 {choice.label}
-                {isChecking && <span className="ml-auto text-[10px] font-black tracking-wider">THINKING…</span>}
+                {isChecking && (
+                  <span className="ml-auto text-[10px] font-black tracking-wider">THINKING…</span>
+                )}
               </Button>
               <SpeakButton
                 text={`Option ${String.fromCharCode(65 + index)}. ${choice.label}`}
@@ -158,14 +164,17 @@ export function WorkbookGlitchChoices({ choices, unlocked, onUnlock, onCorrect }
           );
         })}
       </div>
-      <div className={`mt-3 rounded-xl px-3 py-2 text-center text-xs font-bold ${wrongChoice ? "bg-energy/15 text-foreground" : "text-muted-foreground"}`} aria-live="polite">
+      <div
+        className={`mt-3 rounded-xl px-3 py-2 text-center text-xs font-bold ${wrongChoice ? "bg-energy/15 text-foreground" : "text-muted-foreground"}`}
+        aria-live="polite"
+      >
         {pendingChoice
           ? "Take a moment, Detective… let’s check your thinking."
           : wrongChoice
-          ? `Pencil note: ${supportiveFeedback}`
-          : unlocked
-            ? "✓ Good thinking! Now tap that exact glitch in the picture."
-            : "Pick an answer to unlock the picture."}
+            ? `Pencil note: ${supportiveFeedback}`
+            : unlocked
+              ? "✓ Good thinking! Now tap that exact glitch in the picture."
+              : "Pick an answer to unlock the picture."}
       </div>
     </section>
   );
@@ -179,11 +188,18 @@ type RepairSubmitProps = {
 export function WorkbookRepairSubmit({ ready, onSubmit }: RepairSubmitProps) {
   return (
     <div className="mt-4 border-t border-dashed border-border pt-4 text-center">
-      <Button type="button" onClick={onSubmit} disabled={!ready} className="min-h-11 px-6 font-black">
+      <Button
+        type="button"
+        onClick={onSubmit}
+        disabled={!ready}
+        className="min-h-11 px-6 font-black"
+      >
         ✓ Submit repaired logic
       </Button>
       <p className="mt-2 text-xs font-medium text-muted-foreground" aria-live="polite">
-        {ready ? "Your repair is ready. Submit it when you are sure." : "Finish the repair before submitting your logic."}
+        {ready
+          ? "Your repair is ready. Submit it when you are sure."
+          : "Finish the repair before submitting your logic."}
       </p>
     </div>
   );

@@ -19,9 +19,17 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Glitch Detectives — Reasoning-First Maths for K-6" },
-      { name: "description", content: "A reasoning-first maths platform where children investigate AI mistakes, repair them, and teach the robot why. Built for the AI era." },
+      {
+        name: "description",
+        content:
+          "A reasoning-first maths platform where children investigate AI mistakes, repair them, and teach the robot why. Built for the AI era.",
+      },
       { property: "og:title", content: "Glitch Detectives — Reasoning-First Maths for K-6" },
-      { property: "og:description", content: "Don't solve. Investigate. Detect. Repair. A calm, neurodivergent-inclusive maths platform for K-6 learners." },
+      {
+        property: "og:description",
+        content:
+          "Don't solve. Investigate. Detect. Repair. A calm, neurodivergent-inclusive maths platform for K-6 learners.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

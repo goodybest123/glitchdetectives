@@ -19,7 +19,12 @@ import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { ChatPanel } from "@/components/shared/ChatPanel";
-import { WorkbookActivityPrompt, WorkbookGlitchChoices, WorkbookRepairFrame, WorkbookRepairSubmit } from "@/components/shared/WorkbookActivity";
+import {
+  WorkbookActivityPrompt,
+  WorkbookGlitchChoices,
+  WorkbookRepairFrame,
+  WorkbookRepairSubmit,
+} from "@/components/shared/WorkbookActivity";
 import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
@@ -72,22 +77,23 @@ function CaseThreePage() {
   );
 }
 
-function PageShell({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function PageShell({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <main className="min-h-screen bg-white">
       <header className="border-b border-neutral-100">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-3 py-2.5 sm:px-6 sm:py-3 lg:px-10">
-          <Link to="/play" className="text-xs sm:text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900">
+          <Link
+            to="/play"
+            className="text-xs sm:text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+          >
             ← Back
           </Link>
-          <h1 className="text-sm sm:text-base font-bold tracking-tight text-neutral-900 truncate px-2">{title}</h1>
-          <div className="flex w-[80px] sm:w-[120px] items-center justify-end"><SoundToggle /></div>
+          <h1 className="text-sm sm:text-base font-bold tracking-tight text-neutral-900 truncate px-2">
+            {title}
+          </h1>
+          <div className="flex w-[80px] sm:w-[120px] items-center justify-end">
+            <SoundToggle />
+          </div>
         </div>
       </header>
       <div className="mx-auto w-full max-w-7xl px-3 py-3 sm:px-6 sm:py-5 lg:px-10">{children}</div>
@@ -210,7 +216,10 @@ function SubCaseRunner({
       messages
         .filter((m) => m.role === "user")
         .map((m) =>
-          m.parts.map((p) => (p.type === "text" ? p.text : "")).join("").trim(),
+          m.parts
+            .map((p) => (p.type === "text" ? p.text : ""))
+            .join("")
+            .trim(),
         )
         .filter(Boolean),
     [messages],
@@ -218,13 +227,7 @@ function SubCaseRunner({
 
   const marks = useMemo(() => {
     const investigate =
-      stage === "investigate"
-        ? 0
-        : wrongVerdictCount === 0
-          ? 5
-          : wrongVerdictCount === 1
-            ? 4
-            : 3;
+      stage === "investigate" ? 0 : wrongVerdictCount === 0 ? 5 : wrongVerdictCount === 1 ? 4 : 3;
     const detect = stage === "investigate" || stage === "detect" ? 0 : 5;
     let repair = 0;
     if (atTarget) {
@@ -291,23 +294,46 @@ function SubCaseRunner({
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6">
         {/* Case file */}
         <section>
-          <div ref={repairRef} className="rounded-2xl bg-white p-3 sm:p-5 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100">
+          <div
+            ref={repairRef}
+            className="rounded-2xl bg-white p-3 sm:p-5 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100"
+          >
             <CaseStepper stage={stage} />
             <div className="mb-6">
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
             {stage === "detect" && (
-              <WorkbookGlitchChoices choices={getGlitchChoices("case-03", caseId)} unlocked={glitchUnlocked} onUnlock={() => setGlitchUnlocked(true)} onCorrect={() => setTimeout(() => repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 100)} />
+              <WorkbookGlitchChoices
+                choices={getGlitchChoices("case-03", caseId)}
+                unlocked={glitchUnlocked}
+                onUnlock={() => setGlitchUnlocked(true)}
+                onCorrect={() =>
+                  setTimeout(
+                    () =>
+                      repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
+                    100,
+                  )
+                }
+              />
             )}
 
-            <WorkbookActivityPrompt stage={stage} emoji={c.emoji} title={c.title}
-              detectInstruction={c.captions.investigate} repairInstruction={c.captions.repair}
-              toolName="Comparison Dial" />
+            <WorkbookActivityPrompt
+              stage={stage}
+              emoji={c.emoji}
+              title={c.title}
+              detectInstruction={c.captions.investigate}
+              repairInstruction={c.captions.repair}
+              toolName="Comparison Dial"
+            />
 
             {/* Tanks/beds/disks with comparator in the middle */}
             <div
-              className={stage === "detect" ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition" : ""}
+              className={
+                stage === "detect"
+                  ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition"
+                  : ""
+              }
             >
               <Visual
                 dividersVisible={dividersVisible}
@@ -333,22 +359,28 @@ function SubCaseRunner({
               />
             )}
 
-            {!(stage === "investigate" && !verdictPassed) && (
-              <CaptionLine text={caption} />
-            )}
+            {!(stage === "investigate" && !verdictPassed) && <CaptionLine text={caption} />}
             {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
 
-
             {stage === "repair" && (
-              <WorkbookRepairFrame toolName="Comparison Dial" instruction={c.captions.repair}
-                hint="Compare the shaded amount, not the size of the numbers." progress={`${c.left.n}/${c.left.d}  ${operator}  ${c.right.n}/${c.right.d}`}>
-                <div className="flex justify-center"><ComparatorToggle value={operator} onChange={handleOperatorChange} /></div>
-                <WorkbookRepairSubmit ready={atTarget} onSubmit={() => {
-                  setDividersVisible(false);
-                  setSpinKey((k) => k + 1);
-                  setStage("explain");
-                  window.setTimeout(() => setDividersVisible(true), 1400);
-                }} />
+              <WorkbookRepairFrame
+                toolName="Comparison Dial"
+                instruction={c.captions.repair}
+                hint="Compare the shaded amount, not the size of the numbers."
+                progress={`${c.left.n}/${c.left.d}  ${operator}  ${c.right.n}/${c.right.d}`}
+              >
+                <div className="flex justify-center">
+                  <ComparatorToggle value={operator} onChange={handleOperatorChange} />
+                </div>
+                <WorkbookRepairSubmit
+                  ready={atTarget}
+                  onSubmit={() => {
+                    setDividersVisible(false);
+                    setSpinKey((k) => k + 1);
+                    setStage("explain");
+                    window.setTimeout(() => setDividersVisible(true), 1400);
+                  }}
+                />
               </WorkbookRepairFrame>
             )}
 
@@ -376,10 +408,11 @@ function SubCaseRunner({
           messages={messages}
           isSending={isSending}
           onSend={(text) => sendMessage({ text })}
-          onViewReport={() => reportRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          onViewReport={() =>
+            reportRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
         />
       </div>
     </>
   );
 }
-

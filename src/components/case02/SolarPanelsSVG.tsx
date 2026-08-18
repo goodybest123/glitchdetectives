@@ -13,7 +13,6 @@ export function SolarPanelsSVG({
   pulseKey = 0,
   glitchTarget,
 }: VisualProps) {
-
   const W = 380;
   const H = 110;
   const gap = 8;
@@ -81,9 +80,7 @@ export function SolarPanelsSVG({
       </svg>
 
       <div className="flex items-center gap-5 rounded-2xl bg-[#1f2937] px-5 py-3">
-        <span className="text-xs font-bold tracking-wider text-[#fde68a]">
-          ACTIVE SOLAR POWER
-        </span>
+        <span className="text-xs font-bold tracking-wider text-[#fde68a]">ACTIVE SOLAR POWER</span>
         <FractionDisplay
           numerator={numerator}
           denominator={denominator}
@@ -93,7 +90,6 @@ export function SolarPanelsSVG({
           size="md"
           glitchTarget={glitchTarget}
         />
-
       </div>
     </div>
   );

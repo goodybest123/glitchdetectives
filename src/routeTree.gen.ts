@@ -9,43 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PrintablesRouteImport } from './routes/printables'
-import { Route as PlayRouteImport } from './routes/play'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PrintablesIndexRouteImport } from './routes/printables.index'
+import { Route as PlayRouteImport } from './routes/play'
+import { Route as PrintablesRouteImport } from './routes/printables'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
-import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
-import { Route as PlayReportRouteImport } from './routes/play.report'
-import { Route as PlayCase06RouteImport } from './routes/play.case-06'
-import { Route as PlayCase05RouteImport } from './routes/play.case-05'
-import { Route as PlayCase04RouteImport } from './routes/play.case-04'
-import { Route as PlayCase03RouteImport } from './routes/play.case-03'
-import { Route as PlayCase02RouteImport } from './routes/play.case-02'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
+import { Route as PlayCase02RouteImport } from './routes/play.case-02'
+import { Route as PlayCase03RouteImport } from './routes/play.case-03'
+import { Route as PlayCase04RouteImport } from './routes/play.case-04'
+import { Route as PlayCase05RouteImport } from './routes/play.case-05'
+import { Route as PlayCase06RouteImport } from './routes/play.case-06'
+import { Route as PlayReportRouteImport } from './routes/play.report'
+import { Route as PrintablesIndexRouteImport } from './routes/printables.index'
+import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
+import { Route as ApiChatCase01RouteImport } from './routes/api/chat/case-01'
+import { Route as ApiChatCase01CanvasRouteImport } from './routes/api/chat/case-01-canvas'
+import { Route as ApiChatCase01ChocolateRouteImport } from './routes/api/chat/case-01-chocolate'
+import { Route as ApiChatCase02BarRouteImport } from './routes/api/chat/case-02-bar'
+import { Route as ApiChatCase02CrateRouteImport } from './routes/api/chat/case-02-crate'
+import { Route as ApiChatCase02PanelsRouteImport } from './routes/api/chat/case-02-panels'
+import { Route as ApiChatCase03DisksRouteImport } from './routes/api/chat/case-03-disks'
+import { Route as ApiChatCase03GardenRouteImport } from './routes/api/chat/case-03-garden'
+import { Route as ApiChatCase03TanksRouteImport } from './routes/api/chat/case-03-tanks'
+import { Route as ApiChatCase04BeamsRouteImport } from './routes/api/chat/case-04-beams'
+import { Route as ApiChatCase04CargoRouteImport } from './routes/api/chat/case-04-cargo'
+import { Route as ApiChatCase04CoolantRouteImport } from './routes/api/chat/case-04-coolant'
+import { Route as ApiChatCase05AssemblyRouteImport } from './routes/api/chat/case-05-assembly'
+import { Route as ApiChatCase05ConveyorRouteImport } from './routes/api/chat/case-05-conveyor'
+import { Route as ApiChatCase05CoolantRouteImport } from './routes/api/chat/case-05-coolant'
+import { Route as ApiChatCase06BlueprintRouteImport } from './routes/api/chat/case-06-blueprint'
+import { Route as ApiChatCase06CircuitRouteImport } from './routes/api/chat/case-06-circuit'
+import { Route as ApiChatCase06PaintRouteImport } from './routes/api/chat/case-06-paint'
 import { Route as PrintablesFractionsL1IndexRouteImport } from './routes/printables.fractions-l1.index'
 import { Route as PrintablesFractionsL1PreviewRouteImport } from './routes/printables.fractions-l1.preview'
-import { Route as ApiChatCase06PaintRouteImport } from './routes/api/chat/case-06-paint'
-import { Route as ApiChatCase06CircuitRouteImport } from './routes/api/chat/case-06-circuit'
-import { Route as ApiChatCase06BlueprintRouteImport } from './routes/api/chat/case-06-blueprint'
-import { Route as ApiChatCase05CoolantRouteImport } from './routes/api/chat/case-05-coolant'
-import { Route as ApiChatCase05ConveyorRouteImport } from './routes/api/chat/case-05-conveyor'
-import { Route as ApiChatCase05AssemblyRouteImport } from './routes/api/chat/case-05-assembly'
-import { Route as ApiChatCase04CoolantRouteImport } from './routes/api/chat/case-04-coolant'
-import { Route as ApiChatCase04CargoRouteImport } from './routes/api/chat/case-04-cargo'
-import { Route as ApiChatCase04BeamsRouteImport } from './routes/api/chat/case-04-beams'
-import { Route as ApiChatCase03TanksRouteImport } from './routes/api/chat/case-03-tanks'
-import { Route as ApiChatCase03GardenRouteImport } from './routes/api/chat/case-03-garden'
-import { Route as ApiChatCase03DisksRouteImport } from './routes/api/chat/case-03-disks'
-import { Route as ApiChatCase02PanelsRouteImport } from './routes/api/chat/case-02-panels'
-import { Route as ApiChatCase02CrateRouteImport } from './routes/api/chat/case-02-crate'
-import { Route as ApiChatCase02BarRouteImport } from './routes/api/chat/case-02-bar'
-import { Route as ApiChatCase01ChocolateRouteImport } from './routes/api/chat/case-01-chocolate'
-import { Route as ApiChatCase01CanvasRouteImport } from './routes/api/chat/case-01-canvas'
-import { Route as ApiChatCase01RouteImport } from './routes/api/chat/case-01'
 
-const PrintablesRoute = PrintablesRouteImport.update({
-  id: '/printables',
-  path: '/printables',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlayRoute = PlayRouteImport.update({
@@ -53,49 +53,19 @@ const PlayRoute = PlayRouteImport.update({
   path: '/play',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const PrintablesRoute = PrintablesRouteImport.update({
+  id: '/printables',
+  path: '/printables',
   getParentRoute: () => rootRouteImport,
-} as any)
-const PrintablesIndexRoute = PrintablesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PrintablesRoute,
 } as any)
 const PlayIndexRoute = PlayIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PlayRoute,
 } as any)
-const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
-  id: '/fractions-l1',
-  path: '/fractions-l1',
-  getParentRoute: () => PrintablesRoute,
-} as any)
-const PlayReportRoute = PlayReportRouteImport.update({
-  id: '/report',
-  path: '/report',
-  getParentRoute: () => PlayRoute,
-} as any)
-const PlayCase06Route = PlayCase06RouteImport.update({
-  id: '/case-06',
-  path: '/case-06',
-  getParentRoute: () => PlayRoute,
-} as any)
-const PlayCase05Route = PlayCase05RouteImport.update({
-  id: '/case-05',
-  path: '/case-05',
-  getParentRoute: () => PlayRoute,
-} as any)
-const PlayCase04Route = PlayCase04RouteImport.update({
-  id: '/case-04',
-  path: '/case-04',
-  getParentRoute: () => PlayRoute,
-} as any)
-const PlayCase03Route = PlayCase03RouteImport.update({
-  id: '/case-03',
-  path: '/case-03',
+const PlayCase01Route = PlayCase01RouteImport.update({
+  id: '/case-01',
+  path: '/case-01',
   getParentRoute: () => PlayRoute,
 } as any)
 const PlayCase02Route = PlayCase02RouteImport.update({
@@ -103,10 +73,130 @@ const PlayCase02Route = PlayCase02RouteImport.update({
   path: '/case-02',
   getParentRoute: () => PlayRoute,
 } as any)
-const PlayCase01Route = PlayCase01RouteImport.update({
-  id: '/case-01',
-  path: '/case-01',
+const PlayCase03Route = PlayCase03RouteImport.update({
+  id: '/case-03',
+  path: '/case-03',
   getParentRoute: () => PlayRoute,
+} as any)
+const PlayCase04Route = PlayCase04RouteImport.update({
+  id: '/case-04',
+  path: '/case-04',
+  getParentRoute: () => PlayRoute,
+} as any)
+const PlayCase05Route = PlayCase05RouteImport.update({
+  id: '/case-05',
+  path: '/case-05',
+  getParentRoute: () => PlayRoute,
+} as any)
+const PlayCase06Route = PlayCase06RouteImport.update({
+  id: '/case-06',
+  path: '/case-06',
+  getParentRoute: () => PlayRoute,
+} as any)
+const PlayReportRoute = PlayReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => PlayRoute,
+} as any)
+const PrintablesIndexRoute = PrintablesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PrintablesRoute,
+} as any)
+const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
+  id: '/fractions-l1',
+  path: '/fractions-l1',
+  getParentRoute: () => PrintablesRoute,
+} as any)
+const ApiChatCase01Route = ApiChatCase01RouteImport.update({
+  id: '/api/chat/case-01',
+  path: '/api/chat/case-01',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase01CanvasRoute = ApiChatCase01CanvasRouteImport.update({
+  id: '/api/chat/case-01-canvas',
+  path: '/api/chat/case-01-canvas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase01ChocolateRoute = ApiChatCase01ChocolateRouteImport.update({
+  id: '/api/chat/case-01-chocolate',
+  path: '/api/chat/case-01-chocolate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase02BarRoute = ApiChatCase02BarRouteImport.update({
+  id: '/api/chat/case-02-bar',
+  path: '/api/chat/case-02-bar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase02CrateRoute = ApiChatCase02CrateRouteImport.update({
+  id: '/api/chat/case-02-crate',
+  path: '/api/chat/case-02-crate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase02PanelsRoute = ApiChatCase02PanelsRouteImport.update({
+  id: '/api/chat/case-02-panels',
+  path: '/api/chat/case-02-panels',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase03DisksRoute = ApiChatCase03DisksRouteImport.update({
+  id: '/api/chat/case-03-disks',
+  path: '/api/chat/case-03-disks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase03GardenRoute = ApiChatCase03GardenRouteImport.update({
+  id: '/api/chat/case-03-garden',
+  path: '/api/chat/case-03-garden',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase03TanksRoute = ApiChatCase03TanksRouteImport.update({
+  id: '/api/chat/case-03-tanks',
+  path: '/api/chat/case-03-tanks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase04BeamsRoute = ApiChatCase04BeamsRouteImport.update({
+  id: '/api/chat/case-04-beams',
+  path: '/api/chat/case-04-beams',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase04CargoRoute = ApiChatCase04CargoRouteImport.update({
+  id: '/api/chat/case-04-cargo',
+  path: '/api/chat/case-04-cargo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase04CoolantRoute = ApiChatCase04CoolantRouteImport.update({
+  id: '/api/chat/case-04-coolant',
+  path: '/api/chat/case-04-coolant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase05AssemblyRoute = ApiChatCase05AssemblyRouteImport.update({
+  id: '/api/chat/case-05-assembly',
+  path: '/api/chat/case-05-assembly',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase05ConveyorRoute = ApiChatCase05ConveyorRouteImport.update({
+  id: '/api/chat/case-05-conveyor',
+  path: '/api/chat/case-05-conveyor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase05CoolantRoute = ApiChatCase05CoolantRouteImport.update({
+  id: '/api/chat/case-05-coolant',
+  path: '/api/chat/case-05-coolant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase06BlueprintRoute = ApiChatCase06BlueprintRouteImport.update({
+  id: '/api/chat/case-06-blueprint',
+  path: '/api/chat/case-06-blueprint',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase06CircuitRoute = ApiChatCase06CircuitRouteImport.update({
+  id: '/api/chat/case-06-circuit',
+  path: '/api/chat/case-06-circuit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase06PaintRoute = ApiChatCase06PaintRouteImport.update({
+  id: '/api/chat/case-06-paint',
+  path: '/api/chat/case-06-paint',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PrintablesFractionsL1IndexRoute =
   PrintablesFractionsL1IndexRouteImport.update({
@@ -120,96 +210,6 @@ const PrintablesFractionsL1PreviewRoute =
     path: '/preview',
     getParentRoute: () => PrintablesFractionsL1Route,
   } as any)
-const ApiChatCase06PaintRoute = ApiChatCase06PaintRouteImport.update({
-  id: '/api/chat/case-06-paint',
-  path: '/api/chat/case-06-paint',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase06CircuitRoute = ApiChatCase06CircuitRouteImport.update({
-  id: '/api/chat/case-06-circuit',
-  path: '/api/chat/case-06-circuit',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase06BlueprintRoute = ApiChatCase06BlueprintRouteImport.update({
-  id: '/api/chat/case-06-blueprint',
-  path: '/api/chat/case-06-blueprint',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase05CoolantRoute = ApiChatCase05CoolantRouteImport.update({
-  id: '/api/chat/case-05-coolant',
-  path: '/api/chat/case-05-coolant',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase05ConveyorRoute = ApiChatCase05ConveyorRouteImport.update({
-  id: '/api/chat/case-05-conveyor',
-  path: '/api/chat/case-05-conveyor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase05AssemblyRoute = ApiChatCase05AssemblyRouteImport.update({
-  id: '/api/chat/case-05-assembly',
-  path: '/api/chat/case-05-assembly',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase04CoolantRoute = ApiChatCase04CoolantRouteImport.update({
-  id: '/api/chat/case-04-coolant',
-  path: '/api/chat/case-04-coolant',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase04CargoRoute = ApiChatCase04CargoRouteImport.update({
-  id: '/api/chat/case-04-cargo',
-  path: '/api/chat/case-04-cargo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase04BeamsRoute = ApiChatCase04BeamsRouteImport.update({
-  id: '/api/chat/case-04-beams',
-  path: '/api/chat/case-04-beams',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase03TanksRoute = ApiChatCase03TanksRouteImport.update({
-  id: '/api/chat/case-03-tanks',
-  path: '/api/chat/case-03-tanks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase03GardenRoute = ApiChatCase03GardenRouteImport.update({
-  id: '/api/chat/case-03-garden',
-  path: '/api/chat/case-03-garden',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase03DisksRoute = ApiChatCase03DisksRouteImport.update({
-  id: '/api/chat/case-03-disks',
-  path: '/api/chat/case-03-disks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase02PanelsRoute = ApiChatCase02PanelsRouteImport.update({
-  id: '/api/chat/case-02-panels',
-  path: '/api/chat/case-02-panels',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase02CrateRoute = ApiChatCase02CrateRouteImport.update({
-  id: '/api/chat/case-02-crate',
-  path: '/api/chat/case-02-crate',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase02BarRoute = ApiChatCase02BarRouteImport.update({
-  id: '/api/chat/case-02-bar',
-  path: '/api/chat/case-02-bar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase01ChocolateRoute = ApiChatCase01ChocolateRouteImport.update({
-  id: '/api/chat/case-01-chocolate',
-  path: '/api/chat/case-01-chocolate',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase01CanvasRoute = ApiChatCase01CanvasRouteImport.update({
-  id: '/api/chat/case-01-canvas',
-  path: '/api/chat/case-01-canvas',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatCase01Route = ApiChatCase01RouteImport.update({
-  id: '/api/chat/case-01',
-  path: '/api/chat/case-01',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -445,11 +445,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/printables': {
-      id: '/printables'
-      path: '/printables'
-      fullPath: '/printables'
-      preLoaderRoute: typeof PrintablesRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/play': {
@@ -459,19 +459,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/printables': {
+      id: '/printables'
+      path: '/printables'
+      fullPath: '/printables'
+      preLoaderRoute: typeof PrintablesRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/printables/': {
-      id: '/printables/'
-      path: '/'
-      fullPath: '/printables/'
-      preLoaderRoute: typeof PrintablesIndexRouteImport
-      parentRoute: typeof PrintablesRoute
     }
     '/play/': {
       id: '/play/'
@@ -480,46 +473,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayIndexRouteImport
       parentRoute: typeof PlayRoute
     }
-    '/printables/fractions-l1': {
-      id: '/printables/fractions-l1'
-      path: '/fractions-l1'
-      fullPath: '/printables/fractions-l1'
-      preLoaderRoute: typeof PrintablesFractionsL1RouteImport
-      parentRoute: typeof PrintablesRoute
-    }
-    '/play/report': {
-      id: '/play/report'
-      path: '/report'
-      fullPath: '/play/report'
-      preLoaderRoute: typeof PlayReportRouteImport
-      parentRoute: typeof PlayRoute
-    }
-    '/play/case-06': {
-      id: '/play/case-06'
-      path: '/case-06'
-      fullPath: '/play/case-06'
-      preLoaderRoute: typeof PlayCase06RouteImport
-      parentRoute: typeof PlayRoute
-    }
-    '/play/case-05': {
-      id: '/play/case-05'
-      path: '/case-05'
-      fullPath: '/play/case-05'
-      preLoaderRoute: typeof PlayCase05RouteImport
-      parentRoute: typeof PlayRoute
-    }
-    '/play/case-04': {
-      id: '/play/case-04'
-      path: '/case-04'
-      fullPath: '/play/case-04'
-      preLoaderRoute: typeof PlayCase04RouteImport
-      parentRoute: typeof PlayRoute
-    }
-    '/play/case-03': {
-      id: '/play/case-03'
-      path: '/case-03'
-      fullPath: '/play/case-03'
-      preLoaderRoute: typeof PlayCase03RouteImport
+    '/play/case-01': {
+      id: '/play/case-01'
+      path: '/case-01'
+      fullPath: '/play/case-01'
+      preLoaderRoute: typeof PlayCase01RouteImport
       parentRoute: typeof PlayRoute
     }
     '/play/case-02': {
@@ -529,12 +487,180 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayCase02RouteImport
       parentRoute: typeof PlayRoute
     }
-    '/play/case-01': {
-      id: '/play/case-01'
-      path: '/case-01'
-      fullPath: '/play/case-01'
-      preLoaderRoute: typeof PlayCase01RouteImport
+    '/play/case-03': {
+      id: '/play/case-03'
+      path: '/case-03'
+      fullPath: '/play/case-03'
+      preLoaderRoute: typeof PlayCase03RouteImport
       parentRoute: typeof PlayRoute
+    }
+    '/play/case-04': {
+      id: '/play/case-04'
+      path: '/case-04'
+      fullPath: '/play/case-04'
+      preLoaderRoute: typeof PlayCase04RouteImport
+      parentRoute: typeof PlayRoute
+    }
+    '/play/case-05': {
+      id: '/play/case-05'
+      path: '/case-05'
+      fullPath: '/play/case-05'
+      preLoaderRoute: typeof PlayCase05RouteImport
+      parentRoute: typeof PlayRoute
+    }
+    '/play/case-06': {
+      id: '/play/case-06'
+      path: '/case-06'
+      fullPath: '/play/case-06'
+      preLoaderRoute: typeof PlayCase06RouteImport
+      parentRoute: typeof PlayRoute
+    }
+    '/play/report': {
+      id: '/play/report'
+      path: '/report'
+      fullPath: '/play/report'
+      preLoaderRoute: typeof PlayReportRouteImport
+      parentRoute: typeof PlayRoute
+    }
+    '/printables/': {
+      id: '/printables/'
+      path: '/'
+      fullPath: '/printables/'
+      preLoaderRoute: typeof PrintablesIndexRouteImport
+      parentRoute: typeof PrintablesRoute
+    }
+    '/printables/fractions-l1': {
+      id: '/printables/fractions-l1'
+      path: '/fractions-l1'
+      fullPath: '/printables/fractions-l1'
+      preLoaderRoute: typeof PrintablesFractionsL1RouteImport
+      parentRoute: typeof PrintablesRoute
+    }
+    '/api/chat/case-01': {
+      id: '/api/chat/case-01'
+      path: '/api/chat/case-01'
+      fullPath: '/api/chat/case-01'
+      preLoaderRoute: typeof ApiChatCase01RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-01-canvas': {
+      id: '/api/chat/case-01-canvas'
+      path: '/api/chat/case-01-canvas'
+      fullPath: '/api/chat/case-01-canvas'
+      preLoaderRoute: typeof ApiChatCase01CanvasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-01-chocolate': {
+      id: '/api/chat/case-01-chocolate'
+      path: '/api/chat/case-01-chocolate'
+      fullPath: '/api/chat/case-01-chocolate'
+      preLoaderRoute: typeof ApiChatCase01ChocolateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-02-bar': {
+      id: '/api/chat/case-02-bar'
+      path: '/api/chat/case-02-bar'
+      fullPath: '/api/chat/case-02-bar'
+      preLoaderRoute: typeof ApiChatCase02BarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-02-crate': {
+      id: '/api/chat/case-02-crate'
+      path: '/api/chat/case-02-crate'
+      fullPath: '/api/chat/case-02-crate'
+      preLoaderRoute: typeof ApiChatCase02CrateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-02-panels': {
+      id: '/api/chat/case-02-panels'
+      path: '/api/chat/case-02-panels'
+      fullPath: '/api/chat/case-02-panels'
+      preLoaderRoute: typeof ApiChatCase02PanelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-03-disks': {
+      id: '/api/chat/case-03-disks'
+      path: '/api/chat/case-03-disks'
+      fullPath: '/api/chat/case-03-disks'
+      preLoaderRoute: typeof ApiChatCase03DisksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-03-garden': {
+      id: '/api/chat/case-03-garden'
+      path: '/api/chat/case-03-garden'
+      fullPath: '/api/chat/case-03-garden'
+      preLoaderRoute: typeof ApiChatCase03GardenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-03-tanks': {
+      id: '/api/chat/case-03-tanks'
+      path: '/api/chat/case-03-tanks'
+      fullPath: '/api/chat/case-03-tanks'
+      preLoaderRoute: typeof ApiChatCase03TanksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-04-beams': {
+      id: '/api/chat/case-04-beams'
+      path: '/api/chat/case-04-beams'
+      fullPath: '/api/chat/case-04-beams'
+      preLoaderRoute: typeof ApiChatCase04BeamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-04-cargo': {
+      id: '/api/chat/case-04-cargo'
+      path: '/api/chat/case-04-cargo'
+      fullPath: '/api/chat/case-04-cargo'
+      preLoaderRoute: typeof ApiChatCase04CargoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-04-coolant': {
+      id: '/api/chat/case-04-coolant'
+      path: '/api/chat/case-04-coolant'
+      fullPath: '/api/chat/case-04-coolant'
+      preLoaderRoute: typeof ApiChatCase04CoolantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-05-assembly': {
+      id: '/api/chat/case-05-assembly'
+      path: '/api/chat/case-05-assembly'
+      fullPath: '/api/chat/case-05-assembly'
+      preLoaderRoute: typeof ApiChatCase05AssemblyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-05-conveyor': {
+      id: '/api/chat/case-05-conveyor'
+      path: '/api/chat/case-05-conveyor'
+      fullPath: '/api/chat/case-05-conveyor'
+      preLoaderRoute: typeof ApiChatCase05ConveyorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-05-coolant': {
+      id: '/api/chat/case-05-coolant'
+      path: '/api/chat/case-05-coolant'
+      fullPath: '/api/chat/case-05-coolant'
+      preLoaderRoute: typeof ApiChatCase05CoolantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-06-blueprint': {
+      id: '/api/chat/case-06-blueprint'
+      path: '/api/chat/case-06-blueprint'
+      fullPath: '/api/chat/case-06-blueprint'
+      preLoaderRoute: typeof ApiChatCase06BlueprintRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-06-circuit': {
+      id: '/api/chat/case-06-circuit'
+      path: '/api/chat/case-06-circuit'
+      fullPath: '/api/chat/case-06-circuit'
+      preLoaderRoute: typeof ApiChatCase06CircuitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-06-paint': {
+      id: '/api/chat/case-06-paint'
+      path: '/api/chat/case-06-paint'
+      fullPath: '/api/chat/case-06-paint'
+      preLoaderRoute: typeof ApiChatCase06PaintRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/printables/fractions-l1/': {
       id: '/printables/fractions-l1/'
@@ -549,132 +675,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/printables/fractions-l1/preview'
       preLoaderRoute: typeof PrintablesFractionsL1PreviewRouteImport
       parentRoute: typeof PrintablesFractionsL1Route
-    }
-    '/api/chat/case-06-paint': {
-      id: '/api/chat/case-06-paint'
-      path: '/api/chat/case-06-paint'
-      fullPath: '/api/chat/case-06-paint'
-      preLoaderRoute: typeof ApiChatCase06PaintRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-06-circuit': {
-      id: '/api/chat/case-06-circuit'
-      path: '/api/chat/case-06-circuit'
-      fullPath: '/api/chat/case-06-circuit'
-      preLoaderRoute: typeof ApiChatCase06CircuitRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-06-blueprint': {
-      id: '/api/chat/case-06-blueprint'
-      path: '/api/chat/case-06-blueprint'
-      fullPath: '/api/chat/case-06-blueprint'
-      preLoaderRoute: typeof ApiChatCase06BlueprintRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-05-coolant': {
-      id: '/api/chat/case-05-coolant'
-      path: '/api/chat/case-05-coolant'
-      fullPath: '/api/chat/case-05-coolant'
-      preLoaderRoute: typeof ApiChatCase05CoolantRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-05-conveyor': {
-      id: '/api/chat/case-05-conveyor'
-      path: '/api/chat/case-05-conveyor'
-      fullPath: '/api/chat/case-05-conveyor'
-      preLoaderRoute: typeof ApiChatCase05ConveyorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-05-assembly': {
-      id: '/api/chat/case-05-assembly'
-      path: '/api/chat/case-05-assembly'
-      fullPath: '/api/chat/case-05-assembly'
-      preLoaderRoute: typeof ApiChatCase05AssemblyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-04-coolant': {
-      id: '/api/chat/case-04-coolant'
-      path: '/api/chat/case-04-coolant'
-      fullPath: '/api/chat/case-04-coolant'
-      preLoaderRoute: typeof ApiChatCase04CoolantRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-04-cargo': {
-      id: '/api/chat/case-04-cargo'
-      path: '/api/chat/case-04-cargo'
-      fullPath: '/api/chat/case-04-cargo'
-      preLoaderRoute: typeof ApiChatCase04CargoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-04-beams': {
-      id: '/api/chat/case-04-beams'
-      path: '/api/chat/case-04-beams'
-      fullPath: '/api/chat/case-04-beams'
-      preLoaderRoute: typeof ApiChatCase04BeamsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-03-tanks': {
-      id: '/api/chat/case-03-tanks'
-      path: '/api/chat/case-03-tanks'
-      fullPath: '/api/chat/case-03-tanks'
-      preLoaderRoute: typeof ApiChatCase03TanksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-03-garden': {
-      id: '/api/chat/case-03-garden'
-      path: '/api/chat/case-03-garden'
-      fullPath: '/api/chat/case-03-garden'
-      preLoaderRoute: typeof ApiChatCase03GardenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-03-disks': {
-      id: '/api/chat/case-03-disks'
-      path: '/api/chat/case-03-disks'
-      fullPath: '/api/chat/case-03-disks'
-      preLoaderRoute: typeof ApiChatCase03DisksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-02-panels': {
-      id: '/api/chat/case-02-panels'
-      path: '/api/chat/case-02-panels'
-      fullPath: '/api/chat/case-02-panels'
-      preLoaderRoute: typeof ApiChatCase02PanelsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-02-crate': {
-      id: '/api/chat/case-02-crate'
-      path: '/api/chat/case-02-crate'
-      fullPath: '/api/chat/case-02-crate'
-      preLoaderRoute: typeof ApiChatCase02CrateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-02-bar': {
-      id: '/api/chat/case-02-bar'
-      path: '/api/chat/case-02-bar'
-      fullPath: '/api/chat/case-02-bar'
-      preLoaderRoute: typeof ApiChatCase02BarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-01-chocolate': {
-      id: '/api/chat/case-01-chocolate'
-      path: '/api/chat/case-01-chocolate'
-      fullPath: '/api/chat/case-01-chocolate'
-      preLoaderRoute: typeof ApiChatCase01ChocolateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-01-canvas': {
-      id: '/api/chat/case-01-canvas'
-      path: '/api/chat/case-01-canvas'
-      fullPath: '/api/chat/case-01-canvas'
-      preLoaderRoute: typeof ApiChatCase01CanvasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat/case-01': {
-      id: '/api/chat/case-01'
-      path: '/api/chat/case-01'
-      fullPath: '/api/chat/case-01'
-      preLoaderRoute: typeof ApiChatCase01RouteImport
-      parentRoute: typeof rootRouteImport
     }
   }
 }
