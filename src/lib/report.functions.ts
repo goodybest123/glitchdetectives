@@ -97,8 +97,15 @@ function normalizeInsights(r: unknown): GradeResult["insights"] {
   const arr = Array.isArray(r) ? r : [];
   const byDim = new Map<string, Record<string, unknown>>();
   for (const item of arr) {
-    if (item && typeof item === "object" && typeof (item as Record<string, unknown>).dimension === "string") {
-      byDim.set((item as Record<string, unknown>).dimension as string, item as Record<string, unknown>);
+    if (
+      item &&
+      typeof item === "object" &&
+      typeof (item as Record<string, unknown>).dimension === "string"
+    ) {
+      byDim.set(
+        (item as Record<string, unknown>).dimension as string,
+        item as Record<string, unknown>,
+      );
     }
   }
   return DIMENSIONS.map((dim) => {
