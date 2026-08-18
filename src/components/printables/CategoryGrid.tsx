@@ -5,6 +5,15 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import fractionsL1Cover from "@/assets/fractions-level-1-cover.png";
+import {
+  COLLECTION_BADGES,
+  COLLECTION_INTRO,
+  COLLECTION_PDF_URL,
+  COLLECTION_PITCH,
+  COLLECTION_PITCH_HEADING,
+  WHATS_INSIDE,
+  WHATS_INSIDE_INTRO,
+} from "./collection";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
