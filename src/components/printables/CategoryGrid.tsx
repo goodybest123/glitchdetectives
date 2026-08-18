@@ -165,95 +165,71 @@ function CategoryCard({ category: c, onActivate }: { category: Category; onActiv
 /* ---------------- Fraction Learning Path ---------------- */
 
 type FractionLevel = {
-  n: 1 | 2 | 3;
+  n: 1 | 3;
+  /** Short label shown on the tile and above the title. */
+  badge: string;
   title: string;
   desc: ReactNode;
   meta?: string[];
   locked: boolean;
   href?: string;
+  /** Internal route with the buyer-facing page preview. */
+  previewTo?: string;
   cover?: string;
 };
 
 const FRACTION_LEVELS: FractionLevel[] = [
   {
     n: 1,
-    title: "Foundations",
+    badge: "Levels 1 & 2",
+    title: "Fractions — Foundations Collection",
     desc: (
       <>
-        <strong>Turn math practice into a mystery to solve!</strong>
+        <strong>Includes Levels 1 &amp; 2 Missions.</strong>
         <br />
-        Sam is trying to share with his friends, but his math logic keeps glitching. In this interactive workbook, your child becomes the Lead Detective. Instead of boring drills, they investigate Sam's work, spot his mistakes, and teach him the true rules of fractions.
-        <br /><br />
-        <strong>Why Kids & Parents Love It:</strong>
+        {COLLECTION_INTRO}
         <br />
-        The 4-Step Framework: Investigate, Detect, Repair, Explain.
         <br />
-        <strong>Builds Confidence:</strong> Finding someone else's mistakes removes the fear of failure.
+        <strong>{COLLECTION_PITCH_HEADING}</strong>
         <br />
-        <strong>Meaningful Conversations:</strong> The "Explain" step turns quiet practice into deep discussions.
+        {COLLECTION_PITCH[0]}
         <br />
-        <strong>Neuro-Inclusive Design:</strong> Clean, visual, and uncluttered to reduce cognitive overload.
-        <br /><br />
-        <strong>Workbook Details:</strong>
         <br />
-        Focus: Halves, Quarters, & Equal Shares.
+        {COLLECTION_PITCH[1]}
         <br />
-        Best For: Grades 1 & 2 (or a visual reboot for older kids).
+        <br />
+        {COLLECTION_PITCH[2]}
+        <br />
+        <br />
+        <strong>What&apos;s Inside</strong>
+        <br />
+        {WHATS_INSIDE_INTRO}
+        {WHATS_INSIDE.map((block) => (
+          <span key={block.title} className="block mt-3">
+            <strong>{block.title}</strong>
+            <br />
+            {block.lead}
+            <br />
+            {block.items.join(" · ")}
+          </span>
+        ))}
       </>
     ),
-    meta: ["Grade 1-2", "6 pages"],
+    meta: COLLECTION_BADGES,
     locked: false,
-    href: "https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/view?usp=drive_link",
-    cover: fractionsL1Cover,
-  },
-  {
-    n: 2,
-    title: "Numerators & Denominators",
-    desc: (
-      <>
-        <strong>Turn math practice into a mystery to solve!</strong>
-        <br />
-        Sam is back — and his fraction logic keeps glitching in new ways. In this interactive workbook, your child becomes the Lead Detective. Instead of boring drills, they investigate Sam's work, spot his mistakes, and teach him the true rules of fractions.
-        <br /><br />
-        <strong>Why Kids & Parents Love It:</strong>
-        <br />
-        The 4-Step Framework: Investigate, Detect, Repair, Explain.
-        <br />
-        <strong>Builds Confidence:</strong> Finding someone else's mistakes removes the fear of failure.
-        <br />
-        <strong>Meaningful Conversations:</strong> The "Explain" step turns quiet practice into deep discussions.
-        <br />
-        <strong>Neuro-Inclusive Design:</strong> Clean, visual, and uncluttered to reduce cognitive overload.
-        <br /><br />
-        <strong>Workbook Details:</strong>
-        <br />
-        Focus: Numerators and Denominators.
-        <br />
-        Understanding fractions within a set of items.
-        <br />
-        Comparing unit fractions.
-        <br />
-        Adding and subtracting fractions with the same denominator.
-        <br />
-        Equivalent Fractions.
-        <br />
-        Fractions on a number line.
-        <br />
-        Best For: Grades 3–5.
-      </>
-    ),
-    meta: ["Grade 3-5"],
-    locked: false,
-    href: "https://drive.google.com/file/d/1oeicJkXs_tzCcE1mORAn0Fn_Sg6-3RpA/view?usp=drive_link",
+    href: COLLECTION_PDF_URL,
+    previewTo: "/printables/fractions-l1/preview",
     cover: fractionsL1Cover,
   },
   {
     n: 3,
+    badge: "Level 3",
     title: "Classified",
     desc: "Mission classified. Comparison and pathway cases unlock soon.",
     locked: true,
   },
 ];
+
 
 function FractionLearningPath() {
   return (
