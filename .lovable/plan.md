@@ -1,47 +1,42 @@
-## Goal
-Lift the two weakest rubric rows (Version Control + Code Readability & Documentation) with docs a judge will actually open. No source-code refactors — pure documentation.
+# Fractions Foundations Collection + buyer preview page
 
-## Deliverables
+Consolidate the printables library into a single fractions product ("Foundations Collection", Levels 1 & 2 combined) and add a page where buyers can preview real workbook pages before downloading.
 
-### 1. `README.md` (repo root) — the judge's landing page
-- One-line pitch + tagline ("Don't solve. Investigate. Detect. Repair.")
-- Live URL: https://glitchdetectives.lovable.app
-- 3-sentence "why it exists" (AI-era critical thinking, role reversal, neurodivergent-inclusive)
-- Screenshot placeholders: landing, a case in play, the Cognitive Insights report, a workbook page
-- **How it works** — the 4-step loop, one paragraph
-- **Tech stack** — TanStack Start (React 19, Vite 7), TypeScript strict, Tailwind v4, Lovable Cloud (Supabase), Lovable AI Gateway (Gemini), Cloudflare Workers runtime
-- **Run locally** — `bun install`, `bun dev`, env vars needed
-- **Project structure** — 8-line tree with one-line descriptions
-- **Links** — demo video, architecture doc, self-assessment
-- License: MIT (safe hackathon default)
-- **No founder name / no personal contact** — kept anonymous per your call
+## 1. Remove Level 2
 
-### 2. `docs/ARCHITECTURE.md` — the "another developer can understand it" doc
-- **Runtime topology** ASCII diagram: browser → TanStack Router → server fn / API route → Lovable AI Gateway → Zod-normalised response → localStorage report store → `/play/report`
-- **Routing map** — table of every route in `src/routes/` with purpose
-- **The 6 cases** — table: case id, concept, folder, chat endpoint
-- **AI grading pipeline** — walk through `useReportRecorder` → `gradeExplanation` → structured output → Zod normalise → fallback JSON → safe defaults
-- **Report data model** — `ReportEntry` shape, storage key, versioning note
-- **Server runtime constraints** — Cloudflare Worker + `nodejs_compat`, why we avoid Node-only packages
-- **Auth** — Supabase middleware (`requireSupabaseAuth`, `attachSupabaseAuth`) and where it's used (or not used yet)
-- **Extending** — how to add Case 07 in 5 steps
+- Delete the Level 2 card from the fractions learning path in the printables library.
+- Delete the standalone `/printables/fractions-l2` page and its link from the library.
+- The path becomes: Level 1 (live) + Level 3 (classified/coming soon).
 
-### 3. `docs/CONTRIBUTING.md` — signals a maintained repo
-- Branching convention (`main` protected, `feat/*`, `fix/*`)
-- Conventional Commits style (`feat:`, `fix:`, `docs:`, `chore:`)
-- PR checklist (typecheck passes, screenshot for UI, updated docs)
-- Local dev + how to run a single route
+## 2. Rewrite the Level 1 card as the Foundations Collection
 
-### 4. Light JSDoc pass on public boundaries only (no logic changes)
-- `src/lib/report.functions.ts` — what the server fn does, inputs, outputs, failure modes
-- `src/hooks/useReportStore.ts` — storage contract, versioning key
-- `src/hooks/useReportRecorder.ts` — when it fires, idempotency guarantee
-- `src/router.tsx` — how routes get registered
+New copy on the card and on the `/printables/fractions-l1` detail page:
 
-Files already well-commented (leave alone): `src/server.ts`, `src/components/shared/*`.
+**Glitch Detectives: Fractions — Foundations Collection (Includes Levels 1 & 2 Missions)**
 
-## Out of scope
-- Rewriting git history / squashing / tagging — Lovable commits per turn; if you want a `v1.0-hackathon` tag, do it in GitHub after this lands (or ask and I'll give exact CLI steps).
-- Branch protection rules — GitHub-side setting.
-- Refactoring `case01`–`case06`.
-- Actual screenshot capture — I'll leave `![...](docs/samples/*.png)` placeholders with one-line capture instructions.
+Badges: Grades 1–2 · Fractions · 21 Pages · Instant Digital Download · Free
+
+Body sections:
+- Intro: complete printable workbook combining Levels 1 and 2; children become Lead Detectives who investigate mistakes, repair misconceptions and explain their thinking.
+- "Become the Lead Detective and Solve Fraction Mysteries" — the Sam narrative and the investigate / detect / repair / explain framing; reasoning-first rather than memorisation.
+- "What's Inside":
+  - Level 1 — Building Strong Foundations: equal and unequal parts, halves, quarters, fractions in everyday contexts, connecting pictures with fraction language, explaining mathematical thinking.
+  - Level 2 — Deeper Fraction Investigations: numerators and denominators, fractions of a set, comparing unit fractions, equivalent fractions, fractions on a number line, adding and subtracting with the same denominator.
+
+The download button keeps pointing to the existing Google Drive workbook link.
+
+## 3. New preview page
+
+New route `/printables/fractions-l1/preview` (linked from the card and from a "Preview pages" button on the detail page).
+
+- Sample gallery of the first 5 pages of the workbook, rendered as images from the Level 1 PDF already in the project.
+- Each page shown as a card with a page number; clicking opens a lightbox with a larger view and next/previous navigation, closable with Escape.
+- After the samples, a "That's the sample — the full 21-page collection is free" panel with the download CTA and the What's Inside summary.
+- Fully responsive: single column on mobile, two/three up on tablet and desktop; lazy-loaded images.
+
+## Technical notes
+
+- Page images are generated once from `public/printables/fractions-level-1-foundations.pdf` with `pdftoppm` at web resolution, written as compressed JPGs under `public/printables/preview/` and referenced by path (keeps the bundle small; the source PDF is ~21 MB).
+- Copy for the collection lives in one shared module (e.g. `src/components/printables/collection.ts`) so the card, detail page and preview page stay in sync.
+- Gallery + lightbox are a new client component `src/components/printables/PagePreviewGallery.tsx`; no backend changes.
+- The new route gets its own `head()` with a unique title, description and og tags.
