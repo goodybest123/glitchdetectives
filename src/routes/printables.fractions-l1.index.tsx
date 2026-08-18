@@ -5,8 +5,6 @@
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Download, ExternalLink, Images, Search } from "lucide-react";
-import { Navbar } from "@/components/landing/Navbar";
-import { Footer } from "@/components/landing/sections";
 import {
   COLLECTION_BADGES,
   COLLECTION_INTRO,
@@ -49,7 +47,6 @@ export const Route = createFileRoute("/printables/fractions-l1/")({
 function FractionsCollectionPage() {
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
       <main>
         <section style={{ background: MINT }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 lg:py-24">
@@ -186,7 +183,6 @@ function FractionsCollectionPage() {
             </div>
           </div>
         </section>
-        <Footer />
       </main>
     </div>
   );

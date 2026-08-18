@@ -10,8 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as PrintablesRouteImport } from './routes/printables'
+import { Route as ProductsRouteImport } from './routes/products'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
 import { Route as PlayCase02RouteImport } from './routes/play.case-02'
@@ -48,6 +51,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlayRoute = PlayRouteImport.update({
   id: '/play',
   path: '/play',
@@ -56,6 +69,11 @@ const PlayRoute = PlayRouteImport.update({
 const PrintablesRoute = PrintablesRouteImport.update({
   id: '/printables',
   path: '/printables',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlayIndexRoute = PlayIndexRouteImport.update({
@@ -213,8 +231,11 @@ const PrintablesFractionsL1PreviewRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/play': typeof PlayRouteWithChildren
   '/printables': typeof PrintablesRouteWithChildren
+  '/products': typeof ProductsRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -248,6 +269,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/products': typeof ProductsRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -281,8 +305,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
   '/play': typeof PlayRouteWithChildren
   '/printables': typeof PrintablesRouteWithChildren
+  '/products': typeof ProductsRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -318,8 +345,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/contact'
     | '/play'
     | '/printables'
+    | '/products'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -353,6 +383,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/contact'
+    | '/products'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -385,8 +418,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/contact'
     | '/play'
     | '/printables'
+    | '/products'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -421,8 +457,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
   PlayRoute: typeof PlayRouteWithChildren
   PrintablesRoute: typeof PrintablesRouteWithChildren
+  ProductsRoute: typeof ProductsRoute
   ApiChatCase01Route: typeof ApiChatCase01Route
   ApiChatCase01CanvasRoute: typeof ApiChatCase01CanvasRoute
   ApiChatCase01ChocolateRoute: typeof ApiChatCase01ChocolateRoute
@@ -452,6 +491,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/play': {
       id: '/play'
       path: '/play'
@@ -464,6 +517,13 @@ declare module '@tanstack/react-router' {
       path: '/printables'
       fullPath: '/printables'
       preLoaderRoute: typeof PrintablesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/play/': {
@@ -734,8 +794,11 @@ const PrintablesRouteWithChildren = PrintablesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
   PlayRoute: PlayRouteWithChildren,
   PrintablesRoute: PrintablesRouteWithChildren,
+  ProductsRoute: ProductsRoute,
   ApiChatCase01Route: ApiChatCase01Route,
   ApiChatCase01CanvasRoute: ApiChatCase01CanvasRoute,
   ApiChatCase01ChocolateRoute: ApiChatCase01ChocolateRoute,
