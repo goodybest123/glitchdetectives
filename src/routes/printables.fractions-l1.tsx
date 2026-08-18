@@ -1,29 +1,52 @@
 /**
- * `/printables/fractions-l1` — Fractions, Level 1 printables page. Renders
- * the printable worksheets pulled from `public/printables/`.
+ * `/printables/fractions-l1` — detail page for the Fractions Foundations
+ * Collection (Levels 1 & 2 missions combined). Copy comes from the shared
+ * `collection` module; sample pages live at `/printables/fractions-l1/preview`.
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Download, ExternalLink, Search, Sparkles } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, Images, Search } from "lucide-react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/sections";
+import {
+  COLLECTION_BADGES,
+  COLLECTION_INTRO,
+  COLLECTION_PDF_URL,
+  COLLECTION_PITCH,
+  COLLECTION_PITCH_HEADING,
+  COLLECTION_SUBTITLE,
+  COLLECTION_TITLE,
+  WHATS_INSIDE,
+  WHATS_INSIDE_INTRO,
+} from "@/components/printables/collection";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
 const MINT = "var(--color-bg-mint)";
+const MUTED = "color-mix(in oklab, var(--color-brand-blue) 72%, transparent)";
 
 export const Route = createFileRoute("/printables/fractions-l1")({
   head: () => ({
     meta: [
-      { title: "Fractions Level 1 — Printables — Glitch Detectives" },
-      { name: "description", content: "Download the Glitch Detectives Fractions Level 1 workbook: twelve gentle Grade 1 pages to spot unequal halves, repair mis-cut shapes, and explain why fair means equal." },
-      { property: "og:title", content: "Fractions Level 1 — Glitch Detective Printables" },
-      { property: "og:description", content: "Grade 1 fraction printables: calm, low-ink, neuro-inclusive reasoning activities. Available now." },
+      { title: "Fractions Foundations Collection — Glitch Detectives Printables" },
+      {
+        name: "description",
+        content:
+          "Free 21-page Glitch Detectives fractions workbook combining Levels 1 and 2: equal parts, halves, quarters, numerators, denominators, equivalence and the number line for Grades 1–2.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "Fractions Foundations Collection — Glitch Detectives" },
+      {
+        property: "og:description",
+        content:
+          "Children become Lead Detectives who investigate mistakes, repair misconceptions and explain their fraction thinking. Free instant download.",
+      },
     ],
   }),
-  component: FractionsL1Page,
+  component: FractionsCollectionPage,
 });
 
-function FractionsL1Page() {
+function FractionsCollectionPage() {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -47,41 +70,48 @@ function FractionsL1Page() {
                   className="label-eyebrow px-2 py-1 rounded-full self-start"
                   style={{ background: YELLOW, color: BLUE }}
                 >
-                  F1
+                  Levels 1 &amp; 2
                 </span>
                 <div className="flex-1 flex items-center justify-center">
                   <Search className="w-14 h-14" style={{ color: YELLOW }} strokeWidth={2} />
                 </div>
                 <div className="text-white">
                   <div className="text-[10px] font-mono tracking-[0.3em] opacity-70">FRACTIONS</div>
-                  <div className="text-2xl font-black uppercase leading-none mt-1">Level 1</div>
+                  <div className="text-2xl font-black uppercase leading-none mt-1">
+                    Foundations
+                  </div>
                 </div>
               </div>
 
               <div>
-                <span
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
-                  style={{ background: YELLOW, color: BLUE }}
-                >
-                  <Sparkles className="w-3.5 h-3.5" /> New Release
-                </span>
                 <h1
-                  className="heading-black uppercase text-4xl sm:text-5xl mt-5"
+                  className="heading-black uppercase text-4xl sm:text-5xl"
                   style={{ color: BLUE }}
                 >
-                  Fractions Level 1
+                  {COLLECTION_TITLE}
                 </h1>
-                <p
-                  className="mt-5 text-lg leading-relaxed"
-                  style={{ color: "color-mix(in oklab, var(--color-brand-blue) 75%, transparent)" }}
-                >
-                  Twelve gentle pages of glitch-detective fraction missions for Grade 1. Spot
-                  unequal halves, repair mis-cut shapes, and talk through every fix.
+                <p className="mt-3 text-lg font-semibold" style={{ color: MUTED }}>
+                  {COLLECTION_SUBTITLE}
+                </p>
+                <p className="mt-5 text-base sm:text-lg leading-relaxed" style={{ color: MUTED }}>
+                  {COLLECTION_INTRO}
                 </p>
 
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {COLLECTION_BADGES.map((b) => (
+                    <span
+                      key={b}
+                      className="px-3 py-1.5 rounded-full text-xs font-semibold bg-white"
+                      style={{ color: BLUE }}
+                    >
+                      {b}
+                    </span>
+                  ))}
+                </div>
+
                 <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                    href="https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/view?usp=drive_link"
+                  <a
+                    href={COLLECTION_PDF_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
@@ -89,8 +119,15 @@ function FractionsL1Page() {
                   >
                     <Download className="w-4 h-4" /> Download PDF
                   </a>
+                  <Link
+                    to="/printables/fractions-l1/preview"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs border hover:opacity-80 transition-opacity"
+                    style={{ borderColor: BLUE, color: BLUE }}
+                  >
+                    <Images className="w-4 h-4" /> Preview pages
+                  </Link>
                   <a
-                    href="https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/view?usp=drive_link"
+                    href={COLLECTION_PDF_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs border hover:opacity-80 transition-opacity"
@@ -102,42 +139,48 @@ function FractionsL1Page() {
               </div>
             </div>
 
-            <div className="mt-12">
-              <h2
-                className="heading-black uppercase text-2xl sm:text-3xl mb-5"
-                style={{ color: BLUE }}
-              >
-                Workbook preview
+            <div className="mt-14 rounded-3xl bg-white border border-black/5 p-7 sm:p-10 shadow-sm">
+              <h2 className="heading-black uppercase text-2xl sm:text-3xl" style={{ color: BLUE }}>
+                {COLLECTION_PITCH_HEADING}
               </h2>
-              <div
-                className="rounded-2xl overflow-hidden border border-black/10 bg-white shadow-lg"
-                style={{ minHeight: "80vh" }}
-              >
-                <object
-                  data="https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/preview"
-                  type="text/html"
-                  className="w-full"
-                  style={{ height: "80vh" }}
-                  aria-label="Fractions Level 1 workbook PDF preview"
-                >
-                  <iframe
-                    src="https://drive.google.com/file/d/1iKVxom5mfZ_qN1Zdyd7kT_eX7WwmMMUD/preview"
-                    title="Fractions Level 1 workbook PDF preview"
-                    className="w-full"
-                    style={{ height: "80vh", border: 0 }}
-                  />
-                  <div className="p-8 text-center" style={{ color: BLUE }}>
-                    <p className="text-base font-semibold">
-                      Your browser can't preview PDFs inline.
-                    </p>
-                    <p
-                      className="mt-2 text-sm"
-                      style={{ color: "color-mix(in oklab, var(--color-brand-blue) 70%, transparent)" }}
+              {COLLECTION_PITCH.map((p) => (
+                <p key={p} className="mt-4 text-base leading-relaxed" style={{ color: MUTED }}>
+                  {p}
+                </p>
+              ))}
+            </div>
+
+            <div className="mt-8 rounded-3xl bg-white border border-black/5 p-7 sm:p-10 shadow-sm">
+              <h2 className="heading-black uppercase text-2xl sm:text-3xl" style={{ color: BLUE }}>
+                What&apos;s Inside
+              </h2>
+              <p className="mt-4 text-base leading-relaxed" style={{ color: MUTED }}>
+                {WHATS_INSIDE_INTRO}
+              </p>
+              <div className="mt-8 grid sm:grid-cols-2 gap-8">
+                {WHATS_INSIDE.map((block) => (
+                  <div key={block.title}>
+                    <h3
+                      className="text-base font-black uppercase tracking-tight"
+                      style={{ color: BLUE }}
                     >
-                      Use the Download or Open in new tab buttons above to view the workbook.
+                      {block.title}
+                    </h3>
+                    <p className="mt-2 text-sm" style={{ color: MUTED }}>
+                      {block.lead}
                     </p>
+                    <ul className="mt-3 space-y-1.5 text-sm leading-relaxed" style={{ color: MUTED }}>
+                      {block.items.map((i) => (
+                        <li key={i} className="flex gap-2">
+                          <span aria-hidden style={{ color: YELLOW }}>
+                            ●
+                          </span>
+                          {i}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </object>
+                ))}
               </div>
             </div>
           </div>
