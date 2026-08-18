@@ -20,11 +20,11 @@ import { z } from "zod";
 import { createLovableAiGatewayProvider } from "./ai-gateway";
 
 const Input = z.object({
-  caseTitle: z.string(),
-  subTitle: z.string(),
-  glitchSummary: z.string(),
-  conceptMastered: z.string(),
-  childExplanation: z.string().min(1),
+  caseTitle: z.string().min(1).max(100),
+  subTitle: z.string().min(1).max(120),
+  glitchSummary: z.string().min(1).max(200),
+  conceptMastered: z.string().min(1).max(200),
+  childExplanation: z.string().min(1).max(2000),
 });
 
 const RubricItem = z.object({
