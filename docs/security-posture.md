@@ -33,13 +33,13 @@ External services
 
 ### Key assets & threats
 
-| Asset | Threat | Control |
-|-------|--------|---------|
-| Child's free-text explanation | Injection, prompt leakage, abuse of AI API | Zod validation, role/content limits, message length caps, strict system prompts |
-| AI API key (`LOVABLE_API_KEY`) | Leakage | Server-only read; never exposed to the browser |
-| Diagnostic report | Leakage of child progress | Stored in `localStorage` only; no server-side persistence |
-| Public API endpoints | Spam / abuse | Input size and count limits; no write-side effects on the backend |
-| Dependencies | Known vulnerabilities | Automated `npm audit` / `security--dependency_scan` checks |
+| Asset                          | Threat                                     | Control                                                                         |
+| ------------------------------ | ------------------------------------------ | ------------------------------------------------------------------------------- |
+| Child's free-text explanation  | Injection, prompt leakage, abuse of AI API | Zod validation, role/content limits, message length caps, strict system prompts |
+| AI API key (`LOVABLE_API_KEY`) | Leakage                                    | Server-only read; never exposed to the browser                                  |
+| Diagnostic report              | Leakage of child progress                  | Stored in `localStorage` only; no server-side persistence                       |
+| Public API endpoints           | Spam / abuse                               | Input size and count limits; no write-side effects on the backend               |
+| Dependencies                   | Known vulnerabilities                      | Automated `npm audit` / `security--dependency_scan` checks                      |
 
 ## 3. Input Validation & Abuse Protection
 
@@ -144,12 +144,12 @@ The application relies on the Cloudflare edge for TLS, HSTS, and DDoS protection
 
 ## 9. Known Limitations & Next Steps
 
-| Priority | Item | Recommendation |
-|----------|------|------------------|
-| Medium | Application-level rate limiting | Add per-IP or per-session limits on `/api/chat/*` and `/gradeExplanation` using a Cloudflare KV or short-lived memory cache. |
-| Medium | Explicit security headers | Set `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, and `Permissions-Policy` in `src/server.ts`. |
-| Low | Audit logging | If parent dashboards are added later, log AI grading requests server-side without storing child explanations verbatim. |
-| Low | Fuzz testing of AI inputs | Periodically run a small test suite that sends malformed, long, and off-topic messages to verify validation. |
+| Priority | Item                            | Recommendation                                                                                                               |
+| -------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Medium   | Application-level rate limiting | Add per-IP or per-session limits on `/api/chat/*` and `/gradeExplanation` using a Cloudflare KV or short-lived memory cache. |
+| Medium   | Explicit security headers       | Set `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, and `Permissions-Policy` in `src/server.ts`.     |
+| Low      | Audit logging                   | If parent dashboards are added later, log AI grading requests server-side without storing child explanations verbatim.       |
+| Low      | Fuzz testing of AI inputs       | Periodically run a small test suite that sends malformed, long, and off-topic messages to verify validation.                 |
 
 ## 10. Reproduction Checklist
 
