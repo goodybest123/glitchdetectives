@@ -22,6 +22,7 @@ import { Route as PlayCase04RouteImport } from './routes/play.case-04'
 import { Route as PlayCase03RouteImport } from './routes/play.case-03'
 import { Route as PlayCase02RouteImport } from './routes/play.case-02'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
+import { Route as PrintablesFractionsL1PreviewRouteImport } from './routes/printables.fractions-l1.preview'
 import { Route as ApiChatCase06PaintRouteImport } from './routes/api/chat/case-06-paint'
 import { Route as ApiChatCase06CircuitRouteImport } from './routes/api/chat/case-06-circuit'
 import { Route as ApiChatCase06BlueprintRouteImport } from './routes/api/chat/case-06-blueprint'
@@ -106,6 +107,12 @@ const PlayCase01Route = PlayCase01RouteImport.update({
   path: '/case-01',
   getParentRoute: () => PlayRoute,
 } as any)
+const PrintablesFractionsL1PreviewRoute =
+  PrintablesFractionsL1PreviewRouteImport.update({
+    id: '/preview',
+    path: '/preview',
+    getParentRoute: () => PrintablesFractionsL1Route,
+  } as any)
 const ApiChatCase06PaintRoute = ApiChatCase06PaintRouteImport.update({
   id: '/api/chat/case-06-paint',
   path: '/api/chat/case-06-paint',
@@ -208,7 +215,7 @@ export interface FileRoutesByFullPath {
   '/play/case-05': typeof PlayCase05Route
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
-  '/printables/fractions-l1': typeof PrintablesFractionsL1Route
+  '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
   '/printables/fractions-l2': typeof PrintablesFractionsL2Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -229,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/api/chat/case-06-blueprint': typeof ApiChatCase06BlueprintRoute
   '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
+  '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -240,7 +248,7 @@ export interface FileRoutesByTo {
   '/play/case-05': typeof PlayCase05Route
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
-  '/printables/fractions-l1': typeof PrintablesFractionsL1Route
+  '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
   '/printables/fractions-l2': typeof PrintablesFractionsL2Route
   '/play': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -261,6 +269,7 @@ export interface FileRoutesByTo {
   '/api/chat/case-06-blueprint': typeof ApiChatCase06BlueprintRoute
   '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
+  '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -274,7 +283,7 @@ export interface FileRoutesById {
   '/play/case-05': typeof PlayCase05Route
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
-  '/printables/fractions-l1': typeof PrintablesFractionsL1Route
+  '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
   '/printables/fractions-l2': typeof PrintablesFractionsL2Route
   '/play/': typeof PlayIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -295,6 +304,7 @@ export interface FileRoutesById {
   '/api/chat/case-06-blueprint': typeof ApiChatCase06BlueprintRoute
   '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
+  '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-blueprint'
     | '/api/chat/case-06-circuit'
     | '/api/chat/case-06-paint'
+    | '/printables/fractions-l1/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -362,6 +373,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-blueprint'
     | '/api/chat/case-06-circuit'
     | '/api/chat/case-06-paint'
+    | '/printables/fractions-l1/preview'
   id:
     | '__root__'
     | '/'
@@ -395,6 +407,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-blueprint'
     | '/api/chat/case-06-circuit'
     | '/api/chat/case-06-paint'
+    | '/printables/fractions-l1/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -513,6 +526,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/play/case-01'
       preLoaderRoute: typeof PlayCase01RouteImport
       parentRoute: typeof PlayRoute
+    }
+    '/printables/fractions-l1/preview': {
+      id: '/printables/fractions-l1/preview'
+      path: '/preview'
+      fullPath: '/printables/fractions-l1/preview'
+      preLoaderRoute: typeof PrintablesFractionsL1PreviewRouteImport
+      parentRoute: typeof PrintablesFractionsL1Route
     }
     '/api/chat/case-06-paint': {
       id: '/api/chat/case-06-paint'
@@ -667,13 +687,26 @@ const PlayRouteChildren: PlayRouteChildren = {
 
 const PlayRouteWithChildren = PlayRoute._addFileChildren(PlayRouteChildren)
 
+interface PrintablesFractionsL1RouteChildren {
+  PrintablesFractionsL1PreviewRoute: typeof PrintablesFractionsL1PreviewRoute
+}
+
+const PrintablesFractionsL1RouteChildren: PrintablesFractionsL1RouteChildren = {
+  PrintablesFractionsL1PreviewRoute: PrintablesFractionsL1PreviewRoute,
+}
+
+const PrintablesFractionsL1RouteWithChildren =
+  PrintablesFractionsL1Route._addFileChildren(
+    PrintablesFractionsL1RouteChildren,
+  )
+
 interface PrintablesRouteChildren {
-  PrintablesFractionsL1Route: typeof PrintablesFractionsL1Route
+  PrintablesFractionsL1Route: typeof PrintablesFractionsL1RouteWithChildren
   PrintablesFractionsL2Route: typeof PrintablesFractionsL2Route
 }
 
 const PrintablesRouteChildren: PrintablesRouteChildren = {
-  PrintablesFractionsL1Route: PrintablesFractionsL1Route,
+  PrintablesFractionsL1Route: PrintablesFractionsL1RouteWithChildren,
   PrintablesFractionsL2Route: PrintablesFractionsL2Route,
 }
 
