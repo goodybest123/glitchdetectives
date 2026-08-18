@@ -51,11 +51,12 @@ function PreviewPage() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 lg:py-20">
             <Link
               to="/printables/fractions-l1"
-              className="inline-flex items-center gap-2 text-sm font-semibold mb-8 hover:opacity-80"
+              className="flex w-fit items-center gap-2 text-sm font-semibold mb-8 hover:opacity-80"
               style={{ color: BLUE }}
             >
               <ArrowLeft className="w-4 h-4" /> Back to workbook
             </Link>
+
 
             <span
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
