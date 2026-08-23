@@ -9,8 +9,15 @@ import { PREVIEW_PAGES } from "./collection";
 const BLUE = "var(--color-brand-blue)";
 const MUTED = "color-mix(in oklab, var(--color-brand-blue) 70%, transparent)";
 
-export function PagePreviewGallery() {
+export function PagePreviewGallery({
+  pages = PREVIEW_PAGES,
+}: {
+  /** Page thumbnails to show; defaults to the fractions collection samples. */
+  pages?: { n: number; src: string }[];
+}) {
+  const PREVIEW_PAGES = pages;
   const [open, setOpen] = useState<number | null>(null);
+
 
   const close = useCallback(() => setOpen(null), []);
   const step = useCallback((dir: 1 | -1) => {
