@@ -23,13 +23,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Glitch Detectives is a reasoning-first K-6 maths company. Children investigate AI mistakes, repair them, and explain their thinking. Playful, neurodivergent-inclusive learning for the AI era.",
+          "Glitch Detectives is a neuroinclusive, reasoning-first K-6 maths company. Children hunt errors in AI answers, explain why they are wrong, and build confidence in a world where not every answer can be trusted.",
       },
       { property: "og:title", content: "Glitch Detectives — Reasoning-First Maths for K-6" },
       {
         property: "og:description",
         content:
-          "Don't solve. Investigate. Detect. Repair. A calm, neurodivergent-inclusive maths company for K-6 learners.",
+          "Don't solve. Investigate. Detect. Repair. A calm, neuroinclusive maths company that teaches children to question answers — especially AI-generated ones.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -85,30 +85,31 @@ function Landing() {
                   className="absolute -top-px left-8 right-8 h-px"
                   style={{ background: YELLOW, boxShadow: `0 0 24px ${YELLOW}` }}
                 />
-                <p className="text-base sm:text-lg text-white/90 leading-relaxed">
+              <p className="text-base sm:text-lg text-white/90 leading-relaxed">
                   <strong className="font-bold block mb-3 text-white">
-                    Raise a child who questions answers. Not just finds them.
+                    Raise a child who questions answers — not just finds them.
                   </strong>
                   In a world where AI generates answers instantly, the most valuable skill is
-                  knowing how to evaluate, verify, and reason. Glitch Detectives builds that skill:
-                  one mission at a time.
+                  knowing how to evaluate, verify, and reason. Glitch Detectives builds that skill
+                  one mission at a time, with calm, neuroinclusive experiences designed for children
+                  who think in different ways and at different speeds.
                 </p>
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
-                  to="/products"
+                  to="/play"
                   className="px-6 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
                   style={{ background: MINT, color: BLUE }}
                 >
-                  Explore Products <ArrowRight className="w-4 h-4" />
+                  Explore Worlds <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
-                  to="/play"
+                  to="/printables"
                   className="px-6 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
                   style={{ background: YELLOW, color: BLUE }}
                 >
-                  <Play className="w-4 h-4" /> Try Free
+                  <FileText className="w-4 h-4" /> Explore Printables
                 </Link>
               </div>
 
@@ -163,13 +164,13 @@ function Landing() {
                   icon: Brain,
                 },
                 {
-                  t: "AI Literacy",
-                  d: "Learn to spot confident-sounding wrong answers.",
+                  t: "AI Error Hunting",
+                  d: "Confident answers aren't always right. Learn to spot the glitch.",
                   icon: Shield,
                 },
                 {
-                  t: "Explain to Learn",
-                  d: "Speaking reasoning aloud deepens understanding.",
+                  t: "Neuroinclusive",
+                  d: "No timers, no pressure. Thinking takes the time it takes.",
                   icon: MessageCircle,
                 },
               ].map((c) => (
@@ -202,15 +203,15 @@ function Landing() {
               <div>
                 <span className="label-eyebrow text-lg">Our Platform</span>
                 <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
-                  A game and printables that teach the same thinking
+                  Detective Worlds and printables that teach the same thinking
                 </h2>
                 <p className="mt-5 text-[var(--color-brand-blue)]/80 text-lg leading-relaxed">
                   The same reasoning loop — investigate, detect, repair, explain — across
-                  interactive detective worlds and screen-free printable workbooks.
+                  interactive Detective Worlds and screen-free printable workbooks.
                 </p>
                 <ul className="mt-6 space-y-3">
                   {[
-                    "Six detective worlds, one active fractions curriculum",
+                    "Six Detective Worlds, one active fractions curriculum",
                     "Voice or text explanations, TTS on every line",
                     "No timers, no punishments, no sign-up required",
                     "Cognitive Insights report for adults",
@@ -272,7 +273,7 @@ function Landing() {
                 to="/play"
                 className="px-7 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 bg-[var(--color-brand-blue)] text-white hover:scale-105 transition-transform"
               >
-                Try the Game <ArrowRight className="w-4 h-4" />
+                Enter Detective Worlds <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 to="/contact"
