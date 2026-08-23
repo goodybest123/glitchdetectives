@@ -100,9 +100,14 @@ function ContactPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4">
+                  <a
+                    href="https://www.facebook.com/profile.php?id=61580385755702"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-start gap-4 group"
+                  >
                     <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
                       style={{ background: YELLOW }}
                     >
                       <svg
@@ -118,16 +123,11 @@ function ContactPage() {
                       <h3 className="font-black uppercase text-[var(--color-brand-blue)] text-sm tracking-wide">
                         Facebook
                       </h3>
-                      <a
-                        href="https://www.facebook.com/profile.php?id=61580385755702"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[var(--color-brand-blue)]/80 hover:text-[var(--color-brand-blue)] transition-colors"
-                      >
+                      <span className="text-[var(--color-brand-blue)]/80 group-hover:text-[var(--color-brand-blue)] transition-colors">
                         Visit our page
-                      </a>
+                      </span>
                     </div>
-                  </div>
+                  </a>
                 </div>
               </div>
 
