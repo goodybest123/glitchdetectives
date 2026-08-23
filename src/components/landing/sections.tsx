@@ -720,7 +720,7 @@ export function Testimonials() {
       name: "Maya R.",
       role: "Parent of a Grade 1 learner",
       quote:
-        "She actually wants to explain her thinking now. It's like the game gave her permission to be slow and curious.",
+        "She actually wants to explain her thinking now. It's like the experience gave her permission to be slow and curious.",
     },
     {
       name: "Daniel K.",

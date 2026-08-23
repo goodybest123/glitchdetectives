@@ -1,6 +1,6 @@
 /**
  * Site-wide top navbar. Appears on every company page (home, about, products,
- * contact) and links to real routes. The "Try for Free" CTA goes to the game.
+ * contact) and links to real routes. The "Try for Free" CTA goes to the Detective Worlds.
  */
 import { Link } from "@tanstack/react-router";
 import { Menu, Search, X } from "lucide-react";
