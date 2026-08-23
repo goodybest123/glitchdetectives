@@ -6,9 +6,32 @@
  * future "locked / coming soon" cards. A revealed pending card shows a small
  * "coming soon" pill via `revealedId` state.
  */
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Lock } from "lucide-react";
+import { lockPlay } from "@/lib/gate.functions";
+
+/**
+ * Small "Lock HQ" control: clears the shared-passcode session so the next
+ * visitor to `/play` has to enter the passcode again.
+ */
+function LockHqButton() {
+  const router = useRouter();
+  const lock = useServerFn(lockPlay);
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        await lock({});
+        await router.navigate({ to: "/unlock" });
+      }}
+      className="rounded-full border border-neutral-200 px-4 py-2 text-xs font-bold tracking-wider text-neutral-500 transition hover:text-neutral-900"
+    >
+      🔒 LOCK HQ
+    </button>
+  );
+}
 
 export const Route = createFileRoute("/play/")({
   head: () => ({
