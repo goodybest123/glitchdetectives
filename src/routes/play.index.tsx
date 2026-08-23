@@ -95,12 +95,15 @@ function PlayPage() {
             >
               ← Back to Products
             </Link>
-            <Link
-              to="/play/report"
-              className="rounded-full bg-neutral-900 px-4 py-2 text-xs font-bold tracking-wider text-white transition hover:bg-black"
-            >
-              📋 VIEW DETECTIVE'S REPORT
-            </Link>
+            <div className="flex items-center gap-3">
+              <LockHqButton />
+              <Link
+                to="/play/report"
+                className="rounded-full bg-neutral-900 px-4 py-2 text-xs font-bold tracking-wider text-white transition hover:bg-black"
+              >
+                📋 VIEW DETECTIVE'S REPORT
+              </Link>
+            </div>
           </div>
           <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-neutral-900 leading-[0.95]">
             Fraction Factory:
