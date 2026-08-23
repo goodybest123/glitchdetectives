@@ -33,13 +33,13 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Glitch Detectives is a reasoning-first K-6 maths company. We help children question answers, explain thinking, and build skills for the AI era.",
+          "Glitch Detectives is a neuroinclusive, reasoning-first K-6 maths company. We teach children to question answers, verify AI outputs, and explain their thinking — without timers or pressure.",
       },
       { property: "og:title", content: "About — Glitch Detectives" },
       {
         property: "og:description",
         content:
-          "We build playful, neurodivergent-inclusive learning tools where children investigate AI mistakes and explain their thinking.",
+          "We build playful, neuroinclusive learning tools where children hunt errors, question AI answers, and explain their thinking.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -89,16 +89,18 @@ function AboutPage() {
             <div className="grid lg:grid-cols-2 gap-12 mt-12 items-start">
               <div>
                 <p className="text-lg text-[var(--color-brand-blue)]/80 leading-relaxed">
-                  Getting the right answer is great, but knowing why it's right is even better. The
-                  most important skills a child can learn are how to spot mistakes, fix them, and
-                  teach someone else how they figured it out.
+                  Getting the right answer is great, but knowing why it's right — and when a
+                  confident-looking answer is actually wrong — is even better. The most important
+                  skills a child can learn today are how to spot mistakes, fix them, and explain why
+                  AI outputs can't always be trusted.
                 </p>
                 <blockquote
                   className="mt-8 rounded-2xl border-l-4 p-6 italic text-[var(--color-brand-blue)] font-medium"
                   style={{ background: BG_MINT, borderColor: YELLOW }}
                 >
-                  "The child who can explain <strong>why</strong> an answer is wrong learns ten
-                  times more than the child who only finds the right one."
+                  "The child who can explain <strong>why</strong> an answer is wrong, including a
+                  wrong answer from a robot, learns ten times more than the child who only finds the
+                  right one."
                 </blockquote>
               </div>
               <div className="space-y-4">
@@ -108,12 +110,12 @@ function AboutPage() {
                     body: "Kids learn the steps but can't explain why they work.",
                   },
                   {
-                    title: "Overreliance on answer-getting",
-                    body: "AI delivers answers instantly — but skips the reasoning.",
+                    title: "Blind trust in AI-generated answers",
+                    body: "AI sounds confident even when it is wrong. Children need to verify, not just accept.",
                   },
                   {
-                    title: "Weak reasoning skills & fear of mistakes",
-                    body: "Mistakes become shameful instead of useful clues.",
+                    title: "Blank-page anxiety & fear of mistakes",
+                    body: "Starting from scratch can feel overwhelming. Mistakes should feel like clues, not failures.",
                   },
                 ].map((w) => (
                   <div
@@ -274,7 +276,8 @@ function AboutPage() {
               </h2>
               <p className="mt-4 text-white/75">
                 Our platform is intentionally designed to support different learning styles, calm
-                learning, and flexible thinking.
+                learning, and flexible thinking. We reduce blank-page anxiety by giving every child a
+                clear starting point, visible structure, and permission to take their time.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -308,6 +311,11 @@ function AboutPage() {
                   t: "Multiple Ways to Express",
                   d: "Tap, drag, draw, or speak your reasoning aloud.",
                   icon: Hand,
+                },
+                {
+                  t: "No Blank-Page Fear",
+                  d: "Every mission starts with a clear prompt, so children never face an empty screen or worksheet alone.",
+                  icon: MessageCircle,
                 },
               ].map((c) => (
                 <div
@@ -417,7 +425,7 @@ function AboutPage() {
                   name: "Maya R.",
                   role: "Parent of a Grade 1 learner",
                   quote:
-                    "She actually wants to explain her thinking now. It's like the game gave her permission to be slow and curious.",
+                    "She actually wants to explain her thinking now. It's like the experience gave her permission to be slow and curious.",
                 },
                 {
                   name: "Daniel K.",
