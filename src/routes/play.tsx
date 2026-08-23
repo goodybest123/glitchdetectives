@@ -3,13 +3,15 @@
  * (`/play/case-01`, `/play/report`, etc.) can share the URL segment.
  *
  * It also acts as the access gate: `beforeLoad` asks the server whether this
- * visitor has unlocked the worlds, and the server throws a redirect to
- * `/unlock` when they haven't. Gating at the layout covers every child route.
+ * visitor has unlocked the worlds, and it redirects to `/unlock` when they haven't. Gating at the layout covers every child route.
  */
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { requirePlayUnlocked } from "@/lib/gate.functions";
 
 export const Route = createFileRoute("/play")({
-  beforeLoad: () => requirePlayUnlocked(),
+  beforeLoad: async () => {
+    const { unlocked } = await requirePlayUnlocked();
+    if (!unlocked) throw redirect({ to: "/unlock" });
+  },
   component: () => <Outlet />,
 });

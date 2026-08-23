@@ -12,7 +12,6 @@
  */
 import { createServerFn } from "@tanstack/react-start";
 import { useSession } from "@tanstack/react-start/server";
-import { redirect } from "@tanstack/react-router";
 import { createHash, timingSafeEqual } from "node:crypto";
 
 type GateSession = { unlocked?: boolean };
@@ -38,11 +37,16 @@ function passcodeMatches(input: string, expected: string): boolean {
   return timingSafeEqual(a, b);
 }
 
-/** Throws a redirect to `/unlock` unless the visitor has unlocked the worlds. */
+/**
+ * Reports whether the visitor has unlocked the worlds.
+ *
+ * Returns a plain value instead of throwing a redirect: throwing a redirect
+ * response inside a server function surfaces as an unhandled `Response` error
+ * on the client. The caller (the `/play` layout `beforeLoad`) does the redirect.
+ */
 export const requirePlayUnlocked = createServerFn({ method: "GET" }).handler(async () => {
   const session = await useSession<GateSession>(sessionConfig());
-  if (!session.data.unlocked) throw redirect({ to: "/unlock" });
-  return { unlocked: true as const };
+  return { unlocked: Boolean(session.data.unlocked) };
 });
 
 /** Validates a submitted passcode and, on success, marks the session unlocked. */
