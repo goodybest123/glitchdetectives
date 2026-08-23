@@ -79,14 +79,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "A reasoning-first K-6 maths company. Children investigate AI mistakes, repair them, and explain their thinking.",
+          "A reasoning-first K-6 maths platform. Children investigate AI mistakes, repair them, and explain their thinking.",
       },
       { name: "author", content: "Glitch Detectives" },
       { property: "og:title", content: "Glitch Detectives" },
       {
         property: "og:description",
         content:
-          "A reasoning-first K-6 maths company. Children investigate AI mistakes, repair them, and explain their thinking.",
+          "A reasoning-first K-6 maths platform. Children investigate AI mistakes, repair them, and explain their thinking.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -95,7 +95,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "twitter:description",
         content:
-          "A reasoning-first K-6 maths company. Children investigate AI mistakes, repair them, and explain their thinking.",
+          "A reasoning-first K-6 maths platform. Children investigate AI mistakes, repair them, and explain their thinking.",
       },
     ],
     links: [

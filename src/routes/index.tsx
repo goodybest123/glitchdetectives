@@ -23,13 +23,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Glitch Detectives is a neuroinclusive, reasoning-first K-6 maths company. Children hunt errors in AI answers, explain why they are wrong, and build confidence in a world where not every answer can be trusted.",
+          "Glitch Detectives is a neuroinclusive, reasoning-first K-6 maths platform. Children hunt errors in AI answers, explain why they are wrong, and build confidence in a world where not every answer can be trusted.",
       },
       { property: "og:title", content: "Glitch Detectives — Reasoning-First Maths for K-6" },
       {
         property: "og:description",
         content:
-          "Don't solve. Investigate. Detect. Repair. A calm, neuroinclusive maths company that teaches children to question answers — especially AI-generated ones.",
+          "Don't solve. Investigate. Detect. Repair. A calm, neuroinclusive maths platform that teaches children to question answers — especially AI-generated ones.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -68,7 +68,7 @@ function Landing() {
                   className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border"
                   style={{ color: YELLOW, borderColor: "rgba(255,222,89,0.4)" }}
                 >
-                  Reasoning-First Maths Company
+                  Reasoning-First Maths Platform
                 </span>
               </div>
 
