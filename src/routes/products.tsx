@@ -24,13 +24,13 @@ export const Route = createFileRoute("/products")({
       {
         name: "description",
         content:
-          "Explore the Glitch Detectives platform: a playful K-6 reasoning game and screen-free printable workbook collections.",
+          "Explore the Glitch Detectives platform: neuroinclusive AI role-reversal Detective Worlds and screen-free printable workbook collections that teach children to question answers.",
       },
       { property: "og:title", content: "Products — Glitch Detectives" },
       {
         property: "og:description",
         content:
-          "AI role-reversal games and printable workbooks that teach children to investigate, repair, and explain mathematical thinking.",
+          "AI role-reversal Detective Worlds and printable workbooks that teach children to investigate, repair, and explain mathematical thinking — without pressure or blank-page anxiety.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -62,12 +62,13 @@ function ProductsPage() {
                 Products
               </span>
               <h1 className="heading-black text-4xl sm:text-5xl lg:text-6xl uppercase mt-4">
-                Play, Print, and Reason
+                Detective Worlds, Printables, and Reason
               </h1>
               <p className="mt-6 text-lg text-white/80 leading-relaxed max-w-xl">
-                Glitch Detectives combines an interactive AI role-reversal game with screen-free
-                printable workbooks. Both follow the same reasoning-first loop: investigate, detect,
-                repair, explain.
+                Glitch Detectives combines interactive AI role-reversal Detective Worlds with
+                screen-free printable workbooks. Both follow the same reasoning-first loop:
+                investigate, detect, repair, explain — and both teach children that not every answer
+                can be trusted.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -75,7 +76,7 @@ function ProductsPage() {
                   className="px-6 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
                   style={{ background: MINT, color: BLUE }}
                 >
-                  <Play className="w-4 h-4" /> Try the Game Free
+                  <Play className="w-4 h-4" /> Try Detective Worlds Free
                 </Link>
                 <Link
                   to="/printables"
@@ -106,11 +107,11 @@ function ProductsPage() {
           </div>
         </section>
 
-        {/* Game Platform */}
+        {/* Detective Worlds */}
         <section className="bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
             <div className="text-center max-w-2xl mx-auto mb-14">
-              <span className="label-eyebrow text-lg">The Game</span>
+              <span className="label-eyebrow text-lg">Detective Worlds</span>
               <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
                 Interactive Detective Worlds
               </h2>
@@ -222,12 +223,13 @@ function ProductsPage() {
             <div className="text-center max-w-2xl mx-auto mb-14">
               <span className="label-eyebrow text-lg">Off-Screen</span>
               <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
-                No screen? No problem.
+                No screen? No problem. No blank page.
               </h2>
               <p className="mt-5 text-[var(--color-brand-blue)]/80 text-base sm:text-lg leading-relaxed">
                 Children can still experience the full Glitch Detectives reasoning journey through
-                calm, hands-on printable activities designed for families and classrooms who prefer
-                low-screen or screen-free learning.
+                calm, hands-on printable activities. Every page begins with a clear starting point, so
+                learners never face the blank-page anxiety that blocks many children from beginning
+                their work.
               </p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -307,10 +309,10 @@ function ProductsPage() {
                 </h3>
                 <p className="mt-3 text-[var(--color-brand-blue)]/70 leading-relaxed">
                   Turn homework friction into curiosity. Children explain their thinking, spot AI
-                  errors, and build confidence without pressure or timers.
+                  errors, and build confidence without pressure, timers, or the anxiety of a blank page.
                 </p>
                 <ul className="mt-5 space-y-2">
-                  {["No sign-up required", "Progress saved locally", "Voice or text input"].map(
+                  {["No sign-up required", "Progress saved locally", "Voice or text input", "Calm, neuroinclusive design"].map(
                     (s) => (
                       <li
                         key={s}
@@ -341,10 +343,11 @@ function ProductsPage() {
                 </h3>
                 <p className="mt-3 text-[var(--color-brand-blue)]/70 leading-relaxed">
                   Get qualitative insights into how students think. The Cognitive Insights report
-                  surfaces reasoning patterns, vocabulary, and misconceptions.
+                  surfaces reasoning patterns, vocabulary, and misconceptions — and the activities are
+                  designed to remove blank-page anxiety so every learner can start.
                 </p>
                 <ul className="mt-5 space-y-2">
-                  {["Classroom-safe content", "Printable extensions", "AI-literacy aligned"].map(
+                  {["Classroom-safe content", "Printable extensions", "AI-literacy aligned", "Neuroinclusive structure"].map(
                     (s) => (
                       <li
                         key={s}
