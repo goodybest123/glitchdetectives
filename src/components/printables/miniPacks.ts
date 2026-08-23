@@ -62,6 +62,7 @@ export const MINI_PACKS: MiniPack[] = [
         body: "Proving exactly why a calculation is wrong and writing out how to fix it, which builds massive confidence in their reasoning skills.",
       },
     ],
+    downloadUrl: "https://selar.com/glitchdetectives_money_math",
     tint: "#e8f9f5",
   },
   {
@@ -90,6 +91,7 @@ export const MINI_PACKS: MiniPack[] = [
         body: "Simple prompt questions so the adult in the room can extend the thinking without needing a lesson plan.",
       },
     ],
+    downloadUrl: "https://selar.com/548i3377r9",
     tint: "#fff4d6",
   },
 ];
