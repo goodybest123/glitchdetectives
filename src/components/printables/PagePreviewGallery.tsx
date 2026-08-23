@@ -9,7 +9,13 @@ import { PREVIEW_PAGES } from "./collection";
 const BLUE = "var(--color-brand-blue)";
 const MUTED = "color-mix(in oklab, var(--color-brand-blue) 70%, transparent)";
 
-export function PagePreviewGallery() {
+export function PagePreviewGallery({
+  pages,
+}: {
+  /** Page thumbnails to show; defaults to the fractions collection samples. */
+  pages?: { n: number; src: string }[];
+}) {
+  const items = pages ?? PREVIEW_PAGES;
   const [open, setOpen] = useState<number | null>(null);
 
   const close = useCallback(() => setOpen(null), []);
@@ -17,7 +23,7 @@ export function PagePreviewGallery() {
     setOpen((cur) => {
       if (cur === null) return cur;
       const next = cur + dir;
-      if (next < 0 || next >= PREVIEW_PAGES.length) return cur;
+      if (next < 0 || next >= items.length) return cur;
       return next;
     });
   }, []);
@@ -36,7 +42,7 @@ export function PagePreviewGallery() {
   return (
     <>
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {PREVIEW_PAGES.map((p, i) => (
+        {items.map((p, i) => (
           <li key={p.n}>
             <button
               type="button"
@@ -72,7 +78,7 @@ export function PagePreviewGallery() {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={`Workbook sample page ${PREVIEW_PAGES[open].n}`}
+          aria-label={`Workbook sample page ${items[open].n}`}
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70"
           onClick={close}
         >
@@ -81,8 +87,8 @@ export function PagePreviewGallery() {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={PREVIEW_PAGES[open].src}
-              alt={`Workbook sample page ${PREVIEW_PAGES[open].n}`}
+              src={items[open].src}
+              alt={`Workbook sample page ${items[open].n}`}
               className="w-full max-h-[85vh] object-contain rounded-xl bg-white"
             />
             <button
@@ -104,12 +110,12 @@ export function PagePreviewGallery() {
                 <ChevronLeft className="w-5 h-5" style={{ color: BLUE }} />
               </button>
               <span className="text-sm font-semibold text-white">
-                Page {PREVIEW_PAGES[open].n} of {PREVIEW_PAGES.length} samples
+                Page {items[open].n} of {items.length} samples
               </span>
               <button
                 type="button"
                 onClick={() => step(1)}
-                disabled={open === PREVIEW_PAGES.length - 1}
+                disabled={open === items.length - 1}
                 aria-label="Next page"
                 className="w-10 h-10 rounded-full bg-white shadow flex items-center justify-center disabled:opacity-40"
               >
