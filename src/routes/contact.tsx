@@ -225,12 +225,8 @@ function ContactPage() {
                       type="submit"
                       className="w-full px-6 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center justify-center gap-2 bg-[var(--color-brand-yellow)] text-[var(--color-brand-blue)] hover:scale-105 transition-transform"
                     >
-                      <Send className="w-4 h-4" /> Send Message
+                      <Send className="w-4 h-4" /> Send
                     </button>
-                    <p className="text-xs text-[var(--color-brand-blue)]/60 text-center">
-                      This is a front-end demo form. In production, messages are sent to your team
-                      inbox.
-                    </p>
                   </form>
                 )}
               </div>
