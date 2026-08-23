@@ -129,13 +129,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isFullscreenGameplay = pathname.startsWith("/play/case-");
+  const isFullscreenWorld = pathname.startsWith("/play/case-");
 
   return (
     <QueryClientProvider client={queryClient}>
-      {!isFullscreenGameplay && <Navbar />}
+      {!isFullscreenWorld && <Navbar />}
       <Outlet />
-      {!isFullscreenGameplay && <Footer />}
+      {!isFullscreenWorld && <Footer />}
     </QueryClientProvider>
   );
 }
