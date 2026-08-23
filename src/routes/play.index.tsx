@@ -40,7 +40,7 @@ export const Route = createFileRoute("/play/")({
       {
         name: "description",
         content:
-          "A calm, neuro-inclusive learning dashboard. Investigate the active fractions case — no timers, no scores.",
+          "Enter the Glitch Detectives Detective Worlds. A calm, neuro-inclusive learning dashboard for the active fractions case — no timers, no scores.",
       },
     ],
   }),
