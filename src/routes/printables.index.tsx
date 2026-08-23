@@ -9,7 +9,6 @@ import { CategoryGrid } from "@/components/printables/CategoryGrid";
 import { MiniPacksSection } from "@/components/printables/MiniPacksSection";
 import { BenefitsRow } from "@/components/printables/BenefitsRow";
 
-
 export const Route = createFileRoute("/printables/")({
   head: () => ({
     meta: [

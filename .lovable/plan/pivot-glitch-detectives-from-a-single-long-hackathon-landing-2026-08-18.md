@@ -1,6 +1,7 @@
 Pivot Glitch Detectives from a single long hackathon landing page into a proper multi-page company website while keeping the existing play + printables products fully functional.
 
 Scope
+
 - Treat Glitch Detectives as both the company and the core product.
 - Keep `/play` and `/printables` unchanged for users who want to use the product.
 - Create clearly separated company pages: `/` (Home), `/about`, `/products`, `/contact`.
@@ -59,5 +60,6 @@ Plan
     - Smoke test that `/`, `/about`, `/products`, `/contact`, `/play`, and `/printables/fractions-l1` all load and the navbar links work.
 
 Out of scope
+
 - No new auth, no backend contact form storage, no payment changes, no new game cases.
 - Visual rebrand is not part of this plan unless explicitly requested; keep the existing brand palette and assets.

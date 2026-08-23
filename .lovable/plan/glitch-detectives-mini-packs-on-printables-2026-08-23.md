@@ -5,16 +5,19 @@ Add a free "Mini Packs" section to the printables library, below the topic grid,
 ## What gets built
 
 **1. New section on `/printables`: "Glitch Detectives Mini Packs"**
+
 - Sits directly below the "Choose a maths world" topic grid, above the benefits row.
 - Short intro line: quick, free, low-prep detective missions.
 - A card per mini pack showing: cover image (page 1 of the PDF), title, page count, topic badges, a "Free" badge, plus two buttons — "Download pack" (Selar/asset link) and "Preview pages".
 
 **2. Per-pack preview pages**
+
 - Route: `/printables/mini-packs/$slug` (e.g. `/printables/mini-packs/money-maths`).
 - Reuses the existing lightbox gallery from the fractions preview, showing every page of the mini pack as an image.
 - Full product copy (description, "what they'll learn"), badges, and the download button.
 
 **3. Content source**
+
 - Each uploaded PDF is rendered to page images (same pipeline used for the fractions samples) and stored under `public/printables/mini-packs/<slug>/`.
 - All copy lives in one data file so packs are easy to add or edit later.
 

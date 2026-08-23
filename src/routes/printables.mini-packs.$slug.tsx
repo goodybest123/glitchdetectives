@@ -22,7 +22,10 @@ export const Route = createFileRoute("/printables/mini-packs/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Mini pack not found — Glitch Detectives" }, { name: "robots", content: "noindex" }],
+        meta: [
+          { title: "Mini pack not found — Glitch Detectives" },
+          { name: "robots", content: "noindex" },
+        ],
       };
     }
     const { pack } = loaderData;
@@ -105,7 +108,11 @@ function MiniPackPage() {
 
             <div className="mt-6 max-w-3xl space-y-4">
               {pack.description.map((p) => (
-                <p key={p.slice(0, 24)} className="text-base leading-relaxed" style={{ color: MUTED }}>
+                <p
+                  key={p.slice(0, 24)}
+                  className="text-base leading-relaxed"
+                  style={{ color: MUTED }}
+                >
                   {p}
                 </p>
               ))}

@@ -18,8 +18,6 @@ export function PagePreviewGallery({
   const items = pages ?? PREVIEW_PAGES;
   const [open, setOpen] = useState<number | null>(null);
 
-
-
   const close = useCallback(() => setOpen(null), []);
   const step = useCallback((dir: 1 | -1) => {
     setOpen((cur) => {
