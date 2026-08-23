@@ -94,6 +94,35 @@ export const MINI_PACKS: MiniPack[] = [
     downloadUrl: "https://selar.com/548i3377r9",
     tint: "#fff4d6",
   },
+  {
+    slug: "real-world-glitch-hunt",
+    title: "Real-World Math Glitch Hunt - Mini Pack",
+    blurb:
+      "A free 6-page workbook where children follow ZED-4 through everyday scenes and repair the maths glitches he leaves behind.",
+    badges: ["Real-World", "6 Pages", "Free"],
+    pageCount: 6,
+    description: [
+      "If your child rushes to guess numbers without checking if they actually make sense, you're not alone. We spend so much time asking kids, \u201CWhat is the answer?\u201D that we forget to teach them the most important skill: asking, \u201CDoes this answer make sense?\u201D",
+      "That's exactly why I created the Real-World Math Glitch Hunt. Instead of boring drill sheets, this free 6-page workbook turns your child into a Math Detective. They will follow ZED-4, a friendly robot who keeps making mathematical \u201Cglitches\u201D in everyday life \u2014 like sharing pizza, buying toys, and counting balloons.",
+      "Your child's mission: INVESTIGATE the scene, DETECT the glitch, REPAIR the mistake, and EXPLAIN their thinking.",
+    ],
+    learn: [
+      {
+        title: "Does this make sense?",
+        body: "Children stop guessing numbers and start checking whether an answer is reasonable before they accept it.",
+      },
+      {
+        title: "Maths in everyday scenes",
+        body: "Sharing pizza, buying toys and counting balloons put arithmetic into situations children already recognise.",
+      },
+      {
+        title: "The four-step detective routine",
+        body: "Investigate, detect, repair, explain \u2014 the same habit that carries across every Glitch Detectives pack.",
+      },
+    ],
+    downloadUrl: "http://selar.com/mini_glitch_detectives_hunt",
+    tint: "#ece8ff",
+  },
 ];
 
 export function getMiniPack(slug: string) {
