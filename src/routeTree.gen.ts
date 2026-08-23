@@ -45,6 +45,7 @@ import { Route as ApiChatCase06CircuitRouteImport } from './routes/api/chat/case
 import { Route as ApiChatCase06PaintRouteImport } from './routes/api/chat/case-06-paint'
 import { Route as PrintablesFractionsL1IndexRouteImport } from './routes/printables.fractions-l1.index'
 import { Route as PrintablesFractionsL1PreviewRouteImport } from './routes/printables.fractions-l1.preview'
+import { Route as PrintablesMiniPacksSlugRouteImport } from './routes/printables.mini-packs.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -228,6 +229,11 @@ const PrintablesFractionsL1PreviewRoute =
     path: '/preview',
     getParentRoute: () => PrintablesFractionsL1Route,
   } as any)
+const PrintablesMiniPacksSlugRoute = PrintablesMiniPacksSlugRouteImport.update({
+  id: '/mini-packs/$slug',
+  path: '/mini-packs/$slug',
+  getParentRoute: () => PrintablesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -265,6 +271,7 @@ export interface FileRoutesByFullPath {
   '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
   '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
+  '/printables/mini-packs/$slug': typeof PrintablesMiniPacksSlugRoute
   '/printables/fractions-l1/': typeof PrintablesFractionsL1IndexRoute
 }
 export interface FileRoutesByTo {
@@ -300,6 +307,7 @@ export interface FileRoutesByTo {
   '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
   '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
+  '/printables/mini-packs/$slug': typeof PrintablesMiniPacksSlugRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1IndexRoute
 }
 export interface FileRoutesById {
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
   '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
+  '/printables/mini-packs/$slug': typeof PrintablesMiniPacksSlugRoute
   '/printables/fractions-l1/': typeof PrintablesFractionsL1IndexRoute
 }
 export interface FileRouteTypes {
@@ -379,6 +388,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-circuit'
     | '/api/chat/case-06-paint'
     | '/printables/fractions-l1/preview'
+    | '/printables/mini-packs/$slug'
     | '/printables/fractions-l1/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -414,6 +424,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-circuit'
     | '/api/chat/case-06-paint'
     | '/printables/fractions-l1/preview'
+    | '/printables/mini-packs/$slug'
     | '/printables/fractions-l1'
   id:
     | '__root__'
@@ -452,6 +463,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-circuit'
     | '/api/chat/case-06-paint'
     | '/printables/fractions-l1/preview'
+    | '/printables/mini-packs/$slug'
     | '/printables/fractions-l1/'
   fileRoutesById: FileRoutesById
 }
@@ -736,6 +748,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrintablesFractionsL1PreviewRouteImport
       parentRoute: typeof PrintablesFractionsL1Route
     }
+    '/printables/mini-packs/$slug': {
+      id: '/printables/mini-packs/$slug'
+      path: '/mini-packs/$slug'
+      fullPath: '/printables/mini-packs/$slug'
+      preLoaderRoute: typeof PrintablesMiniPacksSlugRouteImport
+      parentRoute: typeof PrintablesRoute
+    }
   }
 }
 
@@ -781,11 +800,13 @@ const PrintablesFractionsL1RouteWithChildren =
 interface PrintablesRouteChildren {
   PrintablesFractionsL1Route: typeof PrintablesFractionsL1RouteWithChildren
   PrintablesIndexRoute: typeof PrintablesIndexRoute
+  PrintablesMiniPacksSlugRoute: typeof PrintablesMiniPacksSlugRoute
 }
 
 const PrintablesRouteChildren: PrintablesRouteChildren = {
   PrintablesFractionsL1Route: PrintablesFractionsL1RouteWithChildren,
   PrintablesIndexRoute: PrintablesIndexRoute,
+  PrintablesMiniPacksSlugRoute: PrintablesMiniPacksSlugRoute,
 }
 
 const PrintablesRouteWithChildren = PrintablesRoute._addFileChildren(

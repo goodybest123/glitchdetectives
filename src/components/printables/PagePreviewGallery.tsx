@@ -10,13 +10,14 @@ const BLUE = "var(--color-brand-blue)";
 const MUTED = "color-mix(in oklab, var(--color-brand-blue) 70%, transparent)";
 
 export function PagePreviewGallery({
-  pages = PREVIEW_PAGES,
+  pages,
 }: {
   /** Page thumbnails to show; defaults to the fractions collection samples. */
   pages?: { n: number; src: string }[];
 }) {
-  const PREVIEW_PAGES = pages;
+  const items = pages ?? PREVIEW_PAGES;
   const [open, setOpen] = useState<number | null>(null);
+
 
 
   const close = useCallback(() => setOpen(null), []);
