@@ -76,12 +76,8 @@ function ContactPage() {
             <div className="grid lg:grid-cols-2 gap-12">
               <div>
                 <h2 className="heading-black uppercase text-3xl sm:text-4xl text-[var(--color-brand-blue)]">
-                  Send a message
+                  Get in touch
                 </h2>
-                <p className="mt-4 text-[var(--color-brand-blue)]/70 leading-relaxed">
-                  We read every message. Tell us who you are and what you're looking for — a demo, a
-                  classroom licence, a partnership, or just feedback.
-                </p>
 
                 <div className="mt-10 space-y-6">
                   <div className="flex items-start gap-4">
@@ -100,6 +96,35 @@ function ContactPage() {
                         className="text-[var(--color-brand-blue)]/80 hover:text-[var(--color-brand-blue)] transition-colors"
                       >
                         hello@glitchdetectives.com
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
+                      style={{ background: YELLOW }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-5 h-5 text-[var(--color-brand-blue)]"
+                      >
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-black uppercase text-[var(--color-brand-blue)] text-sm tracking-wide">
+                        Facebook
+                      </h3>
+                      <a
+                        href="https://www.facebook.com/profile.php?id=61580385755702"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[var(--color-brand-blue)]/80 hover:text-[var(--color-brand-blue)] transition-colors"
+                      >
+                        Visit our page
                       </a>
                     </div>
                   </div>
@@ -200,12 +225,8 @@ function ContactPage() {
                       type="submit"
                       className="w-full px-6 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center justify-center gap-2 bg-[var(--color-brand-yellow)] text-[var(--color-brand-blue)] hover:scale-105 transition-transform"
                     >
-                      <Send className="w-4 h-4" /> Send Message
+                      <Send className="w-4 h-4" /> Send
                     </button>
-                    <p className="text-xs text-[var(--color-brand-blue)]/60 text-center">
-                      This is a front-end demo form. In production, messages are sent to your team
-                      inbox.
-                    </p>
                   </form>
                 )}
               </div>
