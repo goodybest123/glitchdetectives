@@ -1,5 +1,5 @@
 /**
- * Site-wide top navbar. Appears on every company page (home, about, products,
+ * Site-wide top navbar. Appears on every platform page (home, about, products,
  * contact) and links to real routes. The "Try for Free" CTA goes to the Detective Worlds.
  */
 import { Link } from "@tanstack/react-router";

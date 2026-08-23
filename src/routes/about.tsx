@@ -33,7 +33,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Glitch Detectives is a neuroinclusive, reasoning-first K-6 maths company. We teach children to question answers, verify AI outputs, and explain their thinking — without timers or pressure.",
+          "Glitch Detectives is a neuroinclusive, reasoning-first K-6 maths platform. We teach children to question answers, verify AI outputs, and explain their thinking — without timers or pressure.",
       },
       { property: "og:title", content: "About — Glitch Detectives" },
       {
