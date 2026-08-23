@@ -5,7 +5,7 @@
  */
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { Lock, ArrowRight } from "lucide-react";
+import { Lock, ArrowRight, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { unlockPlay } from "@/lib/gate.functions";
 
@@ -108,6 +108,14 @@ function UnlockPage() {
           </Link>
           .
         </p>
+
+        <Link
+          to="/"
+          className="mt-5 inline-flex items-center justify-center gap-2 rounded-full border border-black/10 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[var(--color-brand-blue)] hover:bg-[var(--color-bg-light)] transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" /> Back to home
+        </Link>
+
       </div>
     </main>
   );

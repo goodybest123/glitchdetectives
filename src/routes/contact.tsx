@@ -103,22 +103,6 @@ function ContactPage() {
                       </a>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-                      style={{ background: YELLOW }}
-                    >
-                      <MapPin className="w-5 h-5 text-[var(--color-brand-blue)]" />
-                    </div>
-                    <div>
-                      <h3 className="font-black uppercase text-[var(--color-brand-blue)] text-sm tracking-wide">
-                        Based in
-                      </h3>
-                      <p className="text-[var(--color-brand-blue)]/80">
-                        Lagos, Nigeria · Building globally
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
 
