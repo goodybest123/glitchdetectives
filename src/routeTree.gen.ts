@@ -18,6 +18,7 @@ import { Route as PrintablesRouteImport } from './routes/printables'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as UnlockRouteImport } from './routes/unlock'
 import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
+import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
 import { Route as PlayCase02RouteImport } from './routes/play.case-02'
@@ -93,6 +94,11 @@ const UnlockRoute = UnlockRouteImport.update({
 const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => ArticlesRoute,
+} as any)
+const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
   getParentRoute: () => ArticlesRoute,
 } as any)
 const PlayIndexRoute = PlayIndexRouteImport.update({
@@ -262,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/printables': typeof PrintablesRouteWithChildren
   '/products': typeof ProductsRoute
   '/unlock': typeof UnlockRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -301,6 +308,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/products': typeof ProductsRoute
   '/unlock': typeof UnlockRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -343,6 +351,7 @@ export interface FileRoutesById {
   '/printables': typeof PrintablesRouteWithChildren
   '/products': typeof ProductsRoute
   '/unlock': typeof UnlockRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -387,6 +396,7 @@ export interface FileRouteTypes {
     | '/printables'
     | '/products'
     | '/unlock'
+    | '/articles/$slug'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -426,6 +436,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/products'
     | '/unlock'
+    | '/articles/$slug'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -467,6 +478,7 @@ export interface FileRouteTypes {
     | '/printables'
     | '/products'
     | '/unlock'
+    | '/articles/$slug'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -593,6 +605,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/articles/'
       preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof ArticlesRoute
+    }
+    '/articles/$slug': {
+      id: '/articles/$slug'
+      path: '/$slug'
+      fullPath: '/articles/$slug'
+      preLoaderRoute: typeof ArticlesSlugRouteImport
       parentRoute: typeof ArticlesRoute
     }
     '/play/': {
@@ -816,10 +835,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface ArticlesRouteChildren {
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
   ArticlesIndexRoute: typeof ArticlesIndexRoute
 }
 
 const ArticlesRouteChildren: ArticlesRouteChildren = {
+  ArticlesSlugRoute: ArticlesSlugRoute,
   ArticlesIndexRoute: ArticlesIndexRoute,
 }
 
