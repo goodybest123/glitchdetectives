@@ -35,6 +35,28 @@ export function AntiAiOrNot() {
         thinking work back in, on purpose.
       </p>
 
+      <h2>The confidence trap: why AI sounds right even when it's wrong</h2>
+      <p>
+        One thing about AI that catches children and adults off guard is how confident it sounds.
+        It doesn't say "maybe" or "I think." It answers in full sentences, with examples, and acts
+        like the answer is settled. The problem is, confidence is not the same thing as correctness.
+        AI can be wrong about facts, wrong about math, and wrong about history, while sounding
+        completely sure of itself.
+      </p>
+      <p>
+        For a child who is still learning how to think critically, this is a big deal. If the
+        machine always looks certain, why would they question it? But that is exactly the habit they
+        need: stopping to ask, "Does this actually make sense?" before trusting the answer. Not all
+        answers should be accepted, especially in this AI era. Fact-checking is not extra work; it
+        is the main skill now.
+      </p>
+      <p>
+        This is why I don't think the solution is to keep AI away from kids. The solution is to
+        teach them that speed and confidence are not proof. Real understanding means slowing down,
+        comparing the answer to what you already know, and being willing to say, "I don't think this
+        is right." That is the muscle Glitch Detectives is built to exercise.
+      </p>
+
       <h2>What it's doing to their wellbeing</h2>
       <p>
         This part worries me more than the academic side. Kids are starting to lean on AI not just
