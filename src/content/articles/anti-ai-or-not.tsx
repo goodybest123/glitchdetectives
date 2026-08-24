@@ -55,7 +55,23 @@ export function AntiAiOrNot() {
         worth making at all. That's the feeling we have to protect them from.
       </p>
 
+      <h2>What it's doing to the environment</h2>
+      <p>
+        I don't think most parents think about this part, but it's worth knowing. Every time a
+        chatbot answers a question, it runs on a data center somewhere, and those data centers use
+        real electricity and real water to keep running and cool. Some estimates put a single AI
+        chat exchange at using a small cup's worth of water for cooling and about as much
+        electricity as a few minutes of a lightbulb being on, and that scales up fast across
+        millions of people using it every day.
+      </p>
+      <p>
+        I'm not saying don't let your kid use AI because of the environment. I'm saying it's not a
+        free, invisible resource. It has a cost somewhere, even if we never see it. Worth knowing,
+        worth teaching your kids too, honestly.
+      </p>
+
       <h2>So should homeschool parents use it or not?</h2>
+
       <p>
         My honest answer: use it if you wish, but with limits you set on purpose, not limits you
         figure out after something's already gone wrong.
