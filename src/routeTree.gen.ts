@@ -11,11 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as PrintablesRouteImport } from './routes/printables'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as UnlockRouteImport } from './routes/unlock'
+import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
+import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
 import { Route as PlayCase02RouteImport } from './routes/play.case-02'
@@ -58,6 +61,11 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArticlesRoute = ArticlesRouteImport.update({
+  id: '/articles',
+  path: '/articles',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -82,6 +90,16 @@ const UnlockRoute = UnlockRouteImport.update({
   id: '/unlock',
   path: '/unlock',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ArticlesRoute,
+} as any)
+const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ArticlesRoute,
 } as any)
 const PlayIndexRoute = PlayIndexRouteImport.update({
   id: '/',
@@ -244,11 +262,13 @@ const PrintablesMiniPacksSlugRoute = PrintablesMiniPacksSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRouteWithChildren
   '/contact': typeof ContactRoute
   '/play': typeof PlayRouteWithChildren
   '/printables': typeof PrintablesRouteWithChildren
   '/products': typeof ProductsRoute
   '/unlock': typeof UnlockRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -257,6 +277,7 @@ export interface FileRoutesByFullPath {
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
+  '/articles/': typeof ArticlesIndexRoute
   '/play/': typeof PlayIndexRoute
   '/printables/': typeof PrintablesIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -287,6 +308,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/products': typeof ProductsRoute
   '/unlock': typeof UnlockRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -294,6 +316,7 @@ export interface FileRoutesByTo {
   '/play/case-05': typeof PlayCase05Route
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
+  '/articles': typeof ArticlesIndexRoute
   '/play': typeof PlayIndexRoute
   '/printables': typeof PrintablesIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -322,11 +345,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRouteWithChildren
   '/contact': typeof ContactRoute
   '/play': typeof PlayRouteWithChildren
   '/printables': typeof PrintablesRouteWithChildren
   '/products': typeof ProductsRoute
   '/unlock': typeof UnlockRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -335,6 +360,7 @@ export interface FileRoutesById {
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
+  '/articles/': typeof ArticlesIndexRoute
   '/play/': typeof PlayIndexRoute
   '/printables/': typeof PrintablesIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -364,11 +390,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/articles'
     | '/contact'
     | '/play'
     | '/printables'
     | '/products'
     | '/unlock'
+    | '/articles/$slug'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -377,6 +405,7 @@ export interface FileRouteTypes {
     | '/play/case-06'
     | '/play/report'
     | '/printables/fractions-l1'
+    | '/articles/'
     | '/play/'
     | '/printables/'
     | '/api/chat/case-01'
@@ -407,6 +436,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/products'
     | '/unlock'
+    | '/articles/$slug'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -414,6 +444,7 @@ export interface FileRouteTypes {
     | '/play/case-05'
     | '/play/case-06'
     | '/play/report'
+    | '/articles'
     | '/play'
     | '/printables'
     | '/api/chat/case-01'
@@ -441,11 +472,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/articles'
     | '/contact'
     | '/play'
     | '/printables'
     | '/products'
     | '/unlock'
+    | '/articles/$slug'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -454,6 +487,7 @@ export interface FileRouteTypes {
     | '/play/case-06'
     | '/play/report'
     | '/printables/fractions-l1'
+    | '/articles/'
     | '/play/'
     | '/printables/'
     | '/api/chat/case-01'
@@ -482,6 +516,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ArticlesRoute: typeof ArticlesRouteWithChildren
   ContactRoute: typeof ContactRoute
   PlayRoute: typeof PlayRouteWithChildren
   PrintablesRoute: typeof PrintablesRouteWithChildren
@@ -523,6 +558,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/articles': {
+      id: '/articles'
+      path: '/articles'
+      fullPath: '/articles'
+      preLoaderRoute: typeof ArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -557,6 +599,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/unlock'
       preLoaderRoute: typeof UnlockRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/articles/': {
+      id: '/articles/'
+      path: '/'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof ArticlesRoute
+    }
+    '/articles/$slug': {
+      id: '/articles/$slug'
+      path: '/$slug'
+      fullPath: '/articles/$slug'
+      preLoaderRoute: typeof ArticlesSlugRouteImport
+      parentRoute: typeof ArticlesRoute
     }
     '/play/': {
       id: '/play/'
@@ -778,6 +834,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ArticlesRouteChildren {
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
+  ArticlesIndexRoute: typeof ArticlesIndexRoute
+}
+
+const ArticlesRouteChildren: ArticlesRouteChildren = {
+  ArticlesSlugRoute: ArticlesSlugRoute,
+  ArticlesIndexRoute: ArticlesIndexRoute,
+}
+
+const ArticlesRouteWithChildren = ArticlesRoute._addFileChildren(
+  ArticlesRouteChildren,
+)
+
 interface PlayRouteChildren {
   PlayCase01Route: typeof PlayCase01Route
   PlayCase02Route: typeof PlayCase02Route
@@ -836,6 +906,7 @@ const PrintablesRouteWithChildren = PrintablesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ArticlesRoute: ArticlesRouteWithChildren,
   ContactRoute: ContactRoute,
   PlayRoute: PlayRouteWithChildren,
   PrintablesRoute: PrintablesRouteWithChildren,

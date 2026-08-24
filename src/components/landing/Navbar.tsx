@@ -11,6 +11,7 @@ const ROUTE_LINKS = [
   { to: "/about" as const, label: "About" },
   { to: "/products" as const, label: "Products" },
   { to: "/printables" as const, label: "Printables" },
+  { to: "/articles" as const, label: "Articles" },
   { to: "/contact" as const, label: "Contact" },
 ] as const;
 

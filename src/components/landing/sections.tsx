@@ -846,6 +846,11 @@ export function Footer() {
               Printables
             </Link>
           </li>
+          <li>
+            <Link to="/articles" className="hover:text-white">
+              Articles
+            </Link>
+          </li>
         </ul>
         <div className="flex items-center gap-3">
           {[Facebook, Twitter, Instagram, Youtube].map((Ic, i) => (
