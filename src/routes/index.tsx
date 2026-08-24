@@ -165,7 +165,7 @@ function Landing() {
                 },
                 {
                   t: "AI Error Hunting",
-                  d: "Confident answers aren't always right. Learn to spot the glitch.",
+                  d: "AI sounds sure of itself, but it isn't always right. Kids learn to fact-check and spot the glitch.",
                   icon: Shield,
                 },
                 {

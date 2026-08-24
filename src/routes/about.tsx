@@ -111,7 +111,7 @@ function AboutPage() {
                   },
                   {
                     title: "Blind trust in AI-generated answers",
-                    body: "AI sounds confident even when it is wrong. Children need to verify, not just accept.",
+                    body: "AI is always confident, but not always correct. Children need to fact-check and verify, not just accept.",
                   },
                   {
                     title: "Blank-page anxiety & fear of mistakes",
