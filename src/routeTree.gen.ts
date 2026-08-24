@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as PrintablesRouteImport } from './routes/printables'
@@ -56,6 +57,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesRoute = ArticlesRouteImport.update({
+  id: '/articles',
+  path: '/articles',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -244,6 +250,7 @@ const PrintablesMiniPacksSlugRoute = PrintablesMiniPacksSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRoute
   '/contact': typeof ContactRoute
   '/play': typeof PlayRouteWithChildren
   '/printables': typeof PrintablesRouteWithChildren
@@ -284,6 +291,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRoute
   '/contact': typeof ContactRoute
   '/products': typeof ProductsRoute
   '/unlock': typeof UnlockRoute
@@ -322,6 +330,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRoute
   '/contact': typeof ContactRoute
   '/play': typeof PlayRouteWithChildren
   '/printables': typeof PrintablesRouteWithChildren
@@ -364,6 +373,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/articles'
     | '/contact'
     | '/play'
     | '/printables'
@@ -404,6 +414,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/articles'
     | '/contact'
     | '/products'
     | '/unlock'
@@ -441,6 +452,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/articles'
     | '/contact'
     | '/play'
     | '/printables'
@@ -482,6 +494,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ArticlesRoute: typeof ArticlesRoute
   ContactRoute: typeof ContactRoute
   PlayRoute: typeof PlayRouteWithChildren
   PrintablesRoute: typeof PrintablesRouteWithChildren
@@ -521,6 +534,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles': {
+      id: '/articles'
+      path: '/articles'
+      fullPath: '/articles'
+      preLoaderRoute: typeof ArticlesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -836,6 +856,7 @@ const PrintablesRouteWithChildren = PrintablesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ArticlesRoute: ArticlesRoute,
   ContactRoute: ContactRoute,
   PlayRoute: PlayRouteWithChildren,
   PrintablesRoute: PrintablesRouteWithChildren,
