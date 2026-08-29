@@ -39,7 +39,11 @@ export function MiniPacksSection() {
 }
 
 function MiniPackCard({ pack }: { pack: MiniPack }) {
-  const coverPage = packPages(pack)[0];
+  const pages = packPages(pack);
+  // Prefer an explicit cover page (e.g. the PDF's first page), else first sample.
+  const coverPage = pack.coverPage
+    ? { n: pack.coverPage, src: `/printables/mini-packs/${pack.slug}/page-${pack.coverPage}.jpg` }
+    : pages[0];
 
   return (
     <div className="h-full rounded-3xl border border-black/5 bg-white overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-md transition-transform">

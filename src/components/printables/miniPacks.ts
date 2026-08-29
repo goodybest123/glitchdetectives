@@ -19,6 +19,8 @@ export type MiniPack = {
   pageCount: number;
   /** Original PDF page numbers shown as buyer-facing samples. */
   samplePages?: number[];
+  /** PDF page used as the card cover; defaults to the first sample page. */
+  coverPage?: number;
   /** Long-form product copy paragraphs for the preview page. */
   description: string[];
   /** "What they will actually learn" bullets. */
@@ -134,6 +136,7 @@ export const MINI_PACKS: MiniPack[] = [
     badges: ["7 Days", "No Worksheets", "Free"],
     pageCount: 22,
     samplePages: [2, 7, 11],
+    coverPage: 1,
     description: [
       "Tried the workbooks, printed the pages, and still ended up with a child in tears? This free seven-day challenge takes a different approach: seven hands-on math investigations using things you already have at home. No prep, no printing, just five minutes a day and a little curiosity.",
       "Your child might split an apple fairly, work with a pretend $20 budget, build a tower from blocks, or catch and fix a hidden mistake. Each day follows the same simple method: Investigate, Detect, Repair, Explain — a practical routine for noticing what is happening, finding the problem or pattern, working out the fix, and explaining their thinking out loud.",
