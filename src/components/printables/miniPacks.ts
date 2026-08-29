@@ -19,6 +19,8 @@ export type MiniPack = {
   pageCount: number;
   /** Original PDF page numbers shown as buyer-facing samples. */
   samplePages?: number[];
+  /** PDF page used as the card cover; defaults to the first sample page. */
+  coverPage?: number;
   /** Long-form product copy paragraphs for the preview page. */
   description: string[];
   /** "What they will actually learn" bullets. */
