@@ -17,6 +17,8 @@ export type MiniPack = {
   badges: string[];
   /** Number of printable pages; also drives how many preview images we expect. */
   pageCount: number;
+  /** Original PDF page numbers shown as buyer-facing samples. */
+  samplePages?: number[];
   /** Long-form product copy paragraphs for the preview page. */
   description: string[];
   /** "What they will actually learn" bullets. */
@@ -29,9 +31,10 @@ export type MiniPack = {
 
 /** Page image paths for a pack (rendered from its PDF into /public). */
 export function packPages(pack: MiniPack) {
-  return Array.from({ length: pack.pageCount }, (_, i) => ({
-    n: i + 1,
-    src: `/printables/mini-packs/${pack.slug}/page-${i + 1}.jpg`,
+  const pageNumbers = pack.samplePages ?? Array.from({ length: pack.pageCount }, (_, i) => i + 1);
+  return pageNumbers.map((n) => ({
+    n,
+    src: `/printables/mini-packs/${pack.slug}/page-${n}.jpg`,
   }));
 }
 
@@ -122,6 +125,36 @@ export const MINI_PACKS: MiniPack[] = [
     ],
     downloadUrl: "http://selar.com/mini_glitch_detectives_hunt",
     tint: "#ece8ff",
+  },
+  {
+    slug: "7-day-math-without-worksheets-challenge",
+    title: "The 7-Day Math Without Worksheets Homeschool Challenge",
+    blurb:
+      "Seven real-world math investigations, zero worksheets, and five minutes a day for a calmer week of noticing, reasoning, and explaining.",
+    badges: ["7 Days", "No Worksheets", "Free"],
+    pageCount: 22,
+    samplePages: [2, 7, 11],
+    description: [
+      "Tried the workbooks, printed the pages, and still ended up with a child in tears? This free seven-day challenge takes a different approach: seven hands-on math investigations using things you already have at home. No prep, no printing, just five minutes a day and a little curiosity.",
+      "Your child might split an apple fairly, work with a pretend $20 budget, build a tower from blocks, or catch and fix a hidden mistake. Each day follows the same simple method: Investigate, Detect, Repair, Explain — a practical routine for noticing what is happening, finding the problem or pattern, working out the fix, and explaining their thinking out loud.",
+      "Inside are parent scripts, prompts, and a helpful line for when your child gets stuck, along with a Detective ID Card, a grand finale mystery featuring ZED-4, a certificate page, and real talk for the parent. You do not need to be good at maths to run this. You just need to ask, ‘What do you notice?’",
+    ],
+    learn: [
+      {
+        title: "Real-world reasoning",
+        body: "Children explore fairness, money, measurement, patterns, and mistakes through ordinary objects and situations at home.",
+      },
+      {
+        title: "A repeatable thinking routine",
+        body: "Investigate, detect, repair, explain gives children a steady way to slow down, check their thinking, and communicate what they notice.",
+      },
+      {
+        title: "Confidence for the whole family",
+        body: "Parent scripts and ‘say this if they get stuck’ prompts make it easier to support mathematical thinking without needing a lesson plan.",
+      },
+    ],
+    downloadUrl: "https://selar.com/7-days-math-without-worksheet-challenge",
+    tint: "#f8e8ee",
   },
 ];
 

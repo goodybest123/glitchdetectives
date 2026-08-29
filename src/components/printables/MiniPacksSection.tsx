@@ -4,7 +4,7 @@
  */
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Download, FileText } from "lucide-react";
-import { MINI_PACKS, type MiniPack } from "./miniPacks";
+import { MINI_PACKS, packPages, type MiniPack } from "./miniPacks";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
@@ -39,15 +39,17 @@ export function MiniPacksSection() {
 }
 
 function MiniPackCard({ pack }: { pack: MiniPack }) {
+  const coverPage = packPages(pack)[0];
+
   return (
     <div className="h-full rounded-3xl border border-black/5 bg-white overflow-hidden flex flex-col hover:-translate-y-1 hover:shadow-md transition-transform">
       <div
         className="relative aspect-[4/3] flex items-center justify-center overflow-hidden"
         style={{ background: pack.tint }}
       >
-        <img
-          src={`/printables/mini-packs/${pack.slug}/page-1.jpg`}
-          alt={`${pack.title} cover page`}
+          <img
+           src={coverPage?.src}
+           alt={`${pack.title} sample page ${coverPage?.n ?? 1}`}
           loading="lazy"
           className="absolute inset-0 w-full h-full object-cover object-top"
           onError={(e) => {

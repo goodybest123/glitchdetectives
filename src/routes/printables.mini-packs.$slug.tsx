@@ -135,7 +135,7 @@ function MiniPackPage() {
                 Page preview
               </h2>
               <p className="mt-3 text-sm" style={{ color: MUTED }}>
-                All {pack.pageCount} pages exactly as they print. Tap any page to zoom in.
+                {pages.length} sample pages from the {pack.pageCount}-page pack. Tap any page to zoom in.
               </p>
               <div className="mt-8">
                 <PagePreviewGallery pages={pages} />
