@@ -132,7 +132,7 @@ export const MINI_PACKS: MiniPack[] = [
     blurb:
       "Seven real-world math investigations, zero worksheets, and five minutes a day for a calmer week of noticing, reasoning, and explaining.",
     badges: ["7 Days", "No Worksheets", "Free"],
-    pageCount: 11,
+    pageCount: 22,
     samplePages: [2, 7, 11],
     description: [
       "Tried the workbooks, printed the pages, and still ended up with a child in tears? This free seven-day challenge takes a different approach: seven hands-on math investigations using things you already have at home. No prep, no printing, just five minutes a day and a little curiosity.",
