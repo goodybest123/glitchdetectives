@@ -126,7 +126,7 @@ export function PagePreviewGallery({
         </div>
       )}
       <p className="sr-only" style={{ color: MUTED }}>
-        Use the arrow keys to move between sample pages and Escape to close.
+         Use the arrow keys to move between sample pages and Escape to close.
       </p>
     </>
   );
