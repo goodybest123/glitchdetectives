@@ -10,7 +10,11 @@ export function createPlaySessionConfig(password: string) {
     cookie: {
       httpOnly: true,
       secure: true,
-      sameSite: "lax" as const,
+      // Lovable previews run inside a cross-site iframe. `SameSite=None` plus
+      // CHIPS keeps this encrypted gate session available there without
+      // exposing it to client-side JavaScript.
+      sameSite: "none" as const,
+      partitioned: true,
       path: "/",
     },
   };
