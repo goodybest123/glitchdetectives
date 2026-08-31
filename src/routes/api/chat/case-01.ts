@@ -17,7 +17,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
-import { validateChatMessages } from "@/lib/chat-validation";
+import { formatChatStreamError, readAndValidateChatMessages } from "@/lib/chat-validation";
 
 const SYSTEM_PROMPT = `You are ZED-4's friendly AI Guide — a warm, curious robot helper for a Grade 1 child (age 6).
 
@@ -55,7 +55,7 @@ export const Route = createFileRoute("/api/chat/case-01")({
       POST: async ({ request }) => {
         const key = process.env.LOVABLE_API_KEY;
         if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
-        const messages = validateChatMessages(await request.json());
+        const messages = await readAndValidateChatMessages(request);
         if (messages instanceof Response) return messages;
 
         const gateway = createLovableAiGatewayProvider(key);
@@ -65,7 +65,10 @@ export const Route = createFileRoute("/api/chat/case-01")({
           messages: await convertToModelMessages(messages),
         });
 
-        return result.toUIMessageStreamResponse({ originalMessages: messages });
+        return result.toUIMessageStreamResponse({
+          originalMessages: messages,
+          onError: formatChatStreamError,
+        });
       },
     },
   },

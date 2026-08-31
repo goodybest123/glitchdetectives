@@ -60,12 +60,6 @@ export function validateChatMessages(body: unknown): UIMessage[] | Response {
       return new Response("Each message needs at least one part", { status: 400 });
     }
 
-    if (content.length > MAX_MESSAGE_LENGTH) {
-      return new Response(`Message too long (max ${MAX_MESSAGE_LENGTH} characters)`, {
-        status: 400,
-      });
-    }
-
     for (const part of parts) {
       if (!part || typeof part !== "object") {
         return new Response("Each message part must be an object", { status: 400 });
