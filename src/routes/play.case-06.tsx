@@ -132,7 +132,7 @@ function SubCaseRunner({
 
   const transport = useRef(new DefaultChatTransport({ api: c.chatEndpoint })).current;
 
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, error } = useChat({
     id: `case-06-${caseId}`,
     messages: [welcomeMessage],
     transport,
@@ -404,6 +404,7 @@ function SubCaseRunner({
           stage={stage}
           messages={messages}
           isSending={isSending}
+          error={error}
           onSend={(text) => sendMessage({ text })}
           onViewReport={() =>
             reportRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })

@@ -42,23 +42,45 @@ export function validateChatMessages(body: unknown): UIMessage[] | Response {
       return new Response("Each message must be an object", { status: 400 });
     }
 
-    const { role, content } = msg as { role?: unknown; content?: unknown };
+    const { id, role, parts } = msg as {
+      id?: unknown;
+      role?: unknown;
+      parts?: unknown;
+    };
+
+    if (typeof id !== "string" || id.length === 0 || id.length > 200) {
+      return new Response("Each message needs a valid id", { status: 400 });
+    }
 
     if (typeof role !== "string" || !["user", "assistant", "system"].includes(role)) {
       return new Response("Invalid message role", { status: 400 });
     }
 
-    if (typeof content !== "string") {
-      return new Response("Message content must be a string", { status: 400 });
+    if (!Array.isArray(parts) || parts.length === 0) {
+      return new Response("Each message needs at least one part", { status: 400 });
     }
 
-    if (content.length > MAX_MESSAGE_LENGTH) {
-      return new Response(`Message too long (max ${MAX_MESSAGE_LENGTH} characters)`, {
-        status: 400,
-      });
-    }
+    for (const part of parts) {
+      if (!part || typeof part !== "object") {
+        return new Response("Each message part must be an object", { status: 400 });
+      }
 
-    totalLength += content.length;
+      const { type, text } = part as { type?: unknown; text?: unknown };
+      if (type !== "text" && type !== "reasoning") {
+        return new Response("Unsupported message part", { status: 400 });
+      }
+      if (typeof text !== "string") {
+        return new Response("Text message parts must contain text", { status: 400 });
+      }
+
+      if (text.length > MAX_MESSAGE_LENGTH) {
+        return new Response(`Message part too long (max ${MAX_MESSAGE_LENGTH} characters)`, {
+          status: 400,
+        });
+      }
+
+      totalLength += text.length;
+    }
   }
 
   if (totalLength > MAX_TOTAL_LENGTH) {
@@ -68,4 +90,39 @@ export function validateChatMessages(body: unknown): UIMessage[] | Response {
   }
 
   return messages as UIMessage[];
+}
+
+/** Reads the transport body without turning malformed JSON into a server error page. */
+export async function readAndValidateChatMessages(
+  request: Request,
+): Promise<UIMessage[] | Response> {
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return new Response("Invalid JSON body", { status: 400 });
+  }
+
+  return validateChatMessages(body);
+}
+
+/** Converts gateway failures into a safe, useful message for the child-facing chat. */
+export function formatChatStreamError(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+  const normalized = message.toLowerCase();
+
+  if (normalized.includes("401")) {
+    return "ZED-4 is unavailable because the AI service is not configured.";
+  }
+  if (normalized.includes("402")) {
+    return "ZED-4 is paused because AI credits are unavailable right now.";
+  }
+  if (normalized.includes("403")) {
+    return "ZED-4 is unavailable because the AI service is blocked.";
+  }
+  if (normalized.includes("429")) {
+    return "ZED-4 is busy right now. Please try again in a moment.";
+  }
+
+  return "ZED-4 could not reply right now. Please try again.";
 }

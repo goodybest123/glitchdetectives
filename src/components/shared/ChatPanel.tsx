@@ -12,6 +12,7 @@ type Props = {
   stage: Stage;
   messages: UIMessage[];
   isSending: boolean;
+  error?: Error;
   onSend: (text: string) => void;
   onViewReport?: () => void;
 };
@@ -99,6 +100,7 @@ function ChatPanelInner({
   stage,
   messages,
   isSending,
+  error,
   onSend,
   onViewReport,
   variant,
@@ -196,6 +198,14 @@ function ChatPanelInner({
             })}
             {isSending && (
               <div className="text-xs italic text-neutral-400">AI Guide is thinking…</div>
+            )}
+            {error && (
+              <p
+                className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700"
+                role="alert"
+              >
+                {error.message || "ZED-4 could not reply right now. Please try again."}
+              </p>
             )}
 
             {/* INLINE composer — flows directly under the latest message */}
