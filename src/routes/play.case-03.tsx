@@ -291,6 +291,7 @@ function SubCaseRunner({
         </span>
       </div>
 
+      <CaseStepper stage={stage} />
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6">
         {/* Case file */}
         <section>
@@ -298,7 +299,6 @@ function SubCaseRunner({
             ref={repairRef}
             className="rounded-2xl bg-white p-3 sm:p-5 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100"
           >
-            <CaseStepper stage={stage} />
             <div className="mb-6">
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
