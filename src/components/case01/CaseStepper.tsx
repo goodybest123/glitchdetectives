@@ -17,7 +17,7 @@ export function CaseStepper({ stage }: { stage: Stage }) {
       : (STEPS[activeIndex] ?? STEPS[0]);
 
   return (
-    <>
+    <div className="sticky top-0 z-20 -mx-3 -mt-3 border-b border-border bg-card px-3 pt-3 pb-1 shadow-sm sm:-mx-5 sm:-mt-5 sm:px-5 sm:pt-5">
       <div className="mb-2 flex items-center justify-center gap-2 text-xs text-neutral-500">
         <span>
           <span className="font-bold text-neutral-700">{current.label}:</span> {current.desc}
@@ -89,6 +89,6 @@ export function CaseStepper({ stage }: { stage: Stage }) {
           );
         })}
       </ol>
-    </>
+    </div>
   );
 }
