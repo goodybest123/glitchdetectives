@@ -12,30 +12,7 @@
  */
 import { createServerFn } from "@tanstack/react-start";
 import { useSession } from "@tanstack/react-start/server";
-import { createHash, timingSafeEqual } from "node:crypto";
-
-type GateSession = { unlocked?: boolean };
-
-function sessionConfig() {
-  return {
-    password: process.env["PLAY_SESSION_SECRET"]!,
-    name: "gd-play-gate",
-    maxAge: 60 * 60 * 24 * 30, // 30 days
-    cookie: {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax" as const,
-      path: "/",
-    },
-  };
-}
-
-/** Hash both sides so `timingSafeEqual` gets equal-length buffers. */
-function passcodeMatches(input: string, expected: string): boolean {
-  const a = createHash("sha256").update(input, "utf8").digest();
-  const b = createHash("sha256").update(expected, "utf8").digest();
-  return timingSafeEqual(a, b);
-}
+import { createPlaySessionConfig, passcodeMatches, type GateSession } from "./gate.server";
 
 /**
  * Reports whether the visitor has unlocked the worlds.
@@ -45,28 +22,35 @@ function passcodeMatches(input: string, expected: string): boolean {
  * on the client. The caller (the `/play` layout `beforeLoad`) does the redirect.
  */
 export const requirePlayUnlocked = createServerFn({ method: "GET" }).handler(async () => {
-  const session = await useSession<GateSession>(sessionConfig());
+  const sessionSecret = process.env["PLAY_SESSION_SECRET"];
+  if (!sessionSecret) return { unlocked: false };
+
+  const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
   return { unlocked: Boolean(session.data.unlocked) };
 });
 
 /** Validates a submitted passcode and, on success, marks the session unlocked. */
 export const unlockPlay = createServerFn({ method: "POST" })
-  .inputValidator((data: { passcode: string }) => ({
+  .validator((data: { passcode: string }) => ({
     passcode: String(data?.passcode ?? "").slice(0, 200),
   }))
   .handler(async ({ data }) => {
     const expected = process.env["PLAY_PASSCODE"];
-    if (!expected) return { ok: false as const };
+    const sessionSecret = process.env["PLAY_SESSION_SECRET"];
+    if (!expected || !sessionSecret) return { ok: false as const };
     if (!passcodeMatches(data.passcode, expected)) return { ok: false as const };
 
-    const session = await useSession<GateSession>(sessionConfig());
+    const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
     await session.update({ unlocked: true });
     return { ok: true as const };
   });
 
 /** Clears the unlocked flag (useful before handing a laptop to someone else). */
 export const lockPlay = createServerFn({ method: "POST" }).handler(async () => {
-  const session = await useSession<GateSession>(sessionConfig());
+  const sessionSecret = process.env["PLAY_SESSION_SECRET"];
+  if (!sessionSecret) return { ok: false as const };
+
+  const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
   await session.clear();
   return { ok: true as const };
 });

@@ -3,7 +3,7 @@
  * worlds while they're in private testing. On success the server sets an
  * encrypted session cookie and we navigate into `/play`.
  */
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useHydrated, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Lock, ArrowRight, ArrowLeft } from "lucide-react";
 import { useState } from "react";
@@ -35,6 +35,7 @@ export const Route = createFileRoute("/unlock")({
 function UnlockPage() {
   const router = useRouter();
   const unlock = useServerFn(unlockPlay);
+  const hydrated = useHydrated();
   const [error, setError] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -71,7 +72,8 @@ function UnlockPage() {
           passcode, enter it below.
         </p>
 
-        <form onSubmit={onSubmit} className="mt-6 space-y-3 text-left">
+        {hydrated ? (
+        <form method="post" onSubmit={onSubmit} className="mt-6 space-y-3 text-left">
           <label
             htmlFor="passcode"
             className="block text-xs font-bold uppercase tracking-widest text-[var(--color-brand-blue)]/70"
@@ -100,6 +102,9 @@ function UnlockPage() {
             {busy ? "Checking…" : "Enter HQ"} <ArrowRight className="w-4 h-4" />
           </button>
         </form>
+        ) : (
+          <div className="mt-6 h-[190px]" aria-hidden="true" />
+        )}
 
         <p className="mt-6 text-sm text-[var(--color-brand-blue)]/70">
           No passcode?{" "}
