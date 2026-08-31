@@ -68,40 +68,38 @@ function UnlockPage() {
           Detective HQ is in private testing
         </h1>
         <p className="mt-3 text-sm text-[var(--color-brand-blue)]/70 leading-relaxed">
-          The interactive worlds aren't open to the public yet. If you have an access
-          passcode, enter it below.
+          The interactive worlds aren't open to the public yet. If you have an access passcode,
+          enter it below.
         </p>
 
         {hydrated ? (
-        <form method="post" onSubmit={onSubmit} className="mt-6 space-y-3 text-left">
-          <label
-            htmlFor="passcode"
-            className="block text-xs font-bold uppercase tracking-widest text-[var(--color-brand-blue)]/70"
-          >
-            Access passcode
-          </label>
-          <input
-            id="passcode"
-            name="passcode"
-            type="password"
-            autoComplete="current-password"
-            required
-            className="w-full rounded-2xl border border-black/10 px-4 py-3 text-[var(--color-brand-blue)] outline-none focus:border-[var(--color-brand-blue)]"
-            placeholder="••••••••"
-          />
-          {error && (
-            <p className="text-sm text-red-600">
-              That passcode didn't work. Please try again.
-            </p>
-          )}
-          <button
-            type="submit"
-            disabled={busy}
-            className="w-full px-6 py-3 rounded-full bg-[var(--color-brand-blue)] text-white font-bold uppercase tracking-wider text-sm inline-flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform disabled:opacity-60"
-          >
-            {busy ? "Checking…" : "Enter HQ"} <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
+          <form method="post" onSubmit={onSubmit} className="mt-6 space-y-3 text-left">
+            <label
+              htmlFor="passcode"
+              className="block text-xs font-bold uppercase tracking-widest text-[var(--color-brand-blue)]/70"
+            >
+              Access passcode
+            </label>
+            <input
+              id="passcode"
+              name="passcode"
+              type="password"
+              autoComplete="current-password"
+              required
+              className="w-full rounded-2xl border border-black/10 px-4 py-3 text-[var(--color-brand-blue)] outline-none focus:border-[var(--color-brand-blue)]"
+              placeholder="••••••••"
+            />
+            {error && (
+              <p className="text-sm text-red-600">That passcode didn't work. Please try again.</p>
+            )}
+            <button
+              type="submit"
+              disabled={busy}
+              className="w-full px-6 py-3 rounded-full bg-[var(--color-brand-blue)] text-white font-bold uppercase tracking-wider text-sm inline-flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform disabled:opacity-60"
+            >
+              {busy ? "Checking…" : "Enter HQ"} <ArrowRight className="w-4 h-4" />
+            </button>
+          </form>
         ) : (
           <div className="mt-6 h-[190px]" aria-hidden="true" />
         )}
@@ -120,7 +118,6 @@ function UnlockPage() {
         >
           <ArrowLeft className="w-4 h-4" /> Back to home
         </Link>
-
       </div>
     </main>
   );
