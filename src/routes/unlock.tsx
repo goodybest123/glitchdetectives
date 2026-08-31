@@ -3,7 +3,7 @@
  * worlds while they're in private testing. On success the server sets an
  * encrypted session cookie and we navigate into `/play`.
  */
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useHydrated, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Lock, ArrowRight, ArrowLeft } from "lucide-react";
 import { useState } from "react";
@@ -35,6 +35,7 @@ export const Route = createFileRoute("/unlock")({
 function UnlockPage() {
   const router = useRouter();
   const unlock = useServerFn(unlockPlay);
+  const hydrated = useHydrated();
   const [error, setError] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -67,39 +68,41 @@ function UnlockPage() {
           Detective HQ is in private testing
         </h1>
         <p className="mt-3 text-sm text-[var(--color-brand-blue)]/70 leading-relaxed">
-          The interactive worlds aren't open to the public yet. If you have an access
-          passcode, enter it below.
+          The interactive worlds aren't open to the public yet. If you have an access passcode,
+          enter it below.
         </p>
 
-        <form onSubmit={onSubmit} className="mt-6 space-y-3 text-left">
-          <label
-            htmlFor="passcode"
-            className="block text-xs font-bold uppercase tracking-widest text-[var(--color-brand-blue)]/70"
-          >
-            Access passcode
-          </label>
-          <input
-            id="passcode"
-            name="passcode"
-            type="password"
-            autoComplete="current-password"
-            required
-            className="w-full rounded-2xl border border-black/10 px-4 py-3 text-[var(--color-brand-blue)] outline-none focus:border-[var(--color-brand-blue)]"
-            placeholder="••••••••"
-          />
-          {error && (
-            <p className="text-sm text-red-600">
-              That passcode didn't work. Please try again.
-            </p>
-          )}
-          <button
-            type="submit"
-            disabled={busy}
-            className="w-full px-6 py-3 rounded-full bg-[var(--color-brand-blue)] text-white font-bold uppercase tracking-wider text-sm inline-flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform disabled:opacity-60"
-          >
-            {busy ? "Checking…" : "Enter HQ"} <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
+        {hydrated ? (
+          <form method="post" onSubmit={onSubmit} className="mt-6 space-y-3 text-left">
+            <label
+              htmlFor="passcode"
+              className="block text-xs font-bold uppercase tracking-widest text-[var(--color-brand-blue)]/70"
+            >
+              Access passcode
+            </label>
+            <input
+              id="passcode"
+              name="passcode"
+              type="password"
+              autoComplete="current-password"
+              required
+              className="w-full rounded-2xl border border-black/10 px-4 py-3 text-[var(--color-brand-blue)] outline-none focus:border-[var(--color-brand-blue)]"
+              placeholder="••••••••"
+            />
+            {error && (
+              <p className="text-sm text-red-600">That passcode didn't work. Please try again.</p>
+            )}
+            <button
+              type="submit"
+              disabled={busy}
+              className="w-full px-6 py-3 rounded-full bg-[var(--color-brand-blue)] text-white font-bold uppercase tracking-wider text-sm inline-flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform disabled:opacity-60"
+            >
+              {busy ? "Checking…" : "Enter HQ"} <ArrowRight className="w-4 h-4" />
+            </button>
+          </form>
+        ) : (
+          <div className="mt-6 h-[190px]" aria-hidden="true" />
+        )}
 
         <p className="mt-6 text-sm text-[var(--color-brand-blue)]/70">
           No passcode?{" "}
@@ -115,7 +118,6 @@ function UnlockPage() {
         >
           <ArrowLeft className="w-4 h-4" /> Back to home
         </Link>
-
       </div>
     </main>
   );
