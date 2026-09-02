@@ -31,12 +31,59 @@ type Tool = "move" | "rotate" | "compare";
 type Recipient = "Maya" | "Leo" | "Sam" | "ZED-4";
 
 const RECIPIENTS: Recipient[] = ["Maya", "Leo", "Sam", "ZED-4"];
+// The four shares ZED-4 cut: deliberately unequal sweep angles so the
+// completed pizza and every draggable/comparable piece visibly differ in size.
 const PIECES = [
-  { id: "A", size: "large", start: { x: 18, y: 52 } },
-  { id: "B", size: "small", start: { x: 40, y: 28 } },
-  { id: "C", size: "medium", start: { x: 64, y: 51 } },
-  { id: "D", size: "mediumLarge", start: { x: 40, y: 77 } },
+  { id: "A", sweep: 150, start: { x: 18, y: 52 } }, // very large
+  { id: "B", sweep: 45, start: { x: 40, y: 28 } }, // small sliver
+  { id: "C", sweep: 90, start: { x: 64, y: 51 } }, // medium quarter
+  { id: "D", sweep: 75, start: { x: 40, y: 77 } }, // medium-small
 ] as const;
+
+type PieceId = (typeof PIECES)[number]["id"];
+
+function pieceById(id: string) {
+  return PIECES.find((piece) => piece.id === id) ?? PIECES[0];
+}
+
+// Board pixel size scales with the wedge angle so size is visible at a glance.
+function piecePixelSize(sweep: number) {
+  return Math.round(48 + sweep * 0.38);
+}
+
+const WEDGE_CX = 50;
+const WEDGE_CY = 50;
+const WEDGE_R = 44;
+
+function wedgePoint(deg: number, r = WEDGE_R) {
+  const rad = ((deg - 90) * Math.PI) / 180;
+  return { x: WEDGE_CX + r * Math.cos(rad), y: WEDGE_CY + r * Math.sin(rad) };
+}
+
+/**
+ * A single pizza wedge SVG centered on its tip pointing "up" after rotation.
+ * The crust follows the arc; two straight edges are the cut sides.
+ */
+function PizzaWedge({ sweep, className }: { sweep: number; className?: string }) {
+  const start = wedgePoint(-sweep / 2);
+  const end = wedgePoint(sweep / 2);
+  const largeArc = sweep > 180 ? 1 : 0;
+  const arc = `M ${WEDGE_CX} ${WEDGE_CY} L ${start.x} ${start.y} A ${WEDGE_R} ${WEDGE_R} 0 ${largeArc} 1 ${end.x} ${end.y} Z`;
+  // One pepperoni dot placed along the wedge's middle axis.
+  const dot = wedgePoint(0, WEDGE_R * 0.55);
+  return (
+    <svg viewBox="0 0 100 100" className={className} aria-hidden>
+      <path
+        d={arc}
+        fill="var(--pizza-base)"
+        stroke="var(--pizza-crust)"
+        strokeWidth={7}
+        strokeLinejoin="round"
+      />
+      <circle cx={dot.x} cy={dot.y} r={5} fill="var(--pizza-sauce)" opacity={0.85} />
+    </svg>
+  );
+}
 
 const HINTS = [
   "Everyone has one piece. Is each piece the same size?",
