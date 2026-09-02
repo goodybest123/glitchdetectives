@@ -919,11 +919,9 @@ function DetectPanel(props: DetectPanelProps) {
                   const size = piecePixelSize(piece.sweep);
                   return (
                     <div key={id} className="flex flex-col items-center gap-1">
-                      <PizzaWedge
-                        sweep={piece.sweep}
-                        className="h-auto"
-                        // width set via style below
-                      />
+                      <div style={{ width: size, height: size }}>
+                        <PizzaWedge sweep={piece.sweep} className="h-full w-full" />
+                      </div>
                       <span className="text-xs font-bold text-muted-foreground">
                         Piece {piece.id}
                       </span>
