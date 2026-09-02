@@ -57,6 +57,13 @@ export const Route = createFileRoute("/play/case-01")({
         content:
           "Three fair-sharing puzzles: pizza, chocolate, and a painted canvas — a calm Grade 1 maths case.",
       },
+      { property: "og:title", content: "Case 01: The Fair-Share Glitch — Glitch Detectives" },
+      {
+        property: "og:description",
+        content: "Investigate ZED-4’s pizza claim, repair the shares, and explain what makes sharing fair.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: CaseOnePage,

@@ -21,6 +21,7 @@ import { MicButton } from "@/components/case01/MicButton";
 import { SpeakButton } from "@/components/case01/SpeakButton";
 import { ChatPanel } from "@/components/shared/ChatPanel";
 import type { SubCaseDef } from "@/components/case01/cases";
+import { useReportRecorder } from "@/hooks/useReportRecorder";
 import { celebrate } from "@/lib/celebrate";
 
 const SOLVED_TOKEN = "[[CASE_SOLVED]]";
@@ -189,6 +190,19 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
     explain: stage === "solved" ? 5 : 0,
   };
 
+  useReportRecorder({
+    active: stage === "solved",
+    caseId: "case-01",
+    subId: "pizza",
+    caseTitle: "Case 01.01 · The Pizza",
+    subTitle: definition.title,
+    emoji: definition.emoji,
+    glitchSummary: definition.subtitle,
+    conceptMastered: definition.conceptMastered,
+    studentQuotes,
+    marks,
+  });
+
   const movePiece = (id: string, clientX: number, clientY: number, board: HTMLElement) => {
     const rect = board.getBoundingClientRect();
     setPiecePositions((current) => ({
@@ -301,7 +315,7 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
       </div>
       <CaseStepper stage={currentStage} />
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <main className="space-y-5">
+        <div className="space-y-5">
           {stage === "investigate" && (
             <>
               <StageIntro
@@ -509,7 +523,7 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
               />
             </div>
           )}
-        </main>
+        </div>
         <ChatPanel
           stage={currentStage}
           messages={messages}
