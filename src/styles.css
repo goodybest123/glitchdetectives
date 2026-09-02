@@ -43,10 +43,10 @@
   --color-brand-mint: #a5f5de;
   --color-bg-light: #f8f9fa;
   --color-bg-mint: #e8f9f5;
-  --color-pizza-crust: #b9793d;
-  --color-pizza-base: #ffd978;
-  --color-pizza-sauce: #db665d;
-  --color-pizza-cheese: #ffe9a6;
+  --color-pizza-crust: var(--pizza-crust);
+  --color-pizza-base: var(--pizza-base);
+  --color-pizza-sauce: var(--pizza-sauce);
+  --color-pizza-cheese: var(--pizza-cheese);
 
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;

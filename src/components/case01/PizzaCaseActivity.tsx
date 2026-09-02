@@ -108,7 +108,7 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
   const [explanationMethod, setExplanationMethod] =
     useState<ObservationLog["explanationMethod"]>(null);
   const [hintIndex, setHintIndex] = useState(0);
-  const [log, setLog] = useState<ObservationLog>(readLog);
+  const [log, setLog] = useState<ObservationLog>(emptyLog);
   const [applyComplete, setApplyComplete] = useState(false);
   const [reportRef, repairRef] = [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)];
   const dragRef = useRef<{ id: string; board: HTMLElement } | null>(null);
@@ -160,6 +160,10 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
       celebrate();
     }
   }, [messages, onSolved, stage]);
+
+  useEffect(() => {
+    setLog(readLog());
+  }, []);
 
   useEffect(() => {
     const nextLog = { ...log, explanationMethod, hintsUsed: hintIndex };
