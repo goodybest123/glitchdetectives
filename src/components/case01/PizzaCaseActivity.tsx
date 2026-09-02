@@ -796,6 +796,7 @@ function InvestigationBoard(props: BoardProps) {
         {PIECES.map((piece) => {
           const point = props.piecePositions[piece.id] ?? piece.start;
           const selected = props.selectedPiece === piece.id;
+          const size = piecePixelSize(piece.sweep);
           return (
             <button
               key={piece.id}
@@ -806,15 +807,16 @@ function InvestigationBoard(props: BoardProps) {
               onPointerMove={(event) => props.onDrag(piece.id, event)}
               onPointerUp={props.onFinishDrag}
               onPointerCancel={props.onFinishDrag}
-              className={`absolute flex h-16 w-20 -translate-x-1/2 -translate-y-1/2 touch-none items-center justify-center rounded-xl border-2 bg-card text-2xl shadow-sm transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring ${selected ? "border-primary ring-4 ring-primary/20" : "border-border"}`}
+              className={`absolute flex -translate-x-1/2 -translate-y-1/2 touch-none items-center justify-center rounded-xl p-1 transition-[filter] focus-visible:ring-2 focus-visible:ring-ring ${selected ? "drop-shadow-[0_0_10px_var(--primary)]" : "hover:drop-shadow-md"}`}
               style={{
                 left: `${point.x}%`,
                 top: `${point.y}%`,
+                width: size,
+                height: size,
                 transform: `translate(-50%, -50%) rotate(${props.pieceRotations[piece.id] ?? 0}deg)`,
               }}
             >
-              <GripVertical className="absolute left-1 h-4 w-4 text-muted-foreground" aria-hidden />
-              <span aria-hidden>🍕</span>
+              <PizzaWedge sweep={piece.sweep} className="h-full w-full" />
               <span className="sr-only">Piece {piece.id}</span>
             </button>
           );
