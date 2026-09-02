@@ -13,7 +13,7 @@ import {
 } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
-import { Check, GripVertical, Lightbulb, RotateCcw, Undo2 } from "lucide-react";
+import { Check, Lightbulb, RotateCcw, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CaseStepper, type Stage } from "@/components/case01/CaseStepper";
 import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
