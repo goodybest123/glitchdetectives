@@ -674,19 +674,56 @@ function InvestigationScene() {
   );
 }
 
+/**
+ * ZED-4's completed solution: one pizza cut into four true arc wedges using
+ * the same unequal sweep angles as the draggable pieces (150°/45°/90°/75°),
+ * so "one piece each, different amounts" is visible at a glance.
+ */
 function UnequalPizza() {
+  const CX = 100;
+  const CY = 100;
+  const R = 88;
+  const GAP = 2; // degrees trimmed from each wedge edge so the cuts are visible
+  const polar = (deg: number, r = R) => {
+    const rad = ((deg - 90) * Math.PI) / 180;
+    return { x: CX + r * Math.cos(rad), y: CY + r * Math.sin(rad) };
+  };
+  // Lay the wedges out in order around the circle, starting at 12 o'clock.
+  let cursor = 0;
+  const toppings: { x: number; y: number }[] = [];
+  const wedges = PIECES.map((piece) => {
+    const start = cursor + GAP;
+    const end = cursor + piece.sweep - GAP;
+    cursor += piece.sweep;
+    const s = polar(start);
+    const e = polar(end);
+    const largeArc = end - start > 180 ? 1 : 0;
+    const mid = polar((start + end) / 2, R * 0.55);
+    toppings.push(mid);
+    return `M ${CX} ${CY} L ${s.x} ${s.y} A ${R} ${R} 0 ${largeArc} 1 ${e.x} ${e.y} Z`;
+  });
   return (
-    <div className="mx-auto flex h-56 w-56 items-center justify-center rounded-full border-[16px] border-pizza-crust bg-pizza-base shadow-sm sm:h-64 sm:w-64">
-      <div className="relative h-full w-full overflow-hidden rounded-full border-4 border-pizza-sauce/60">
-        <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rotate-[18deg] bg-primary/70" />
-        <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rotate-[42deg] bg-primary/70" />
-        <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rotate-[70deg] bg-primary/70" />
-        <span className="absolute left-1/4 top-1/4 text-2xl">●</span>
-        <span className="absolute right-1/4 top-1/3 text-2xl">●</span>
-        <span className="absolute bottom-1/4 left-1/3 text-2xl">●</span>
-        <span className="absolute bottom-1/4 right-1/4 text-2xl">●</span>
-      </div>
-    </div>
+    <svg
+      viewBox="0 0 200 200"
+      className="mx-auto h-56 w-56 sm:h-64 sm:w-64"
+      role="img"
+      aria-label="A pizza cut into four pieces of clearly different sizes"
+    >
+      <circle cx={CX} cy={CY} r={R + 8} fill="var(--pizza-crust)" />
+      {wedges.map((d, i) => (
+        <path
+          key={i}
+          d={d}
+          fill="var(--pizza-base)"
+          stroke="var(--pizza-crust)"
+          strokeWidth={2.5}
+          strokeLinejoin="round"
+        />
+      ))}
+      {toppings.map((t, i) => (
+        <circle key={i} cx={t.x} cy={t.y} r={5} fill="var(--pizza-sauce)" opacity={0.85} />
+      ))}
+    </svg>
   );
 }
 
