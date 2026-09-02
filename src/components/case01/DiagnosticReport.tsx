@@ -16,6 +16,7 @@ type Props = {
   conceptMastered?: string;
   onTryAnother?: () => void;
   nextCaseLabel?: string;
+  showMarks?: boolean;
 };
 
 const MAX_PER_STEP = 5;
@@ -34,6 +35,7 @@ export function DiagnosticReport({
   conceptMastered = "Fair Sharing — equal parts of one whole",
   onTryAnother,
   nextCaseLabel = "Case 02 — comparing fair shares.",
+  showMarks = true,
 }: Props) {
   const total = marks.investigate + marks.detect + marks.repair + marks.explain;
   const maxTotal = MAX_PER_STEP * 4;
@@ -72,25 +74,27 @@ export function DiagnosticReport({
         <SpeakButton text={`ZED-4 says: ${thanks}`} />
       </div>
 
-      {/* Marks */}
-      <div className="mt-6 rounded-2xl border border-neutral-100 bg-[#f8fafc] p-5">
-        <div className="flex items-center justify-between border-b border-neutral-200/70 pb-3">
-          <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Marks</div>
-          <span className="rounded-full bg-[#dcfce7] px-3 py-1 text-sm font-bold text-[#166534]">
-            {total} / {maxTotal}
-          </span>
+      {/* Marks stay available for parent-facing reports, but Case 01 can lead with reasoning skills instead. */}
+      {showMarks && (
+        <div className="mt-6 rounded-2xl border border-neutral-100 bg-[#f8fafc] p-5">
+          <div className="flex items-center justify-between border-b border-neutral-200/70 pb-3">
+            <div className="text-xs font-bold uppercase tracking-wider text-neutral-500">Marks</div>
+            <span className="rounded-full bg-[#dcfce7] px-3 py-1 text-sm font-bold text-[#166534]">
+              {total} / {maxTotal}
+            </span>
+          </div>
+          <ul className="mt-4 space-y-2.5">
+            <StepMark label="Investigate" score={marks.investigate} />
+            <StepMark label="Detect" score={marks.detect} />
+            <StepMark label="Repair" score={marks.repair} />
+            <StepMark label="Explain" score={marks.explain} />
+          </ul>
+          <div className="mt-4 flex items-center gap-2 border-t border-neutral-200/70 pt-3 text-sm font-semibold text-neutral-700">
+            <span>{remarkFor(total)}</span>
+            <SpeakButton text={remarkFor(total)} />
+          </div>
         </div>
-        <ul className="mt-4 space-y-2.5">
-          <StepMark label="Investigate" score={marks.investigate} />
-          <StepMark label="Detect" score={marks.detect} />
-          <StepMark label="Repair" score={marks.repair} />
-          <StepMark label="Explain" score={marks.explain} />
-        </ul>
-        <div className="mt-4 flex items-center gap-2 border-t border-neutral-200/70 pt-3 text-sm font-semibold text-neutral-700">
-          <span>{remarkFor(total)}</span>
-          <SpeakButton text={remarkFor(total)} />
-        </div>
-      </div>
+      )}
 
       {/* Concept mastered */}
       <div className="mt-6">

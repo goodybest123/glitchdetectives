@@ -33,8 +33,9 @@ function write(map: ProgressMap) {
 
 export function useCaseProgress<S extends string>(caseId: string, subCaseIds: readonly S[]) {
   const [solved, setSolved] = useState<Record<S, boolean>>(() => {
-    const stored = read()[caseId] ?? {};
-    return Object.fromEntries(subCaseIds.map((id) => [id, !!stored[id]])) as Record<S, boolean>;
+    // SSR and the first browser render must match. Saved progress is loaded
+    // in the effect below, after hydration, to avoid changing the markup.
+    return Object.fromEntries(subCaseIds.map((id) => [id, false])) as Record<S, boolean>;
   });
 
   // Sync on mount in case storage changed since first render (SSR).
