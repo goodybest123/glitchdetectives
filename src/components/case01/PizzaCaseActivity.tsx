@@ -40,8 +40,6 @@ const PIECES = [
   { id: "D", sweep: 75, start: { x: 40, y: 77 } }, // medium-small
 ] as const;
 
-type PieceId = (typeof PIECES)[number]["id"];
-
 function pieceById(id: string) {
   return PIECES.find((piece) => piece.id === id) ?? PIECES[0];
 }
