@@ -107,7 +107,8 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     conceptMastered: "Fair Sharing — four equal parts of one whole",
     story: {
       eyebrow: "CASE 01.01 · THE PIZZA",
-      intro: "ZED-4 was helping four detectives share one pizza. He says everyone got a fair share.",
+      intro:
+        "ZED-4 was helping four detectives share one pizza. He says everyone got a fair share.",
       solution: "I cut the pizza into four pieces. One piece each means fair sharing!",
       confidence: "“Case closed!” But did he check the size of each piece?",
       mission: "Investigate ZED-4’s solution and prove what is fair.",
@@ -129,10 +130,12 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     ],
     apply: {
       title: "Your turn: share something fairly",
-      prompt: "Use four small objects and one piece of paper. Show how four people could get the same amount.",
+      prompt:
+        "Use four small objects and one piece of paper. Show how four people could get the same amount.",
       grab: ["paper", "4 small objects", "a pencil"],
     },
-    skillSummary: "You compared quantities, tested the picture, repaired the shares, and explained why equal pieces matter.",
+    skillSummary:
+      "You compared quantities, tested the picture, repaired the shares, and explained why equal pieces matter.",
     evidenceSkills: ["Compared the pieces", "Tested an idea", "Explained the evidence"],
   },
   chocolate: {
@@ -167,7 +170,8 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     conceptMastered: "Fair Sharing — three equal parts make thirds",
     story: {
       eyebrow: "CASE 01.02 · THE CHOCOLATE BAR",
-      intro: "ZED-4 broke a chocolate bar into three pieces for three friends. He says each friend gets a fair share.",
+      intro:
+        "ZED-4 broke a chocolate bar into three pieces for three friends. He says each friend gets a fair share.",
       solution: "There are three pieces, so they must be matching thirds!",
       confidence: "“Easy peasy. Case closed!” Did he compare the sizes?",
       mission: "Investigate the bar and show what a fair share needs.",
@@ -189,7 +193,8 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     ],
     apply: {
       title: "Your turn: compare three pieces",
-      prompt: "Find three safe objects at home. Put them side by side. Can you make three groups with the same amount?",
+      prompt:
+        "Find three safe objects at home. Put them side by side. Can you make three groups with the same amount?",
       grab: ["3 safe objects", "a table", "your eyes"],
     },
     skillSummary: "You looked past the number three and checked whether each piece really matched.",
@@ -227,7 +232,8 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     conceptMastered: "Fair Sharing — halves are two matching parts",
     story: {
       eyebrow: "CASE 01.03 · THE PAINTED CANVAS",
-      intro: "ZED-4 painted one side of a canvas and called it half. He says one painted side and one unpainted side must match.",
+      intro:
+        "ZED-4 painted one side of a canvas and called it half. He says one painted side and one unpainted side must match.",
       solution: "I made two sides. One and one means half!",
       confidence: "“Perfect work!” But are the two sides the same size?",
       mission: "Move the line, compare both sides, and decide what half means.",
@@ -252,7 +258,8 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       prompt: "Fold or draw a line on paper. Can you show two parts that match in size?",
       grab: ["paper", "a pencil", "a flat table"],
     },
-    skillSummary: "You used the model to check that half means two matching parts, not just two spaces.",
+    skillSummary:
+      "You used the model to check that half means two matching parts, not just two spaces.",
     evidenceSkills: ["Compared both sides", "Moved the divider", "Explained what half means"],
   },
 };

@@ -346,7 +346,7 @@ function SubCaseRunner({
             )}
 
             {stage === "repair" && (
-                <Case01RepairBoard
+              <Case01RepairBoard
                 definition={c}
                 equalized={equalized}
                 onEqualizedChange={setEqualized}
