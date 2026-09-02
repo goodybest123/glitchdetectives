@@ -28,6 +28,7 @@ import { ZedBubble } from "@/components/case01/ZedBubble";
 import { CaseStepper, type Stage } from "@/components/case01/CaseStepper";
 import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case01/CasePicker";
+import { PizzaCaseExperience } from "@/components/case01/PizzaCaseActivity";
 import {
   Case01ApplyChallenge,
   Case01DetectPanel,
@@ -77,12 +78,21 @@ function CaseOnePage() {
 
   return (
     <PageShell title={`Case 01 · ${SUB_CASES[activeCase].title}`}>
-      <SubCaseRunner
-        key={activeCase}
-        caseId={activeCase}
-        onSolved={() => markSolved(activeCase)}
-        onBackToPicker={() => setActiveCase(null)}
-      />
+      {activeCase === "pizza" ? (
+        <PizzaCaseExperience
+          key={activeCase}
+          definition={SUB_CASES.pizza}
+          onSolved={() => markSolved(activeCase)}
+          onBackToPicker={() => setActiveCase(null)}
+        />
+      ) : (
+        <SubCaseRunner
+          key={activeCase}
+          caseId={activeCase}
+          onSolved={() => markSolved(activeCase)}
+          onBackToPicker={() => setActiveCase(null)}
+        />
+      )}
     </PageShell>
   );
 }

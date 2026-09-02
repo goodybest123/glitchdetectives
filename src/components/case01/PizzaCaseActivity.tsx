@@ -3,7 +3,14 @@
  * It is the reference investigation: a child sees a confident claim, gathers
  * evidence, makes a forgiving repair, explains the reasoning, and applies it.
  */
-import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { Check, GripVertical, Lightbulb, RotateCcw, Undo2 } from "lucide-react";
@@ -14,7 +21,6 @@ import { MicButton } from "@/components/case01/MicButton";
 import { SpeakButton } from "@/components/case01/SpeakButton";
 import { ChatPanel } from "@/components/shared/ChatPanel";
 import type { SubCaseDef } from "@/components/case01/cases";
-import { useReportRecorder } from "@/hooks/useReportRecorder";
 import { celebrate } from "@/lib/celebrate";
 
 const SOLVED_TOKEN = "[[CASE_SOLVED]]";
@@ -509,7 +515,7 @@ function ApplyChallenge({ complete, onComplete }: { complete: boolean; onComplet
   return <section className="rounded-2xl border-2 border-primary bg-card p-5 shadow-sm sm:p-6"><p className="label-eyebrow text-muted-foreground">REAL-WORLD CHALLENGE</p><h2 className="mt-1 text-2xl font-black text-foreground">Now try it in your world.</h2><p className="mt-3 text-sm leading-relaxed text-muted-foreground">You have one sandwich and two people. How could you make sure both people get a fair share?</p><p className="mt-2 text-sm text-foreground">Try paper, playdough, a real sandwich, or another object nearby. This is optional.</p><Button type="button" onClick={onComplete} disabled={complete} className="mt-4 font-black">{complete ? <><Check className="h-4 w-4" aria-hidden /> CHALLENGE LOGGED</> : "I TRIED THE CHALLENGE"}</Button></section>;
 }
 
-function PrimaryNext({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+function PrimaryNext({ children, onClick }: { children: ReactNode; onClick: () => void }) {
   return <div className="flex justify-end"><Button type="button" onClick={onClick} size="lg" className="font-black">{children}</Button></div>;
 }
 
