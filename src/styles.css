@@ -43,6 +43,10 @@
   --color-brand-mint: #a5f5de;
   --color-bg-light: #f8f9fa;
   --color-bg-mint: #e8f9f5;
+  --color-pizza-crust: var(--pizza-crust);
+  --color-pizza-base: var(--pizza-base);
+  --color-pizza-sauce: var(--pizza-sauce);
+  --color-pizza-cheese: var(--pizza-cheese);
 
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -75,6 +79,10 @@
   --border: oklch(0.88 0.025 220);
   --input: oklch(0.88 0.025 220);
   --ring: oklch(0.247 0.073 254);
+  --pizza-crust: oklch(0.61 0.13 55);
+  --pizza-base: oklch(0.88 0.16 88);
+  --pizza-sauce: oklch(0.66 0.15 24);
+  --pizza-cheese: oklch(0.94 0.13 90);
 }
 
 .dark {

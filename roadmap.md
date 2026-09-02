@@ -1,6 +1,7 @@
 # Roadmap
 
-- [x] Rebuild Case 01.01–01.03 around story, hands-on evidence, repair, explain, and apply.
-- [x] Make Case 01 visuals and evidence interactions mouse, touch, and keyboard friendly.
-- [x] Fix the confirmed CasePicker hydration mismatch without changing progress persistence.
-- [x] Verify Case 01 flows, AI prompts, typecheck, build, and live rendering.
+- [x] Rebuild Case 01.01 — The Pizza around story, hands-on evidence, repair, explain, and apply.
+- [x] Keep Cases 01.02–01.03 and Cases 02–06 on their existing runner while Pizza uses the new case template.
+- [x] Make the Pizza investigation and repair interactions mouse, touch, and keyboard friendly.
+- [x] Persist Pizza observation notes locally without adding accounts, scoring, timers, or a backend.
+- [x] Verify the Pizza route with typecheck, targeted lint, production build, and live rendering checks.
