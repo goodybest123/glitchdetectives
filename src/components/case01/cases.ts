@@ -55,6 +55,22 @@ export type SubCaseDef = {
   };
   Visual: ComponentType<VisualProps>;
   conceptMastered: string;
+  story: {
+    eyebrow: string;
+    intro: string;
+    solution: string;
+    confidence: string;
+    mission: string;
+    notice: string;
+    participants: string[];
+  };
+  detectChoices: { label: string; correct: boolean }[];
+  evidencePrompt: string;
+  repairPrompt: string;
+  explainChoices: string[];
+  apply: { title: string; prompt: string; grab: string[] };
+  skillSummary: string;
+  evidenceSkills: string[];
 };
 
 export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
@@ -89,6 +105,35 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: PizzaSVG,
     conceptMastered: "Fair Sharing — four equal parts of one whole",
+    story: {
+      eyebrow: "CASE 01.01 · THE PIZZA",
+      intro: "ZED-4 was helping four detectives share one pizza. He says everyone got a fair share.",
+      solution: "I cut the pizza into four pieces. One piece each means fair sharing!",
+      confidence: "“Case closed!” But did he check the size of each piece?",
+      mission: "Investigate ZED-4’s solution and prove what is fair.",
+      notice: "Move pieces beside each other. No timer. Take your time.",
+      participants: ["Maya", "Leo", "Sam", "ZED-4"],
+    },
+    detectChoices: [
+      { label: "The pieces are different sizes, so the shares are not equal.", correct: true },
+      { label: "Four pieces are always fair, whatever their sizes.", correct: false },
+      { label: "Everyone needs two pieces.", correct: false },
+      { label: "Pizza cannot be shared fairly.", correct: false },
+    ],
+    evidencePrompt: "Show your evidence: put the slices beside each other and compare them.",
+    repairPrompt: "Can you make four matching shares, then give one to each detective?",
+    explainChoices: [
+      "The pizza was not fair because the pieces were different sizes.",
+      "A fair share means everyone gets the same amount.",
+      "Four pieces need to be equal, not just four pieces.",
+    ],
+    apply: {
+      title: "Your turn: share something fairly",
+      prompt: "Use four small objects and one piece of paper. Show how four people could get the same amount.",
+      grab: ["paper", "4 small objects", "a pencil"],
+    },
+    skillSummary: "You compared quantities, tested the picture, repaired the shares, and explained why equal pieces matter.",
+    evidenceSkills: ["Compared the pieces", "Tested an idea", "Explained the evidence"],
   },
   chocolate: {
     id: "chocolate",
@@ -120,6 +165,35 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: ChocolateSVG,
     conceptMastered: "Fair Sharing — three equal parts make thirds",
+    story: {
+      eyebrow: "CASE 01.02 · THE CHOCOLATE BAR",
+      intro: "ZED-4 broke a chocolate bar into three pieces for three friends. He says each friend gets a fair share.",
+      solution: "There are three pieces, so they must be matching thirds!",
+      confidence: "“Easy peasy. Case closed!” Did he compare the sizes?",
+      mission: "Investigate the bar and show what a fair share needs.",
+      notice: "Move the pieces into a row so your eyes can compare them.",
+      participants: ["Ari", "Bo", "ZED-4"],
+    },
+    detectChoices: [
+      { label: "The pieces are different sizes, so they are not equal thirds.", correct: true },
+      { label: "Three pieces are always thirds, even when sizes differ.", correct: false },
+      { label: "The middle piece should count as two pieces.", correct: false },
+      { label: "Only the wrapper needs to be the same size.", correct: false },
+    ],
+    evidencePrompt: "Show your evidence: line the chocolate pieces up and compare their widths.",
+    repairPrompt: "Can you make three matching pieces, then give one to each friend?",
+    explainChoices: [
+      "The chocolate was not fair because the pieces were different sizes.",
+      "Three equal pieces make a fair share for three friends.",
+      "The number of pieces is not enough; their amounts must match.",
+    ],
+    apply: {
+      title: "Your turn: compare three pieces",
+      prompt: "Find three safe objects at home. Put them side by side. Can you make three groups with the same amount?",
+      grab: ["3 safe objects", "a table", "your eyes"],
+    },
+    skillSummary: "You looked past the number three and checked whether each piece really matched.",
+    evidenceSkills: ["Compared widths", "Questioned a claim", "Repaired the bar"],
   },
   canvas: {
     id: "canvas",
@@ -151,6 +225,35 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
     },
     Visual: CanvasSVG,
     conceptMastered: "Fair Sharing — halves are two matching parts",
+    story: {
+      eyebrow: "CASE 01.03 · THE PAINTED CANVAS",
+      intro: "ZED-4 painted one side of a canvas and called it half. He says one painted side and one unpainted side must match.",
+      solution: "I made two sides. One and one means half!",
+      confidence: "“Perfect work!” But are the two sides the same size?",
+      mission: "Move the line, compare both sides, and decide what half means.",
+      notice: "Drag slowly. You can change your mind while you investigate.",
+      participants: ["Nia", "ZED-4"],
+    },
+    detectChoices: [
+      { label: "The line is off-center, so the two parts are not equal.", correct: true },
+      { label: "Any line makes two equal halves.", correct: false },
+      { label: "One painted side is always half.", correct: false },
+      { label: "The wider side is smaller because it is unpainted.", correct: false },
+    ],
+    evidencePrompt: "Show your evidence: move the line and compare the two regions.",
+    repairPrompt: "Can you move the line until both sides match?",
+    explainChoices: [
+      "The canvas was not half because one side was bigger.",
+      "Half means two parts that are the same size.",
+      "A line alone is not enough; both sides must match.",
+    ],
+    apply: {
+      title: "Your turn: find two equal parts",
+      prompt: "Fold or draw a line on paper. Can you show two parts that match in size?",
+      grab: ["paper", "a pencil", "a flat table"],
+    },
+    skillSummary: "You used the model to check that half means two matching parts, not just two spaces.",
+    evidenceSkills: ["Compared both sides", "Moved the divider", "Explained what half means"],
   },
 };
 

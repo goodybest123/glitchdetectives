@@ -26,22 +26,21 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { ZedBubble } from "@/components/case01/ZedBubble";
 import { CaseStepper, type Stage } from "@/components/case01/CaseStepper";
-import { SpeakButton } from "@/components/case01/SpeakButton";
 import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case01/CasePicker";
-import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
+import {
+  Case01ApplyChallenge,
+  Case01DetectPanel,
+  Case01EvidenceBoard,
+  Case01ExplainPrompts,
+  Case01RepairBoard,
+  Case01SkillUnlock,
+  Case01StoryBrief,
+  Case01Verdict,
+} from "@/components/case01/Case01Activity";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
-import { CaptionLine } from "@/components/shared/CaptionLine";
-import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { ChatPanel } from "@/components/shared/ChatPanel";
-import {
-  WorkbookActivityPrompt,
-  WorkbookGlitchChoices,
-  WorkbookRepairFrame,
-  WorkbookRepairSubmit,
-} from "@/components/shared/WorkbookActivity";
-import { getGlitchChoices } from "@/components/shared/glitchChoices";
 import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
@@ -134,12 +133,14 @@ function SubCaseRunner({
   );
 
   const [stage, setStage] = useState<Stage>("investigate");
-  const [verdictPassed, setVerdictPassed] = useState(false);
   const [wrongVerdictCount, setWrongVerdictCount] = useState(0);
-  const [verdictShakeKey, setVerdictShakeKey] = useState(0);
   const [equalized, setEqualized] = useState(0);
   const [pulseKey, setPulseKey] = useState(0);
-  const [glitchUnlocked, setGlitchUnlocked] = useState(false);
+  const [investigationMoved, setInvestigationMoved] = useState(false);
+  const [investigationResetKey, setInvestigationResetKey] = useState(0);
+  const [selectedObservation, setSelectedObservation] = useState<string | null>(null);
+  const [assigned, setAssigned] = useState<string[]>([]);
+  const [applyComplete, setApplyComplete] = useState(false);
   const sfx = useSfx();
   const reportRef = useRef<HTMLDivElement>(null);
   const repairRef = useRef<HTMLDivElement>(null);
@@ -189,24 +190,16 @@ function SubCaseRunner({
     }
   }, [stage]);
 
-  const handleGlitchClick = () => {
-    if (stage !== "detect" || !glitchUnlocked) return;
-    setStage("repair");
-    setPulseKey((k) => k + 1);
+  const resetInvestigation = () => {
+    setInvestigationMoved(false);
+    setSelectedObservation(null);
+    setInvestigationResetKey((key) => key + 1);
+    setEqualized(caseId === "canvas" ? 0.15 : 0);
   };
 
-  const handleVerdictGlitch = () => {
-    if (stage !== "investigate" || verdictPassed) return;
-    setVerdictPassed(true);
-    setStage("detect");
-    // start canvas slider mid-trip so kids see motion either way
-    if (caseId === "canvas") setEqualized(0.15);
-  };
-
-  const handleVerdictNoGlitch = () => {
-    if (stage !== "investigate" || verdictPassed) return;
-    setWrongVerdictCount((n) => n + 1);
-    setVerdictShakeKey((k) => k + 1);
+  const resetRepair = () => {
+    setEqualized(caseId === "canvas" ? 0.15 : 0);
+    setAssigned([]);
   };
 
   const isSending = status === "submitted" || status === "streaming";
@@ -215,6 +208,8 @@ function SubCaseRunner({
   const distance = Math.abs(equalized - target);
   const atTarget = distance <= tol;
   const progressPct = Math.max(0, Math.round((1 - distance) * 100));
+  const repairReady =
+    atTarget && (caseId === "canvas" || assigned.length === c.story.participants.length);
 
   const studentQuotes = useMemo(
     () =>
@@ -267,23 +262,11 @@ function SubCaseRunner({
       ? { tone: "neutral" as const, text: c.bubbles.investigate }
       : { tone: "happy" as const, text: c.bubbles.solved };
 
-  const caption = c.captions[stage];
-  const showDetective = stage === "detect" || stage === "repair";
-
   const nextIndex = SUB_CASE_ORDER.indexOf(caseId) + 1;
   const nextCaseLabel =
     nextIndex < SUB_CASE_ORDER.length
       ? `Try ${SUB_CASES[SUB_CASE_ORDER[nextIndex]].title} next.`
       : "You've solved every case in this file!";
-
-  const hint =
-    stage === "repair" && !atTarget
-      ? distance > tol && caseId === "canvas"
-        ? equalized < target
-          ? "A little more to the right…"
-          : "A little to the left…"
-        : c.toolHint
-      : undefined;
 
   return (
     <>
@@ -308,140 +291,113 @@ function SubCaseRunner({
               <ZedBubble message={zed.text} tone={zed.tone} speakable />
             </div>
 
+            {stage === "investigate" && (
+              <>
+                <Case01StoryBrief caseId={caseId} definition={c} />
+                <Case01EvidenceBoard
+                  caseId={caseId}
+                  stage="investigate"
+                  equalized={equalized}
+                  onEqualizedChange={setEqualized}
+                  moved={investigationMoved}
+                  onMoved={() => setInvestigationMoved(true)}
+                  onReset={resetInvestigation}
+                  resetKey={investigationResetKey}
+                />
+                <Case01Verdict
+                  onAgree={() => setWrongVerdictCount((count) => count + 1)}
+                  onGlitch={() => {
+                    setStage("detect");
+                  }}
+                  onUnsure={() => setInvestigationMoved(true)}
+                  note={
+                    wrongVerdictCount > 0
+                      ? "It is okay to check again. Move a piece and compare before deciding."
+                      : undefined
+                  }
+                />
+              </>
+            )}
+
             {stage === "detect" && (
-              <WorkbookGlitchChoices
-                choices={getGlitchChoices("case-01", caseId)}
-                unlocked={glitchUnlocked}
-                onUnlock={() => setGlitchUnlocked(true)}
-                onCorrect={() =>
-                  setTimeout(
-                    () =>
-                      repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
-                    100,
+              <>
+                <Case01EvidenceBoard
+                  caseId={caseId}
+                  stage="detect"
+                  equalized={equalized}
+                  onEqualizedChange={setEqualized}
+                  moved={investigationMoved}
+                  onMoved={() => setInvestigationMoved(true)}
+                  onReset={resetInvestigation}
+                  resetKey={investigationResetKey}
+                />
+                <Case01DetectPanel
+                  definition={c}
+                  selected={selectedObservation}
+                  onSelect={(choice, correct) => {
+                    setSelectedObservation(choice);
+                  }}
+                  evidenceReady={investigationMoved}
+                  onConfirm={() => {
+                    setStage("repair");
+                  }}
+                />
+              </>
+            )}
+
+            {stage === "repair" && (
+                <Case01RepairBoard
+                definition={c}
+                equalized={equalized}
+                onEqualizedChange={setEqualized}
+                assigned={assigned}
+                onAssign={(person) =>
+                  setAssigned((current) =>
+                    current.includes(person)
+                      ? current.filter((item) => item !== person)
+                      : [...current, person],
                   )
                 }
+                ready={repairReady}
+                onSubmit={() => setStage("explain")}
+                onReset={resetRepair}
               />
             )}
 
-            <WorkbookActivityPrompt
-              stage={stage}
-              emoji={c.emoji}
-              title={c.title}
-              detectInstruction={c.captions.investigate}
-              repairInstruction={c.toolTagline}
-              toolName={c.sliderLabel}
-            />
-
-            {/* Visual + Repair side-by-side on sm+, stacked on phones */}
             <div
               ref={repairRef}
-              className={`grid gap-3 ${stage === "repair" || stage === "explain" || stage === "solved" ? "sm:grid-cols-2 sm:items-start" : "grid-cols-1"}`}
+              className="rounded-xl border border-border bg-background p-3 sm:p-4"
             >
-              <div
-                className={
-                  stage === "detect"
-                    ? "cursor-pointer rounded-xl ring-2 ring-[#fcd34d] ring-offset-2 transition"
-                    : ""
-                }
-              >
-                <Visual
-                  equalized={equalized}
-                  onGlitchClick={handleGlitchClick}
-                  interactive={stage === "detect" && glitchUnlocked}
-                  pulseKey={pulseKey}
-                />
-              </div>
-
-              {(stage === "repair" || stage === "explain" || stage === "solved") && (
-                <WorkbookRepairFrame
-                  toolName={c.sliderLabel}
-                  instruction={c.toolTagline}
-                  hint={hint}
-                  progress={atTarget ? "✓ BALANCED" : `${progressPct}%`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span aria-hidden className="text-lg">
-                          🛠️
-                        </span>
-                        <label
-                          htmlFor="equalizer"
-                          className="text-xs font-bold tracking-wider text-neutral-800"
-                        >
-                          {c.sliderLabel}
-                        </label>
-                        <SpeakButton text={`${c.sliderLabel}. ${c.toolTagline}`} />
-                      </div>
-                      <p className="mt-1 text-[11px] text-neutral-600">{c.toolTagline}</p>
-                    </div>
-                    {atTarget ? (
-                      <span className="shrink-0 rounded-full bg-[#10b981] px-2 py-0.5 text-[9px] font-bold tracking-wider text-white">
-                        ✓ BALANCED
-                      </span>
-                    ) : (
-                      <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[9px] font-bold tracking-wider text-neutral-500 ring-1 ring-neutral-200">
-                        {progressPct}%
-                      </span>
-                    )}
-                  </div>
-
-                  {stage === "repair" && !atTarget && (
-                    <div className="mt-2 rounded-lg bg-[#fef3c7] px-2.5 py-1.5 text-[11px] font-semibold text-[#92400e] ring-1 ring-[#fcd34d]">
-                      ⚡ Drag the slider to repair the glitch.
-                    </div>
-                  )}
-                  {(stage === "explain" || stage === "solved") && (
-                    <div className="mt-2 rounded-lg bg-white/70 px-2.5 py-1.5 text-[11px] font-medium text-neutral-500 ring-1 ring-neutral-200">
-                      🔒 Tool locked — explain your reasoning to close the case.
-                    </div>
-                  )}
-
-                  <input
-                    id="equalizer"
-                    type="range"
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    value={equalized}
-                    onChange={(e) => setEqualized(parseFloat(e.target.value))}
-                    disabled={stage === "explain" || stage === "solved"}
-                    className="mt-3 w-full accent-[#2563eb]"
-                  />
-                  <div className="mt-1 flex justify-between text-[10px] font-medium text-neutral-600">
-                    <span>{c.toolMinLabel}</span>
-                    <span>{c.toolMaxLabel}</span>
-                  </div>
-                  {stage === "repair" && (
-                    <WorkbookRepairSubmit
-                      ready={atTarget}
-                      onSubmit={() => {
-                        setEqualized(target);
-                        setStage("explain");
-                      }}
-                    />
-                  )}
-                </WorkbookRepairFrame>
-              )}
+              <Visual equalized={equalized} pulseKey={pulseKey} />
+              <p className="mt-2 text-center text-xs font-semibold text-muted-foreground">
+                {stage === "detect"
+                  ? "Use your evidence board to decide what you notice."
+                  : stage === "repair"
+                    ? "Your repaired model will appear here."
+                    : "The model shows ZED-4’s original solution."}
+              </p>
             </div>
 
-            {stage === "investigate" && !verdictPassed && (
-              <VerdictButtons
-                onGlitch={handleVerdictGlitch}
-                onNoGlitch={handleVerdictNoGlitch}
-                shakeKey={verdictShakeKey}
-                wrongCount={wrongVerdictCount}
-              />
-            )}
-
-            {!(stage === "investigate" && !verdictPassed) && <CaptionLine text={caption} />}
-            {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
-
             {(stage === "explain" || stage === "solved") && <SuccessBanner />}
+            {stage === "explain" && (
+              <>
+                <Case01ExplainPrompts definition={c} onSend={(text) => sendMessage({ text })} />
+                <div className="rounded-xl border border-border bg-background px-3 py-2 text-xs font-semibold text-muted-foreground">
+                  Evidence recap: you compared the pieces and repaired the model. Tell ZED-4 what
+                  made the first share unfair.
+                </div>
+              </>
+            )}
           </div>
 
           {stage === "solved" && (
             <div ref={reportRef}>
+              <Case01SkillUnlock caseId={caseId} definition={c} />
+              <Case01ApplyChallenge
+                definition={c}
+                completed={applyComplete}
+                onComplete={() => setApplyComplete(true)}
+              />
               <DiagnosticReport
                 studentQuotes={studentQuotes}
                 turnCount={studentQuotes.length}
@@ -450,6 +406,7 @@ function SubCaseRunner({
                 conceptMastered={c.conceptMastered}
                 nextCaseLabel={nextCaseLabel}
                 onTryAnother={onBackToPicker}
+                showMarks={false}
               />
             </div>
           )}
