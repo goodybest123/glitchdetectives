@@ -13,7 +13,7 @@ import {
 } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
-import { Check, GripVertical, Lightbulb, RotateCcw, Undo2 } from "lucide-react";
+import { Check, Lightbulb, RotateCcw, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CaseStepper, type Stage } from "@/components/case01/CaseStepper";
 import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
@@ -31,12 +31,57 @@ type Tool = "move" | "rotate" | "compare";
 type Recipient = "Maya" | "Leo" | "Sam" | "ZED-4";
 
 const RECIPIENTS: Recipient[] = ["Maya", "Leo", "Sam", "ZED-4"];
+// The four shares ZED-4 cut: deliberately unequal sweep angles so the
+// completed pizza and every draggable/comparable piece visibly differ in size.
 const PIECES = [
-  { id: "A", size: "large", start: { x: 18, y: 52 } },
-  { id: "B", size: "small", start: { x: 40, y: 28 } },
-  { id: "C", size: "medium", start: { x: 64, y: 51 } },
-  { id: "D", size: "mediumLarge", start: { x: 40, y: 77 } },
+  { id: "A", sweep: 150, start: { x: 18, y: 52 } }, // very large
+  { id: "B", sweep: 45, start: { x: 40, y: 28 } }, // small sliver
+  { id: "C", sweep: 90, start: { x: 64, y: 51 } }, // medium quarter
+  { id: "D", sweep: 75, start: { x: 40, y: 77 } }, // medium-small
 ] as const;
+
+function pieceById(id: string) {
+  return PIECES.find((piece) => piece.id === id) ?? PIECES[0];
+}
+
+// Board pixel size scales with the wedge angle so size is visible at a glance.
+function piecePixelSize(sweep: number) {
+  return Math.round(48 + sweep * 0.38);
+}
+
+const WEDGE_CX = 50;
+const WEDGE_CY = 50;
+const WEDGE_R = 44;
+
+function wedgePoint(deg: number, r = WEDGE_R) {
+  const rad = ((deg - 90) * Math.PI) / 180;
+  return { x: WEDGE_CX + r * Math.cos(rad), y: WEDGE_CY + r * Math.sin(rad) };
+}
+
+/**
+ * A single pizza wedge SVG centered on its tip pointing "up" after rotation.
+ * The crust follows the arc; two straight edges are the cut sides.
+ */
+function PizzaWedge({ sweep, className }: { sweep: number; className?: string }) {
+  const start = wedgePoint(-sweep / 2);
+  const end = wedgePoint(sweep / 2);
+  const largeArc = sweep > 180 ? 1 : 0;
+  const arc = `M ${WEDGE_CX} ${WEDGE_CY} L ${start.x} ${start.y} A ${WEDGE_R} ${WEDGE_R} 0 ${largeArc} 1 ${end.x} ${end.y} Z`;
+  // One pepperoni dot placed along the wedge's middle axis.
+  const dot = wedgePoint(0, WEDGE_R * 0.55);
+  return (
+    <svg viewBox="0 0 100 100" className={className} aria-hidden>
+      <path
+        d={arc}
+        fill="var(--pizza-base)"
+        stroke="var(--pizza-crust)"
+        strokeWidth={7}
+        strokeLinejoin="round"
+      />
+      <circle cx={dot.x} cy={dot.y} r={5} fill="var(--pizza-sauce)" opacity={0.85} />
+    </svg>
+  );
+}
 
 const HINTS = [
   "Everyone has one piece. Is each piece the same size?",
@@ -629,19 +674,56 @@ function InvestigationScene() {
   );
 }
 
+/**
+ * ZED-4's completed solution: one pizza cut into four true arc wedges using
+ * the same unequal sweep angles as the draggable pieces (150°/45°/90°/75°),
+ * so "one piece each, different amounts" is visible at a glance.
+ */
 function UnequalPizza() {
+  const CX = 100;
+  const CY = 100;
+  const R = 88;
+  const GAP = 2; // degrees trimmed from each wedge edge so the cuts are visible
+  const polar = (deg: number, r = R) => {
+    const rad = ((deg - 90) * Math.PI) / 180;
+    return { x: CX + r * Math.cos(rad), y: CY + r * Math.sin(rad) };
+  };
+  // Lay the wedges out in order around the circle, starting at 12 o'clock.
+  let cursor = 0;
+  const toppings: { x: number; y: number }[] = [];
+  const wedges = PIECES.map((piece) => {
+    const start = cursor + GAP;
+    const end = cursor + piece.sweep - GAP;
+    cursor += piece.sweep;
+    const s = polar(start);
+    const e = polar(end);
+    const largeArc = end - start > 180 ? 1 : 0;
+    const mid = polar((start + end) / 2, R * 0.55);
+    toppings.push(mid);
+    return `M ${CX} ${CY} L ${s.x} ${s.y} A ${R} ${R} 0 ${largeArc} 1 ${e.x} ${e.y} Z`;
+  });
   return (
-    <div className="mx-auto flex h-56 w-56 items-center justify-center rounded-full border-[16px] border-pizza-crust bg-pizza-base shadow-sm sm:h-64 sm:w-64">
-      <div className="relative h-full w-full overflow-hidden rounded-full border-4 border-pizza-sauce/60">
-        <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rotate-[18deg] bg-primary/70" />
-        <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rotate-[42deg] bg-primary/70" />
-        <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rotate-[70deg] bg-primary/70" />
-        <span className="absolute left-1/4 top-1/4 text-2xl">●</span>
-        <span className="absolute right-1/4 top-1/3 text-2xl">●</span>
-        <span className="absolute bottom-1/4 left-1/3 text-2xl">●</span>
-        <span className="absolute bottom-1/4 right-1/4 text-2xl">●</span>
-      </div>
-    </div>
+    <svg
+      viewBox="0 0 200 200"
+      className="mx-auto h-56 w-56 sm:h-64 sm:w-64"
+      role="img"
+      aria-label="A pizza cut into four pieces of clearly different sizes"
+    >
+      <circle cx={CX} cy={CY} r={R + 8} fill="var(--pizza-crust)" />
+      {wedges.map((d, i) => (
+        <path
+          key={i}
+          d={d}
+          fill="var(--pizza-base)"
+          stroke="var(--pizza-crust)"
+          strokeWidth={2.5}
+          strokeLinejoin="round"
+        />
+      ))}
+      {toppings.map((t, i) => (
+        <circle key={i} cx={t.x} cy={t.y} r={5} fill="var(--pizza-sauce)" opacity={0.85} />
+      ))}
+    </svg>
   );
 }
 
@@ -714,6 +796,7 @@ function InvestigationBoard(props: BoardProps) {
         {PIECES.map((piece) => {
           const point = props.piecePositions[piece.id] ?? piece.start;
           const selected = props.selectedPiece === piece.id;
+          const size = piecePixelSize(piece.sweep);
           return (
             <button
               key={piece.id}
@@ -724,15 +807,16 @@ function InvestigationBoard(props: BoardProps) {
               onPointerMove={(event) => props.onDrag(piece.id, event)}
               onPointerUp={props.onFinishDrag}
               onPointerCancel={props.onFinishDrag}
-              className={`absolute flex h-16 w-20 -translate-x-1/2 -translate-y-1/2 touch-none items-center justify-center rounded-xl border-2 bg-card text-2xl shadow-sm transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring ${selected ? "border-primary ring-4 ring-primary/20" : "border-border"}`}
+              className={`absolute flex -translate-x-1/2 -translate-y-1/2 touch-none items-center justify-center rounded-xl p-1 transition-[filter] focus-visible:ring-2 focus-visible:ring-ring ${selected ? "drop-shadow-[0_0_10px_var(--primary)]" : "hover:drop-shadow-md"}`}
               style={{
                 left: `${point.x}%`,
                 top: `${point.y}%`,
+                width: size,
+                height: size,
                 transform: `translate(-50%, -50%) rotate(${props.pieceRotations[piece.id] ?? 0}deg)`,
               }}
             >
-              <GripVertical className="absolute left-1 h-4 w-4 text-muted-foreground" aria-hidden />
-              <span aria-hidden>🍕</span>
+              <PizzaWedge sweep={piece.sweep} className="h-full w-full" />
               <span className="sr-only">Piece {piece.id}</span>
             </button>
           );
@@ -829,6 +913,22 @@ function DetectPanel(props: DetectPanelProps) {
           </div>
           {props.evidencePair.length === 2 && (
             <>
+              <div className="mt-4 flex items-end justify-center gap-6 rounded-2xl border border-dashed border-primary/40 bg-secondary/60 p-4">
+                {props.evidencePair.map((id) => {
+                  const piece = pieceById(id);
+                  const size = piecePixelSize(piece.sweep);
+                  return (
+                    <div key={id} className="flex flex-col items-center gap-1">
+                      <div style={{ width: size, height: size }}>
+                        <PizzaWedge sweep={piece.sweep} className="h-full w-full" />
+                      </div>
+                      <span className="text-xs font-bold text-muted-foreground">
+                        Piece {piece.id}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
               <p className="mt-4 text-sm font-bold text-foreground">What do you notice?</p>
               <div className="mt-2 grid gap-2 sm:grid-cols-2">
                 <Button
