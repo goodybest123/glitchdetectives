@@ -318,6 +318,23 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
                   )
                 }
               />
+              <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-secondary p-3">
+                <div className="flex items-start gap-2">
+                  <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
+                  <p className="text-sm text-foreground">
+                    {hintIndex > 0 ? HINTS[hintIndex - 1] : "Need a clue? You can investigate first."}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setHintIndex((index) => Math.min(HINTS.length, index + 1))}
+                  disabled={hintIndex >= HINTS.length}
+                >
+                  <Lightbulb className="h-4 w-4" aria-hidden /> NEED A CLUE?
+                </Button>
+              </div>
               <PrimaryNext onClick={() => setStage("detect")}>I’M READY TO DETECT <span aria-hidden>→</span></PrimaryNext>
             </>
           )}
@@ -453,7 +470,7 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
 
 function PizzaProgress({ current }: { current: PizzaStage }) {
   const steps = ["brief", "investigate", "detect", "repair", "explain"] as const;
-  const active = steps.indexOf(current);
+  const active = current === "solved" ? steps.length : steps.indexOf(current);
   return (
     <ol className="grid grid-cols-5 gap-1 rounded-2xl border border-border bg-card p-3 text-center" aria-label="Case progress">
       {steps.map((step, index) => (
