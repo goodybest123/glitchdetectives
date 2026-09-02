@@ -913,6 +913,24 @@ function DetectPanel(props: DetectPanelProps) {
           </div>
           {props.evidencePair.length === 2 && (
             <>
+              <div className="mt-4 flex items-end justify-center gap-6 rounded-2xl border border-dashed border-primary/40 bg-secondary/60 p-4">
+                {props.evidencePair.map((id) => {
+                  const piece = pieceById(id);
+                  const size = piecePixelSize(piece.sweep);
+                  return (
+                    <div key={id} className="flex flex-col items-center gap-1">
+                      <PizzaWedge
+                        sweep={piece.sweep}
+                        className="h-auto"
+                        // width set via style below
+                      />
+                      <span className="text-xs font-bold text-muted-foreground">
+                        Piece {piece.id}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
               <p className="mt-4 text-sm font-bold text-foreground">What do you notice?</p>
               <div className="mt-2 grid gap-2 sm:grid-cols-2">
                 <Button
