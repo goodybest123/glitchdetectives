@@ -142,7 +142,6 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
   const [evidenceChoice, setEvidenceChoice] = useState<"same" | "different" | null>(null);
   const [evidenceMessage, setEvidenceMessage] = useState("");
   const [cutDirections, setCutDirections] = useState<("vertical" | "horizontal")[]>([]);
-  const [cutPosition, setCutPosition] = useState(50);
   const [assigned, setAssigned] = useState<Recipient[]>([]);
   const [fairness, setFairness] = useState<"yes" | "no" | null>(null);
   const [explanationAnswers, setExplanationAnswers] = useState<[string | null, string | null]>([
@@ -476,7 +475,6 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
               />
               <RepairPanel
                 cutDirections={cutDirections}
-                cutPosition={cutPosition}
                 ready={repairReady}
                 assigned={assigned}
                 distributed={distributed}
@@ -486,12 +484,10 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
                     current.length < 2 ? [...current, direction] : current,
                   )
                 }
-                onCutPosition={setCutPosition}
                 onReset={() => {
                   setCutDirections([]);
                   setAssigned([]);
                   setFairness(null);
-                  setCutPosition(50);
                 }}
                 onAssign={(recipient) =>
                   setAssigned((current) =>
@@ -978,15 +974,108 @@ function DetectPanel(props: DetectPanelProps) {
   );
 }
 
+/**
+ * A real pizza model for the repair stage. The cut buttons add full diameter
+ * lines, so the finished state is visibly four equal quarter regions rather
+ * than an emoji sitting beneath decorative borders.
+ */
+function RepairPizza({ cutDirections }: { cutDirections: ("vertical" | "horizontal")[] }) {
+  const center = 130;
+  const radius = 96;
+  const hasVertical = cutDirections.includes("vertical");
+  const hasHorizontal = cutDirections.includes("horizontal");
+  const isComplete = hasVertical && hasHorizontal;
+  const pointAt = (degrees: number) => {
+    const radians = ((degrees - 90) * Math.PI) / 180;
+    return {
+      x: center + radius * Math.cos(radians),
+      y: center + radius * Math.sin(radians),
+    };
+  };
+  const quadrantPath = (start: number, end: number) => {
+    const first = pointAt(start);
+    const second = pointAt(end);
+    return `M ${center} ${center} L ${first.x} ${first.y} A ${radius} ${radius} 0 0 1 ${second.x} ${second.y} Z`;
+  };
+  const label = isComplete
+    ? "Pizza cut into four equal parts"
+    : cutDirections.length === 1
+      ? "Pizza cut into two regions"
+      : "Whole pizza ready to cut";
+
+  return (
+    <div className="mx-auto w-full max-w-sm rounded-2xl border border-border bg-secondary/60 p-3 sm:p-5">
+      <svg
+        viewBox="0 0 260 260"
+        className="mx-auto aspect-square w-full max-w-[320px]"
+        role="img"
+        aria-label={label}
+      >
+        <defs>
+          <clipPath id="repair-pizza-clip">
+            <circle cx={center} cy={center} r={radius} />
+          </clipPath>
+        </defs>
+        <circle cx={center} cy={center} r={radius + 11} fill="var(--pizza-crust)" />
+        <circle cx={center} cy={center} r={radius} fill="var(--pizza-base)" />
+        {isComplete && (
+          <g clipPath="url(#repair-pizza-clip)" opacity={0.5}>
+            <path d={quadrantPath(0, 90)} fill="var(--pizza-cheese)" />
+            <path d={quadrantPath(180, 270)} fill="var(--pizza-cheese)" />
+          </g>
+        )}
+        <g clipPath="url(#repair-pizza-clip)" fill="var(--pizza-sauce)" opacity={0.8}>
+          <circle cx="86" cy="92" r="6" />
+          <circle cx="168" cy="82" r="5" />
+          <circle cx="180" cy="158" r="6" />
+          <circle cx="94" cy="176" r="5" />
+          <circle cx="132" cy="118" r="4" />
+        </g>
+        {hasVertical && (
+          <line
+            x1={center}
+            y1={center - radius}
+            x2={center}
+            y2={center + radius}
+            stroke="var(--primary)"
+            strokeWidth="5"
+            strokeLinecap="round"
+          />
+        )}
+        {hasHorizontal && (
+          <line
+            x1={center - radius}
+            y1={center}
+            x2={center + radius}
+            y2={center}
+            stroke="var(--primary)"
+            strokeWidth="5"
+            strokeLinecap="round"
+          />
+        )}
+        <circle
+          cx={center}
+          cy={center}
+          r={radius}
+          fill="none"
+          stroke="var(--pizza-crust)"
+          strokeWidth="3"
+        />
+      </svg>
+      <p className="mt-2 text-center text-xs font-bold text-muted-foreground">
+        {isComplete ? "Four matching quarter-pizza regions" : label}
+      </p>
+    </div>
+  );
+}
+
 type RepairPanelProps = {
   cutDirections: ("vertical" | "horizontal")[];
-  cutPosition: number;
   ready: boolean;
   assigned: Recipient[];
   distributed: boolean;
   fairness: "yes" | "no" | null;
   onCut: (direction: "vertical" | "horizontal") => void;
-  onCutPosition: (position: number) => void;
   onReset: () => void;
   onAssign: (recipient: Recipient) => void;
   onFairness: (choice: "yes" | "no") => void;
@@ -1006,17 +1095,7 @@ function RepairPanel(props: RepairPanelProps) {
         <h3 className="mt-1 text-lg font-black text-foreground">Make four equal shares.</h3>
       </header>
       <div className="space-y-4 p-4 sm:p-5">
-        <div className="relative mx-auto flex aspect-square max-w-sm items-center justify-center rounded-full border-[18px] border-pizza-crust bg-pizza-base">
-          <div
-            className={`absolute inset-0 ${props.cutDirections.length > 0 ? "border-r-4 border-primary" : ""}`}
-          />
-          {props.cutDirections.length > 1 && (
-            <div className="absolute inset-0 border-b-4 border-primary" />
-          )}
-          <span className="z-10 text-7xl" aria-hidden>
-            🍕
-          </span>
-        </div>
+        <RepairPizza cutDirections={props.cutDirections} />
         <p className="text-center text-sm font-semibold text-muted-foreground">
           {nextDirection === "first"
             ? "Start with one cut across the whole pizza."
@@ -1042,22 +1121,6 @@ function RepairPanel(props: RepairPanelProps) {
             >
               CUT HORIZONTALLY
             </Button>
-          </div>
-        )}
-        {props.cutDirections.length > 0 && (
-          <div>
-            <label htmlFor="pizza-cut-position" className="text-xs font-bold text-foreground">
-              Move the cut gently if you want to compare.
-            </label>
-            <input
-              id="pizza-cut-position"
-              type="range"
-              min="35"
-              max="65"
-              value={props.cutPosition}
-              onChange={(event) => props.onCutPosition(Number(event.target.value))}
-              className="mt-2 w-full accent-primary"
-            />
           </div>
         )}
         {props.ready && (
