@@ -196,7 +196,8 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
         "Take a piece of paper and imagine it is a chocolate bar. Divide it fairly between 3 people. Fold it, draw lines, cut it, or use playdough. How did you check that the shares were fair?",
       grab: ["paper", "a pencil", "safe scissors or playdough"],
     },
-    skillSummary: "You looked past the number three and checked whether each person received the same amount.",
+    skillSummary:
+      "You looked past the number three and checked whether each person received the same amount.",
     evidenceSkills: ["Compared pieces", "Used evidence", "Repaired the share"],
   },
   canvas: {
