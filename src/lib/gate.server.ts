@@ -3,18 +3,19 @@ import { createHash, timingSafeEqual } from "node:crypto";
 export type GateSession = { unlocked?: boolean };
 
 export function createPlaySessionConfig(password: string) {
+  // Local previews run over HTTP, where a Secure cookie is discarded by the
+  // browser. Published HTTPS deployments keep the stronger cross-site cookie
+  // settings needed when the preview is embedded by the host.
+  const hosted = process.env.NODE_ENV === "production";
   return {
     password,
     name: "gd-play-gate",
     maxAge: 60 * 60 * 24 * 30,
     cookie: {
       httpOnly: true,
-      secure: true,
-      // Lovable previews run inside a cross-site iframe. `SameSite=None` plus
-      // CHIPS keeps this encrypted gate session available there without
-      // exposing it to client-side JavaScript.
-      sameSite: "none" as const,
-      partitioned: true,
+      secure: hosted,
+      sameSite: hosted ? ("none" as const) : ("lax" as const),
+      partitioned: hosted,
       path: "/",
     },
   };

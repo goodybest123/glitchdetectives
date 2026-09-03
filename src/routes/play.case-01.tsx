@@ -29,6 +29,7 @@ import { CaseStepper, type Stage } from "@/components/case01/CaseStepper";
 import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case01/CasePicker";
 import { PizzaCaseExperience } from "@/components/case01/PizzaCaseActivity";
+import { ChocolateCaseExperience } from "@/components/case01/ChocolateCaseActivity";
 import {
   Case01ApplyChallenge,
   Case01DetectPanel,
@@ -90,6 +91,13 @@ function CaseOnePage() {
         <PizzaCaseExperience
           key={activeCase}
           definition={SUB_CASES.pizza}
+          onSolved={() => markSolved(activeCase)}
+          onBackToPicker={() => setActiveCase(null)}
+        />
+      ) : activeCase === "chocolate" ? (
+        <ChocolateCaseExperience
+          key={activeCase}
+          definition={SUB_CASES.chocolate}
           onSolved={() => markSolved(activeCase)}
           onBackToPicker={() => setActiveCase(null)}
         />
