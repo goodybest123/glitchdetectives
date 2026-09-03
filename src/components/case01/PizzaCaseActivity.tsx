@@ -1021,12 +1021,16 @@ function RepairPizza({
       : "Whole pizza ready to cut";
   const coordinateForPosition = (position: number) =>
     center - radius + ((center + radius - (center - radius)) * position) / 100;
-  const positionFromPointer = (event: ReactPointerEvent<SVGElement>, direction: "vertical" | "horizontal") => {
+  const positionFromPointer = (
+    event: ReactPointerEvent<SVGElement>,
+    direction: "vertical" | "horizontal",
+  ) => {
     const rect = svgRef.current?.getBoundingClientRect();
     if (!rect) return 50;
-    const raw = direction === "vertical"
-      ? ((event.clientX - rect.left) / rect.width) * 260
-      : ((event.clientY - rect.top) / rect.height) * 260;
+    const raw =
+      direction === "vertical"
+        ? ((event.clientX - rect.left) / rect.width) * 260
+        : ((event.clientY - rect.top) / rect.height) * 260;
     const clamped = Math.max(center - radius, Math.min(center + radius, raw));
     return ((clamped - (center - radius)) / (radius * 2)) * 100;
   };
@@ -1041,7 +1045,10 @@ function RepairPizza({
     setDragging(null);
     setDragPosition(50);
   };
-  const startDrag = (event: ReactPointerEvent<SVGGElement>, direction: "vertical" | "horizontal") => {
+  const startDrag = (
+    event: ReactPointerEvent<SVGGElement>,
+    direction: "vertical" | "horizontal",
+  ) => {
     if (direction !== nextDirection) return;
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
