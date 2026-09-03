@@ -979,11 +979,7 @@ function DetectPanel(props: DetectPanelProps) {
  * lines, so the finished state is visibly four equal quarter regions rather
  * than an emoji sitting beneath decorative borders.
  */
-function RepairPizza({
-  cutDirections,
-}: {
-  cutDirections: ("vertical" | "horizontal")[];
-}) {
+function RepairPizza({ cutDirections }: { cutDirections: ("vertical" | "horizontal")[] }) {
   const center = 130;
   const radius = 96;
   const hasVertical = cutDirections.includes("vertical");
