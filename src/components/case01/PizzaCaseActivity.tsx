@@ -142,7 +142,6 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
   const [evidenceChoice, setEvidenceChoice] = useState<"same" | "different" | null>(null);
   const [evidenceMessage, setEvidenceMessage] = useState("");
   const [cutDirections, setCutDirections] = useState<("vertical" | "horizontal")[]>([]);
-  const [cutPosition, setCutPosition] = useState(50);
   const [assigned, setAssigned] = useState<Recipient[]>([]);
   const [fairness, setFairness] = useState<"yes" | "no" | null>(null);
   const [explanationAnswers, setExplanationAnswers] = useState<[string | null, string | null]>([
@@ -476,7 +475,6 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
               />
               <RepairPanel
                 cutDirections={cutDirections}
-                cutPosition={cutPosition}
                 ready={repairReady}
                 assigned={assigned}
                 distributed={distributed}
@@ -486,12 +484,10 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
                     current.length < 2 ? [...current, direction] : current,
                   )
                 }
-                onCutPosition={setCutPosition}
                 onReset={() => {
                   setCutDirections([]);
                   setAssigned([]);
                   setFairness(null);
-                  setCutPosition(50);
                 }}
                 onAssign={(recipient) =>
                   setAssigned((current) =>
@@ -980,13 +976,11 @@ function DetectPanel(props: DetectPanelProps) {
 
 type RepairPanelProps = {
   cutDirections: ("vertical" | "horizontal")[];
-  cutPosition: number;
   ready: boolean;
   assigned: Recipient[];
   distributed: boolean;
   fairness: "yes" | "no" | null;
   onCut: (direction: "vertical" | "horizontal") => void;
-  onCutPosition: (position: number) => void;
   onReset: () => void;
   onAssign: (recipient: Recipient) => void;
   onFairness: (choice: "yes" | "no") => void;
@@ -1006,17 +1000,7 @@ function RepairPanel(props: RepairPanelProps) {
         <h3 className="mt-1 text-lg font-black text-foreground">Make four equal shares.</h3>
       </header>
       <div className="space-y-4 p-4 sm:p-5">
-        <div className="relative mx-auto flex aspect-square max-w-sm items-center justify-center rounded-full border-[18px] border-pizza-crust bg-pizza-base">
-          <div
-            className={`absolute inset-0 ${props.cutDirections.length > 0 ? "border-r-4 border-primary" : ""}`}
-          />
-          {props.cutDirections.length > 1 && (
-            <div className="absolute inset-0 border-b-4 border-primary" />
-          )}
-          <span className="z-10 text-7xl" aria-hidden>
-            🍕
-          </span>
-        </div>
+        <RepairPizza cutDirections={props.cutDirections} />
         <p className="text-center text-sm font-semibold text-muted-foreground">
           {nextDirection === "first"
             ? "Start with one cut across the whole pizza."
@@ -1042,22 +1026,6 @@ function RepairPanel(props: RepairPanelProps) {
             >
               CUT HORIZONTALLY
             </Button>
-          </div>
-        )}
-        {props.cutDirections.length > 0 && (
-          <div>
-            <label htmlFor="pizza-cut-position" className="text-xs font-bold text-foreground">
-              Move the cut gently if you want to compare.
-            </label>
-            <input
-              id="pizza-cut-position"
-              type="range"
-              min="35"
-              max="65"
-              value={props.cutPosition}
-              onChange={(event) => props.onCutPosition(Number(event.target.value))}
-              className="mt-2 w-full accent-primary"
-            />
           </div>
         )}
         {props.ready && (
