@@ -975,16 +975,33 @@ function DetectPanel(props: DetectPanelProps) {
 }
 
 /**
- * A real pizza model for the repair stage. The cut buttons add full diameter
- * lines, so the finished state is visibly four equal quarter regions rather
- * than an emoji sitting beneath decorative borders.
+ * A hands-on pizza model for the repair stage. The child drags a cut line
+ * across the pizza and the forgiving centre snap turns it into a real cut.
+ * The committed cuts are always full diameters, so the finished state is
+ * visibly four equal quarter regions rather than decorative borders.
  */
-function RepairPizza({ cutDirections }: { cutDirections: ("vertical" | "horizontal")[] }) {
+function RepairPizza({
+  cutDirections,
+  onCut,
+}: {
+  cutDirections: ("vertical" | "horizontal")[];
+  onCut: (direction: "vertical" | "horizontal") => void;
+}) {
   const center = 130;
   const radius = 96;
   const hasVertical = cutDirections.includes("vertical");
   const hasHorizontal = cutDirections.includes("horizontal");
   const isComplete = hasVertical && hasHorizontal;
+  const nextDirection = !hasVertical ? "vertical" : !hasHorizontal ? "horizontal" : null;
+  const [dragging, setDragging] = useState<"vertical" | "horizontal" | null>(null);
+  const [dragPosition, setDragPosition] = useState(50);
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    setDragging(null);
+    setDragPosition(50);
+  }, [nextDirection]);
+
   const pointAt = (degrees: number) => {
     const radians = ((degrees - 90) * Math.PI) / 180;
     return {
@@ -1002,14 +1019,76 @@ function RepairPizza({ cutDirections }: { cutDirections: ("vertical" | "horizont
     : cutDirections.length === 1
       ? "Pizza cut into two regions"
       : "Whole pizza ready to cut";
+  const coordinateForPosition = (position: number) =>
+    center - radius + ((center + radius - (center - radius)) * position) / 100;
+  const positionFromPointer = (event: ReactPointerEvent<SVGSVGElement>, direction: "vertical" | "horizontal") => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const raw = direction === "vertical"
+      ? ((event.clientX - rect.left) / rect.width) * 260
+      : ((event.clientY - rect.top) / rect.height) * 260;
+    const clamped = Math.max(center - radius, Math.min(center + radius, raw));
+    return ((clamped - (center - radius)) / (radius * 2)) * 100;
+  };
+  const updateDragPosition = (event: ReactPointerEvent<SVGSVGElement>) => {
+    if (!dragging) return;
+    setDragPosition(positionFromPointer(event, dragging));
+  };
+  const finishDrag = (event: ReactPointerEvent<SVGSVGElement>) => {
+    if (!dragging) return;
+    const position = positionFromPointer(event, dragging);
+    if (Math.abs(position - 50) <= 16) onCut(dragging);
+    setDragging(null);
+    setDragPosition(50);
+  };
+  const startDrag = (event: ReactPointerEvent<SVGSVGElement>, direction: "vertical" | "horizontal") => {
+    if (direction !== nextDirection) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setDragging(direction);
+    setDragPosition(positionFromPointer(event, direction));
+  };
+  const moveWithKeyboard = (event: React.KeyboardEvent<SVGGElement>) => {
+    if (!nextDirection) return;
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      event.preventDefault();
+      setDragPosition((position) => Math.max(0, position - 5));
+    }
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      event.preventDefault();
+      setDragPosition((position) => Math.min(100, position + 5));
+    }
+    if (event.key === "Home") {
+      event.preventDefault();
+      setDragPosition(0);
+    }
+    if (event.key === "End") {
+      event.preventDefault();
+      setDragPosition(100);
+    }
+    if ((event.key === "Enter" || event.key === " ") && Math.abs(dragPosition - 50) <= 16) {
+      event.preventDefault();
+      onCut(nextDirection);
+      setDragPosition(50);
+    }
+  };
+  const verticalX = dragging === "vertical" ? coordinateForPosition(dragPosition) : center;
+  const horizontalY = dragging === "horizontal" ? coordinateForPosition(dragPosition) : center;
+  const guideIsReady = Math.abs(dragPosition - 50) <= 16;
 
   return (
     <div className="mx-auto w-full max-w-sm rounded-2xl border border-border bg-secondary/60 p-3 sm:p-5">
       <svg
+        ref={svgRef}
         viewBox="0 0 260 260"
         className="mx-auto aspect-square w-full max-w-[320px]"
         role="img"
         aria-label={label}
+        onPointerMove={updateDragPosition}
+        onPointerUp={finishDrag}
+        onPointerCancel={() => {
+          setDragging(null);
+          setDragPosition(50);
+        }}
       >
         <defs>
           <clipPath id="repair-pizza-clip">
@@ -1033,9 +1112,9 @@ function RepairPizza({ cutDirections }: { cutDirections: ("vertical" | "horizont
         </g>
         {hasVertical && (
           <line
-            x1={center}
+            x1={verticalX}
             y1={center - radius}
-            x2={center}
+            x2={verticalX}
             y2={center + radius}
             stroke="var(--primary)"
             strokeWidth="5"
@@ -1045,13 +1124,60 @@ function RepairPizza({ cutDirections }: { cutDirections: ("vertical" | "horizont
         {hasHorizontal && (
           <line
             x1={center - radius}
-            y1={center}
+            y1={horizontalY}
             x2={center + radius}
-            y2={center}
+            y2={horizontalY}
             stroke="var(--primary)"
             strokeWidth="5"
             strokeLinecap="round"
           />
+        )}
+        {nextDirection && (
+          <g
+            role="slider"
+            tabIndex={0}
+            aria-label={`${nextDirection} cut line. Drag to the centre of the pizza.`}
+            aria-orientation={nextDirection}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(dragPosition)}
+            aria-valuetext={guideIsReady ? "At the centre" : "Move towards the centre"}
+            onPointerDown={(event) => startDrag(event, nextDirection)}
+            onKeyDown={moveWithKeyboard}
+            className="cursor-grab outline-none active:cursor-grabbing"
+          >
+            {nextDirection === "vertical" ? (
+              <line
+                x1={coordinateForPosition(dragPosition)}
+                y1={center - radius - 8}
+                x2={coordinateForPosition(dragPosition)}
+                y2={center + radius + 8}
+                stroke={guideIsReady ? "var(--success)" : "var(--energy)"}
+                strokeWidth="8"
+                strokeDasharray="10 7"
+                strokeLinecap="round"
+              />
+            ) : (
+              <line
+                x1={center - radius - 8}
+                y1={coordinateForPosition(dragPosition)}
+                x2={center + radius + 8}
+                y2={coordinateForPosition(dragPosition)}
+                stroke={guideIsReady ? "var(--success)" : "var(--energy)"}
+                strokeWidth="8"
+                strokeDasharray="10 7"
+                strokeLinecap="round"
+              />
+            )}
+            <circle
+              cx={nextDirection === "vertical" ? coordinateForPosition(dragPosition) : center}
+              cy={nextDirection === "horizontal" ? coordinateForPosition(dragPosition) : center}
+              r="10"
+              fill={guideIsReady ? "var(--success)" : "var(--energy)"}
+              stroke="var(--background)"
+              strokeWidth="3"
+            />
+          </g>
         )}
         <circle
           cx={center}
@@ -1063,7 +1189,11 @@ function RepairPizza({ cutDirections }: { cutDirections: ("vertical" | "horizont
         />
       </svg>
       <p className="mt-2 text-center text-xs font-bold text-muted-foreground">
-        {isComplete ? "Four matching quarter-pizza regions" : label}
+        {isComplete
+          ? "Four matching quarter-pizza regions"
+          : guideIsReady
+            ? "Release to make this cut"
+            : `Drag the ${nextDirection} line to the centre`}
       </p>
     </div>
   );
@@ -1095,7 +1225,7 @@ function RepairPanel(props: RepairPanelProps) {
         <h3 className="mt-1 text-lg font-black text-foreground">Make four equal shares.</h3>
       </header>
       <div className="space-y-4 p-4 sm:p-5">
-        <RepairPizza cutDirections={props.cutDirections} />
+        <RepairPizza cutDirections={props.cutDirections} onCut={props.onCut} />
         <p className="text-center text-sm font-semibold text-muted-foreground">
           {nextDirection === "first"
             ? "Start with one cut across the whole pizza."
@@ -1103,26 +1233,6 @@ function RepairPanel(props: RepairPanelProps) {
               ? "Now make one cut the other way."
               : "Four regions are ready to compare."}
         </p>
-        {nextDirection !== "done" && (
-          <div className="grid gap-2 sm:grid-cols-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => props.onCut("vertical")}
-              disabled={props.cutDirections.includes("vertical")}
-            >
-              CUT VERTICALLY
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => props.onCut("horizontal")}
-              disabled={props.cutDirections.includes("horizontal")}
-            >
-              CUT HORIZONTALLY
-            </Button>
-          </div>
-        )}
         {props.ready && (
           <div className="rounded-xl border border-success bg-secondary p-3 text-sm font-bold text-foreground">
             ✓ Four equal regions. Now give one share to each detective.
