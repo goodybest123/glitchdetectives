@@ -167,7 +167,7 @@ export const SUB_CASES: Record<SubCaseId, SubCaseDef> = {
       solved: "Case closed. Read your diagnostic report below.",
     },
     Visual: ChocolateSVG,
-    conceptMastered: "Fair Sharing — three equal parts make thirds",
+    conceptMastered: "Fair Sharing — three equal parts",
     story: {
       eyebrow: "CASE 01.02 · THE CHOCOLATE BAR",
       intro:
