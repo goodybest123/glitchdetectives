@@ -994,12 +994,14 @@ function RepairPizza({
   const isComplete = hasVertical && hasHorizontal;
   const nextDirection = !hasVertical ? "vertical" : !hasHorizontal ? "horizontal" : null;
   const [dragging, setDragging] = useState<"vertical" | "horizontal" | null>(null);
-  const [dragPosition, setDragPosition] = useState(50);
+  // Start each fresh knife at the edge so the child must physically move it
+  // across the pizza instead of seeing a completed-looking centre cut.
+  const [dragPosition, setDragPosition] = useState(8);
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     setDragging(null);
-    setDragPosition(50);
+    setDragPosition(8);
   }, [nextDirection]);
 
   const pointAt = (degrees: number) => {
@@ -1043,7 +1045,7 @@ function RepairPizza({
     const position = positionFromPointer(event, dragging);
     if (Math.abs(position - 50) <= 16) onCut(dragging);
     setDragging(null);
-    setDragPosition(50);
+    setDragPosition(8);
   };
   const startDrag = (
     event: ReactPointerEvent<SVGGElement>,
@@ -1076,7 +1078,7 @@ function RepairPizza({
     if ((event.key === "Enter" || event.key === " ") && Math.abs(dragPosition - 50) <= 16) {
       event.preventDefault();
       onCut(nextDirection);
-      setDragPosition(50);
+      setDragPosition(8);
     }
   };
   const verticalX = dragging === "vertical" ? coordinateForPosition(dragPosition) : center;
@@ -1095,7 +1097,7 @@ function RepairPizza({
         onPointerUp={finishDrag}
         onPointerCancel={() => {
           setDragging(null);
-          setDragPosition(50);
+          setDragPosition(8);
         }}
       >
         <defs>
