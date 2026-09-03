@@ -5,3 +5,4 @@
 - [x] Make the Pizza investigation and repair interactions mouse, touch, and keyboard friendly.
 - [x] Persist Pizza observation notes locally without adding accounts, scoring, timers, or a backend.
 - [x] Verify the Pizza route with typecheck, targeted lint, production build, and live rendering checks.
+- [ ] Rebuild Case 01.02 — The Chocolate Bar with hands-on comparison, draggable dividers, evidence, explain, and apply.
