@@ -47,6 +47,10 @@
   --color-pizza-base: var(--pizza-base);
   --color-pizza-sauce: var(--pizza-sauce);
   --color-pizza-cheese: var(--pizza-cheese);
+  --color-chocolate-base: var(--chocolate-base);
+  --color-chocolate-dark: var(--chocolate-dark);
+  --color-chocolate-highlight: var(--chocolate-highlight);
+  --color-chocolate-foil: var(--chocolate-foil);
 
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -83,6 +87,10 @@
   --pizza-base: oklch(0.88 0.16 88);
   --pizza-sauce: oklch(0.66 0.15 24);
   --pizza-cheese: oklch(0.94 0.13 90);
+  --chocolate-base: oklch(0.34 0.08 45);
+  --chocolate-dark: oklch(0.22 0.05 45);
+  --chocolate-highlight: oklch(0.58 0.12 55);
+  --chocolate-foil: oklch(0.88 0.025 220);
 }
 
 .dark {
