@@ -283,13 +283,12 @@ function ChatPanelInner({
                   <button
                     type="submit"
                     disabled={!chatEnabled || isSending || !input.trim()}
-                    className="rounded-full bg-[#1f2937] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-black disabled:bg-neutral-300"
+                    className="rounded-full bg-[#1f2937] px-5 py-3 text-sm font-bold tracking-wider text-white transition-colors hover:bg-black disabled:bg-neutral-300"
                   >
-                    SUBMIT EVIDENCE
+                    SEND TO ZED-4
                   </button>
                 </div>
               </form>
-            )}
           </div>
         ) : (
           <div className="flex h-full items-center justify-center text-center text-sm text-neutral-400">
