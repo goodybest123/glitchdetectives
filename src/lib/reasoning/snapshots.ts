@@ -235,13 +235,16 @@ export function generateLevelSnapshot(levelId: string, allResults: CaseResult[])
   )[0]?.dimension;
   const focusDimension: ReasoningDimension = focus ?? "check";
 
+  // Per-level wording for the concept section. Every phrase is tied to an
+  // observed behaviour below, so nothing is claimed without evidence.
+  const concepts = LEVEL_CONCEPTS[levelId] ?? LEVEL_CONCEPTS["level-01"]!;
+
   const canDo: string[] = [];
-  if (results.some((r) => r.detection.correctDetection))
-    canDo.push("Recognises when parts of a whole are not equal.");
-  if (results.some((r) => r.repair.successful))
-    canDo.push("Can make equal parts from a whole using objects.");
-  if (results.some((r) => r.explanation.demonstratedUnderstanding))
-    canDo.push("Can say that fair sharing means everyone gets the same amount.");
+  if (results.some((r) => r.detection.correctDetection)) canDo.push(concepts.canDo[0]!);
+  if (results.some((r) => r.repair.successful)) canDo.push(concepts.canDo[1]!);
+  if (results.some((r) => r.explanation.demonstratedUnderstanding)) canDo.push(concepts.canDo[2]!);
+
+
 
   const hintTotal = results.reduce((sum, r) => sum + r.support.hintCount, 0);
   const retryTotal = results.reduce((sum, r) => sum + r.support.retries, 0);
