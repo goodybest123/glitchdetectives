@@ -25,6 +25,7 @@ import { SpeakButton } from "@/components/case01/SpeakButton";
 import { ChatPanel } from "@/components/shared/ChatPanel";
 import type { SubCaseDef } from "@/components/case01/cases";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
+import { useCaseResultRecorder } from "@/lib/reasoning";
 import { celebrate } from "@/lib/celebrate";
 
 const SOLVED_TOKEN = "[[CASE_SOLVED]]";
