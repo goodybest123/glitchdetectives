@@ -266,8 +266,8 @@ function ChatPanelInner({
                   rows={2}
                   placeholder={
                     chatEnabled
-                      ? "Type your reasoning, or tap the mic to speak…"
-                      : "Locked until repair is complete"
+                      ? "Tell ZED-4 what you noticed — type it or tap the mic and say it."
+                      : "Fix the glitch first, then you can talk to ZED-4."
                   }
                   className="w-full resize-none rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-[#60a5fa] focus:outline-none focus:ring-2 focus:ring-[#dbeafe] disabled:bg-neutral-50"
                 />
