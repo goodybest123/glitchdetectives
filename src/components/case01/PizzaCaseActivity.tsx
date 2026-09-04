@@ -22,6 +22,7 @@ import { SpeakButton } from "@/components/case01/SpeakButton";
 import { ChatPanel } from "@/components/shared/ChatPanel";
 import type { SubCaseDef } from "@/components/case01/cases";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
+import { useCaseResultRecorder } from "@/lib/reasoning";
 import { celebrate } from "@/lib/celebrate";
 
 const SOLVED_TOKEN = "[[CASE_SOLVED]]";
@@ -250,6 +251,48 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
     studentQuotes,
     marks,
   });
+
+  // Structured reasoning evidence for the Detective's Report.
+  useCaseResultRecorder(stage === "solved", () => ({
+    caseId: "case-01.01",
+    levelId: "level-01",
+    concept: "Parts of a Whole",
+    completed: true,
+    investigation: {
+      interactedWithModel: true,
+      manipulatedObjects: log.usedComparison,
+      comparedObjects: log.usedComparison,
+      exploredBeforeAnswering: log.usedComparison,
+    },
+    detection: {
+      selectedClaim: detectSelection,
+      correctDetection: log.detectedCorrectGlitch,
+      attempts: Math.max(1, log.attemptCount),
+      identifiedRelevantEvidence: evidenceChoice === "different",
+      evidenceType: "size comparison",
+    },
+    repair: {
+      attempted: cutDirections.length > 0,
+      successful: log.repairedPizza,
+      attempts: cutDirections.length,
+      usedManipulation: true,
+      requiredHint: hintIndex > 0,
+    },
+    explanation: {
+      method: explanationMethod,
+      response: studentQuotes.at(-1) ?? "",
+      demonstratedUnderstanding: true,
+    },
+    support: {
+      hintsUsed: hintIndex > 0,
+      hintCount: hintIndex,
+      retries: Math.max(0, log.attemptCount - 1),
+      changedAnswer: log.revisedAnswer,
+      revisedAfterEvidence: log.revisedAnswer,
+    },
+    interaction: { attemptCount: log.attemptCount, completedWithoutAnswerReveal: true },
+    timestamp: Date.now(),
+  }));
 
   const movePiece = (id: string, clientX: number, clientY: number, board: HTMLElement) => {
     const rect = board.getBoundingClientRect();

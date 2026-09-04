@@ -6,3 +6,6 @@
 - [x] Persist Pizza observation notes locally without adding accounts, scoring, timers, or a backend.
 - [x] Verify the Pizza route with typecheck, targeted lint, production build, and live rendering checks.
 - [x] Rebuild Case 01.02 — The Chocolate Bar with hands-on comparison, draggable dividers, evidence, explain, and apply.
+
+- [x] Case 01.03 The Painted Canvas rebuilt hands-on (drag, compare, evidence, draggable halving line)
+- [x] Detective's Report rebuilt as an evidence-based reasoning snapshot (NOTICE/CHECK/REPRESENT/REVISE/EXPLAIN)
