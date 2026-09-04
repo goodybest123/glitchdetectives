@@ -241,8 +241,7 @@ function ChatPanelInner({
                 </button>
               </div>
             )}
-            {(
-              <form
+            <form
                 ref={composerWrapRef}
                 className="pt-3"
                 onSubmit={(e) => {
