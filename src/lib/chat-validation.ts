@@ -66,9 +66,12 @@ export function validateChatMessages(body: unknown): UIMessage[] | Response {
       }
 
       const { type, text } = part as { type?: unknown; text?: unknown };
-      if (type !== "text" && type !== "reasoning") {
-        return new Response("Unsupported message part", { status: 400 });
-      }
+
+      // The AI SDK adds bookkeeping parts (e.g. `step-start`) to assistant
+      // messages. They carry no text and must be ignored, not rejected —
+      // rejecting them broke every follow-up turn in the conversation.
+      if (type !== "text" && type !== "reasoning") continue;
+
       if (typeof text !== "string") {
         return new Response("Text message parts must contain text", { status: 400 });
       }
