@@ -34,7 +34,11 @@ import { Route as ApiChatCase01CanvasRouteImport } from './routes/api/chat/case-
 import { Route as ApiChatCase01ChocolateRouteImport } from './routes/api/chat/case-01-chocolate'
 import { Route as ApiChatCase02BarRouteImport } from './routes/api/chat/case-02-bar'
 import { Route as ApiChatCase02CrateRouteImport } from './routes/api/chat/case-02-crate'
+import { Route as ApiChatCase02MysteryRouteImport } from './routes/api/chat/case-02-mystery'
 import { Route as ApiChatCase02PanelsRouteImport } from './routes/api/chat/case-02-panels'
+import { Route as ApiChatCase02SquaresRouteImport } from './routes/api/chat/case-02-squares'
+import { Route as ApiChatCase02TrayRouteImport } from './routes/api/chat/case-02-tray'
+import { Route as ApiChatCase02WallRouteImport } from './routes/api/chat/case-02-wall'
 import { Route as ApiChatCase03DisksRouteImport } from './routes/api/chat/case-03-disks'
 import { Route as ApiChatCase03GardenRouteImport } from './routes/api/chat/case-03-garden'
 import { Route as ApiChatCase03TanksRouteImport } from './routes/api/chat/case-03-tanks'
@@ -176,9 +180,29 @@ const ApiChatCase02CrateRoute = ApiChatCase02CrateRouteImport.update({
   path: '/api/chat/case-02-crate',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatCase02MysteryRoute = ApiChatCase02MysteryRouteImport.update({
+  id: '/api/chat/case-02-mystery',
+  path: '/api/chat/case-02-mystery',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatCase02PanelsRoute = ApiChatCase02PanelsRouteImport.update({
   id: '/api/chat/case-02-panels',
   path: '/api/chat/case-02-panels',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase02SquaresRoute = ApiChatCase02SquaresRouteImport.update({
+  id: '/api/chat/case-02-squares',
+  path: '/api/chat/case-02-squares',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase02TrayRoute = ApiChatCase02TrayRouteImport.update({
+  id: '/api/chat/case-02-tray',
+  path: '/api/chat/case-02-tray',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase02WallRoute = ApiChatCase02WallRouteImport.update({
+  id: '/api/chat/case-02-wall',
+  path: '/api/chat/case-02-wall',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatCase03DisksRoute = ApiChatCase03DisksRouteImport.update({
@@ -285,7 +309,11 @@ export interface FileRoutesByFullPath {
   '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
   '/api/chat/case-02-bar': typeof ApiChatCase02BarRoute
   '/api/chat/case-02-crate': typeof ApiChatCase02CrateRoute
+  '/api/chat/case-02-mystery': typeof ApiChatCase02MysteryRoute
   '/api/chat/case-02-panels': typeof ApiChatCase02PanelsRoute
+  '/api/chat/case-02-squares': typeof ApiChatCase02SquaresRoute
+  '/api/chat/case-02-tray': typeof ApiChatCase02TrayRoute
+  '/api/chat/case-02-wall': typeof ApiChatCase02WallRoute
   '/api/chat/case-03-disks': typeof ApiChatCase03DisksRoute
   '/api/chat/case-03-garden': typeof ApiChatCase03GardenRoute
   '/api/chat/case-03-tanks': typeof ApiChatCase03TanksRoute
@@ -324,7 +352,11 @@ export interface FileRoutesByTo {
   '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
   '/api/chat/case-02-bar': typeof ApiChatCase02BarRoute
   '/api/chat/case-02-crate': typeof ApiChatCase02CrateRoute
+  '/api/chat/case-02-mystery': typeof ApiChatCase02MysteryRoute
   '/api/chat/case-02-panels': typeof ApiChatCase02PanelsRoute
+  '/api/chat/case-02-squares': typeof ApiChatCase02SquaresRoute
+  '/api/chat/case-02-tray': typeof ApiChatCase02TrayRoute
+  '/api/chat/case-02-wall': typeof ApiChatCase02WallRoute
   '/api/chat/case-03-disks': typeof ApiChatCase03DisksRoute
   '/api/chat/case-03-garden': typeof ApiChatCase03GardenRoute
   '/api/chat/case-03-tanks': typeof ApiChatCase03TanksRoute
@@ -368,7 +400,11 @@ export interface FileRoutesById {
   '/api/chat/case-01-chocolate': typeof ApiChatCase01ChocolateRoute
   '/api/chat/case-02-bar': typeof ApiChatCase02BarRoute
   '/api/chat/case-02-crate': typeof ApiChatCase02CrateRoute
+  '/api/chat/case-02-mystery': typeof ApiChatCase02MysteryRoute
   '/api/chat/case-02-panels': typeof ApiChatCase02PanelsRoute
+  '/api/chat/case-02-squares': typeof ApiChatCase02SquaresRoute
+  '/api/chat/case-02-tray': typeof ApiChatCase02TrayRoute
+  '/api/chat/case-02-wall': typeof ApiChatCase02WallRoute
   '/api/chat/case-03-disks': typeof ApiChatCase03DisksRoute
   '/api/chat/case-03-garden': typeof ApiChatCase03GardenRoute
   '/api/chat/case-03-tanks': typeof ApiChatCase03TanksRoute
@@ -413,7 +449,11 @@ export interface FileRouteTypes {
     | '/api/chat/case-01-chocolate'
     | '/api/chat/case-02-bar'
     | '/api/chat/case-02-crate'
+    | '/api/chat/case-02-mystery'
     | '/api/chat/case-02-panels'
+    | '/api/chat/case-02-squares'
+    | '/api/chat/case-02-tray'
+    | '/api/chat/case-02-wall'
     | '/api/chat/case-03-disks'
     | '/api/chat/case-03-garden'
     | '/api/chat/case-03-tanks'
@@ -452,7 +492,11 @@ export interface FileRouteTypes {
     | '/api/chat/case-01-chocolate'
     | '/api/chat/case-02-bar'
     | '/api/chat/case-02-crate'
+    | '/api/chat/case-02-mystery'
     | '/api/chat/case-02-panels'
+    | '/api/chat/case-02-squares'
+    | '/api/chat/case-02-tray'
+    | '/api/chat/case-02-wall'
     | '/api/chat/case-03-disks'
     | '/api/chat/case-03-garden'
     | '/api/chat/case-03-tanks'
@@ -495,7 +539,11 @@ export interface FileRouteTypes {
     | '/api/chat/case-01-chocolate'
     | '/api/chat/case-02-bar'
     | '/api/chat/case-02-crate'
+    | '/api/chat/case-02-mystery'
     | '/api/chat/case-02-panels'
+    | '/api/chat/case-02-squares'
+    | '/api/chat/case-02-tray'
+    | '/api/chat/case-02-wall'
     | '/api/chat/case-03-disks'
     | '/api/chat/case-03-garden'
     | '/api/chat/case-03-tanks'
@@ -527,7 +575,11 @@ export interface RootRouteChildren {
   ApiChatCase01ChocolateRoute: typeof ApiChatCase01ChocolateRoute
   ApiChatCase02BarRoute: typeof ApiChatCase02BarRoute
   ApiChatCase02CrateRoute: typeof ApiChatCase02CrateRoute
+  ApiChatCase02MysteryRoute: typeof ApiChatCase02MysteryRoute
   ApiChatCase02PanelsRoute: typeof ApiChatCase02PanelsRoute
+  ApiChatCase02SquaresRoute: typeof ApiChatCase02SquaresRoute
+  ApiChatCase02TrayRoute: typeof ApiChatCase02TrayRoute
+  ApiChatCase02WallRoute: typeof ApiChatCase02WallRoute
   ApiChatCase03DisksRoute: typeof ApiChatCase03DisksRoute
   ApiChatCase03GardenRoute: typeof ApiChatCase03GardenRoute
   ApiChatCase03TanksRoute: typeof ApiChatCase03TanksRoute
@@ -719,11 +771,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatCase02CrateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat/case-02-mystery': {
+      id: '/api/chat/case-02-mystery'
+      path: '/api/chat/case-02-mystery'
+      fullPath: '/api/chat/case-02-mystery'
+      preLoaderRoute: typeof ApiChatCase02MysteryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat/case-02-panels': {
       id: '/api/chat/case-02-panels'
       path: '/api/chat/case-02-panels'
       fullPath: '/api/chat/case-02-panels'
       preLoaderRoute: typeof ApiChatCase02PanelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-02-squares': {
+      id: '/api/chat/case-02-squares'
+      path: '/api/chat/case-02-squares'
+      fullPath: '/api/chat/case-02-squares'
+      preLoaderRoute: typeof ApiChatCase02SquaresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-02-tray': {
+      id: '/api/chat/case-02-tray'
+      path: '/api/chat/case-02-tray'
+      fullPath: '/api/chat/case-02-tray'
+      preLoaderRoute: typeof ApiChatCase02TrayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-02-wall': {
+      id: '/api/chat/case-02-wall'
+      path: '/api/chat/case-02-wall'
+      fullPath: '/api/chat/case-02-wall'
+      preLoaderRoute: typeof ApiChatCase02WallRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat/case-03-disks': {
@@ -917,7 +997,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatCase01ChocolateRoute: ApiChatCase01ChocolateRoute,
   ApiChatCase02BarRoute: ApiChatCase02BarRoute,
   ApiChatCase02CrateRoute: ApiChatCase02CrateRoute,
+  ApiChatCase02MysteryRoute: ApiChatCase02MysteryRoute,
   ApiChatCase02PanelsRoute: ApiChatCase02PanelsRoute,
+  ApiChatCase02SquaresRoute: ApiChatCase02SquaresRoute,
+  ApiChatCase02TrayRoute: ApiChatCase02TrayRoute,
+  ApiChatCase02WallRoute: ApiChatCase02WallRoute,
   ApiChatCase03DisksRoute: ApiChatCase03DisksRoute,
   ApiChatCase03GardenRoute: ApiChatCase03GardenRoute,
   ApiChatCase03TanksRoute: ApiChatCase03TanksRoute,

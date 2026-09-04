@@ -221,6 +221,40 @@ const TRY_AT_HOME: Record<
 
 const LEVEL_RANK = { insufficient: 0, emerging: 1, developing: 2, consistent: 3 } as const;
 
+/**
+ * Per-level concept wording. `canDo[0]` is unlocked by a correct detection,
+ * `canDo[1]` by a successful repair, `canDo[2]` by an explanation — so each
+ * sentence traces back to something the child actually did.
+ */
+const LEVEL_CONCEPTS: Record<
+  string,
+  { concept: string; statement: string; headline: string; canDo: [string, string, string] }
+> = {
+  "level-01": {
+    concept: "Parts of a Whole — fair sharing and equal parts",
+    statement:
+      "Based on the evidence collected so far, your child worked with the idea that a whole can be divided into equal parts.",
+    headline: "worked with equal parts of one whole",
+    canDo: [
+      "Recognises when parts of a whole are not equal.",
+      "Can make equal parts from a whole using objects.",
+      "Can say that fair sharing means everyone gets the same amount.",
+    ],
+  },
+  "level-02": {
+    concept: "Naming the Pieces — what the top and bottom numbers count",
+    statement:
+      "Based on the evidence collected so far, your child worked with the idea that the bottom number names how many equal parts make the whole, and the top number counts the parts being considered.",
+    headline: "worked with what each number in a fraction counts",
+    canDo: [
+      "Notices when a fraction's numbers do not match the picture.",
+      "Can build a model that matches a given fraction.",
+      "Can describe, in their own words, what the top and bottom numbers do.",
+    ],
+  },
+};
+
+
 export function generateLevelSnapshot(levelId: string, allResults: CaseResult[]): LevelSnapshot {
   const order = LEVEL_CASE_ORDER[levelId] ?? [];
   const results = allResults
@@ -235,13 +269,16 @@ export function generateLevelSnapshot(levelId: string, allResults: CaseResult[])
   )[0]?.dimension;
   const focusDimension: ReasoningDimension = focus ?? "check";
 
+  // Per-level wording for the concept section. Every phrase is tied to an
+  // observed behaviour below, so nothing is claimed without evidence.
+  const concepts = LEVEL_CONCEPTS[levelId] ?? LEVEL_CONCEPTS["level-01"]!;
+
   const canDo: string[] = [];
-  if (results.some((r) => r.detection.correctDetection))
-    canDo.push("Recognises when parts of a whole are not equal.");
-  if (results.some((r) => r.repair.successful))
-    canDo.push("Can make equal parts from a whole using objects.");
-  if (results.some((r) => r.explanation.demonstratedUnderstanding))
-    canDo.push("Can say that fair sharing means everyone gets the same amount.");
+  if (results.some((r) => r.detection.correctDetection)) canDo.push(concepts.canDo[0]!);
+  if (results.some((r) => r.repair.successful)) canDo.push(concepts.canDo[1]!);
+  if (results.some((r) => r.explanation.demonstratedUnderstanding)) canDo.push(concepts.canDo[2]!);
+
+
 
   const hintTotal = results.reduce((sum, r) => sum + r.support.hintCount, 0);
   const retryTotal = results.reduce((sum, r) => sum + r.support.retries, 0);
@@ -269,16 +306,17 @@ export function generateLevelSnapshot(levelId: string, allResults: CaseResult[])
     hasData,
     isComplete: order.length > 0 && results.length >= order.length,
     headline: hasData
-      ? `During these investigations, your child worked with equal parts of one whole across ${results.length} case${results.length === 1 ? "" : "s"}.`
+      ? `During these investigations, your child ${concepts.headline} across ${results.length} case${results.length === 1 ? "" : "s"}.`
       : "No investigations completed yet on this device.",
     dimensions,
     mathematics: {
-      concept: "Parts of a Whole — fair sharing and equal parts",
+      concept: concepts.concept,
       statement: hasData
-        ? "Based on the evidence collected so far, your child worked with the idea that a whole can be divided into equal parts."
+        ? concepts.statement
         : "Complete an investigation to collect evidence about this concept.",
       canDo,
     },
+
     cases: results.map(evidenceCard),
     supportSummary,
     mayIndicate,
