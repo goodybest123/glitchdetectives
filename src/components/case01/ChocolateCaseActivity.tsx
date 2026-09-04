@@ -249,6 +249,48 @@ export function ChocolateCaseExperience({ definition, onSolved, onBackToPicker }
     marks,
   });
 
+  // Structured reasoning evidence for the Detective's Report.
+  useCaseResultRecorder(stage === "solved", () => ({
+    caseId: "case-01.02",
+    levelId: "level-01",
+    concept: "Parts of a Whole",
+    completed: true,
+    investigation: {
+      interactedWithModel: true,
+      manipulatedObjects: log.comparedPieces,
+      comparedObjects: log.comparedPieces,
+      exploredBeforeAnswering: log.comparedPieces,
+    },
+    detection: {
+      selectedClaim: log.selectedDetection,
+      correctDetection: log.detectedUnequalPieces,
+      attempts: Math.max(1, log.attemptCount),
+      identifiedRelevantEvidence: log.usedEvidence,
+      evidenceType: "size comparison",
+    },
+    repair: {
+      attempted: log.repairAttempt > 0,
+      successful: log.repairSuccess,
+      attempts: log.repairAttempt,
+      usedManipulation: true,
+      requiredHint: hintIndex > 0,
+    },
+    explanation: {
+      method: explanationMethod,
+      response: studentQuotes.at(-1) ?? "",
+      demonstratedUnderstanding: true,
+    },
+    support: {
+      hintsUsed: hintIndex > 0,
+      hintCount: hintIndex,
+      retries: Math.max(0, log.attemptCount - 1),
+      changedAnswer: log.revisedResponse,
+      revisedAfterEvidence: log.revisedResponse,
+    },
+    interaction: { attemptCount: log.attemptCount, completedWithoutAnswerReveal: true },
+    timestamp: Date.now(),
+  }));
+
   const movePiece = (id: string, clientX: number, clientY: number, board: HTMLElement) => {
     const rect = board.getBoundingClientRect();
     setPiecePositions((current) => ({
