@@ -18,6 +18,7 @@ import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
+import { ReadPageButton } from "@/components/shared/ReadPageButton";
 import { ChatPanel } from "@/components/shared/ChatPanel";
 import {
   WorkbookActivityPrompt,
@@ -91,7 +92,15 @@ function PageShell({ title, children }: { title: string; children: React.ReactNo
           </div>
         </div>
       </header>
-      <div className="mx-auto w-full max-w-7xl px-3 py-3 sm:px-6 sm:py-5 lg:px-10">{children}</div>
+      <div
+        data-readable
+        className="mx-auto w-full max-w-7xl px-3 py-3 sm:px-6 sm:py-5 lg:px-10"
+      >
+        <div className="mb-3 flex justify-end">
+          <ReadPageButton />
+        </div>
+        {children}
+      </div>
     </main>
   );
 }

@@ -406,6 +406,11 @@ function PizzaCaseExperience({ definition, onSolved, onBackToPicker }: Props) {
                       ? HINTS[hintIndex - 1]
                       : "Need a clue? You can investigate first."}
                   </p>
+                  <SpeakButton
+                    text={
+                      hintIndex > 0 ? HINTS[hintIndex - 1] : "Need a clue? You can investigate first."
+                    }
+                  />
                 </div>
                 <Button
                   type="button"

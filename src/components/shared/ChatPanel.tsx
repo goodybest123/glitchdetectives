@@ -114,8 +114,9 @@ function ChatPanelInner({
   const composerWrapRef = useRef<HTMLFormElement>(null);
   const lastStageRef = useRef<Stage | null>(null);
 
-  const chatEnabled = stage === "explain";
-  const visible = chatEnabled || stage === "solved";
+  // Keep chatting after the case closes — kids often want to keep talking to ZED-4.
+  const chatEnabled = stage === "explain" || stage === "solved";
+  const visible = chatEnabled;
 
   // When entering explain, scroll to TOP so ZED's prompt is the first thing visible.
   useEffect(() => {
@@ -229,20 +230,18 @@ function ChatPanelInner({
             )}
 
             {/* INLINE composer — flows directly under the latest message */}
-            {stage === "solved" ? (
+            {stage === "solved" && onViewReport && (
               <div className="pt-3">
-                {onViewReport && (
-                  <button
-                    type="button"
-                    onClick={onViewReport}
-                    className="w-full rounded-full bg-[#10b981] px-4 py-2.5 text-xs font-bold tracking-wider text-white transition-colors hover:bg-[#0ea371]"
-                  >
-                    VIEW DIAGNOSTIC REPORT
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={onViewReport}
+                  className="w-full rounded-full bg-[#10b981] px-4 py-3 text-sm font-bold tracking-wider text-white transition-colors hover:bg-[#0ea371]"
+                >
+                  VIEW DIAGNOSTIC REPORT
+                </button>
               </div>
-            ) : (
-              <form
+            )}
+            <form
                 ref={composerWrapRef}
                 className="pt-3"
                 onSubmit={(e) => {
@@ -267,8 +266,8 @@ function ChatPanelInner({
                   rows={2}
                   placeholder={
                     chatEnabled
-                      ? "Type your reasoning, or tap the mic to speak…"
-                      : "Locked until repair is complete"
+                      ? "Tell ZED-4 what you noticed — type it or tap the mic and say it."
+                      : "Fix the glitch first, then you can talk to ZED-4."
                   }
                   className="w-full resize-none rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-[#60a5fa] focus:outline-none focus:ring-2 focus:ring-[#dbeafe] disabled:bg-neutral-50"
                 />
@@ -284,13 +283,12 @@ function ChatPanelInner({
                   <button
                     type="submit"
                     disabled={!chatEnabled || isSending || !input.trim()}
-                    className="rounded-full bg-[#1f2937] px-4 py-2 text-xs font-bold tracking-wider text-white transition-colors hover:bg-black disabled:bg-neutral-300"
+                    className="rounded-full bg-[#1f2937] px-5 py-3 text-sm font-bold tracking-wider text-white transition-colors hover:bg-black disabled:bg-neutral-300"
                   >
-                    SUBMIT EVIDENCE
+                    SEND TO ZED-4
                   </button>
                 </div>
               </form>
-            )}
           </div>
         ) : (
           <div className="flex h-full items-center justify-center text-center text-sm text-neutral-400">

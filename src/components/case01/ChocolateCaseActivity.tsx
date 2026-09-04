@@ -943,6 +943,9 @@ function HintBox({ hintIndex, onHint }: { hintIndex: number; onHint: () => void 
         <p className="text-sm text-foreground">
           {hintIndex > 0 ? HINTS[hintIndex - 1] : "Need a clue? You can investigate first."}
         </p>
+        <SpeakButton
+          text={hintIndex > 0 ? HINTS[hintIndex - 1] : "Need a clue? You can investigate first."}
+        />
       </div>
       <Button
         type="button"
