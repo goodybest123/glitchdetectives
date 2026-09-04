@@ -30,6 +30,7 @@ import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
 import { CasePicker } from "@/components/case01/CasePicker";
 import { PizzaCaseExperience } from "@/components/case01/PizzaCaseActivity";
 import { ChocolateCaseExperience } from "@/components/case01/ChocolateCaseActivity";
+import { CanvasCaseExperience } from "@/components/case01/CanvasCaseActivity";
 import {
   Case01ApplyChallenge,
   Case01DetectPanel,
@@ -99,6 +100,13 @@ function CaseOnePage() {
         <ChocolateCaseExperience
           key={activeCase}
           definition={SUB_CASES.chocolate}
+          onSolved={() => markSolved(activeCase)}
+          onBackToPicker={() => setActiveCase(null)}
+        />
+      ) : activeCase === "canvas" ? (
+        <CanvasCaseExperience
+          key={activeCase}
+          definition={SUB_CASES.canvas}
           onSolved={() => markSolved(activeCase)}
           onBackToPicker={() => setActiveCase(null)}
         />
