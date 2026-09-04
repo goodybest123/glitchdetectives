@@ -878,7 +878,7 @@ function ComparisonBoard(props: ComparisonProps) {
               style={{
                 left: `${point.x}%`,
                 top: `${point.y}%`,
-                width: `${Math.max(82, piece.width * 0.55)}px`,
+                width: `${52 + piece.width * 0.35}px`,
               }}
               onPointerDown={(event) => props.onStartDrag(piece.id, event)}
               onPointerMove={(event) => props.onDrag(piece.id, event)}
@@ -1051,7 +1051,7 @@ function DetectPanel(props: DetectProps) {
                     <div key={id} className="flex flex-col items-center gap-1">
                       <div
                         className="h-14 rounded-lg border-2 border-chocolate-dark bg-chocolate-base"
-                        style={{ width: `${Math.max(72, piece.width * 0.55)}px` }}
+                        style={{ width: `${48 + piece.width * 0.35}px` }}
                       />
                       <span className="text-xs font-bold text-muted-foreground">
                         Piece {piece.id}
