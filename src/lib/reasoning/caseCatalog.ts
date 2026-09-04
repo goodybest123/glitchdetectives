@@ -22,7 +22,9 @@ export type CaseMeta = {
 
 export const LEVEL_TITLES: Record<string, string> = {
   "level-01": "Parts of a Whole",
+  "level-02": "Naming the Pieces",
 };
+
 
 export const CASE_CATALOG: Record<string, CaseMeta> = {
   "case-01.01": {
