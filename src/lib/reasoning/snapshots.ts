@@ -306,16 +306,17 @@ export function generateLevelSnapshot(levelId: string, allResults: CaseResult[])
     hasData,
     isComplete: order.length > 0 && results.length >= order.length,
     headline: hasData
-      ? `During these investigations, your child worked with equal parts of one whole across ${results.length} case${results.length === 1 ? "" : "s"}.`
+      ? `During these investigations, your child ${concepts.headline} across ${results.length} case${results.length === 1 ? "" : "s"}.`
       : "No investigations completed yet on this device.",
     dimensions,
     mathematics: {
-      concept: "Parts of a Whole — fair sharing and equal parts",
+      concept: concepts.concept,
       statement: hasData
-        ? "Based on the evidence collected so far, your child worked with the idea that a whole can be divided into equal parts."
+        ? concepts.statement
         : "Complete an investigation to collect evidence about this concept.",
       canDo,
     },
+
     cases: results.map(evidenceCard),
     supportSummary,
     mayIndicate,
