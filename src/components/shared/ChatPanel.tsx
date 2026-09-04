@@ -114,8 +114,9 @@ function ChatPanelInner({
   const composerWrapRef = useRef<HTMLFormElement>(null);
   const lastStageRef = useRef<Stage | null>(null);
 
-  const chatEnabled = stage === "explain";
-  const visible = chatEnabled || stage === "solved";
+  // Keep chatting after the case closes — kids often want to keep talking to ZED-4.
+  const chatEnabled = stage === "explain" || stage === "solved";
+  const visible = chatEnabled;
 
   // When entering explain, scroll to TOP so ZED's prompt is the first thing visible.
   useEffect(() => {
