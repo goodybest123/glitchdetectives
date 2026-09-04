@@ -230,19 +230,18 @@ function ChatPanelInner({
             )}
 
             {/* INLINE composer — flows directly under the latest message */}
-            {stage === "solved" ? (
+            {stage === "solved" && onViewReport && (
               <div className="pt-3">
-                {onViewReport && (
-                  <button
-                    type="button"
-                    onClick={onViewReport}
-                    className="w-full rounded-full bg-[#10b981] px-4 py-2.5 text-xs font-bold tracking-wider text-white transition-colors hover:bg-[#0ea371]"
-                  >
-                    VIEW DIAGNOSTIC REPORT
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={onViewReport}
+                  className="w-full rounded-full bg-[#10b981] px-4 py-3 text-sm font-bold tracking-wider text-white transition-colors hover:bg-[#0ea371]"
+                >
+                  VIEW DIAGNOSTIC REPORT
+                </button>
               </div>
-            ) : (
+            )}
+            {(
               <form
                 ref={composerWrapRef}
                 className="pt-3"
