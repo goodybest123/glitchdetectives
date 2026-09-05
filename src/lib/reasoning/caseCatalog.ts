@@ -66,7 +66,9 @@ export const CASE_CATALOG: Record<string, CaseMeta> = {
     title: "The Cookie Tray",
     levelTitle: "Naming the Pieces",
     concept: "Naming the Pieces",
-    whatHappened: "ZED-4 read 3/4 and swapped what the top and bottom numbers count.",
+    whatHappened:
+      "ZED-4 was asked for 3/4 of a 4-cookie tray, said the tray had 3 cookies and handed over 4.",
+
     model: "cookie tray parts",
   },
   "case-02.02": {
