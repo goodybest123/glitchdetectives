@@ -390,7 +390,9 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                     interactive
                     onToggle={toggleExplored}
                     unitLabel={model.unitLabel}
+                    reminder="bottom number = all the parts · top number = the ones we chose"
                   />
+
                   <FractionReadout
                     top={explored.length}
                     bottom={model.totalParts}
@@ -639,7 +641,9 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                       interactive
                       onToggle={toggleRepair}
                       unitLabel={model.unitLabel}
+                      reminder="bottom number = all the parts · top number = the ones we chose"
                     />
+
                     <FractionReadout
                       top={repairSelected.length}
                       bottom={repairTotal}

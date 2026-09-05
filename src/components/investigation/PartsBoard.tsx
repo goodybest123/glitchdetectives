@@ -7,6 +7,10 @@
  * predictable; only the shape, the number of parts and the goal change.
  */
 import type { ModelShape } from "./types";
+import cookieImg from "@/assets/level02/cookie.jpg";
+import chocolateImg from "@/assets/level02/chocolate.jpg";
+import wallImg from "@/assets/level02/wall.jpg";
+import stripImg from "@/assets/level02/strip.jpg";
 
 type Props = {
   shape: ModelShape;
@@ -17,6 +21,8 @@ type Props = {
   unitLabel: string;
   /** Optional caption read by screen readers instead of the default. */
   label?: string;
+  /** Extra reminder line under the board, e.g. what each number counts. */
+  reminder?: string;
 };
 
 const SHAPE_CLASS: Record<ModelShape, string> = {
@@ -24,6 +30,14 @@ const SHAPE_CLASS: Record<ModelShape, string> = {
   bar: "rounded-lg aspect-[3/2]",
   wall: "rounded-md aspect-[4/3]",
   strip: "rounded-md aspect-[1/2]",
+};
+
+/** Real photograph used for each part, so the model looks like the real thing. */
+const SHAPE_IMAGE: Record<ModelShape, string> = {
+  tray: cookieImg,
+  bar: chocolateImg,
+  wall: wallImg,
+  strip: stripImg,
 };
 
 function columnsFor(shape: ModelShape, total: number) {
@@ -40,9 +54,11 @@ export function PartsBoard({
   onToggle,
   unitLabel,
   label,
+  reminder,
 }: Props) {
   const columns = columnsFor(shape, total);
   const isSelected = (index: number) => selected.includes(index);
+  const photo = SHAPE_IMAGE[shape];
 
   return (
     <div
@@ -59,12 +75,36 @@ export function PartsBoard({
       >
         {Array.from({ length: total }, (_, index) => {
           const on = isSelected(index);
-          const base = `${SHAPE_CLASS[shape]} w-full border-2 transition-colors`;
+          const base = `${SHAPE_CLASS[shape]} relative w-full overflow-hidden border-2 bg-card transition-all`;
           const tone = on
-            ? "border-primary bg-primary text-primary-foreground"
-            : "border-border bg-card text-muted-foreground";
+            ? "border-primary ring-2 ring-primary"
+            : "border-border opacity-60 grayscale";
+          const inner = (
+            <>
+              <img
+                src={photo}
+                alt=""
+                loading="lazy"
+                width={512}
+                height={512}
+                className="h-full w-full object-cover"
+              />
+              {on && (
+                <span
+                  aria-hidden
+                  className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-black text-primary-foreground"
+                >
+                  ✓
+                </span>
+              )}
+            </>
+          );
           if (!interactive) {
-            return <div key={index} className={`${base} ${tone}`} aria-hidden />;
+            return (
+              <div key={index} className={`${base} ${tone}`} aria-hidden>
+                {inner}
+              </div>
+            );
           }
           return (
             <button
@@ -74,16 +114,22 @@ export function PartsBoard({
               aria-pressed={on}
               aria-label={`${unitLabel} ${index + 1} of ${total}${on ? ", chosen" : ""}`}
               className={`${base} ${tone} min-h-11 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
-            />
+            >
+              {inner}
+            </button>
           );
         })}
       </div>
       <p className="mt-3 text-center text-xs font-bold text-muted-foreground" aria-live="polite">
         {total} equal parts in the whole · {selected.length} chosen
       </p>
+      {reminder && (
+        <p className="mt-1 text-center text-xs font-semibold text-muted-foreground">{reminder}</p>
+      )}
     </div>
   );
 }
+
 
 /** Plain read-out of a fraction, used beside the board. */
 export function FractionReadout({
