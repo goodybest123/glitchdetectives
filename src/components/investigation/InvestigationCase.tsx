@@ -734,10 +734,12 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                     />
                   </div>
 
+                  {/* Never "WRONG" — an unfinished build gets a question. */}
                   <p className="text-center text-xs font-bold text-muted-foreground" aria-live="polite">
                     {repairReady
                       ? definition.repair.successText
-                      : "Keep building. Tap the parts, and set how many equal parts the whole has."}
+                      : (definition.repair.checkText ??
+                        "Keep building. Tap the parts, and set how many equal parts the whole has.")}
                   </p>
 
                   {repairReady && (
