@@ -454,6 +454,14 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                 </div>
               </section>
 
+              {definition.investigate.evidenceSort && (
+                <NumberSortBoard
+                  config={definition.investigate.evidenceSort}
+                  onSolved={() => setSortSolved(true)}
+                />
+              )}
+
+
               <HintBox
                 hints={definition.hints}
                 hintIndex={hintIndex}
