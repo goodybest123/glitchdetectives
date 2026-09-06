@@ -576,24 +576,78 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                             </Button>
                           ))}
                         </div>
-                        <Button
-                          type="button"
-                          className="mt-4 font-black"
-                          onClick={() => {
-                            const choice =
-                              evidenceChoice === null
-                                ? undefined
-                                : definition.detect.evidence.choices[evidenceChoice];
-                            if (choice?.correct) {
-                              setEvidenceMessage("");
-                              setStage("repair");
-                            } else {
-                              setEvidenceMessage(definition.detect.evidence.retry);
-                            }
-                          }}
-                        >
-                          CONFIRM MY EVIDENCE →
-                        </Button>
+                        {!evidenceLocked && (
+                          <Button
+                            type="button"
+                            className="mt-4 font-black"
+                            onClick={() => {
+                              const choice =
+                                evidenceChoice === null
+                                  ? undefined
+                                  : definition.detect.evidence.choices[evidenceChoice];
+                              if (choice?.correct) {
+                                setEvidenceMessage("");
+                                setEvidenceLocked(true);
+                                if (!definition.detect.followUp) setStage("repair");
+                              } else {
+                                setEvidenceMessage(definition.detect.evidence.retry);
+                              }
+                            }}
+                          >
+                            CONFIRM MY EVIDENCE →
+                          </Button>
+                        )}
+
+                        {/* Second question: this level asks the child to check
+                            BOTH numbers, not just the one they spotted. */}
+                        {evidenceLocked && definition.detect.followUp && (
+                          <div className="mt-5 rounded-xl border border-border bg-card p-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <p className="text-sm font-black text-foreground">
+                                {definition.detect.followUp.question}
+                              </p>
+                              <SpeakButton
+                                text={`${definition.detect.followUp.question}. ${definition.detect.followUp.choices.join(". ")}`}
+                              />
+                            </div>
+                            <div className="mt-3 grid gap-2">
+                              {definition.detect.followUp.choices.map((choice, index) => (
+                                <Button
+                                  key={choice}
+                                  type="button"
+                                  variant={detectFollowUp === index ? "default" : "outline"}
+                                  onClick={() => {
+                                    setDetectFollowUp(index);
+                                    setDetectFollowUpMessage("");
+                                  }}
+                                  className="h-auto min-h-12 justify-start whitespace-normal text-left"
+                                >
+                                  {choice}
+                                </Button>
+                              ))}
+                            </div>
+                            {detectFollowUpMessage && (
+                              <p className="mt-3 text-sm font-semibold text-foreground" role="status">
+                                {detectFollowUpMessage}
+                              </p>
+                            )}
+                            <Button
+                              type="button"
+                              className="mt-4 font-black"
+                              disabled={detectFollowUp === null}
+                              onClick={() => {
+                                if (detectFollowUpDone) {
+                                  setDetectFollowUpMessage(definition.detect.followUp!.reply);
+                                  setStage("repair");
+                                } else {
+                                  setDetectFollowUpMessage(definition.detect.followUp!.retry);
+                                }
+                              }}
+                            >
+                              CONTINUE →
+                            </Button>
+                          </div>
+                        )}
                       </>
                     )}
                   </div>
