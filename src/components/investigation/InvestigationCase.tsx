@@ -182,16 +182,19 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
     completed: true,
     investigation: {
       interactedWithModel: true,
-      manipulatedObjects: touched,
-      comparedObjects: touched && evidencePlaced,
-      exploredBeforeAnswering: touched,
+      // Sorting each number into its evidence area is itself a comparison of
+      // the whole against the part being considered.
+      manipulatedObjects: touched || sortSolved,
+      comparedObjects: (touched && evidencePlaced) || sortSolved,
+      exploredBeforeAnswering: touched || sortSolved,
     },
     detection: {
       selectedClaim: detection === null ? null : definition.detect.choices[detection],
       correctDetection: detectCorrect,
       attempts: Math.max(1, detectAttempts),
-      identifiedRelevantEvidence:
-        evidenceChoice !== null && !!definition.detect.evidence.choices[evidenceChoice]?.correct,
+      // Checking BOTH numbers against the model is the evidence this level
+      // is about, so a case with a follow-up question needs both answered.
+      identifiedRelevantEvidence: evidenceConfirmed && detectFollowUpDone,
       evidenceType: definition.detect.evidence.type,
     },
     repair: {
