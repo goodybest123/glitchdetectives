@@ -67,6 +67,8 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
   const [evidencePlaced, setEvidencePlaced] = useState(false);
   const [evidenceChoice, setEvidenceChoice] = useState<number | null>(null);
   const [evidenceMessage, setEvidenceMessage] = useState("");
+  /** True once the child has confirmed a correct piece of evidence. */
+  const [evidenceLocked, setEvidenceLocked] = useState(false);
   /** Both numbers placed in the right evidence area (optional sort board). */
   const [sortSolved, setSortSolved] = useState(false);
   /** Optional second detect question. */
