@@ -67,9 +67,8 @@ export const CASE_CATALOG: Record<string, CaseMeta> = {
     levelTitle: "Naming the Pieces",
     concept: "Naming the Pieces",
     whatHappened:
-      "ZED-4 was asked for 3/4 of a 4-cookie tray, said the tray had 3 cookies and handed over 4.",
-
-    model: "cookie tray parts",
+      "ZED-4 read 3/4 on a tray of 4 equal pieces and switched what the two numbers count.",
+    model: "cookie tray pieces",
   },
   "case-02.02": {
     caseId: "case-02.02",
@@ -78,7 +77,7 @@ export const CASE_CATALOG: Record<string, CaseMeta> = {
     title: "The Chocolate Squares",
     levelTitle: "Naming the Pieces",
     concept: "Naming the Pieces",
-    whatHappened: "ZED-4 said the 6 in 2/6 was the amount of chocolate taken.",
+    whatHappened: "ZED-4 said the 6 in 2/6 was the amount of chocolate Maya received.",
     model: "chocolate squares",
   },
   "case-02.03": {
@@ -88,7 +87,7 @@ export const CASE_CATALOG: Record<string, CaseMeta> = {
     title: "The Painted Wall",
     levelTitle: "Naming the Pieces",
     concept: "Naming the Pieces",
-    whatHappened: "ZED-4 built his wall model with the numerator and denominator swapped.",
+    whatHappened: "ZED-4 built a 4-section wall for 4/5 and painted all of it.",
     model: "wall sections",
   },
   "case-02.04": {
@@ -99,8 +98,8 @@ export const CASE_CATALOG: Record<string, CaseMeta> = {
     levelTitle: "Naming the Pieces",
     concept: "Naming the Pieces",
     whatHappened:
-      "ZED-4 described a fraction with denominator 5 and numerator 2, then shaded only one piece.",
-    model: "fraction strip pieces",
+      "ZED-4 said a picture with 2 of 5 parts highlighted matched a card reading 3/5.",
+    model: "fraction strip sections",
   },
 };
 
