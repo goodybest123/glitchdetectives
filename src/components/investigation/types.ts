@@ -41,6 +41,35 @@ export type PartsModelConfig = {
 
 export type EvidenceChoice = { label: string; correct: boolean };
 
+/** Which of the two evidence areas a number belongs in. */
+export type SortArea = "whole" | "part";
+
+/**
+ * The "give each number a job" board. The child drops each number of the
+ * fraction into one of two evidence areas, which is the concrete version of
+ * "what is this number counting?".
+ */
+export type EvidenceSortConfig = {
+  title: string;
+  text: string;
+  /** Headings of the two evidence areas, in order: the whole, then the part. */
+  wholeLabel: string;
+  partLabel: string;
+  /** The two numbers (as written on the fraction) the child must place. */
+  items: { value: string; area: SortArea }[];
+  retry: string;
+  doneText: string;
+};
+
+/** A second, follow-up multiple choice question. */
+export type FollowUpQuestion = {
+  question: string;
+  choices: string[];
+  correctIndex: number;
+  retry: string;
+  reply: string;
+};
+
 export type CaseDefinition = {
   caseId: string; // "case-02.01"
   levelId: string; // "level-02"
