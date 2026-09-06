@@ -134,6 +134,12 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
     repairSelected.length === model.repair.targetSelected;
   const explanationReady = answers.every(Boolean);
   const detectCorrect = detection === definition.detect.correctIndex;
+  const evidenceConfirmed =
+    evidenceChoice !== null && !!definition.detect.evidence.choices[evidenceChoice]?.correct;
+  const detectFollowUpDone =
+    !definition.detect.followUp || detectFollowUp === definition.detect.followUp.correctIndex;
+  const repairFollowUpDone =
+    !definition.repair.followUp || repairFollowUp === definition.repair.followUp.correctIndex;
   const stepperStage: Stage = stage === "brief" ? "investigate" : (stage as Stage);
 
   useEffect(() => {
