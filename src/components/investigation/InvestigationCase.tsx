@@ -796,6 +796,48 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                     </div>
                   )}
 
+                  {/* Optional reasoning check, e.g. "did we change the whole?" */}
+                  {repairReady && confirmed === "yes" && definition.repair.followUp && (
+                    <div className="rounded-xl border border-border bg-background p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-sm font-black text-foreground">
+                          {definition.repair.followUp.question}
+                        </p>
+                        <SpeakButton
+                          text={`${definition.repair.followUp.question}. ${definition.repair.followUp.choices.join(". ")}`}
+                        />
+                      </div>
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                        {definition.repair.followUp.choices.map((choice, index) => (
+                          <Button
+                            key={choice}
+                            type="button"
+                            variant={repairFollowUp === index ? "default" : "outline"}
+                            onClick={() => {
+                              setRepairFollowUp(index);
+                              setRepairFollowUpMessage(
+                                index === definition.repair.followUp!.correctIndex
+                                  ? definition.repair.followUp!.reply
+                                  : definition.repair.followUp!.retry,
+                              );
+                            }}
+                            className="h-auto min-h-12 whitespace-normal text-left"
+                          >
+                            {choice}
+                          </Button>
+                        ))}
+                      </div>
+                      {repairFollowUpMessage && (
+                        <p
+                          className={`mt-3 text-sm font-bold ${repairFollowUpDone ? "text-success" : "text-muted-foreground"}`}
+                          role="status"
+                        >
+                          {repairFollowUpMessage}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   <div className="flex flex-wrap justify-between gap-2 border-t border-dashed border-border pt-3">
                     <Button
                       type="button"
@@ -814,7 +856,7 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                     <Button
                       type="button"
                       className="font-black"
-                      disabled={!repairReady || confirmed !== "yes"}
+                      disabled={!repairReady || confirmed !== "yes" || !repairFollowUpDone}
                       onClick={() => setStage("explain")}
                     >
                       CONTINUE TO EXPLAIN →
