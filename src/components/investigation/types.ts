@@ -102,6 +102,8 @@ export type CaseDefinition = {
     boardTitle: string;
     boardText: string;
     observations: string[];
+    /** Optional "give each number a job" evidence areas. */
+    evidenceSort?: EvidenceSortConfig;
   };
 
   /** Three layered clues: observe → direct → scaffold. Never the answer. */
@@ -122,12 +124,16 @@ export type CaseDefinition = {
       /** Short label used in the parent report, e.g. "part count". */
       type: string;
     };
+    /** Optional second question asked once the evidence is confirmed. */
+    followUp?: FollowUpQuestion;
   };
 
   repair: {
     title: string;
     text: string;
     successText: string;
+    /** Shown instead of a "wrong" message while the build does not match. */
+    checkText?: string;
     confirm: {
       question: string;
       yes: string;
@@ -135,10 +141,13 @@ export type CaseDefinition = {
       yesReply: string;
       noReply: string;
     };
+    /** Optional reasoning question asked after the repair is confirmed. */
+    followUp?: FollowUpQuestion;
   };
 
   /** Formal words are only named after the child has explained the meaning. */
   vocabulary?: { title: string; lines: string[] };
+
 
   explain: {
     title: string;
