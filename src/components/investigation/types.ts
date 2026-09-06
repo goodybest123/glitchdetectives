@@ -36,6 +36,13 @@ export type PartsModelConfig = {
     targetTotal: number;
     targetSelected: number;
     instruction: string;
+    /**
+     * What the workspace looks like when the repair stage opens. Defaults to
+     * ZED-4's own model. Use it when the child should build from a blank or
+     * partly-built whole rather than being handed the finished answer.
+     */
+    startTotal?: number;
+    startSelected?: number;
   };
 };
 
