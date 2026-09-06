@@ -77,10 +77,13 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
 
   // Repair
   const [repairTotal, setRepairTotal] = useState(
-    model.repair.adjustableTotal ? model.totalParts : model.repair.targetTotal,
+    model.repair.startTotal ??
+      (model.repair.adjustableTotal ? model.totalParts : model.repair.targetTotal),
   );
   const [repairSelected, setRepairSelected] = useState<number[]>(() =>
-    range(Math.min(model.selectedParts, model.repair.targetTotal)),
+    range(
+      model.repair.startSelected ?? Math.min(model.selectedParts, model.repair.targetTotal),
+    ),
   );
   const [repairActions, setRepairActions] = useState(0);
   const [confirmed, setConfirmed] = useState<"yes" | "no" | null>(null);
