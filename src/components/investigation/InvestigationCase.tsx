@@ -27,6 +27,7 @@ import { CaseReflectionCard } from "@/components/shared/CaseReflectionCard";
 import { celebrate } from "@/lib/celebrate";
 import { generateCaseReflection, useCaseResultRecorder, type CaseResult } from "@/lib/reasoning";
 import { FractionReadout, PartsBoard } from "./PartsBoard";
+import { NumberSortBoard } from "./NumberSortBoard";
 import {
   ApplyChallenge,
   CaseClosedBanner,
