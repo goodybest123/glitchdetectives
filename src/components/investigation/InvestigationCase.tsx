@@ -848,9 +848,17 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                       size="sm"
                       onClick={() => {
                         setRepairTotal(
-                          model.repair.adjustableTotal ? model.totalParts : model.repair.targetTotal,
+                          model.repair.startTotal ??
+                            (model.repair.adjustableTotal
+                              ? model.totalParts
+                              : model.repair.targetTotal),
                         );
-                        setRepairSelected(range(Math.min(model.selectedParts, model.totalParts)));
+                        setRepairSelected(
+                          range(
+                            model.repair.startSelected ??
+                              Math.min(model.selectedParts, model.totalParts),
+                          ),
+                        );
                         setConfirmed(null);
                       }}
                     >

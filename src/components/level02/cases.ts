@@ -60,6 +60,9 @@ export const LEVEL_02_CASES: Record<Level02CaseId, CaseDefinition> = {
         adjustableTotal: { min: 2, max: 8 },
         targetTotal: 4,
         targetSelected: 3,
+        // Start from a blank tray so the child builds 3/4 themselves.
+        startTotal: 2,
+        startSelected: 0,
         instruction: "Build what 3/4 tells us: 4 equal pieces, 3 of them chosen.",
       },
     },
@@ -389,6 +392,9 @@ export const LEVEL_02_CASES: Record<Level02CaseId, CaseDefinition> = {
         adjustableTotal: { min: 2, max: 8 },
         targetTotal: 5,
         targetSelected: 4,
+        // Start from a blank wall: this case is about constructing the model.
+        startTotal: 2,
+        startSelected: 0,
         instruction: "Build 4/5 on the wall.",
       },
     },
