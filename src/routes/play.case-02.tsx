@@ -79,17 +79,37 @@ function LevelTwoPage() {
 
 /** Shown once all four investigations in the level are closed. */
 function LevelClosed() {
-  const idea = "A fraction tells us how many equal parts we are considering out of the equal parts that make up the whole.";
+  const idea =
+    "The denominator tells us how many equal parts make the whole. The numerator tells us how many of those parts we're considering.";
+  const skills = [
+    "02.01 — Give each number a job.",
+    "02.02 — Ask what the number is counting.",
+    "02.03 — Connect symbols to what you see.",
+    "02.04 — Check the symbols against the model.",
+  ];
   return (
     <section className="rounded-3xl border-2 border-success bg-card p-6 shadow-sm">
       <p className="label-eyebrow text-muted-foreground">LEVEL CLOSED</p>
       <div className="mt-1 flex items-start justify-between gap-3">
         <h2 className="text-2xl font-black text-foreground sm:text-3xl">
-          Your detective work uncovered something important.
+          You solved the Naming the Pieces mystery!
         </h2>
-        <SpeakButton text={`Level closed. Your detective work uncovered something important. ${idea}`} size="md" />
+        <SpeakButton
+          text={`Level closed. You solved the Naming the Pieces mystery. Two numbers, two jobs. ${idea}`}
+          size="md"
+        />
       </div>
-      <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">{idea}</p>
+      <p className="mt-4 text-lg font-black tracking-tight text-foreground">TWO NUMBERS. TWO JOBS.</p>
+      <p className="mt-2 max-w-2xl text-base leading-relaxed text-muted-foreground">{idea}</p>
+      <p className="mt-3 max-w-2xl text-sm text-muted-foreground">
+        numerator = top number · denominator = bottom number. Don't just remember their names —
+        remember what they are counting.
+      </p>
+      <ul className="mt-4 space-y-1 text-sm font-semibold text-foreground">
+        {skills.map((skill) => (
+          <li key={skill}>{skill}</li>
+        ))}
+      </ul>
       <div className="mt-5 flex flex-wrap gap-3">
         <Link
           to="/play/report"
