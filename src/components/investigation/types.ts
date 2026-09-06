@@ -36,10 +36,46 @@ export type PartsModelConfig = {
     targetTotal: number;
     targetSelected: number;
     instruction: string;
+    /**
+     * What the workspace looks like when the repair stage opens. Defaults to
+     * ZED-4's own model. Use it when the child should build from a blank or
+     * partly-built whole rather than being handed the finished answer.
+     */
+    startTotal?: number;
+    startSelected?: number;
   };
 };
 
 export type EvidenceChoice = { label: string; correct: boolean };
+
+/** Which of the two evidence areas a number belongs in. */
+export type SortArea = "whole" | "part";
+
+/**
+ * The "give each number a job" board. The child drops each number of the
+ * fraction into one of two evidence areas, which is the concrete version of
+ * "what is this number counting?".
+ */
+export type EvidenceSortConfig = {
+  title: string;
+  text: string;
+  /** Headings of the two evidence areas, in order: the whole, then the part. */
+  wholeLabel: string;
+  partLabel: string;
+  /** The two numbers (as written on the fraction) the child must place. */
+  items: { value: string; area: SortArea }[];
+  retry: string;
+  doneText: string;
+};
+
+/** A second, follow-up multiple choice question. */
+export type FollowUpQuestion = {
+  question: string;
+  choices: string[];
+  correctIndex: number;
+  retry: string;
+  reply: string;
+};
 
 export type CaseDefinition = {
   caseId: string; // "case-02.01"
@@ -73,6 +109,8 @@ export type CaseDefinition = {
     boardTitle: string;
     boardText: string;
     observations: string[];
+    /** Optional "give each number a job" evidence areas. */
+    evidenceSort?: EvidenceSortConfig;
   };
 
   /** Three layered clues: observe → direct → scaffold. Never the answer. */
@@ -93,12 +131,16 @@ export type CaseDefinition = {
       /** Short label used in the parent report, e.g. "part count". */
       type: string;
     };
+    /** Optional second question asked once the evidence is confirmed. */
+    followUp?: FollowUpQuestion;
   };
 
   repair: {
     title: string;
     text: string;
     successText: string;
+    /** Shown instead of a "wrong" message while the build does not match. */
+    checkText?: string;
     confirm: {
       question: string;
       yes: string;
@@ -106,10 +148,13 @@ export type CaseDefinition = {
       yesReply: string;
       noReply: string;
     };
+    /** Optional reasoning question asked after the repair is confirmed. */
+    followUp?: FollowUpQuestion;
   };
 
   /** Formal words are only named after the child has explained the meaning. */
   vocabulary?: { title: string; lines: string[] };
+
 
   explain: {
     title: string;
@@ -120,6 +165,9 @@ export type CaseDefinition = {
 
   detectiveSkill: string;
   apply: string;
+
+  /** ZED-4's own admission, shown when the case closes. */
+  zedResponse?: string;
 
   /** Report metadata. */
   reportModelLabel: string;

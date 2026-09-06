@@ -27,6 +27,7 @@ import { CaseReflectionCard } from "@/components/shared/CaseReflectionCard";
 import { celebrate } from "@/lib/celebrate";
 import { generateCaseReflection, useCaseResultRecorder, type CaseResult } from "@/lib/reasoning";
 import { FractionReadout, PartsBoard } from "./PartsBoard";
+import { NumberSortBoard } from "./NumberSortBoard";
 import {
   ApplyChallenge,
   CaseClosedBanner,
@@ -66,16 +67,29 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
   const [evidencePlaced, setEvidencePlaced] = useState(false);
   const [evidenceChoice, setEvidenceChoice] = useState<number | null>(null);
   const [evidenceMessage, setEvidenceMessage] = useState("");
+  /** True once the child has confirmed a correct piece of evidence. */
+  const [evidenceLocked, setEvidenceLocked] = useState(false);
+  /** Both numbers placed in the right evidence area (optional sort board). */
+  const [sortSolved, setSortSolved] = useState(false);
+  /** Optional second detect question. */
+  const [detectFollowUp, setDetectFollowUp] = useState<number | null>(null);
+  const [detectFollowUpMessage, setDetectFollowUpMessage] = useState("");
 
   // Repair
   const [repairTotal, setRepairTotal] = useState(
-    model.repair.adjustableTotal ? model.totalParts : model.repair.targetTotal,
+    model.repair.startTotal ??
+      (model.repair.adjustableTotal ? model.totalParts : model.repair.targetTotal),
   );
   const [repairSelected, setRepairSelected] = useState<number[]>(() =>
-    range(Math.min(model.selectedParts, model.repair.targetTotal)),
+    range(
+      model.repair.startSelected ?? Math.min(model.selectedParts, model.repair.targetTotal),
+    ),
   );
   const [repairActions, setRepairActions] = useState(0);
   const [confirmed, setConfirmed] = useState<"yes" | "no" | null>(null);
+  /** Optional reasoning question asked after the repair is confirmed. */
+  const [repairFollowUp, setRepairFollowUp] = useState<number | null>(null);
+  const [repairFollowUpMessage, setRepairFollowUpMessage] = useState("");
 
   // Explain
   const [answers, setAnswers] = useState<(string | null)[]>(() =>
@@ -125,6 +139,12 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
     repairSelected.length === model.repair.targetSelected;
   const explanationReady = answers.every(Boolean);
   const detectCorrect = detection === definition.detect.correctIndex;
+  const evidenceConfirmed =
+    evidenceChoice !== null && !!definition.detect.evidence.choices[evidenceChoice]?.correct;
+  const detectFollowUpDone =
+    !definition.detect.followUp || detectFollowUp === definition.detect.followUp.correctIndex;
+  const repairFollowUpDone =
+    !definition.repair.followUp || repairFollowUp === definition.repair.followUp.correctIndex;
   const stepperStage: Stage = stage === "brief" ? "investigate" : (stage as Stage);
 
   useEffect(() => {
@@ -167,16 +187,19 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
     completed: true,
     investigation: {
       interactedWithModel: true,
-      manipulatedObjects: touched,
-      comparedObjects: touched && evidencePlaced,
-      exploredBeforeAnswering: touched,
+      // Sorting each number into its evidence area is itself a comparison of
+      // the whole against the part being considered.
+      manipulatedObjects: touched || sortSolved,
+      comparedObjects: (touched && evidencePlaced) || sortSolved,
+      exploredBeforeAnswering: touched || sortSolved,
     },
     detection: {
       selectedClaim: detection === null ? null : definition.detect.choices[detection],
       correctDetection: detectCorrect,
       attempts: Math.max(1, detectAttempts),
-      identifiedRelevantEvidence:
-        evidenceChoice !== null && !!definition.detect.evidence.choices[evidenceChoice]?.correct,
+      // Checking BOTH numbers against the model is the evidence this level
+      // is about, so a case with a follow-up question needs both answered.
+      identifiedRelevantEvidence: evidenceConfirmed && detectFollowUpDone,
       evidenceType: definition.detect.evidence.type,
     },
     repair: {
@@ -436,6 +459,14 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                 </div>
               </section>
 
+              {definition.investigate.evidenceSort && (
+                <NumberSortBoard
+                  config={definition.investigate.evidenceSort}
+                  onSolved={() => setSortSolved(true)}
+                />
+              )}
+
+
               <HintBox
                 hints={definition.hints}
                 hintIndex={hintIndex}
@@ -550,24 +581,78 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                             </Button>
                           ))}
                         </div>
-                        <Button
-                          type="button"
-                          className="mt-4 font-black"
-                          onClick={() => {
-                            const choice =
-                              evidenceChoice === null
-                                ? undefined
-                                : definition.detect.evidence.choices[evidenceChoice];
-                            if (choice?.correct) {
-                              setEvidenceMessage("");
-                              setStage("repair");
-                            } else {
-                              setEvidenceMessage(definition.detect.evidence.retry);
-                            }
-                          }}
-                        >
-                          CONFIRM MY EVIDENCE →
-                        </Button>
+                        {!evidenceLocked && (
+                          <Button
+                            type="button"
+                            className="mt-4 font-black"
+                            onClick={() => {
+                              const choice =
+                                evidenceChoice === null
+                                  ? undefined
+                                  : definition.detect.evidence.choices[evidenceChoice];
+                              if (choice?.correct) {
+                                setEvidenceMessage("");
+                                setEvidenceLocked(true);
+                                if (!definition.detect.followUp) setStage("repair");
+                              } else {
+                                setEvidenceMessage(definition.detect.evidence.retry);
+                              }
+                            }}
+                          >
+                            CONFIRM MY EVIDENCE →
+                          </Button>
+                        )}
+
+                        {/* Second question: this level asks the child to check
+                            BOTH numbers, not just the one they spotted. */}
+                        {evidenceLocked && definition.detect.followUp && (
+                          <div className="mt-5 rounded-xl border border-border bg-card p-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <p className="text-sm font-black text-foreground">
+                                {definition.detect.followUp.question}
+                              </p>
+                              <SpeakButton
+                                text={`${definition.detect.followUp.question}. ${definition.detect.followUp.choices.join(". ")}`}
+                              />
+                            </div>
+                            <div className="mt-3 grid gap-2">
+                              {definition.detect.followUp.choices.map((choice, index) => (
+                                <Button
+                                  key={choice}
+                                  type="button"
+                                  variant={detectFollowUp === index ? "default" : "outline"}
+                                  onClick={() => {
+                                    setDetectFollowUp(index);
+                                    setDetectFollowUpMessage("");
+                                  }}
+                                  className="h-auto min-h-12 justify-start whitespace-normal text-left"
+                                >
+                                  {choice}
+                                </Button>
+                              ))}
+                            </div>
+                            {detectFollowUpMessage && (
+                              <p className="mt-3 text-sm font-semibold text-foreground" role="status">
+                                {detectFollowUpMessage}
+                              </p>
+                            )}
+                            <Button
+                              type="button"
+                              className="mt-4 font-black"
+                              disabled={detectFollowUp === null}
+                              onClick={() => {
+                                if (detectFollowUpDone) {
+                                  setDetectFollowUpMessage(definition.detect.followUp!.reply);
+                                  setStage("repair");
+                                } else {
+                                  setDetectFollowUpMessage(definition.detect.followUp!.retry);
+                                }
+                              }}
+                            >
+                              CONTINUE →
+                            </Button>
+                          </div>
+                        )}
                       </>
                     )}
                   </div>
@@ -652,10 +737,12 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                     />
                   </div>
 
+                  {/* Never "WRONG" — an unfinished build gets a question. */}
                   <p className="text-center text-xs font-bold text-muted-foreground" aria-live="polite">
                     {repairReady
                       ? definition.repair.successText
-                      : "Keep building. Tap the parts, and set how many equal parts the whole has."}
+                      : (definition.repair.checkText ??
+                        "Keep building. Tap the parts, and set how many equal parts the whole has.")}
                   </p>
 
                   {repairReady && (
@@ -712,6 +799,48 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                     </div>
                   )}
 
+                  {/* Optional reasoning check, e.g. "did we change the whole?" */}
+                  {repairReady && confirmed === "yes" && definition.repair.followUp && (
+                    <div className="rounded-xl border border-border bg-background p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-sm font-black text-foreground">
+                          {definition.repair.followUp.question}
+                        </p>
+                        <SpeakButton
+                          text={`${definition.repair.followUp.question}. ${definition.repair.followUp.choices.join(". ")}`}
+                        />
+                      </div>
+                      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                        {definition.repair.followUp.choices.map((choice, index) => (
+                          <Button
+                            key={choice}
+                            type="button"
+                            variant={repairFollowUp === index ? "default" : "outline"}
+                            onClick={() => {
+                              setRepairFollowUp(index);
+                              setRepairFollowUpMessage(
+                                index === definition.repair.followUp!.correctIndex
+                                  ? definition.repair.followUp!.reply
+                                  : definition.repair.followUp!.retry,
+                              );
+                            }}
+                            className="h-auto min-h-12 whitespace-normal text-left"
+                          >
+                            {choice}
+                          </Button>
+                        ))}
+                      </div>
+                      {repairFollowUpMessage && (
+                        <p
+                          className={`mt-3 text-sm font-bold ${repairFollowUpDone ? "text-success" : "text-muted-foreground"}`}
+                          role="status"
+                        >
+                          {repairFollowUpMessage}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   <div className="flex flex-wrap justify-between gap-2 border-t border-dashed border-border pt-3">
                     <Button
                       type="button"
@@ -719,9 +848,17 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                       size="sm"
                       onClick={() => {
                         setRepairTotal(
-                          model.repair.adjustableTotal ? model.totalParts : model.repair.targetTotal,
+                          model.repair.startTotal ??
+                            (model.repair.adjustableTotal
+                              ? model.totalParts
+                              : model.repair.targetTotal),
                         );
-                        setRepairSelected(range(Math.min(model.selectedParts, model.totalParts)));
+                        setRepairSelected(
+                          range(
+                            model.repair.startSelected ??
+                              Math.min(model.selectedParts, model.totalParts),
+                          ),
+                        );
                         setConfirmed(null);
                       }}
                     >
@@ -730,7 +867,7 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                     <Button
                       type="button"
                       className="font-black"
-                      disabled={!repairReady || confirmed !== "yes"}
+                      disabled={!repairReady || confirmed !== "yes" || !repairFollowUpDone}
                       onClick={() => setStage("explain")}
                     >
                       CONTINUE TO EXPLAIN →
@@ -836,6 +973,7 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
               <CaseClosedBanner
                 zedWasCorrect={definition.zedClaim.isCorrect}
                 skill={definition.detectiveSkill}
+                zedResponse={definition.zedResponse}
               />
               <CaseReflectionCard reflection={reflection} onTryAnother={onBackToPicker} />
               <ApplyChallenge

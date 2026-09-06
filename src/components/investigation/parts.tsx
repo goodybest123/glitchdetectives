@@ -131,13 +131,16 @@ export function ApplyChallenge({
   );
 }
 
-/** CASE CLOSED banner with the case's Detective Skill. */
+/** CASE CLOSED banner with ZED-4's admission and the case's Detective Skill. */
 export function CaseClosedBanner({
   zedWasCorrect,
   skill,
+  zedResponse,
 }: {
   zedWasCorrect: boolean;
   skill: string;
+  /** ZED-4 saying, in his own words, what he got wrong. */
+  zedResponse?: string;
 }) {
   const headline = zedWasCorrect ? "You checked the evidence!" : "You caught the glitch!";
   return (
@@ -145,8 +148,17 @@ export function CaseClosedBanner({
       <p className="label-eyebrow text-muted-foreground">CASE CLOSED</p>
       <div className="mt-1 flex items-start justify-between gap-3">
         <h2 className="text-2xl font-black text-foreground">{headline}</h2>
-        <SpeakButton text={`Case closed. ${headline}. Detective skill. ${skill}`} size="md" />
+        <SpeakButton
+          text={`Case closed. ${headline}. ${zedResponse ? `ZED-4 says. ${zedResponse}. ` : ""}Detective skill. ${skill}`}
+          size="md"
+        />
       </div>
+      {zedResponse && (
+        <div className="mt-4 rounded-xl border border-border bg-background p-4">
+          <p className="label-eyebrow text-muted-foreground">🤖 ZED-4 SAYS</p>
+          <p className="mt-1 text-sm leading-relaxed text-foreground">“{zedResponse}”</p>
+        </div>
+      )}
       <div className="mt-4 rounded-xl border border-border bg-secondary p-4">
         <p className="label-eyebrow text-muted-foreground">DETECTIVE SKILL</p>
         <p className="mt-1 text-lg font-black text-foreground">{skill}</p>
