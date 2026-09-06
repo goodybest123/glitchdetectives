@@ -962,6 +962,7 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
               <CaseClosedBanner
                 zedWasCorrect={definition.zedClaim.isCorrect}
                 skill={definition.detectiveSkill}
+                zedResponse={definition.zedResponse}
               />
               <CaseReflectionCard reflection={reflection} onTryAnother={onBackToPicker} />
               <ApplyChallenge
