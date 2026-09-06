@@ -67,6 +67,11 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
   const [evidencePlaced, setEvidencePlaced] = useState(false);
   const [evidenceChoice, setEvidenceChoice] = useState<number | null>(null);
   const [evidenceMessage, setEvidenceMessage] = useState("");
+  /** Both numbers placed in the right evidence area (optional sort board). */
+  const [sortSolved, setSortSolved] = useState(false);
+  /** Optional second detect question. */
+  const [detectFollowUp, setDetectFollowUp] = useState<number | null>(null);
+  const [detectFollowUpMessage, setDetectFollowUpMessage] = useState("");
 
   // Repair
   const [repairTotal, setRepairTotal] = useState(
@@ -77,6 +82,9 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
   );
   const [repairActions, setRepairActions] = useState(0);
   const [confirmed, setConfirmed] = useState<"yes" | "no" | null>(null);
+  /** Optional reasoning question asked after the repair is confirmed. */
+  const [repairFollowUp, setRepairFollowUp] = useState<number | null>(null);
+  const [repairFollowUpMessage, setRepairFollowUpMessage] = useState("");
 
   // Explain
   const [answers, setAnswers] = useState<(string | null)[]>(() =>
