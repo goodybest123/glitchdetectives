@@ -159,6 +159,9 @@ export type CaseDefinition = {
   detectiveSkill: string;
   apply: string;
 
+  /** ZED-4's own admission, shown when the case closes. */
+  zedResponse?: string;
+
   /** Report metadata. */
   reportModelLabel: string;
   whatHappened: string;
