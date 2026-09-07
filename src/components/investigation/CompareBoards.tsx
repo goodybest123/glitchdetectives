@@ -91,12 +91,12 @@ export function CompareBoards({ config, onInteract }: Props) {
           </div>
         </div>
       ) : (
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-4">
           {[
             { model: config.left, view: left, isSplit: splitLeft, setSplit: setSplitLeft },
             { model: config.right, view: right, isSplit: splitRight, setSplit: setSplitRight },
           ].map(({ model, view, isSplit, setSplit }) => (
-            <div key={model.label} className="rounded-2xl border border-border bg-card p-3">
+            <div key={model.label} className="rounded-2xl border border-border bg-card p-2 sm:p-3">
               <p className="text-center text-sm font-black text-foreground">{model.label}</p>
               <div className="mt-2">
                 <FractionModel
