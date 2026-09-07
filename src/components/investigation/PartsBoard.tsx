@@ -130,9 +130,11 @@ export function PartsBoard({
           );
         })}
       </div>
-      <p className="mt-3 text-center text-xs font-bold text-muted-foreground" aria-live="polite">
-        {total} equal parts in the whole · {selected.length} chosen
-      </p>
+      {!hideCounter && (
+        <p className="mt-3 text-center text-xs font-bold text-muted-foreground" aria-live="polite">
+          {total} equal parts in the whole · {selected.length} chosen
+        </p>
+      )}
       {reminder && (
         <p className="mt-1 text-center text-xs font-semibold text-muted-foreground">{reminder}</p>
       )}
