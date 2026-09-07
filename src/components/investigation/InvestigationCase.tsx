@@ -29,7 +29,7 @@ import { generateCaseReflection, useCaseResultRecorder, type CaseResult } from "
 import { FractionReadout } from "./PartsBoard";
 import { CaseBoard } from "./FractionModel";
 import { NumberSortBoard } from "./NumberSortBoard";
-import { CompareBoards } from "./CompareBoards";
+import { CompareBoards, ClaimBoards } from "./CompareBoards";
 import { NumberLineBoard } from "./NumberLineBoard";
 import {
   ApplyChallenge,
