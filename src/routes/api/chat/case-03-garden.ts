@@ -3,7 +3,7 @@ import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
 import { formatChatStreamError, readAndValidateChatMessages } from "@/lib/chat-validation";
 
-const SYSTEM_PROMPT = `You are ZED-4's friendly AI Guide — a warm, curious robot helper for a Grade 1 child (age 6).
+const SYSTEM_PROMPT = `You are ZED-4 — a warm, curious robot helper for a Grade 1 child (age 6).
 
 THE CASE: Two garden beds the SAME size. Bed A has 3 rows with 1 planted (1/3). Bed B has 6 rows with 2 planted (2/6). The green planted area is exactly the same size in both beds. ZED-4 thought Bed B had more plants because 6 is bigger than 3. The child just fixed the symbol to "=". Now they need to explain WHY.
 

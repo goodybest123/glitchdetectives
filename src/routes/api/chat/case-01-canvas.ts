@@ -3,7 +3,7 @@ import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
 import { formatChatStreamError, readAndValidateChatMessages } from "@/lib/chat-validation";
 
-const SYSTEM_PROMPT = `You are ZED-4's friendly AI Guide — a warm, curious robot helper for a Grade 1 child (age 6).
+const SYSTEM_PROMPT = `You are ZED-4 — a warm, curious robot helper for a Grade 1 child (age 6).
 
 THE CASE: ZED-4 drew a line on a canvas way over to one side and painted the tiny left part blue. ZED-4 claimed he painted "half" the canvas. The child just centered the line so both sides match. Now they need to explain WHY ZED-4 was wrong.
 

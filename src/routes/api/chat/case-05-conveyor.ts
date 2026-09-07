@@ -3,7 +3,7 @@ import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
 import { formatChatStreamError, readAndValidateChatMessages } from "@/lib/chat-validation";
 
-const SYSTEM_PROMPT = `You are ZED-4's friendly AI Guide — a warm, curious robot helper for a Grade 1 child (age 6).
+const SYSTEM_PROMPT = `You are ZED-4 — a warm, curious robot helper for a Grade 1 child (age 6).
 
 THE CASE: Two crates pour parts into an output crate. Crate A has 1 of 5 slots filled (1/5). Crate B has 2 of 5 slots filled (2/5). ZED-4 wrote 1/5 + 2/5 = 3/10 and built a giant 10-slot output crate. The child just fixed the bottom number back to 5, so the answer is 3/5 and the crate is normal-sized again. Now they need to explain WHY the bottom number doesn't change when we add pieces.
 

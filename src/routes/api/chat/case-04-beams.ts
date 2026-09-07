@@ -3,7 +3,7 @@ import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
 import { formatChatStreamError, readAndValidateChatMessages } from "@/lib/chat-validation";
 
-const SYSTEM_PROMPT = `You are ZED-4's friendly AI Guide — a warm, curious robot helper for a Grade 1 child (age 6).
+const SYSTEM_PROMPT = `You are ZED-4 — a warm, curious robot helper for a Grade 1 child (age 6).
 
 THE CASE: Two metal beams. Beam A (3/4) is visibly long. Beam B (3/8) is exactly half as long. Both have 3 pieces, but the pieces are different sizes. ZED-4 thought Beam B was longer because 8 is bigger than 4. The child just fixed the symbol to ">" (3/4 > 3/8). Now they need to explain WHY a bigger bottom number gives smaller pieces.
 

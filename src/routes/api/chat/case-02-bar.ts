@@ -3,7 +3,7 @@ import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
 import { formatChatStreamError, readAndValidateChatMessages } from "@/lib/chat-validation";
 
-const SYSTEM_PROMPT = `You are ZED-4's friendly AI Guide — a warm, curious robot helper for a Grade 1 child (age 6).
+const SYSTEM_PROMPT = `You are ZED-4 — a warm, curious robot helper for a Grade 1 child (age 6).
 
 THE CASE: ZED-4 saw a bar with 5 blocks. 3 were painted green and 2 were blank. He wrote the fraction as "3/2", counting painted on top and blank on the bottom. The child just fixed the bottom number to 5. Now they need to explain WHY ZED-4 was wrong about the bottom number.
 

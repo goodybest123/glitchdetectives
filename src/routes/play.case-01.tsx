@@ -12,7 +12,7 @@
  *   - The multiple-choice "which glitch is it?" step.
  *   - A slider that repairs the visual (`equalized` 0..1, target from case def).
  *   - `useChat` with the case-specific `/api/chat/case-01*` endpoint for the
- *     free-text explanation dialogue. The AI ends its final message with
+ *     free-text explanation dialogue. ZED-4 ends its final message with
  *     `[[CASE_SOLVED]]` when the child has explained the concept — that token
  *     flips `stage` to "solved", fires confetti, and records a `ReportEntry`
  *     via `useReportRecorder`.
