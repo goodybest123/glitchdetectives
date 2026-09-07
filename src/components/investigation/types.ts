@@ -74,6 +74,55 @@ export type EvidenceSortConfig = {
   doneText: string;
 };
 
+/** One whole shown inside a side-by-side comparison. */
+export type CompareModel = {
+  /** Heading above the model, e.g. "Chocolate Bar A". */
+  label: string;
+  shape: ModelShape;
+  unitLabel: string;
+  total: number;
+  selected: number;
+  /** The fraction written under the model, e.g. "1/2". */
+  fraction: string;
+  /**
+   * Optional "split every piece" move. When present the child can press a
+   * button that cuts each part into `into` smaller equal parts — the shaded
+   * amount is split too, so the amount never changes, only the pieces.
+   */
+  split?: { into: number; label: string; resultFraction: string; caption: string };
+};
+
+/**
+ * Two identical wholes shown beside each other so the child compares the
+ * AMOUNT, not the numbers. "Line them up" stacks them for direct comparison.
+ */
+export type CompareConfig = {
+  title: string;
+  text: string;
+  left: CompareModel;
+  right: CompareModel;
+  /** Message shown once the child has lined the two models up. */
+  alignedText: string;
+};
+
+/** A fraction the child places on the 0-to-1 number line. */
+export type NumberLineMark = {
+  label: string; // "2/4"
+  numerator: number;
+  denominator: number;
+};
+
+/** A 0-to-1 number line used as a second kind of evidence. */
+export type NumberLineConfig = {
+  title: string;
+  text: string;
+  /** How many equal steps the line is ticked into (the common denominator). */
+  steps: number;
+  marks: NumberLineMark[];
+  retry: string;
+  doneText: string;
+};
+
 /** A second, follow-up multiple choice question. */
 export type FollowUpQuestion = {
   question: string;
