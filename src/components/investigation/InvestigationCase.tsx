@@ -26,7 +26,8 @@ import { ChatPanel } from "@/components/shared/ChatPanel";
 import { CaseReflectionCard } from "@/components/shared/CaseReflectionCard";
 import { celebrate } from "@/lib/celebrate";
 import { generateCaseReflection, useCaseResultRecorder, type CaseResult } from "@/lib/reasoning";
-import { FractionReadout, PartsBoard } from "./PartsBoard";
+import { FractionReadout } from "./PartsBoard";
+import { CaseBoard } from "./FractionModel";
 import { NumberSortBoard } from "./NumberSortBoard";
 import { CompareBoards } from "./CompareBoards";
 import { NumberLineBoard } from "./NumberLineBoard";
@@ -310,8 +311,9 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
             </Button>
           </div>
           <div className="relative flex min-h-[320px] flex-col items-center justify-center gap-4 rounded-3xl border border-border bg-secondary p-5">
-            <PartsBoard
-              shape={model.shape}
+            <CaseBoard
+              render={model.render}
+                    shape={model.shape}
               total={model.totalParts}
               selected={range(model.selectedParts)}
               unitLabel={model.unitLabel}
@@ -320,8 +322,10 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
               <div className="text-3xl" aria-hidden>
                 🤖
               </div>
-              <p className="text-xs font-black text-foreground">ZED-4</p>
-              <p className="text-[10px] text-muted-foreground">I think I've solved this one!</p>
+              <p className="text-xs font-black text-foreground">ZED-4 · confident</p>
+              <p className="text-[10px] text-muted-foreground">
+                🔎 “I've investigated this one. I'm sure of my answer.”
+              </p>
             </div>
           </div>
         </section>
@@ -369,7 +373,8 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                   />
                 </div>
                 <div className="mt-4 grid items-center gap-4 sm:grid-cols-[1fr_auto]">
-                  <PartsBoard
+                  <CaseBoard
+                    render={model.render}
                     shape={model.shape}
                     total={model.totalParts}
                     selected={range(model.selectedParts)}
@@ -408,7 +413,8 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                   />
                 </div>
                 <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
-                  <PartsBoard
+                  <CaseBoard
+                    render={model.render}
                     shape={model.shape}
                     total={model.totalParts}
                     selected={explored}
@@ -574,8 +580,9 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                     {evidencePlaced && (
                       <>
                         <div className="mt-4 rounded-2xl border border-dashed border-primary/40 bg-secondary/60 p-4">
-                          <PartsBoard
-                            shape={model.shape}
+                          <CaseBoard
+                            render={model.render}
+                    shape={model.shape}
                             total={model.totalParts}
                             selected={range(model.selectedParts)}
                             unitLabel={model.unitLabel}
@@ -745,8 +752,9 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                   )}
 
                   <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-center">
-                    <PartsBoard
-                      shape={model.shape}
+                    <CaseBoard
+                      render={model.render}
+                    shape={model.shape}
                       total={repairTotal}
                       selected={repairSelected}
                       interactive

@@ -24,6 +24,12 @@ export type ProgressionType = "discover" | "transfer" | "represent" | "reason";
 /** A whole cut into equal parts, some of them being considered. */
 export type PartsModelConfig = {
   shape: ModelShape;
+  /**
+   * How the whole is drawn. "photo" (default) tiles a photograph per part.
+   * "model" uses the precise drawn `FractionModel` — required whenever two
+   * wholes must be compared or overlaid (Level 03).
+   */
+  render?: "photo" | "model";
   /** Singular name of one equal part, e.g. "cookie". */
   unitLabel: string;
   /** How many equal parts ZED-4's whole is cut into. */
@@ -79,6 +85,8 @@ export type CompareModel = {
   /** Heading above the model, e.g. "Chocolate Bar A". */
   label: string;
   shape: ModelShape;
+  /** Drawn model by default in comparisons; see `PartsModelConfig.render`. */
+  render?: "photo" | "model";
   unitLabel: string;
   total: number;
   selected: number;
@@ -103,6 +111,10 @@ export type CompareConfig = {
   right: CompareModel;
   /** Message shown once the child has lined the two models up. */
   alignedText: string;
+  /** Label of the overlay control. Defaults to "BRING THEM TOGETHER". */
+  overlayLabel?: string;
+  /** The quiet line revealed while the two models sit on top of each other. */
+  overlayText?: string;
 };
 
 /** A fraction the child places on the 0-to-1 number line. */

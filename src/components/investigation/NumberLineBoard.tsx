@@ -74,7 +74,7 @@ export function NumberLineBoard({ config, onSolved }: Props) {
 
       <div className="mt-6 rounded-2xl border border-border bg-card p-4">
         <div className="relative">
-          <div className="h-1 w-full rounded bg-foreground" />
+          <div className="h-1.5 w-full rounded bg-foreground" />
           <div className="mt-1 flex w-full justify-between">
             {ticks.map((tick) => {
               const here = config.marks.filter((m) => placed[m.label] === tick);
@@ -104,6 +104,12 @@ export function NumberLineBoard({ config, onSolved }: Props) {
           </div>
         </div>
       </div>
+
+      {allPlaced && (
+        <p className="mt-4 rounded-xl border-2 border-success bg-card p-3 text-center text-base font-black text-foreground">
+          Both fractions land on the SAME point.
+        </p>
+      )}
 
       <p className="mt-3 text-sm font-semibold text-foreground" aria-live="polite">
         {allPlaced ? config.doneText : missed ? config.retry : "Pick a fraction, then tap where it belongs."}
