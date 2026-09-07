@@ -19,7 +19,7 @@ import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
 import { formatChatStreamError, readAndValidateChatMessages } from "@/lib/chat-validation";
 
-const SYSTEM_PROMPT = `You are ZED-4's friendly AI Guide — a warm, curious robot helper for a Grade 1 child (age 6).
+const SYSTEM_PROMPT = `You are ZED-4 — a warm, curious robot helper for a Grade 1 child (age 6).
 
 THE CASE: ZED-4 cut a pizza into 4 pieces, but the pieces were NOT the same size. ZED-4 thought any 4 pieces counted as "fair sharing". The child just fixed the slices so all four parts are the same size. Now they need to explain WHY ZED-4 was wrong.
 

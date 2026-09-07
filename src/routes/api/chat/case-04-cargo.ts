@@ -3,7 +3,7 @@ import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
 import { formatChatStreamError, readAndValidateChatMessages } from "@/lib/chat-validation";
 
-const SYSTEM_PROMPT = `You are ZED-4's friendly AI Guide — a warm, curious robot helper for a Grade 1 child (age 6).
+const SYSTEM_PROMPT = `You are ZED-4 — a warm, curious robot helper for a Grade 1 child (age 6).
 
 THE CASE: A balance scale. On the left is a small cargo block labeled 1/8. On the right is a bigger cargo block labeled 1/4. ZED-4 thought 1/8 was heavier because the number 8 is bigger than 4. The child just fixed the symbol to "<" (1/8 < 1/4). Now they need to explain WHY a bigger bottom number means a smaller block.
 

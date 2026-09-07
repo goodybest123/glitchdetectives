@@ -62,10 +62,10 @@ function ChatPanelDrawer(props: Props) {
         className={`fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-full px-4 py-3 text-sm font-bold tracking-wider text-white shadow-lg transition-all ${
           enabled ? "bg-[#1f2937] hover:bg-black animate-pulse-once" : "bg-neutral-400"
         }`}
-        aria-label="Open AI Guide chat"
+        aria-label="Open ZED-4 chat"
       >
         <MessageCircle size={18} />
-        AI GUIDE
+        ZED-4
       </button>
 
       {open && (
@@ -78,7 +78,7 @@ function ChatPanelDrawer(props: Props) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-2">
-              <h2 className="text-sm font-bold tracking-wider text-neutral-700">AI GUIDE</h2>
+              <h2 className="text-sm font-bold tracking-wider text-neutral-700">ZED-4</h2>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -152,7 +152,7 @@ function ChatPanelInner({
     >
       <div className="flex items-start justify-between gap-2 border-b border-neutral-100 px-4 py-2">
         <div>
-          <h2 className="text-xs font-bold tracking-wider text-neutral-700">AI GUIDE</h2>
+          <h2 className="text-xs font-bold tracking-wider text-neutral-700">ZED-4</h2>
           <div className="mt-0.5 flex items-center gap-2">
             <p className="text-[11px] text-neutral-500">
               {stage === "solved"
@@ -201,7 +201,7 @@ function ChatPanelInner({
               );
             })}
             {isSending && (
-              <div className="text-xs italic text-neutral-400">AI Guide is thinking…</div>
+              <div className="text-xs italic text-neutral-400">ZED-4 is thinking…</div>
             )}
             {error && (
               <div
