@@ -683,6 +683,16 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                   <h3 className="mt-1 text-lg font-black text-foreground">
                     {model.repair.instruction}
                   </h3>
+                  {model.repair.howTo && (
+                    <div className="mt-2 flex items-start justify-between gap-3">
+                      <p className="text-sm font-semibold text-muted-foreground">
+                        {model.repair.howTo}
+                      </p>
+                      <SpeakButton
+                        text={`${model.repair.instruction}. ${model.repair.howTo}`}
+                      />
+                    </div>
+                  )}
                 </header>
                 <div className="space-y-4 p-4 sm:p-5">
                   {model.repair.adjustableTotal && (
@@ -736,6 +746,11 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                       bottomLabel="equal parts in the whole"
                     />
                   </div>
+
+                  <p className="text-center text-xs font-semibold text-muted-foreground">
+                    You can tap the pieces above to choose them — watch the counter change as you
+                    tap.
+                  </p>
 
                   {/* Never "WRONG" — an unfinished build gets a question. */}
                   <p className="text-center text-xs font-bold text-muted-foreground" aria-live="polite">

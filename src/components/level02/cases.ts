@@ -64,6 +64,8 @@ export const LEVEL_02_CASES: Record<Level02CaseId, CaseDefinition> = {
         startTotal: 2,
         startSelected: 0,
         instruction: "Build what 3/4 tells us: 4 equal pieces, 3 of them chosen.",
+        howTo:
+          "Tap a cookie to choose it or put it back. Use + and − to cut the tray. The bottom number (denominator) 4 counts all the equal pieces. The top number (numerator) 3 counts the ones you chose.",
       },
     },
     investigate: {
@@ -219,13 +221,17 @@ export const LEVEL_02_CASES: Record<Level02CaseId, CaseDefinition> = {
       shape: "bar",
       unitLabel: "square",
       totalParts: 6,
-      // ZED-4's picture is wrong too: he highlighted 3 squares, not 2.
-      selectedParts: 3,
+      // The investigation picture is honest: 2 highlighted out of 6, like 2/6.
+      selectedParts: 2,
       repair: {
         adjustableTotal: { min: 3, max: 9 },
         targetTotal: 6,
         targetSelected: 2,
-        instruction: "Repair the bar so the picture matches 2/6.",
+        // The repair starts from ZED-4's wrong picture: 3 squares highlighted.
+        startSelected: 3,
+        instruction: "ZED-4's picture shows 3 squares chosen. Fix the bar so the picture matches 2/6.",
+        howTo:
+          "Tap a square to choose it or put it back. The bottom number (denominator) 6 counts all the equal squares in the bar — that stays. The top number (numerator) 2 counts the squares you chose — make it 2.",
       },
     },
     investigate: {
@@ -396,6 +402,8 @@ export const LEVEL_02_CASES: Record<Level02CaseId, CaseDefinition> = {
         startTotal: 2,
         startSelected: 0,
         instruction: "Build 4/5 on the wall.",
+        howTo:
+          "Use + and − to cut the wall into 5 equal sections, then tap a section to paint it. The bottom number (denominator) 5 says how many equal parts the whole needs. The top number (numerator) 4 says how many to paint.",
       },
     },
     investigate: {
@@ -549,6 +557,8 @@ export const LEVEL_02_CASES: Record<Level02CaseId, CaseDefinition> = {
         targetTotal: 5,
         targetSelected: 3,
         instruction: "Repair the picture so it really represents 3/5.",
+        howTo:
+          "Tap one more section to highlight it. The bottom number (denominator) 5 already counts the equal parts — keep it. The top number (numerator) 3 counts the highlighted ones — make it 3.",
       },
     },
     investigate: {
