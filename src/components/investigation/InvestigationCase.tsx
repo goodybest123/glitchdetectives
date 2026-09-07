@@ -29,7 +29,7 @@ import { generateCaseReflection, useCaseResultRecorder, type CaseResult } from "
 import { FractionReadout } from "./PartsBoard";
 import { CaseBoard } from "./FractionModel";
 import { NumberSortBoard } from "./NumberSortBoard";
-import { CompareBoards } from "./CompareBoards";
+import { CompareBoards, ClaimBoards } from "./CompareBoards";
 import { NumberLineBoard } from "./NumberLineBoard";
 import {
   ApplyChallenge,
@@ -311,13 +311,19 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
             </Button>
           </div>
           <div className="relative flex min-h-[320px] flex-col items-center justify-center gap-4 rounded-3xl border border-border bg-secondary p-5">
-            <CaseBoard
-              render={model.render}
-                    shape={model.shape}
-              total={model.totalParts}
-              selected={range(model.selectedParts)}
-              unitLabel={model.unitLabel}
-            />
+            {definition.investigate.compare ? (
+              <div className="w-full">
+                <ClaimBoards config={definition.investigate.compare} />
+              </div>
+            ) : (
+              <CaseBoard
+                render={model.render}
+                shape={model.shape}
+                total={model.totalParts}
+                selected={range(model.selectedParts)}
+                unitLabel={model.unitLabel}
+              />
+            )}
             <div className="rounded-2xl border border-primary bg-card p-3 text-center shadow-sm">
               <div className="text-3xl" aria-hidden>
                 🤖
@@ -373,13 +379,17 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                   />
                 </div>
                 <div className="mt-4 grid items-center gap-4 sm:grid-cols-[1fr_auto]">
-                  <CaseBoard
-                    render={model.render}
-                    shape={model.shape}
-                    total={model.totalParts}
-                    selected={range(model.selectedParts)}
-                    unitLabel={model.unitLabel}
-                  />
+                  {definition.investigate.compare ? (
+                    <ClaimBoards config={definition.investigate.compare} />
+                  ) : (
+                    <CaseBoard
+                      render={model.render}
+                      shape={model.shape}
+                      total={model.totalParts}
+                      selected={range(model.selectedParts)}
+                      unitLabel={model.unitLabel}
+                    />
+                  )}
                   <div className="rounded-2xl border border-border bg-secondary p-3 sm:max-w-xs">
                     <p className="text-sm font-bold text-foreground">ZED-4 says:</p>
                     <p className="mt-1 text-sm leading-relaxed text-muted-foreground">

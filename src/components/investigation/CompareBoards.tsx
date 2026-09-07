@@ -155,3 +155,34 @@ export function CompareBoards({ config, onInteract }: Props) {
     </section>
   );
 }
+
+/**
+ * `ClaimBoards` — the same two wholes, shown side by side and read-only.
+ *
+ * Used wherever ZED-4 states a claim about two fractions (the case brief and
+ * the "completed solution" panel). The child must see BOTH objects the claim
+ * is about, not one of them.
+ */
+export function ClaimBoards({ config }: { config: CompareConfig }) {
+  return (
+    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+      {[config.left, config.right].map((model) => (
+        <div key={model.label} className="rounded-2xl border border-border bg-card p-2 sm:p-3">
+          <p className="text-center text-xs font-black text-foreground sm:text-sm">{model.label}</p>
+          <div className="mt-2">
+            <FractionModel
+              shape={model.shape}
+              total={model.total}
+              selected={range(model.selected)}
+              unitLabel={model.unitLabel}
+              label={`${model.label}: a whole cut into ${model.total} equal parts, ${model.selected} shaded.`}
+            />
+          </div>
+          <p className="mt-2 text-center text-2xl font-black text-foreground sm:text-3xl">
+            {model.fraction}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
