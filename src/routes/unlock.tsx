@@ -37,9 +37,25 @@ export const Route = createFileRoute("/unlock")({
 function UnlockPage() {
   const router = useRouter();
   const unlock = useServerFn(unlockPlay);
+  const check = useServerFn(requirePlayUnlocked);
   const hydrated = useHydrated();
   const [error, setError] = useState(false);
   const [busy, setBusy] = useState(false);
+
+  // Already unlocked on this device (remembered token) — go straight in.
+  useEffect(() => {
+    const token = readPlayToken();
+    if (!token) return;
+    let cancelled = false;
+    void check({ data: { token } })
+      .then(({ unlocked }) => {
+        if (unlocked && !cancelled) void router.navigate({ to: "/play" });
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [check, router]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,8 +63,9 @@ function UnlockPage() {
     setError(false);
     const passcode = String(new FormData(e.currentTarget).get("passcode") ?? "");
     try {
-      const { ok } = await unlock({ data: { passcode } });
-      if (ok) {
+      const result = await unlock({ data: { passcode } });
+      if (result.ok) {
+        savePlayToken(result.token);
         await router.navigate({ to: "/play" });
         return;
       }
@@ -59,6 +76,7 @@ function UnlockPage() {
       setBusy(false);
     }
   }
+
 
   return (
     <main className="min-h-[70vh] bg-[var(--color-bg-light)] flex items-center justify-center px-4 py-20">
