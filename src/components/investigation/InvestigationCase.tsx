@@ -311,13 +311,19 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
             </Button>
           </div>
           <div className="relative flex min-h-[320px] flex-col items-center justify-center gap-4 rounded-3xl border border-border bg-secondary p-5">
-            <CaseBoard
-              render={model.render}
-                    shape={model.shape}
-              total={model.totalParts}
-              selected={range(model.selectedParts)}
-              unitLabel={model.unitLabel}
-            />
+            {definition.investigate.compare ? (
+              <div className="w-full">
+                <ClaimBoards config={definition.investigate.compare} />
+              </div>
+            ) : (
+              <CaseBoard
+                render={model.render}
+                shape={model.shape}
+                total={model.totalParts}
+                selected={range(model.selectedParts)}
+                unitLabel={model.unitLabel}
+              />
+            )}
             <div className="rounded-2xl border border-primary bg-card p-3 text-center shadow-sm">
               <div className="text-3xl" aria-hidden>
                 🤖
