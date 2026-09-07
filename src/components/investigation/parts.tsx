@@ -155,7 +155,7 @@ export function CaseClosedBanner({
       </div>
       {zedResponse && (
         <div className="mt-4 rounded-xl border border-border bg-background p-4">
-          <p className="label-eyebrow text-muted-foreground">🤖 ZED-4 SAYS</p>
+          <p className="label-eyebrow text-muted-foreground">🤖 ZED-4 · THINKING IT OVER</p>
           <p className="mt-1 text-sm leading-relaxed text-foreground">“{zedResponse}”</p>
         </div>
       )}

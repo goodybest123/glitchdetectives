@@ -55,6 +55,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
       errorType: "compared the numbers instead of the amounts",
     },
     model: {
+      render: "model",
       shape: "bar",
       unitLabel: "piece",
       totalParts: 4,
@@ -87,6 +88,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         text: "Line them up and look at the shaded amounts, not the numbers.",
         left: {
           label: "Chocolate Bar A",
+          render: "model",
           shape: "bar",
           unitLabel: "piece",
           total: 2,
@@ -101,6 +103,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         },
         right: {
           label: "Chocolate Bar B",
+          render: "model",
           shape: "bar",
           unitLabel: "piece",
           total: 4,
@@ -108,6 +111,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
           fraction: "2/4",
         },
         alignedText: "The shaded amounts reach exactly the same place. 1/2 = 2/4.",
+        overlayText: "Same amount. Different pieces.",
       },
     },
     hints: [
@@ -229,6 +233,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
       errorType: "counted pieces instead of checking how much of the whole they cover",
     },
     model: {
+      render: "model",
       shape: "pizza",
       unitLabel: "slice",
       totalParts: 6,
@@ -260,6 +265,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         text: "Line them up and check how much of each pizza is shaded.",
         left: {
           label: "Pizza A",
+          render: "model",
           shape: "pizza",
           unitLabel: "slice",
           total: 2,
@@ -274,6 +280,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         },
         right: {
           label: "Pizza B",
+          render: "model",
           shape: "pizza",
           unitLabel: "slice",
           total: 6,
@@ -281,6 +288,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
           fraction: "3/6",
         },
         alignedText: "The three sixths cover exactly the same amount as one half. 1/2 = 3/6.",
+        overlayText: "Three small slices cover exactly one half. Same amount, another name.",
       },
     },
     hints: [
@@ -395,6 +403,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
       errorType: "changed the whole but forgot the shaded part was split too",
     },
     model: {
+      render: "model",
       shape: "panel",
       unitLabel: "section",
       totalParts: 6,
@@ -428,6 +437,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         text: "Split the first panel and watch what happens to the shaded amount.",
         left: {
           label: "Before: 1/3",
+          render: "model",
           shape: "panel",
           unitLabel: "section",
           total: 3,
@@ -442,6 +452,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         },
         right: {
           label: "After: 2/6",
+          render: "model",
           shape: "panel",
           unitLabel: "section",
           total: 6,
@@ -449,6 +460,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
           fraction: "2/6",
         },
         alignedText: "The shaded amount lines up exactly. 1/3 = 2/6.",
+        overlayText: "The factory only cut smaller. The shaded amount never moved.",
       },
     },
     hints: [
@@ -569,6 +581,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
       errorType: "compared the numerators instead of the amounts",
     },
     model: {
+      render: "model",
       shape: "panel",
       unitLabel: "section",
       totalParts: 6,
@@ -601,6 +614,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         text: "Both wholes are identical. Line them up and compare the shaded areas.",
         left: {
           label: "Model A — 3/6",
+          render: "model",
           shape: "panel",
           unitLabel: "section",
           total: 6,
@@ -609,6 +623,7 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         },
         right: {
           label: "Model B — 2/4",
+          render: "model",
           shape: "panel",
           unitLabel: "section",
           total: 4,
@@ -616,6 +631,8 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
           fraction: "2/4",
         },
         alignedText: "The shaded areas match exactly. 3/6 = 2/4.",
+        overlayText: "The shaded areas match exactly. 3 is bigger than 2, but the amounts are equal.",
+
       },
       numberLine: {
         title: "Second piece of evidence: the number line.",
