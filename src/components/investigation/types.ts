@@ -37,6 +37,12 @@ export type PartsModelConfig = {
     targetSelected: number;
     instruction: string;
     /**
+     * A short "how to fix it" line shown inside the repair workspace, naming
+     * what the numerator and denominator are doing for THIS case. Optional;
+     * Level 1 and Levels 3-6 leave it unset.
+     */
+    howTo?: string;
+    /**
      * What the workspace looks like when the repair stage opens. Defaults to
      * ZED-4's own model. Use it when the child should build from a blank or
      * partly-built whole rather than being handed the finished answer.
