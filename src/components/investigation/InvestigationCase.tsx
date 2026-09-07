@@ -459,6 +459,20 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                 </div>
               </section>
 
+              {definition.investigate.compare && (
+                <CompareBoards
+                  config={definition.investigate.compare}
+                  onInteract={() => setTouched(true)}
+                />
+              )}
+
+              {definition.investigate.numberLine && (
+                <NumberLineBoard
+                  config={definition.investigate.numberLine}
+                  onSolved={() => setSortSolved(true)}
+                />
+              )}
+
               {definition.investigate.evidenceSort && (
                 <NumberSortBoard
                   config={definition.investigate.evidenceSort}
