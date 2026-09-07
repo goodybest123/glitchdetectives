@@ -64,6 +64,7 @@ export function PartsBoard({
   unitLabel,
   label,
   reminder,
+  hideCounter = false,
 }: Props) {
   const columns = columnsFor(shape, total);
   const isSelected = (index: number) => selected.includes(index);
