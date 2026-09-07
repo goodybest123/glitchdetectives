@@ -81,7 +81,7 @@ const ACTIVE_CASES: {
   {
     to: "/play/case-03",
     title: "Case 03: The Shape Shifters",
-    subtitle: "When more pieces means smaller pieces.",
+    subtitle: "When different fractions mean the same amount.",
     topic: "Equivalent Fractions",
   },
   {

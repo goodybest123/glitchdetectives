@@ -23,6 +23,7 @@ export type CaseMeta = {
 export const LEVEL_TITLES: Record<string, string> = {
   "level-01": "Parts of a Whole",
   "level-02": "Naming the Pieces",
+  "level-03": "The Shape Shifters",
 };
 
 
@@ -101,12 +102,55 @@ export const CASE_CATALOG: Record<string, CaseMeta> = {
       "ZED-4 said a picture with 2 of 5 parts highlighted matched a card reading 3/5.",
     model: "fraction strip sections",
   },
+  "case-03.01": {
+    caseId: "case-03.01",
+    levelId: "level-03",
+    number: "03.01",
+    title: "The Shape Shifters",
+    levelTitle: "The Shape Shifters",
+    concept: "Equivalent Fractions",
+    whatHappened:
+      "ZED-4 claimed 1/2 and 2/4 must be different amounts because the numbers are different.",
+    model: "chocolate bar pieces",
+  },
+  "case-03.02": {
+    caseId: "case-03.02",
+    levelId: "level-03",
+    number: "03.02",
+    title: "The Pizza Twins",
+    levelTitle: "The Shape Shifters",
+    concept: "Equivalent Fractions",
+    whatHappened: "ZED-4 claimed 3/6 was more pizza than 1/2 because it had more slices.",
+    model: "pizza slices",
+  },
+  "case-03.03": {
+    caseId: "case-03.03",
+    levelId: "level-03",
+    number: "03.03",
+    title: "The Fraction Factory",
+    levelTitle: "The Shape Shifters",
+    concept: "Equivalent Fractions",
+    whatHappened:
+      "ZED-4 split each third into two smaller pieces and thought the shaded amount had become 1/6.",
+    model: "factory panel sections",
+  },
+  "case-03.04": {
+    caseId: "case-03.04",
+    levelId: "level-03",
+    number: "03.04",
+    title: "Fraction Forensics",
+    levelTitle: "The Shape Shifters",
+    concept: "Equivalent Fractions",
+    whatHappened: "ZED-4 claimed 3/6 was bigger than 2/4 because 3 is bigger than 2.",
+    model: "panel sections and a number line",
+  },
 };
 
 /** Ordered case ids for a level — used for the evidence timeline. */
 export const LEVEL_CASE_ORDER: Record<string, string[]> = {
   "level-01": ["case-01.01", "case-01.02", "case-01.03"],
   "level-02": ["case-02.01", "case-02.02", "case-02.03", "case-02.04"],
+  "level-03": ["case-03.01", "case-03.02", "case-03.03", "case-03.04"],
 };
 
 
