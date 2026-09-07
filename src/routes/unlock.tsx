@@ -6,8 +6,10 @@
 import { createFileRoute, Link, useHydrated, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Lock, ArrowRight, ArrowLeft } from "lucide-react";
-import { useState } from "react";
-import { unlockPlay } from "@/lib/gate.functions";
+import { useEffect, useState } from "react";
+import { unlockPlay, requirePlayUnlocked } from "@/lib/gate.functions";
+import { readPlayToken, savePlayToken } from "@/lib/playToken";
+
 
 export const Route = createFileRoute("/unlock")({
   head: () => ({
