@@ -1,76 +1,78 @@
 /**
- * `/play/case-03` — The Shape Shifters (Equivalent Fractions).
- * Same loop as case-01; see `play.case-01.tsx` for the full walkthrough.
+ * `/play/case-03` — LEVEL 03: The Shape Shifters.
+ *
+ * Four investigations on the shared case engine
+ * (`src/components/investigation`):
+ * CASE BRIEF → INVESTIGATE → DETECT → REPAIR → EXPLAIN → CASE CLOSED.
+ *
+ * The level establishes equivalence visually — same whole, same amount,
+ * different pieces. The multiplication rule and simplifying are deliberately
+ * left out; those belong after this idea is secure.
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, type UIMessage } from "ai";
-import { ZedBubble } from "@/components/case01/ZedBubble";
-import { CaseStepper, type Stage } from "@/components/case01/CaseStepper";
+import { useState } from "react";
+import { InvestigationCase } from "@/components/investigation/InvestigationCase";
+import { LevelCasePicker } from "@/components/investigation/LevelCasePicker";
 import { SpeakButton } from "@/components/case01/SpeakButton";
-import { DiagnosticReport } from "@/components/case01/DiagnosticReport";
-import { CasePicker } from "@/components/case03/CasePicker";
-import { ComparatorSymbol } from "@/components/case03/ComparatorSymbol";
-import { ComparatorToggle } from "@/components/case03/ComparatorToggle";
-import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
-import { SuccessBanner } from "@/components/shared/SuccessBanner";
-import { CaptionLine } from "@/components/shared/CaptionLine";
-import { VerdictButtons } from "@/components/shared/VerdictButtons";
 import { SoundToggle } from "@/components/shared/SoundToggle";
 import { ReadPageButton } from "@/components/shared/ReadPageButton";
-import { ChatPanel } from "@/components/shared/ChatPanel";
-import {
-  WorkbookActivityPrompt,
-  WorkbookGlitchChoices,
-  WorkbookRepairFrame,
-  WorkbookRepairSubmit,
-} from "@/components/shared/WorkbookActivity";
-import { getGlitchChoices } from "@/components/shared/glitchChoices";
-import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
-import { useReportRecorder } from "@/hooks/useReportRecorder";
-import { celebrate } from "@/lib/celebrate";
-import {
-  SUB_CASES,
-  SUB_CASE_ORDER,
-  type Operator,
-  type SubCaseId,
-} from "@/components/case03/cases";
+import { LEVEL_03_CASES, LEVEL_03_ORDER, type Level03CaseId } from "@/components/level03/cases";
 
 export const Route = createFileRoute("/play/case-03")({
   head: () => ({
     meta: [
-      { title: "Case 03: The Shape Shifters — Glitch Detectives" },
+      { title: "Level 03: The Shape Shifters — Glitch Detectives" },
       {
         name: "description",
         content:
-          "Three equivalent-fraction puzzles: fuel tanks, garden beds, and memory disks — a calm Grade 1 maths case.",
+          "Four hands-on investigations where a young detective discovers that fractions can look different and still show exactly the same amount.",
       },
+      { property: "og:title", content: "Level 03: The Shape Shifters — Glitch Detectives" },
+      {
+        property: "og:description",
+        content:
+          "Compare the amount, not the numbers. Investigate ZED-4's equivalent-fraction glitches with models and a number line.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: CaseThreePage,
+  component: LevelThreePage,
 });
 
-const SOLVED_TOKEN = "[[CASE_SOLVED]]";
-
-function CaseThreePage() {
-  const [activeCase, setActiveCase] = useState<SubCaseId | null>(null);
-  const { solved: solvedMap, markSolved } = useCaseProgress("case-03", SUB_CASE_ORDER);
+function LevelThreePage() {
+  const [activeCase, setActiveCase] = useState<Level03CaseId | null>(null);
+  const { solved, markSolved } = useCaseProgress("case-03", LEVEL_03_ORDER);
+  const levelComplete = LEVEL_03_ORDER.every((id) => solved[id]);
 
   if (!activeCase) {
     return (
-      <PageShell title="Case 03: The Shape Shifters">
-        <CasePicker solved={solvedMap} onPick={(id) => setActiveCase(id)} />
+      <PageShell title="Level 03: The Shape Shifters">
+        <div className="space-y-5">
+          {levelComplete && <LevelClosed />}
+          <LevelCasePicker
+            levelNumber="03"
+            levelTitle="The Shape Shifters"
+            concept="When different fractions mean the same amount"
+            cases={LEVEL_03_ORDER.map((id) => LEVEL_03_CASES[id])}
+            solved={solved}
+            idFor={(definition) =>
+              LEVEL_03_ORDER.find((id) => LEVEL_03_CASES[id].caseId === definition.caseId) ?? ""
+            }
+            onPick={(id) => setActiveCase(id as Level03CaseId)}
+          />
+        </div>
       </PageShell>
     );
   }
 
+  const definition = LEVEL_03_CASES[activeCase];
   return (
-    <PageShell title={`Case 03 · ${SUB_CASES[activeCase].title}`}>
-      <SubCaseRunner
+    <PageShell title={`Level 03 · ${definition.title}`}>
+      <InvestigationCase
         key={activeCase}
-        caseId={activeCase}
+        definition={definition}
         onSolved={() => markSolved(activeCase)}
         onBackToPicker={() => setActiveCase(null)}
       />
@@ -78,352 +80,80 @@ function CaseThreePage() {
   );
 }
 
+/** Shown once all four investigations in the level are closed. */
+function LevelClosed() {
+  const idea =
+    "Fractions can have different numbers and different-sized pieces while still showing the same amount of the same whole.";
+  const skills = [
+    "03.01 — Compare the amount. You learned not to judge a fraction by its numbers alone.",
+    "03.02 — Look for the same amount. You found equivalent fractions in a new situation.",
+    "03.03 — Track the change. You saw what happens when each part is split into smaller equal pieces.",
+    "03.04 — Prove your claim. You used models and a number line as evidence.",
+  ];
+  return (
+    <section className="rounded-3xl border-2 border-success bg-card p-6 shadow-sm">
+      <p className="label-eyebrow text-muted-foreground">LEVEL CLOSED</p>
+      <div className="mt-1 flex items-start justify-between gap-3">
+        <h2 className="text-2xl font-black text-foreground sm:text-3xl">
+          You solved the Shape Shifter mystery!
+        </h2>
+        <SpeakButton
+          text={`Level closed. You solved the Shape Shifter mystery. Different pieces. Different numbers. Same amount. ${idea}`}
+          size="md"
+        />
+      </div>
+      <p className="mt-4 text-lg font-black tracking-tight text-foreground">
+        DIFFERENT PIECES. DIFFERENT NUMBERS. SAME AMOUNT.
+      </p>
+      <p className="mt-2 max-w-2xl text-base leading-relaxed text-muted-foreground">{idea}</p>
+      <ul className="mt-4 space-y-1 text-sm font-semibold text-foreground">
+        {skills.map((skill) => (
+          <li key={skill}>{skill}</li>
+        ))}
+      </ul>
+      <div className="mt-5 flex flex-wrap gap-3">
+        <Link
+          to="/play/report"
+          className="rounded-xl bg-primary px-5 py-3 text-sm font-black text-primary-foreground"
+        >
+          VIEW DETECTIVE'S REPORT
+        </Link>
+        <Link
+          to="/play/case-04"
+          className="rounded-xl border-2 border-border px-5 py-3 text-sm font-black text-foreground"
+        >
+          CONTINUE TO NEXT LEVEL
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 function PageShell({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <main className="min-h-screen bg-white">
-      <header className="border-b border-neutral-100">
+    <main className="min-h-screen bg-background">
+      <header className="border-b border-border bg-card">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-3 py-2.5 sm:px-6 sm:py-3 lg:px-10">
           <Link
             to="/play"
-            className="text-xs sm:text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+            className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground sm:text-sm"
           >
             ← Back
           </Link>
-          <h1 className="text-sm sm:text-base font-bold tracking-tight text-neutral-900 truncate px-2">
+          <h1 className="truncate px-2 text-sm font-bold tracking-tight text-foreground sm:text-base">
             {title}
           </h1>
-          <div className="flex w-[80px] sm:w-[120px] items-center justify-end">
+          <div className="flex w-[80px] items-center justify-end sm:w-[120px]">
             <SoundToggle />
           </div>
         </div>
       </header>
-      <div
-        data-readable
-        className="mx-auto w-full max-w-7xl px-3 py-3 sm:px-6 sm:py-5 lg:px-10"
-      >
+      <div data-readable className="mx-auto w-full max-w-7xl px-3 py-3 sm:px-6 sm:py-5 lg:px-10">
         <div className="mb-3 flex justify-end">
           <ReadPageButton />
         </div>
         {children}
       </div>
     </main>
-  );
-}
-
-function SubCaseRunner({
-  caseId,
-  onSolved,
-  onBackToPicker,
-}: {
-  caseId: SubCaseId;
-  onSolved: () => void;
-  onBackToPicker: () => void;
-}) {
-  const c = SUB_CASES[caseId];
-  const Visual = c.Visual;
-
-  const welcomeMessage: UIMessage = useMemo(
-    () => ({
-      id: `welcome-${caseId}`,
-      role: "assistant",
-      parts: [{ type: "text", text: c.welcomeText }],
-    }),
-    [caseId, c.welcomeText],
-  );
-
-  const [stage, setStage] = useState<Stage>("investigate");
-  const [verdictPassed, setVerdictPassed] = useState(false);
-  const [wrongVerdictCount, setWrongVerdictCount] = useState(0);
-  const [verdictShakeKey, setVerdictShakeKey] = useState(0);
-  const [operator, setOperator] = useState<Operator>(c.wrongOperator);
-  const [pulseKey, setPulseKey] = useState(0);
-  const [dividersVisible, setDividersVisible] = useState(true);
-  const [spinKey, setSpinKey] = useState(0);
-  const [attempts, setAttempts] = useState(0);
-  const [glitchUnlocked, setGlitchUnlocked] = useState(false);
-  const sfx = useSfx();
-  const reportRef = useRef<HTMLDivElement>(null);
-  const repairRef = useRef<HTMLDivElement>(null);
-
-  const transport = useRef(new DefaultChatTransport({ api: c.chatEndpoint })).current;
-
-  const { messages, sendMessage, regenerate, status, error } = useChat({
-    id: `case-03-${caseId}`,
-    messages: [welcomeMessage],
-    transport,
-  });
-
-  const atTarget = operator === "=";
-
-  useEffect(() => {
-    if (stage !== "explain") return;
-    const hasSolved = messages.some(
-      (m) =>
-        m.role === "assistant" &&
-        m.parts.some((p) => p.type === "text" && p.text.includes(SOLVED_TOKEN)),
-    );
-    if (hasSolved) {
-      setStage("solved");
-      onSolved();
-      sfx("chime");
-      celebrate();
-    }
-  }, [messages, stage, onSolved]);
-
-  useEffect(() => {
-    if (stage === "solved") {
-      const t = setTimeout(
-        () =>
-          reportRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          }),
-        200,
-      );
-      return () => clearTimeout(t);
-    }
-  }, [stage]);
-
-  useEffect(() => {
-    if (stage === "repair") {
-      const t = setTimeout(
-        () => repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
-        100,
-      );
-      return () => clearTimeout(t);
-    }
-  }, [stage]);
-
-  const handleSymbolClick = () => {
-    if (stage !== "detect" || !glitchUnlocked) return;
-    setStage("repair");
-    setPulseKey((k) => k + 1);
-  };
-
-  const handleVerdictGlitch = () => {
-    if (stage !== "investigate" || verdictPassed) return;
-    setVerdictPassed(true);
-    setStage("detect");
-  };
-
-  const handleVerdictNoGlitch = () => {
-    if (stage !== "investigate" || verdictPassed) return;
-    setWrongVerdictCount((n) => n + 1);
-    setVerdictShakeKey((k) => k + 1);
-  };
-
-  const handleOperatorChange = (op: Operator) => {
-    if (stage !== "repair") return;
-    setAttempts((a) => a + 1);
-    setOperator(op);
-  };
-
-  const isSending = status === "submitted" || status === "streaming";
-
-  const studentQuotes = useMemo(
-    () =>
-      messages
-        .filter((m) => m.role === "user")
-        .map((m) =>
-          m.parts
-            .map((p) => (p.type === "text" ? p.text : ""))
-            .join("")
-            .trim(),
-        )
-        .filter(Boolean),
-    [messages],
-  );
-
-  const marks = useMemo(() => {
-    const investigate =
-      stage === "investigate" ? 0 : wrongVerdictCount === 0 ? 5 : wrongVerdictCount === 1 ? 4 : 3;
-    const detect = stage === "investigate" || stage === "detect" ? 0 : 5;
-    let repair = 0;
-    if (atTarget) {
-      if (attempts <= 1) repair = 5;
-      else if (attempts === 2) repair = 3;
-      else repair = 1;
-    }
-    let explain = 0;
-    if (stage === "solved") {
-      const turns = studentQuotes.length;
-      const longestWords = studentQuotes.reduce(
-        (m, q) => Math.max(m, q.split(/\s+/).filter(Boolean).length),
-        0,
-      );
-      if (turns <= 3 && longestWords >= 6) explain = 5;
-      else if (turns <= 5 || longestWords >= 4) explain = 4;
-      else explain = 3;
-    }
-    return { investigate, detect, repair, explain };
-  }, [stage, atTarget, attempts, studentQuotes, wrongVerdictCount]);
-
-  useReportRecorder({
-    active: stage === "solved",
-    caseId: "case-03",
-    subId: caseId,
-    caseTitle: "Case 03: The Shape Shifters",
-    subTitle: c.title,
-    emoji: c.emoji,
-    glitchSummary: c.subtitle,
-    conceptMastered: c.conceptMastered,
-    studentQuotes,
-    marks,
-  });
-
-  const zed =
-    stage === "investigate" || stage === "detect" || (stage === "repair" && !atTarget)
-      ? { tone: "neutral" as const, text: c.bubbles.investigate }
-      : { tone: "happy" as const, text: c.bubbles.solved };
-
-  const caption = c.captions[stage];
-  const showDetective = (stage === "detect" || stage === "repair") && !atTarget;
-
-  const nextIndex = SUB_CASE_ORDER.indexOf(caseId) + 1;
-  const nextCaseLabel =
-    nextIndex < SUB_CASE_ORDER.length
-      ? `Try ${SUB_CASES[SUB_CASE_ORDER[nextIndex]].title} next.`
-      : "You've solved every case in this file!";
-
-  return (
-    <>
-      <div className="mb-2 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={onBackToPicker}
-          className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
-        >
-          ← Choose another case
-        </button>
-        <span className="text-xs font-bold tracking-wider text-neutral-400">
-          {c.emoji} {c.title.toUpperCase()}
-        </span>
-      </div>
-
-      <CaseStepper stage={stage} />
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6">
-        {/* Case file */}
-        <section>
-          <div
-            ref={repairRef}
-            className="rounded-2xl bg-white p-3 sm:p-5 shadow-[0_10px_40px_-12px_rgba(15,23,42,0.15)] ring-1 ring-neutral-100"
-          >
-            <div className="mb-6">
-              <ZedBubble message={zed.text} tone={zed.tone} speakable />
-            </div>
-
-            {stage === "detect" && (
-              <WorkbookGlitchChoices
-                choices={getGlitchChoices("case-03", caseId)}
-                unlocked={glitchUnlocked}
-                onUnlock={() => setGlitchUnlocked(true)}
-                onCorrect={() =>
-                  setTimeout(
-                    () =>
-                      repairRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
-                    100,
-                  )
-                }
-              />
-            )}
-
-            <WorkbookActivityPrompt
-              stage={stage}
-              emoji={c.emoji}
-              title={c.title}
-              detectInstruction={c.captions.investigate}
-              repairInstruction={c.captions.repair}
-              toolName="Comparison Dial"
-            />
-
-            {/* Tanks/beds/disks with comparator in the middle */}
-            <div
-              className={
-                stage === "detect"
-                  ? "cursor-pointer rounded-2xl ring-2 ring-[#fcd34d] ring-offset-2 transition"
-                  : ""
-              }
-            >
-              <Visual
-                dividersVisible={dividersVisible}
-                spinKey={spinKey}
-                middleSlot={
-                  <ComparatorSymbol
-                    operator={operator}
-                    highlight={stage === "detect" || stage === "repair"}
-                    clickable={stage === "detect" && glitchUnlocked}
-                    onClick={handleSymbolClick}
-                    pulseKey={pulseKey}
-                  />
-                }
-              />
-            </div>
-
-            {stage === "investigate" && !verdictPassed && (
-              <VerdictButtons
-                onGlitch={handleVerdictGlitch}
-                onNoGlitch={handleVerdictNoGlitch}
-                shakeKey={verdictShakeKey}
-                wrongCount={wrongVerdictCount}
-              />
-            )}
-
-            {!(stage === "investigate" && !verdictPassed) && <CaptionLine text={caption} />}
-            {showDetective && <DetectiveCallout text={c.bubbles.detect} />}
-
-            {stage === "repair" && (
-              <WorkbookRepairFrame
-                toolName="Comparison Dial"
-                instruction={c.captions.repair}
-                hint="Compare the shaded amount, not the size of the numbers."
-                progress={`${c.left.n}/${c.left.d}  ${operator}  ${c.right.n}/${c.right.d}`}
-              >
-                <div className="flex justify-center">
-                  <ComparatorToggle value={operator} onChange={handleOperatorChange} />
-                </div>
-                <WorkbookRepairSubmit
-                  ready={atTarget}
-                  onSubmit={() => {
-                    setDividersVisible(false);
-                    setSpinKey((k) => k + 1);
-                    setStage("explain");
-                    window.setTimeout(() => setDividersVisible(true), 1400);
-                  }}
-                />
-              </WorkbookRepairFrame>
-            )}
-
-            {(stage === "explain" || stage === "solved") && <SuccessBanner />}
-          </div>
-
-          {stage === "solved" && (
-            <div ref={reportRef}>
-              <DiagnosticReport
-                studentQuotes={studentQuotes}
-                turnCount={studentQuotes.length}
-                marks={marks}
-                caseTitle={`Case 03 · ${c.title}`}
-                conceptMastered={c.conceptMastered}
-                nextCaseLabel={nextCaseLabel}
-                onTryAnother={onBackToPicker}
-              />
-            </div>
-          )}
-        </section>
-
-        {/* Chat panel */}
-        <ChatPanel
-          stage={stage}
-          messages={messages}
-          isSending={isSending}
-          error={error}
-          onSend={(text) => sendMessage({ text })}
-          onRetry={() => void regenerate()}
-          onViewReport={() =>
-            reportRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-          }
-        />
-      </div>
-    </>
   );
 }
