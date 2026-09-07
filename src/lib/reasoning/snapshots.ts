@@ -252,6 +252,17 @@ const LEVEL_CONCEPTS: Record<
       "Can describe, in their own words, what the top and bottom numbers do.",
     ],
   },
+  "level-03": {
+    concept: "The Shape Shifters — when different fractions mean the same amount",
+    statement:
+      "Based on the evidence collected so far, your child worked with the idea that two fractions can look different and still show the same amount of the same whole.",
+    headline: "worked with fractions that look different but show the same amount",
+    canDo: [
+      "Compares the shaded amount rather than only the numbers.",
+      "Can build a fraction that shows the same amount in different-sized pieces.",
+      "Uses a model or a number line as evidence for a claim.",
+    ],
+  },
 };
 
 
