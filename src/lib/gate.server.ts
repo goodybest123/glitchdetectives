@@ -27,3 +27,17 @@ export function passcodeMatches(input: string, expected: string): boolean {
   const expectedDigest = createHash("sha256").update(expected, "utf8").digest();
   return timingSafeEqual(inputDigest, expectedDigest);
 }
+
+/**
+ * Stable token derived from the session secret. Handed to the browser only
+ * after a correct passcode, and kept in localStorage as a fallback for
+ * browsers that drop the cross-site session cookie (e.g. embedded previews).
+ */
+export function playToken(secret: string): string {
+  return createHash("sha256").update(`gd-play-gate:${secret}`, "utf8").digest("hex");
+}
+
+export function tokenMatches(input: string, secret: string): boolean {
+  if (!input) return false;
+  return passcodeMatches(input, playToken(secret));
+}

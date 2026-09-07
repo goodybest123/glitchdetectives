@@ -7,11 +7,13 @@
  */
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { requirePlayUnlocked } from "@/lib/gate.functions";
+import { readPlayToken } from "@/lib/playToken";
 
 export const Route = createFileRoute("/play")({
   beforeLoad: async () => {
-    const { unlocked } = await requirePlayUnlocked();
+    const { unlocked } = await requirePlayUnlocked({ data: { token: readPlayToken() } });
     if (!unlocked) throw redirect({ to: "/unlock" });
   },
   component: () => <Outlet />,
 });
+
