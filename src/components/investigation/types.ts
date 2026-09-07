@@ -16,7 +16,7 @@
  */
 
 /** Which everyday object the parts model is drawn as. */
-export type ModelShape = "tray" | "bar" | "wall" | "strip";
+export type ModelShape = "tray" | "bar" | "wall" | "strip" | "pizza" | "panel";
 
 /** Where a case sits in its level's four-case arc. */
 export type ProgressionType = "discover" | "transfer" | "represent" | "reason";
