@@ -28,6 +28,8 @@ import { celebrate } from "@/lib/celebrate";
 import { generateCaseReflection, useCaseResultRecorder, type CaseResult } from "@/lib/reasoning";
 import { FractionReadout, PartsBoard } from "./PartsBoard";
 import { NumberSortBoard } from "./NumberSortBoard";
+import { CompareBoards } from "./CompareBoards";
+import { NumberLineBoard } from "./NumberLineBoard";
 import {
   ApplyChallenge,
   CaseClosedBanner,
