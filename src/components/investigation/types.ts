@@ -117,6 +117,10 @@ export type CaseDefinition = {
     observations: string[];
     /** Optional "give each number a job" evidence areas. */
     evidenceSort?: EvidenceSortConfig;
+    /** Optional side-by-side comparison of two wholes (Level 03). */
+    compare?: CompareConfig;
+    /** Optional 0-to-1 number line the child places fractions on (Level 03). */
+    numberLine?: NumberLineConfig;
   };
 
   /** Three layered clues: observe → direct → scaffold. Never the answer. */
