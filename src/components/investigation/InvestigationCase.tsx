@@ -379,13 +379,17 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                   />
                 </div>
                 <div className="mt-4 grid items-center gap-4 sm:grid-cols-[1fr_auto]">
-                  <CaseBoard
-                    render={model.render}
-                    shape={model.shape}
-                    total={model.totalParts}
-                    selected={range(model.selectedParts)}
-                    unitLabel={model.unitLabel}
-                  />
+                  {definition.investigate.compare ? (
+                    <ClaimBoards config={definition.investigate.compare} />
+                  ) : (
+                    <CaseBoard
+                      render={model.render}
+                      shape={model.shape}
+                      total={model.totalParts}
+                      selected={range(model.selectedParts)}
+                      unitLabel={model.unitLabel}
+                    />
+                  )}
                   <div className="rounded-2xl border border-border bg-secondary p-3 sm:max-w-xs">
                     <p className="text-sm font-bold text-foreground">ZED-4 says:</p>
                     <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
