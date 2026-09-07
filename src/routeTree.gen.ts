@@ -39,9 +39,10 @@ import { Route as ApiChatCase02PanelsRouteImport } from './routes/api/chat/case-
 import { Route as ApiChatCase02SquaresRouteImport } from './routes/api/chat/case-02-squares'
 import { Route as ApiChatCase02TrayRouteImport } from './routes/api/chat/case-02-tray'
 import { Route as ApiChatCase02WallRouteImport } from './routes/api/chat/case-02-wall'
-import { Route as ApiChatCase03DisksRouteImport } from './routes/api/chat/case-03-disks'
-import { Route as ApiChatCase03GardenRouteImport } from './routes/api/chat/case-03-garden'
-import { Route as ApiChatCase03TanksRouteImport } from './routes/api/chat/case-03-tanks'
+import { Route as ApiChatCase03BarsRouteImport } from './routes/api/chat/case-03-bars'
+import { Route as ApiChatCase03FactoryRouteImport } from './routes/api/chat/case-03-factory'
+import { Route as ApiChatCase03ForensicsRouteImport } from './routes/api/chat/case-03-forensics'
+import { Route as ApiChatCase03PizzaRouteImport } from './routes/api/chat/case-03-pizza'
 import { Route as ApiChatCase04BeamsRouteImport } from './routes/api/chat/case-04-beams'
 import { Route as ApiChatCase04CargoRouteImport } from './routes/api/chat/case-04-cargo'
 import { Route as ApiChatCase04CoolantRouteImport } from './routes/api/chat/case-04-coolant'
@@ -205,19 +206,24 @@ const ApiChatCase02WallRoute = ApiChatCase02WallRouteImport.update({
   path: '/api/chat/case-02-wall',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiChatCase03DisksRoute = ApiChatCase03DisksRouteImport.update({
-  id: '/api/chat/case-03-disks',
-  path: '/api/chat/case-03-disks',
+const ApiChatCase03BarsRoute = ApiChatCase03BarsRouteImport.update({
+  id: '/api/chat/case-03-bars',
+  path: '/api/chat/case-03-bars',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiChatCase03GardenRoute = ApiChatCase03GardenRouteImport.update({
-  id: '/api/chat/case-03-garden',
-  path: '/api/chat/case-03-garden',
+const ApiChatCase03FactoryRoute = ApiChatCase03FactoryRouteImport.update({
+  id: '/api/chat/case-03-factory',
+  path: '/api/chat/case-03-factory',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiChatCase03TanksRoute = ApiChatCase03TanksRouteImport.update({
-  id: '/api/chat/case-03-tanks',
-  path: '/api/chat/case-03-tanks',
+const ApiChatCase03ForensicsRoute = ApiChatCase03ForensicsRouteImport.update({
+  id: '/api/chat/case-03-forensics',
+  path: '/api/chat/case-03-forensics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatCase03PizzaRoute = ApiChatCase03PizzaRouteImport.update({
+  id: '/api/chat/case-03-pizza',
+  path: '/api/chat/case-03-pizza',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatCase04BeamsRoute = ApiChatCase04BeamsRouteImport.update({
@@ -314,9 +320,10 @@ export interface FileRoutesByFullPath {
   '/api/chat/case-02-squares': typeof ApiChatCase02SquaresRoute
   '/api/chat/case-02-tray': typeof ApiChatCase02TrayRoute
   '/api/chat/case-02-wall': typeof ApiChatCase02WallRoute
-  '/api/chat/case-03-disks': typeof ApiChatCase03DisksRoute
-  '/api/chat/case-03-garden': typeof ApiChatCase03GardenRoute
-  '/api/chat/case-03-tanks': typeof ApiChatCase03TanksRoute
+  '/api/chat/case-03-bars': typeof ApiChatCase03BarsRoute
+  '/api/chat/case-03-factory': typeof ApiChatCase03FactoryRoute
+  '/api/chat/case-03-forensics': typeof ApiChatCase03ForensicsRoute
+  '/api/chat/case-03-pizza': typeof ApiChatCase03PizzaRoute
   '/api/chat/case-04-beams': typeof ApiChatCase04BeamsRoute
   '/api/chat/case-04-cargo': typeof ApiChatCase04CargoRoute
   '/api/chat/case-04-coolant': typeof ApiChatCase04CoolantRoute
@@ -357,9 +364,10 @@ export interface FileRoutesByTo {
   '/api/chat/case-02-squares': typeof ApiChatCase02SquaresRoute
   '/api/chat/case-02-tray': typeof ApiChatCase02TrayRoute
   '/api/chat/case-02-wall': typeof ApiChatCase02WallRoute
-  '/api/chat/case-03-disks': typeof ApiChatCase03DisksRoute
-  '/api/chat/case-03-garden': typeof ApiChatCase03GardenRoute
-  '/api/chat/case-03-tanks': typeof ApiChatCase03TanksRoute
+  '/api/chat/case-03-bars': typeof ApiChatCase03BarsRoute
+  '/api/chat/case-03-factory': typeof ApiChatCase03FactoryRoute
+  '/api/chat/case-03-forensics': typeof ApiChatCase03ForensicsRoute
+  '/api/chat/case-03-pizza': typeof ApiChatCase03PizzaRoute
   '/api/chat/case-04-beams': typeof ApiChatCase04BeamsRoute
   '/api/chat/case-04-cargo': typeof ApiChatCase04CargoRoute
   '/api/chat/case-04-coolant': typeof ApiChatCase04CoolantRoute
@@ -405,9 +413,10 @@ export interface FileRoutesById {
   '/api/chat/case-02-squares': typeof ApiChatCase02SquaresRoute
   '/api/chat/case-02-tray': typeof ApiChatCase02TrayRoute
   '/api/chat/case-02-wall': typeof ApiChatCase02WallRoute
-  '/api/chat/case-03-disks': typeof ApiChatCase03DisksRoute
-  '/api/chat/case-03-garden': typeof ApiChatCase03GardenRoute
-  '/api/chat/case-03-tanks': typeof ApiChatCase03TanksRoute
+  '/api/chat/case-03-bars': typeof ApiChatCase03BarsRoute
+  '/api/chat/case-03-factory': typeof ApiChatCase03FactoryRoute
+  '/api/chat/case-03-forensics': typeof ApiChatCase03ForensicsRoute
+  '/api/chat/case-03-pizza': typeof ApiChatCase03PizzaRoute
   '/api/chat/case-04-beams': typeof ApiChatCase04BeamsRoute
   '/api/chat/case-04-cargo': typeof ApiChatCase04CargoRoute
   '/api/chat/case-04-coolant': typeof ApiChatCase04CoolantRoute
@@ -454,9 +463,10 @@ export interface FileRouteTypes {
     | '/api/chat/case-02-squares'
     | '/api/chat/case-02-tray'
     | '/api/chat/case-02-wall'
-    | '/api/chat/case-03-disks'
-    | '/api/chat/case-03-garden'
-    | '/api/chat/case-03-tanks'
+    | '/api/chat/case-03-bars'
+    | '/api/chat/case-03-factory'
+    | '/api/chat/case-03-forensics'
+    | '/api/chat/case-03-pizza'
     | '/api/chat/case-04-beams'
     | '/api/chat/case-04-cargo'
     | '/api/chat/case-04-coolant'
@@ -497,9 +507,10 @@ export interface FileRouteTypes {
     | '/api/chat/case-02-squares'
     | '/api/chat/case-02-tray'
     | '/api/chat/case-02-wall'
-    | '/api/chat/case-03-disks'
-    | '/api/chat/case-03-garden'
-    | '/api/chat/case-03-tanks'
+    | '/api/chat/case-03-bars'
+    | '/api/chat/case-03-factory'
+    | '/api/chat/case-03-forensics'
+    | '/api/chat/case-03-pizza'
     | '/api/chat/case-04-beams'
     | '/api/chat/case-04-cargo'
     | '/api/chat/case-04-coolant'
@@ -544,9 +555,10 @@ export interface FileRouteTypes {
     | '/api/chat/case-02-squares'
     | '/api/chat/case-02-tray'
     | '/api/chat/case-02-wall'
-    | '/api/chat/case-03-disks'
-    | '/api/chat/case-03-garden'
-    | '/api/chat/case-03-tanks'
+    | '/api/chat/case-03-bars'
+    | '/api/chat/case-03-factory'
+    | '/api/chat/case-03-forensics'
+    | '/api/chat/case-03-pizza'
     | '/api/chat/case-04-beams'
     | '/api/chat/case-04-cargo'
     | '/api/chat/case-04-coolant'
@@ -580,9 +592,10 @@ export interface RootRouteChildren {
   ApiChatCase02SquaresRoute: typeof ApiChatCase02SquaresRoute
   ApiChatCase02TrayRoute: typeof ApiChatCase02TrayRoute
   ApiChatCase02WallRoute: typeof ApiChatCase02WallRoute
-  ApiChatCase03DisksRoute: typeof ApiChatCase03DisksRoute
-  ApiChatCase03GardenRoute: typeof ApiChatCase03GardenRoute
-  ApiChatCase03TanksRoute: typeof ApiChatCase03TanksRoute
+  ApiChatCase03BarsRoute: typeof ApiChatCase03BarsRoute
+  ApiChatCase03FactoryRoute: typeof ApiChatCase03FactoryRoute
+  ApiChatCase03ForensicsRoute: typeof ApiChatCase03ForensicsRoute
+  ApiChatCase03PizzaRoute: typeof ApiChatCase03PizzaRoute
   ApiChatCase04BeamsRoute: typeof ApiChatCase04BeamsRoute
   ApiChatCase04CargoRoute: typeof ApiChatCase04CargoRoute
   ApiChatCase04CoolantRoute: typeof ApiChatCase04CoolantRoute
@@ -806,25 +819,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatCase02WallRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/chat/case-03-disks': {
-      id: '/api/chat/case-03-disks'
-      path: '/api/chat/case-03-disks'
-      fullPath: '/api/chat/case-03-disks'
-      preLoaderRoute: typeof ApiChatCase03DisksRouteImport
+    '/api/chat/case-03-bars': {
+      id: '/api/chat/case-03-bars'
+      path: '/api/chat/case-03-bars'
+      fullPath: '/api/chat/case-03-bars'
+      preLoaderRoute: typeof ApiChatCase03BarsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/chat/case-03-garden': {
-      id: '/api/chat/case-03-garden'
-      path: '/api/chat/case-03-garden'
-      fullPath: '/api/chat/case-03-garden'
-      preLoaderRoute: typeof ApiChatCase03GardenRouteImport
+    '/api/chat/case-03-factory': {
+      id: '/api/chat/case-03-factory'
+      path: '/api/chat/case-03-factory'
+      fullPath: '/api/chat/case-03-factory'
+      preLoaderRoute: typeof ApiChatCase03FactoryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/chat/case-03-tanks': {
-      id: '/api/chat/case-03-tanks'
-      path: '/api/chat/case-03-tanks'
-      fullPath: '/api/chat/case-03-tanks'
-      preLoaderRoute: typeof ApiChatCase03TanksRouteImport
+    '/api/chat/case-03-forensics': {
+      id: '/api/chat/case-03-forensics'
+      path: '/api/chat/case-03-forensics'
+      fullPath: '/api/chat/case-03-forensics'
+      preLoaderRoute: typeof ApiChatCase03ForensicsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat/case-03-pizza': {
+      id: '/api/chat/case-03-pizza'
+      path: '/api/chat/case-03-pizza'
+      fullPath: '/api/chat/case-03-pizza'
+      preLoaderRoute: typeof ApiChatCase03PizzaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat/case-04-beams': {
@@ -1002,9 +1022,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatCase02SquaresRoute: ApiChatCase02SquaresRoute,
   ApiChatCase02TrayRoute: ApiChatCase02TrayRoute,
   ApiChatCase02WallRoute: ApiChatCase02WallRoute,
-  ApiChatCase03DisksRoute: ApiChatCase03DisksRoute,
-  ApiChatCase03GardenRoute: ApiChatCase03GardenRoute,
-  ApiChatCase03TanksRoute: ApiChatCase03TanksRoute,
+  ApiChatCase03BarsRoute: ApiChatCase03BarsRoute,
+  ApiChatCase03FactoryRoute: ApiChatCase03FactoryRoute,
+  ApiChatCase03ForensicsRoute: ApiChatCase03ForensicsRoute,
+  ApiChatCase03PizzaRoute: ApiChatCase03PizzaRoute,
   ApiChatCase04BeamsRoute: ApiChatCase04BeamsRoute,
   ApiChatCase04CargoRoute: ApiChatCase04CargoRoute,
   ApiChatCase04CoolantRoute: ApiChatCase04CoolantRoute,
