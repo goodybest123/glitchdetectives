@@ -12,22 +12,33 @@
  */
 import { createServerFn } from "@tanstack/react-start";
 import { useSession } from "@tanstack/react-start/server";
-import { createPlaySessionConfig, passcodeMatches, type GateSession } from "./gate.server";
+import {
+  createPlaySessionConfig,
+  passcodeMatches,
+  playToken,
+  tokenMatches,
+  type GateSession,
+} from "./gate.server";
 
 /**
  * Reports whether the visitor has unlocked the worlds.
  *
- * Returns a plain value instead of throwing a redirect: throwing a redirect
- * response inside a server function surfaces as an unhandled `Response` error
- * on the client. The caller (the `/play` layout `beforeLoad`) does the redirect.
+ * Accepts an optional fallback token (kept in the browser) for cases where the
+ * cross-site session cookie is dropped, e.g. inside an embedded preview frame.
  */
-export const requirePlayUnlocked = createServerFn({ method: "GET" }).handler(async () => {
-  const sessionSecret = process.env["PLAY_SESSION_SECRET"];
-  if (!sessionSecret) return { unlocked: false };
+export const requirePlayUnlocked = createServerFn({ method: "GET" })
+  .validator((data?: { token?: string } | undefined) => ({
+    token: String(data?.token ?? "").slice(0, 200),
+  }))
+  .handler(async ({ data }) => {
+    const sessionSecret = process.env["PLAY_SESSION_SECRET"];
+    if (!sessionSecret) return { unlocked: false };
 
-  const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
-  return { unlocked: Boolean(session.data.unlocked) };
-});
+    if (tokenMatches(data.token, sessionSecret)) return { unlocked: true };
+
+    const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
+    return { unlocked: Boolean(session.data.unlocked) };
+  });
 
 /** Validates a submitted passcode and, on success, marks the session unlocked. */
 export const unlockPlay = createServerFn({ method: "POST" })
@@ -42,8 +53,9 @@ export const unlockPlay = createServerFn({ method: "POST" })
 
     const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
     await session.update({ unlocked: true });
-    return { ok: true as const };
+    return { ok: true as const, token: playToken(sessionSecret) };
   });
+
 
 /** Clears the unlocked flag (useful before handing a laptop to someone else). */
 export const lockPlay = createServerFn({ method: "POST" }).handler(async () => {
