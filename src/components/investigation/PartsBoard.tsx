@@ -11,6 +11,8 @@ import cookieImg from "@/assets/level02/cookie.jpg";
 import chocolateImg from "@/assets/level02/chocolate.jpg";
 import wallImg from "@/assets/level02/wall.jpg";
 import stripImg from "@/assets/level02/strip.jpg";
+import pizzaImg from "@/assets/level03/pizza.jpg";
+import panelImg from "@/assets/level03/panel.jpg";
 
 type Props = {
   shape: ModelShape;
@@ -23,6 +25,8 @@ type Props = {
   label?: string;
   /** Extra reminder line under the board, e.g. what each number counts. */
   reminder?: string;
+  /** Hide the "x equal parts · y chosen" counter (used by compare boards). */
+  hideCounter?: boolean;
 };
 
 const SHAPE_CLASS: Record<ModelShape, string> = {
@@ -30,6 +34,8 @@ const SHAPE_CLASS: Record<ModelShape, string> = {
   bar: "rounded-lg aspect-[3/2]",
   wall: "rounded-md aspect-[4/3]",
   strip: "rounded-md aspect-[1/2]",
+  pizza: "rounded-full aspect-square",
+  panel: "rounded-md aspect-[3/2]",
 };
 
 /** Real photograph used for each part, so the model looks like the real thing. */
@@ -38,11 +44,14 @@ const SHAPE_IMAGE: Record<ModelShape, string> = {
   bar: chocolateImg,
   wall: wallImg,
   strip: stripImg,
+  pizza: pizzaImg,
+  panel: panelImg,
 };
 
 function columnsFor(shape: ModelShape, total: number) {
   if (shape === "tray") return Math.min(4, Math.max(2, Math.ceil(Math.sqrt(total))));
   if (shape === "wall") return Math.min(4, total);
+  if (shape === "pizza") return Math.min(6, total);
   return total;
 }
 
