@@ -78,7 +78,7 @@ function ChatPanelDrawer(props: Props) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-2">
-              <h2 className="text-sm font-bold tracking-wider text-neutral-700">ZED-4</h2>
+              <h2 className="text-sm font-bold tracking-wider text-neutral-700">ZED-4 Guiding</h2>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -152,7 +152,7 @@ function ChatPanelInner({
     >
       <div className="flex items-start justify-between gap-2 border-b border-neutral-100 px-4 py-2">
         <div>
-          <h2 className="text-xs font-bold tracking-wider text-neutral-700">ZED-4</h2>
+          <h2 className="text-xs font-bold tracking-wider text-neutral-700">ZED-4 Guiding</h2>
           <div className="mt-0.5 flex items-center gap-2">
             <p className="text-[11px] text-neutral-500">
               {stage === "solved"
