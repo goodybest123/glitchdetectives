@@ -934,6 +934,8 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                 title={definition.explain.title}
                 text={definition.explain.text}
               />
+
+              {/* 1. Complete sentence builder */}
               <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
                 {definition.explain.slots.map((slot, slotIndex) => (
                   <div key={slot.prompt} className={slotIndex > 0 ? "mt-5" : ""}>
@@ -976,6 +978,22 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                 </Button>
               </div>
 
+              {/* 2. Detective note */}
+              {(definition.explain.detectiveNote || definition.detectiveSkill) && (
+                <div className="rounded-2xl border border-dashed border-border bg-secondary p-4">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-black text-foreground">📝 DETECTIVE NOTE</p>
+                    <SpeakButton
+                      text={definition.explain.detectiveNote || definition.detectiveSkill}
+                    />
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground">
+                    {definition.explain.detectiveNote || definition.detectiveSkill}
+                  </p>
+                </div>
+              )}
+
+              {/* 3. Explain back to ZED-4 */}
               <div className="rounded-2xl border border-border bg-secondary p-4">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-black text-foreground">🎙️ EXPLAIN IT TO ZED-4</p>

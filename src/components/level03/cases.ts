@@ -193,6 +193,8 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         },
       ],
       sentence: (a) => `1/2 and 2/4 are different fraction names for ${a[0]}, because ${a[1]}.`,
+      detectiveNote:
+        "Same amount, different pieces, different numbers. Compare the amount, not just the numerals.",
     },
     zedResponse:
       "I see it now! I was comparing the numbers instead of comparing what the fractions showed. The pieces changed, but the amount stayed the same.",
@@ -364,6 +366,8 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         },
       ],
       sentence: (a) => `3/6 is the same amount as 1/2 because ${a[0]}, and more slices means ${a[1]}.`,
+      detectiveNote:
+        "More pieces does not mean more pizza. The slices got smaller, so the amount stayed the same.",
     },
     zedResponse:
       "So more pieces doesn't always mean more pizza. I have to check how much of the whole those pieces cover.",
@@ -541,6 +545,8 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         },
       ],
       sentence: (a) => `The whole was ${a[0]}, and the shaded part ${a[1]}.`,
+      detectiveNote:
+        "Splitting the whole also splits the shaded part. The pieces change; the amount does not.",
     },
     zedResponse:
       "Aha! The factory didn't make more panel. It just cut the same panel into smaller pieces — and the shaded part got cut into smaller pieces too.",
@@ -718,6 +724,8 @@ export const LEVEL_03_CASES: Record<Level03CaseId, CaseDefinition> = {
         },
       ],
       sentence: (a) => `3/6 and 2/4 are equivalent because ${a[0]}. I proved it by ${a[1]}.`,
+      detectiveNote:
+        "A bigger numerator does not always mean a bigger amount. Evidence from the model and number line beats the numbers alone.",
     },
     zedResponse:
       "You caught me, Detective. I compared the numbers instead of comparing the fractions. 3 is bigger than 2, but that doesn't make 3/6 bigger than 2/4. The models and the number line show they are the same amount. I need evidence before I make my claim.",
