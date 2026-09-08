@@ -179,6 +179,8 @@ export const LEVEL_02_CASES: Record<Level02CaseId, CaseDefinition> = {
         },
       ],
       sentence: (a) => `In 3/4, the 4 tells me ${a[0]} and the 3 tells me ${a[1]}.`,
+      detectiveNote:
+        "The bottom number names the whole. The top number names the part we're considering. They are not interchangeable.",
     },
     zedResponse:
       "Oh! I gave the numbers the wrong jobs. The 4 tells us how many equal pieces make the whole, while the 3 tells us how many of those pieces we're considering.",
@@ -351,6 +353,8 @@ export const LEVEL_02_CASES: Record<Level02CaseId, CaseDefinition> = {
         },
       ],
       sentence: (a) => `The 6 doesn't mean Maya got 6 pieces because ${a[0]}. The numerator tells me ${a[1]}.`,
+      detectiveNote:
+        "The denominator counts all the equal pieces in the whole bar, not the amount someone gets. The numerator counts the pieces we're considering.",
     },
     zedResponse:
       "I see it now. I was looking at the number 6 without asking what it was counting. Six tells us about the whole chocolate bar, not Maya's share.",
@@ -509,6 +513,8 @@ export const LEVEL_02_CASES: Record<Level02CaseId, CaseDefinition> = {
         },
       ],
       sentence: (a) => `The bottom number tells me ${a[0]}, and the top number tells me ${a[1]}.`,
+      detectiveNote:
+        "The bottom number tells us how to cut the whole. The top number tells us how many parts to consider. Build both before deciding.",
     },
     zedResponse:
       "I built the picture from the numbers, but I gave them the wrong jobs. The bottom number tells me how many equal parts the whole needs.",
@@ -665,6 +671,8 @@ export const LEVEL_02_CASES: Record<Level02CaseId, CaseDefinition> = {
         },
       ],
       sentence: (a) => `ZED-4's picture was not 3/5 because ${a[0]}. I know it is 3/5 because ${a[1]}.`,
+      detectiveNote:
+        "A fraction makes two claims: how the whole is cut, and how many parts we're considering. Check both against the picture.",
     },
     zedResponse:
       "I checked the whole, but I forgot to check the part we were looking at. Five equal pieces wasn't enough evidence. I needed to check both numbers.",

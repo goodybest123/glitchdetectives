@@ -232,6 +232,8 @@ export type CaseDefinition = {
     text: string;
     slots: { prompt: string; options: string[] }[];
     sentence: (answers: string[]) => string;
+    /** Short detective note shown after the sentence builder and before the ZED-4 chat. */
+    detectiveNote?: string;
   };
 
   detectiveSkill: string;
