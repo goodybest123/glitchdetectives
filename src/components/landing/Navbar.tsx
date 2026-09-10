@@ -3,8 +3,9 @@
  * contact) and links to real routes. The "Try for Free" CTA goes to the Detective Worlds.
  */
 import { Link } from "@tanstack/react-router";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import logoAsset from "@/assets/brand/glitch-detectives-logo.png.asset.json";
 
 const ROUTE_LINKS = [
   { to: "/" as const, label: "Home" },
@@ -24,18 +25,14 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur border-b border-black/5">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-11 h-11 rounded-full bg-[var(--color-brand-yellow)] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-            <Search className="w-5 h-5 text-[var(--color-brand-blue)]" strokeWidth={3} />
-          </div>
-          <div className="leading-none">
-            <div className="text-[var(--color-brand-blue)] text-xl font-black tracking-tight">
-              GLITCH
-            </div>
-            <div className="text-[var(--color-brand-blue)] text-[10px] font-semibold tracking-[0.35em]">
-              DETECTIVES
-            </div>
-          </div>
+        <Link to="/" className="group flex shrink-0 items-center" aria-label="Glitch Detectives home">
+          <img
+            src={logoAsset.url}
+            alt="Glitch Detectives"
+            width={810}
+            height={680}
+            className="h-16 w-auto object-contain transition-transform group-hover:scale-[1.03]"
+          />
         </Link>
 
         <ul className="hidden md:flex items-center gap-8">

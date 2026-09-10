@@ -35,6 +35,7 @@ import {
   Youtube,
 } from "lucide-react";
 import heroRobot from "@/assets/landing/hero-robot.png";
+import logoAsset from "@/assets/brand/glitch-detectives-logo.png.asset.json";
 import imgFractions from "@/assets/landing/world-fractions.jpg";
 import imgDecimals from "@/assets/landing/world-decimals.jpg";
 import imgPlaceValue from "@/assets/landing/world-placevalue.jpg";
@@ -816,14 +817,15 @@ export function Footer() {
   return (
     <footer style={{ backgroundColor: BLUE, color: "white" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 flex flex-col sm:flex-row gap-8 items-start sm:items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-11 h-11 rounded-full bg-[var(--color-brand-yellow)] flex items-center justify-center">
-            <Search className="w-5 h-5 text-[var(--color-brand-blue)]" strokeWidth={3} />
-          </div>
-          <div className="leading-none">
-            <div className="text-xl font-black tracking-tight">GLITCH</div>
-            <div className="text-[10px] font-semibold tracking-[0.35em]">DETECTIVES</div>
-          </div>
+        <Link to="/" className="group flex items-center" aria-label="Glitch Detectives home">
+          <img
+            src={logoAsset.url}
+            alt="Glitch Detectives"
+            width={810}
+            height={680}
+            loading="lazy"
+            className="h-20 w-auto rounded-sm bg-white p-1.5 object-contain transition-transform group-hover:scale-[1.03]"
+          />
         </Link>
         <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm uppercase tracking-wider font-semibold text-white/80">
           <li>
