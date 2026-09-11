@@ -49,7 +49,7 @@ export const unlockPlay = createServerFn({ method: "POST" })
     const expected = process.env["PLAY_PASSCODE"];
     const sessionSecret = process.env["PLAY_SESSION_SECRET"];
     if (!expected || !sessionSecret) return { ok: false as const };
-    if (!passcodeMatches(data.passcode, expected)) return { ok: false as const };
+    if (!passcodeMatches(data.passcode.trim(), expected.trim())) return { ok: false as const };
 
     const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
     await session.update({ unlocked: true });
