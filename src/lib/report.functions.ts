@@ -17,7 +17,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { generateText, Output } from "ai";
 import { z } from "zod";
-import { createLovableAiGatewayProvider } from "./ai-gateway";
+import { getAiApiKey, getAiModel } from "./ai-gateway";
 
 const Input = z.object({
   caseTitle: z.string().min(1).max(100),
@@ -140,11 +140,10 @@ function normalize(raw: unknown): GradeResult {
 export const gradeExplanation = createServerFn({ method: "POST" })
   .validator((input: unknown) => Input.parse(input))
   .handler(async ({ data }): Promise<GradeResult> => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("Missing LOVABLE_API_KEY");
+    const key = getAiApiKey();
+    if (!key) throw new Error("Missing AI API key. Please set HUGGINGFACE_API_KEY in .env");
 
-    const gateway = createLovableAiGatewayProvider(key);
-    const model = gateway("google/gemini-3-flash-preview");
+    const model = getAiModel();
 
     const system =
       "You are ZED-4, a tutor producing a critical-thinking diagnostic on a child's fraction explanation for parents and educators. " +

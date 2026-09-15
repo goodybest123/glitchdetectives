@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway";
+import { getAiApiKey, getAiModel } from "@/lib/ai-gateway";
 import { formatChatStreamError, readAndValidateChatMessages } from "@/lib/chat-validation";
 
 const SYSTEM_PROMPT = `You are ZED-4 — a warm, curious robot helper for a young child (age 6-8).
@@ -35,13 +35,13 @@ export const Route = createFileRoute("/api/chat/case-03-forensics")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const key = process.env.LOVABLE_API_KEY;
-        if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
+        const key = getAiApiKey();
+        if (!key) return new Response("Missing AI API key. Please set HUGGINGFACE_API_KEY in .env", { status: 500 });
         const messages = await readAndValidateChatMessages(request);
         if (messages instanceof Response) return messages;
-        const gateway = createLovableAiGatewayProvider(key);
+
         const result = streamText({
-          model: gateway("google/gemini-3-flash-preview"),
+          model: getAiModel(),
           system: SYSTEM_PROMPT,
           messages: await convertToModelMessages(messages),
         });
