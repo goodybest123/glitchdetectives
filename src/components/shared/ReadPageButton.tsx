@@ -9,6 +9,7 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { Headphones, Square } from "lucide-react";
+import { getBestNaturalVoice } from "@/lib/speech";
 
 type Props = {
   /** Optional explicit region to read. Defaults to the closest `[data-readable]` ancestor. */
@@ -68,13 +69,16 @@ export function ReadPageButton({ targetRef, className = "", label = "READ THIS T
     if (!text) return;
 
     window.speechSynthesis.cancel();
+    const voice = getBestNaturalVoice(window.speechSynthesis.getVoices());
     // Split into shorter utterances so long pages stay reliable across browsers.
     const sentences = text.match(/[^.!?]+[.!?]*/g) ?? [text];
     let remaining = sentences.length;
     setSpeaking(true);
     sentences.forEach((sentence) => {
       const utterance = new SpeechSynthesisUtterance(sentence.trim());
-      utterance.rate = 0.9;
+      if (voice) utterance.voice = voice;
+      utterance.rate = 1.0;
+      utterance.pitch = 1.05;
       const done = () => {
         remaining -= 1;
         if (remaining <= 0) setSpeaking(false);

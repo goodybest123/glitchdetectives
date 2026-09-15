@@ -35,7 +35,7 @@ import {
   Youtube,
 } from "lucide-react";
 import heroRobot from "@/assets/landing/hero-robot.png";
-import logoAsset from "@/assets/brand/glitch-detectives-logo.png.asset.json";
+import logoUrl from "@/assets/brand/glitch-detectives-logo.png";
 import imgFractions from "@/assets/landing/world-fractions.jpg";
 import imgDecimals from "@/assets/landing/world-decimals.jpg";
 import imgPlaceValue from "@/assets/landing/world-placevalue.jpg";
@@ -819,7 +819,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 flex flex-col sm:flex-row gap-8 items-start sm:items-center justify-between">
         <Link to="/" className="group flex items-center" aria-label="Glitch Detectives home">
           <img
-            src={logoAsset.url}
+            src={logoUrl}
             alt="Glitch Detectives"
             width={810}
             height={680}

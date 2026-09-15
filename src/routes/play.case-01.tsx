@@ -143,7 +143,7 @@ function PageShell({ title, children }: { title: string; children: React.ReactNo
       </header>
       <div
         data-readable
-        className="mx-auto w-full max-w-7xl px-3 py-3 sm:px-6 sm:py-5 lg:px-10"
+        className="mx-auto w-full max-w-7xl px-3 py-3 pb-28 sm:px-6 sm:py-5 sm:pb-12 lg:px-10"
       >
         <div className="mb-3 flex justify-end">
           <ReadPageButton />

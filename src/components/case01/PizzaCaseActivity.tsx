@@ -1071,6 +1071,8 @@ function RepairPizza({
       : "Whole pizza ready to cut";
   const coordinateForPosition = (position: number) =>
     center - radius + ((center + radius - (center - radius)) * position) / 100;
+  const lastSnappedRef = useRef(false);
+
   const positionFromPointer = (
     event: ReactPointerEvent<SVGElement>,
     direction: "vertical" | "horizontal",
@@ -1082,19 +1084,39 @@ function RepairPizza({
         ? ((event.clientX - rect.left) / rect.width) * 260
         : ((event.clientY - rect.top) / rect.height) * 260;
     const clamped = Math.max(center - radius, Math.min(center + radius, raw));
-    return ((clamped - (center - radius)) / (radius * 2)) * 100;
+    let pos = ((clamped - (center - radius)) / (radius * 2)) * 100;
+    
+    // Magnetic snap to centre (50%) when within range
+    if (Math.abs(pos - 50) <= 14) {
+      pos = 50;
+    }
+    return pos;
   };
+
   const updateDragPosition = (event: ReactPointerEvent<SVGSVGElement>) => {
     if (!dragging) return;
-    setDragPosition(positionFromPointer(event, dragging));
+    const pos = positionFromPointer(event, dragging);
+    if (pos === 50 && !lastSnappedRef.current) {
+      lastSnappedRef.current = true;
+      try {
+        if (typeof navigator !== "undefined" && navigator.vibrate) {
+          navigator.vibrate(15);
+        }
+      } catch {}
+    } else if (pos !== 50) {
+      lastSnappedRef.current = false;
+    }
+    setDragPosition(pos);
   };
+
   const finishDrag = (event: ReactPointerEvent<SVGSVGElement>) => {
     if (!dragging) return;
     const position = positionFromPointer(event, dragging);
-    if (Math.abs(position - 50) <= 16) onCut(dragging);
+    if (Math.abs(position - 50) <= 24) onCut(dragging);
     setDragging(null);
     setDragPosition(8);
   };
+
   const startDrag = (
     event: ReactPointerEvent<SVGGElement>,
     direction: "vertical" | "horizontal",
@@ -1105,6 +1127,7 @@ function RepairPizza({
     setDragging(direction);
     setDragPosition(positionFromPointer(event, direction));
   };
+
   const moveWithKeyboard = (event: React.KeyboardEvent<SVGGElement>) => {
     if (!nextDirection) return;
     if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
@@ -1123,22 +1146,23 @@ function RepairPizza({
       event.preventDefault();
       setDragPosition(100);
     }
-    if ((event.key === "Enter" || event.key === " ") && Math.abs(dragPosition - 50) <= 16) {
+    if ((event.key === "Enter" || event.key === " ") && Math.abs(dragPosition - 50) <= 24) {
       event.preventDefault();
       onCut(nextDirection);
       setDragPosition(8);
     }
   };
+
   const verticalX = dragging === "vertical" ? coordinateForPosition(dragPosition) : center;
   const horizontalY = dragging === "horizontal" ? coordinateForPosition(dragPosition) : center;
-  const guideIsReady = Math.abs(dragPosition - 50) <= 16;
+  const guideIsReady = Math.abs(dragPosition - 50) <= 24;
 
   return (
     <div className="mx-auto w-full max-w-sm rounded-2xl border border-border bg-secondary/60 p-3 sm:p-5">
       <svg
         ref={svgRef}
         viewBox="0 0 260 260"
-        className="mx-auto aspect-square w-full max-w-[320px]"
+        className="mx-auto aspect-square w-full max-w-[320px] touch-none select-none"
         role="img"
         aria-label={label}
         onPointerMove={updateDragPosition}
@@ -1204,6 +1228,30 @@ function RepairPizza({
             onKeyDown={moveWithKeyboard}
             className="cursor-grab outline-none active:cursor-grabbing"
           >
+            {/* Invisible large touch hit area for fingers */}
+            {nextDirection === "vertical" ? (
+              <line
+                x1={coordinateForPosition(dragPosition)}
+                y1={center - radius - 12}
+                x2={coordinateForPosition(dragPosition)}
+                y2={center + radius + 12}
+                stroke="transparent"
+                strokeWidth="48"
+                style={{ touchAction: "none" }}
+              />
+            ) : (
+              <line
+                x1={center - radius - 12}
+                y1={coordinateForPosition(dragPosition)}
+                x2={center + radius + 12}
+                y2={coordinateForPosition(dragPosition)}
+                stroke="transparent"
+                strokeWidth="48"
+                style={{ touchAction: "none" }}
+              />
+            )}
+
+            {/* Visible cutting guide */}
             {nextDirection === "vertical" ? (
               <line
                 x1={coordinateForPosition(dragPosition)}
@@ -1211,7 +1259,7 @@ function RepairPizza({
                 x2={coordinateForPosition(dragPosition)}
                 y2={center + radius + 8}
                 stroke={guideIsReady ? "var(--success)" : "var(--energy)"}
-                strokeWidth="8"
+                strokeWidth={guideIsReady ? "9" : "7"}
                 strokeDasharray="10 7"
                 strokeLinecap="round"
               />
@@ -1222,7 +1270,7 @@ function RepairPizza({
                 x2={center + radius + 8}
                 y2={coordinateForPosition(dragPosition)}
                 stroke={guideIsReady ? "var(--success)" : "var(--energy)"}
-                strokeWidth="8"
+                strokeWidth={guideIsReady ? "9" : "7"}
                 strokeDasharray="10 7"
                 strokeLinecap="round"
               />
@@ -1230,7 +1278,13 @@ function RepairPizza({
             <circle
               cx={nextDirection === "vertical" ? coordinateForPosition(dragPosition) : center}
               cy={nextDirection === "horizontal" ? coordinateForPosition(dragPosition) : center}
-              r="10"
+              r="24"
+              fill="transparent"
+            />
+            <circle
+              cx={nextDirection === "vertical" ? coordinateForPosition(dragPosition) : center}
+              cy={nextDirection === "horizontal" ? coordinateForPosition(dragPosition) : center}
+              r={guideIsReady ? "13" : "11"}
               fill={guideIsReady ? "var(--success)" : "var(--energy)"}
               stroke="var(--background)"
               strokeWidth="3"
@@ -1250,9 +1304,26 @@ function RepairPizza({
         {isComplete
           ? "Four matching quarter-pizza regions"
           : guideIsReady
-            ? "Release to make this cut"
+            ? "✨ Snapped to centre! Release to cut"
             : `Drag the ${nextDirection} line to the centre`}
       </p>
+
+      {!isComplete && nextDirection && (
+        <div className="mt-3 flex justify-center">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              onCut(nextDirection);
+              setDragPosition(8);
+            }}
+            className="rounded-full border-primary/20 bg-primary/5 text-xs font-bold text-primary hover:bg-primary/10 active:scale-95"
+          >
+            ✂️ Cut in Half (Centre)
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

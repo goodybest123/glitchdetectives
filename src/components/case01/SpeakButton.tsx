@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Volume2, Square } from "lucide-react";
+import { getBestNaturalVoice } from "@/lib/speech";
 
 type SpeakButtonProps = {
   text: string;
@@ -8,15 +9,7 @@ type SpeakButtonProps = {
   rate?: number;
 };
 
-function pickVoice(voices: SpeechSynthesisVoice[]) {
-  if (!voices.length) return null;
-  const en = voices.filter((v) => v.lang?.toLowerCase().startsWith("en"));
-  const pool = en.length ? en : voices;
-  const female = pool.find((v) => /female|samantha|victoria|karen|moira|tessa/i.test(v.name));
-  return female ?? pool[0];
-}
-
-export function SpeakButton({ text, className = "", size = "sm", rate = 0.95 }: SpeakButtonProps) {
+export function SpeakButton({ text, className = "", size = "sm", rate = 1.0 }: SpeakButtonProps) {
   const [speaking, setSpeaking] = useState(false);
   const [supported, setSupported] = useState(false);
   const utterRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -46,10 +39,10 @@ export function SpeakButton({ text, className = "", size = "sm", rate = 0.95 }: 
     if (!text?.trim()) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    const voice = pickVoice(window.speechSynthesis.getVoices());
+    const voice = getBestNaturalVoice(window.speechSynthesis.getVoices());
     if (voice) u.voice = voice;
     u.rate = rate;
-    u.pitch = 1;
+    u.pitch = 1.06; // Warm and friendly tone
     u.onend = () => setSpeaking(false);
     u.onerror = () => setSpeaking(false);
     utterRef.current = u;

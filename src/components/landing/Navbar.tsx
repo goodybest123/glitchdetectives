@@ -5,7 +5,7 @@
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import logoAsset from "@/assets/brand/glitch-detectives-logo.png.asset.json";
+import logoUrl from "@/assets/brand/glitch-detectives-logo.png";
 
 const ROUTE_LINKS = [
   { to: "/" as const, label: "Home" },
@@ -27,7 +27,7 @@ export function Navbar() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
         <Link to="/" className="group flex shrink-0 items-center" aria-label="Glitch Detectives home">
           <img
-            src={logoAsset.url}
+            src={logoUrl}
             alt="Glitch Detectives"
             width={810}
             height={680}

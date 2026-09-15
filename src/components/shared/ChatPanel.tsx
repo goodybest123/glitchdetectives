@@ -55,18 +55,18 @@ function ChatPanelDrawer(props: Props) {
 
   return (
     <>
-      {/* Floating launcher button (always available, prominent when explain unlocks) */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className={`fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-full px-4 py-3 text-sm font-bold tracking-wider text-white shadow-lg transition-all ${
-          enabled ? "bg-[#1f2937] hover:bg-black animate-pulse-once" : "bg-neutral-400"
-        }`}
-        aria-label="Open ZED-4 chat"
-      >
-        <MessageCircle size={18} />
-        ZED-4
-      </button>
+      {/* Floating launcher button (only displayed during explain/solved to avoid obscuring mobile content) */}
+      {enabled && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-full bg-[#1f2937] px-4 py-3 text-sm font-bold tracking-wider text-white shadow-xl hover:bg-black active:scale-95 transition-all animate-pulse-once"
+          aria-label="Open ZED-4 chat"
+        >
+          <MessageCircle size={18} />
+          ZED-4
+        </button>
+      )}
 
       {open && (
         <div
