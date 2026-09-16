@@ -62,7 +62,7 @@ export function CasePicker({ solved, onPick }: Props) {
               </div>
               <div className="text-lg font-bold text-neutral-900">{c.title}</div>
               <div className="text-sm text-neutral-500">{c.subtitle}</div>
-              <span className="mt-2 text-xs font-bold tracking-wider text-[#1e293b] opacity-0 transition-opacity group-hover:opacity-100">
+              <span className="mt-2 text-xs font-bold tracking-wider text-[#1e293b] opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                 {isSolved ? "REPLAY →" : "OPEN CASE →"}
               </span>
             </button>

@@ -59,13 +59,13 @@ function ReportPage() {
         </div>
       </header>
 
-      <div data-readable className="mx-auto w-full max-w-5xl px-4 py-6 pb-28 sm:px-6 sm:py-10 sm:pb-12">
-        <section className="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
+      <div data-readable className="mx-auto w-full max-w-5xl px-3 py-4 pb-24 sm:px-6 sm:py-10 sm:pb-12">
+        <section className="rounded-3xl border border-border bg-card p-4 sm:p-8 shadow-sm">
           <p className="label-eyebrow text-primary">REASONING SNAPSHOT</p>
-          <h2 className="mt-2 text-3xl font-black text-foreground sm:text-4xl">
+          <h2 className="mt-2 text-2xl sm:text-4xl font-black text-foreground leading-tight">
             What we observed during these investigations
           </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-3 sm:mt-4 max-w-2xl text-xs sm:text-sm leading-relaxed text-muted-foreground">
             This report describes what your child did while investigating. It is not a test result,
             a score, or an assessment of ability. Everything below comes from the actions recorded
             in the cases they completed on this device.
@@ -103,11 +103,11 @@ function ReportPage() {
           </section>
         )}
 
-        <div className="mt-8 flex flex-wrap justify-end gap-3 print:hidden">
+        <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row justify-end gap-2.5 sm:gap-3 print:hidden">
           <button
             type="button"
             onClick={() => typeof window !== "undefined" && window.print()}
-            className="rounded-full border border-border px-5 py-3 text-xs font-black tracking-wider text-foreground"
+            className="w-full sm:w-auto text-center rounded-full border border-border px-5 py-3 text-xs font-black tracking-wider text-foreground min-h-[44px]"
           >
             PRINT REPORT
           </button>
@@ -118,14 +118,14 @@ function ReportPage() {
                 if (window.confirm("Clear all recorded evidence on this device?"))
                   clearCaseResults();
               }}
-              className="rounded-full border border-border px-5 py-3 text-xs font-black tracking-wider text-muted-foreground"
+              className="w-full sm:w-auto text-center rounded-full border border-border px-5 py-3 text-xs font-black tracking-wider text-muted-foreground transition hover:text-foreground min-h-[44px]"
             >
-              CLEAR EVIDENCE
+              CLEAR EVIDENCE (TESTING)
             </button>
           )}
           <Link
             to="/play"
-            className="rounded-full bg-primary px-5 py-3 text-xs font-black tracking-wider text-primary-foreground"
+            className="w-full sm:w-auto text-center rounded-full bg-primary px-6 py-3 text-xs font-black tracking-wider text-primary-foreground min-h-[44px] flex items-center justify-center"
           >
             BACK TO CASES
           </Link>
@@ -137,8 +137,8 @@ function ReportPage() {
 
 function LevelSection({ level }: { level: LevelSnapshot }) {
   return (
-    <section className="mt-6 space-y-6">
-      <div className="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
+    <section className="mt-5 sm:mt-6 space-y-4 sm:space-y-6">
+      <div className="rounded-3xl border border-border bg-card p-4 sm:p-8 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="label-eyebrow text-muted-foreground">

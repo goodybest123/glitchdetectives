@@ -15,13 +15,13 @@ export function CaseProgress({ current }: { current: CaseStep }) {
   const active = current === "solved" ? CASE_STEPS.length : CASE_STEPS.indexOf(current);
   return (
     <ol
-      className="grid grid-cols-5 gap-1 rounded-2xl border border-border bg-card p-3 text-center"
+      className="grid grid-cols-5 gap-1 rounded-2xl border border-border bg-card p-1.5 sm:p-3 text-center"
       aria-label="Case progress"
     >
       {CASE_STEPS.map((step, index) => (
         <li
           key={step}
-          className={`rounded-xl px-1 py-2 text-[10px] font-black uppercase tracking-wider ${
+          className={`rounded-lg sm:rounded-xl px-0.5 sm:px-1 py-1.5 sm:py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-tight sm:tracking-wider truncate ${
             index === active
               ? "bg-primary text-primary-foreground"
               : index < active
@@ -47,11 +47,11 @@ export function StageIntro({
   text: string;
 }) {
   return (
-    <section className="flex items-start gap-3 border-b border-border pb-4">
+    <section className="flex items-start gap-3 border-b border-border pb-3 sm:pb-4">
       <div className="flex-1">
         <p className="label-eyebrow text-primary">{eyebrow}</p>
-        <h2 className="mt-1 text-2xl font-black text-foreground sm:text-3xl">{title}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">{text}</p>
+        <h2 className="mt-1 text-xl font-black text-foreground sm:text-3xl leading-tight">{title}</h2>
+        <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">{text}</p>
       </div>
       <SpeakButton text={`${eyebrow}. ${title}. ${text}`} size="md" />
     </section>
@@ -70,11 +70,11 @@ export function HintBox({
 }) {
   const text = hintIndex > 0 ? hints[hintIndex - 1] : "Need a clue? You can investigate first.";
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-secondary p-3">
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-2xl border border-border bg-secondary p-3 sm:p-4">
       <div className="flex flex-1 items-start gap-2">
         <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
-        <p className="text-sm text-foreground">{text}</p>
-        <SpeakButton text={text} />
+        <p className="text-xs sm:text-sm text-foreground flex-1">{text}</p>
+        <SpeakButton text={text} size="sm" />
       </div>
       <Button
         type="button"
@@ -82,6 +82,7 @@ export function HintBox({
         size="sm"
         onClick={onHint}
         disabled={hintIndex >= hints.length}
+        className="w-full sm:w-auto min-h-10 font-bold text-xs"
       >
         <Lightbulb className="h-4 w-4" aria-hidden /> NEED A CLUE?
       </Button>
@@ -91,8 +92,13 @@ export function HintBox({
 
 export function PrimaryNext({ children, onClick }: { children: ReactNode; onClick: () => void }) {
   return (
-    <div className="flex justify-end">
-      <Button type="button" onClick={onClick} size="lg" className="font-black">
+    <div className="flex justify-end pt-3 sm:pt-4">
+      <Button
+        type="button"
+        onClick={onClick}
+        size="lg"
+        className="w-full sm:w-auto min-h-[50px] font-black text-base shadow-sm active:scale-[0.98]"
+      >
         {children}
       </Button>
     </div>

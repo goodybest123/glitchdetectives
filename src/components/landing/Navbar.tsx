@@ -24,14 +24,14 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur border-b border-black/5">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
         <Link to="/" className="group flex shrink-0 items-center" aria-label="Glitch Detectives home">
           <img
             src={logoUrl}
             alt="Glitch Detectives"
             width={810}
             height={680}
-            className="h-16 w-auto object-contain transition-transform group-hover:scale-[1.03]"
+            className="h-11 sm:h-16 w-auto object-contain transition-transform group-hover:scale-[1.03]"
           />
         </Link>
 
@@ -61,7 +61,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="md:hidden p-2 rounded-xl text-[var(--color-brand-blue)] hover:bg-black/5"
+          className="md:hidden p-2 rounded-xl text-[var(--color-brand-blue)] hover:bg-black/5 active:bg-black/10 min-h-[44px] min-w-[44px] flex items-center justify-center"
           aria-label={open ? "Close menu" : "Open menu"}
         >
           {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -69,23 +69,23 @@ export function Navbar() {
       </nav>
 
       {open && (
-        <div className="md:hidden bg-white border-b border-black/5 px-4 sm:px-6 py-4">
-          <ul className="space-y-3">
+        <div className="md:hidden bg-white border-b border-black/5 px-4 sm:px-6 py-3 shadow-lg">
+          <ul className="space-y-1">
             {ROUTE_LINKS.map((l) => (
               <li key={l.to}>
                 <Link
                   to={l.to}
-                  className="block text-sm font-semibold uppercase tracking-wider text-[var(--color-brand-blue)]/80 hover:text-[var(--color-brand-blue)]"
+                  className="block py-2.5 px-3 rounded-xl text-sm font-bold uppercase tracking-wider text-[var(--color-brand-blue)]/80 hover:text-[var(--color-brand-blue)] hover:bg-black/5 active:bg-black/10 transition-colors"
                   onClick={() => setOpen(false)}
                 >
                   {l.label}
                 </Link>
               </li>
             ))}
-            <li>
+            <li className="pt-2">
               <Link
                 to="/play"
-                className="inline-block px-5 py-2.5 rounded-full bg-[var(--color-brand-yellow)] text-[var(--color-brand-blue)] text-sm font-bold uppercase tracking-wider"
+                className="block w-full text-center py-3 px-5 rounded-full bg-[var(--color-brand-yellow)] text-[var(--color-brand-blue)] text-sm font-bold uppercase tracking-wider shadow-sm active:scale-[0.98]"
                 onClick={() => setOpen(false)}
               >
                 Try for Free

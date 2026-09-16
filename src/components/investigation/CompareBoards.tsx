@@ -91,12 +91,12 @@ export function CompareBoards({ config, onInteract }: Props) {
           </div>
         </div>
       ) : (
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-4">
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {[
             { model: config.left, view: left, isSplit: splitLeft, setSplit: setSplitLeft },
             { model: config.right, view: right, isSplit: splitRight, setSplit: setSplitRight },
           ].map(({ model, view, isSplit, setSplit }) => (
-            <div key={model.label} className="rounded-2xl border border-border bg-card p-2 sm:p-3">
+            <div key={model.label} className="rounded-2xl border border-border bg-card p-3 sm:p-4">
               <p className="text-center text-sm font-black text-foreground">{model.label}</p>
               <div className="mt-2">
                 <FractionModel
@@ -108,7 +108,7 @@ export function CompareBoards({ config, onInteract }: Props) {
                   label={`${model.label}: a whole cut into ${view.total} equal parts, ${view.selected} shaded.`}
                 />
               </div>
-              <p className="mt-2 text-center text-3xl font-black text-foreground">
+              <p className="mt-2 text-center text-2xl sm:text-3xl font-black text-foreground">
                 {view.fraction}
               </p>
               {model.split && (
@@ -121,7 +121,7 @@ export function CompareBoards({ config, onInteract }: Props) {
                       onInteract();
                       setSplit(!isSplit);
                     }}
-                    className="min-h-11 whitespace-normal text-xs font-black"
+                    className="w-full sm:w-auto min-h-11 whitespace-normal text-xs font-black px-4"
                   >
                     {isSplit ? "PUT THE PIECES BACK" : model.split.label}
                   </Button>
@@ -145,7 +145,7 @@ export function CompareBoards({ config, onInteract }: Props) {
             onInteract();
             setAligned(!aligned);
           }}
-          className="min-h-12 font-black"
+          className="w-full sm:w-auto min-h-12 font-black text-sm px-6"
         >
           {aligned
             ? "PUT THEM SIDE BY SIDE"
@@ -165,9 +165,9 @@ export function CompareBoards({ config, onInteract }: Props) {
  */
 export function ClaimBoards({ config }: { config: CompareConfig }) {
   return (
-    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
       {[config.left, config.right].map((model) => (
-        <div key={model.label} className="rounded-2xl border border-border bg-card p-2 sm:p-3">
+        <div key={model.label} className="rounded-2xl border border-border bg-card p-2.5 sm:p-3">
           <p className="text-center text-xs font-black text-foreground sm:text-sm">{model.label}</p>
           <div className="mt-2">
             <FractionModel

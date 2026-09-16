@@ -343,11 +343,11 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-3">
-        <Button type="button" variant="ghost" size="sm" onClick={onBackToPicker}>
+      <div className="flex items-center justify-between gap-2 sm:gap-3">
+        <Button type="button" variant="ghost" size="sm" onClick={onBackToPicker} className="text-xs sm:text-sm shrink-0">
           ← Choose another case
         </Button>
-        <span className="label-eyebrow text-muted-foreground">
+        <span className="label-eyebrow text-muted-foreground truncate max-w-[50vw] sm:max-w-none text-right">
           CASE {definition.number} · {definition.title.toUpperCase()}
         </span>
       </div>
@@ -617,7 +617,7 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                         {!evidenceLocked && (
                           <Button
                             type="button"
-                            className="mt-4 font-black"
+                            className="mt-4 font-black w-full sm:w-auto min-h-[48px]"
                             onClick={() => {
                               const choice =
                                 evidenceChoice === null
@@ -671,7 +671,7 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                             )}
                             <Button
                               type="button"
-                              className="mt-4 font-black"
+                              className="mt-4 font-black w-full sm:w-auto min-h-[48px]"
                               disabled={detectFollowUp === null}
                               onClick={() => {
                                 if (detectFollowUpDone) {
@@ -890,7 +890,7 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                     </div>
                   )}
 
-                  <div className="flex flex-wrap justify-between gap-2 border-t border-dashed border-border pt-3">
+                    <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-dashed border-border pt-3">
                     <Button
                       type="button"
                       variant="ghost"
@@ -910,12 +910,13 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                         );
                         setConfirmed(null);
                       }}
+                      className="w-full sm:w-auto min-h-10 text-xs"
                     >
                       <RotateCcw className="h-4 w-4" aria-hidden /> Start again
                     </Button>
                     <Button
                       type="button"
-                      className="font-black"
+                      className="font-black w-full sm:w-auto min-h-[48px]"
                       disabled={!repairReady || confirmed !== "yes" || !repairFollowUpDone}
                       onClick={() => setStage("explain")}
                     >
@@ -965,7 +966,7 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                 ))}
                 <Button
                   type="button"
-                  className="mt-5 font-black"
+                  className="mt-5 font-black w-full sm:w-auto min-h-[48px]"
                   disabled={!explanationReady}
                   onClick={() =>
                     submitExplanation(

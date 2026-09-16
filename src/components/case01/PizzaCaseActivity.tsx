@@ -638,13 +638,13 @@ function PizzaProgress({ current }: { current: PizzaStage }) {
   const active = current === "solved" ? steps.length : steps.indexOf(current);
   return (
     <ol
-      className="grid grid-cols-5 gap-1 rounded-2xl border border-border bg-card p-3 text-center"
+      className="grid grid-cols-5 gap-1 rounded-2xl border border-border bg-card p-1.5 sm:p-3 text-center"
       aria-label="Case progress"
     >
       {steps.map((step, index) => (
         <li
           key={step}
-          className={`rounded-xl px-1 py-2 text-[10px] font-black uppercase tracking-wider ${index === active ? "bg-primary text-primary-foreground" : index < active ? "bg-secondary text-foreground" : "text-muted-foreground"}`}
+          className={`rounded-lg sm:rounded-xl px-0.5 sm:px-1 py-1.5 sm:py-2 text-[9px] sm:text-[10px] font-black uppercase tracking-tight sm:tracking-wider truncate ${index === active ? "bg-primary text-primary-foreground" : index < active ? "bg-secondary text-foreground" : "text-muted-foreground"}`}
         >
           {index < active ? "✓ " : ""}
           {step === "brief" ? "Brief" : step}
@@ -1563,8 +1563,13 @@ function ApplyChallenge({ complete, onComplete }: { complete: boolean; onComplet
 
 function PrimaryNext({ children, onClick }: { children: ReactNode; onClick: () => void }) {
   return (
-    <div className="flex justify-end">
-      <Button type="button" onClick={onClick} size="lg" className="font-black">
+    <div className="flex justify-end pt-3 sm:pt-4">
+      <Button
+        type="button"
+        onClick={onClick}
+        size="lg"
+        className="w-full sm:w-auto min-h-[50px] font-black text-base shadow-sm active:scale-[0.98]"
+      >
         {children}
       </Button>
     </div>

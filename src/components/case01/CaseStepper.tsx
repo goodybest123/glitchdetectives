@@ -17,21 +17,21 @@ export function CaseStepper({ stage }: { stage: Stage }) {
       : (STEPS[activeIndex] ?? STEPS[0]);
 
   return (
-    <div className="sticky top-0 z-20 mb-4 border-b border-border bg-card px-3 pt-3 pb-1 shadow-sm sm:px-5">
-      <div className="mb-2 flex items-center justify-center gap-2 text-xs text-neutral-500">
-        <span>
+    <div className="sticky top-0 z-20 mb-3 sm:mb-4 border-b border-border bg-card/95 backdrop-blur px-2.5 pt-2.5 pb-1 shadow-sm sm:px-5">
+      <div className="mb-1.5 sm:mb-2 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-neutral-500 text-center px-1">
+        <span className="truncate max-w-[85vw] sm:max-w-none">
           <span className="font-bold text-neutral-700">{current.label}:</span> {current.desc}
         </span>
-        <SpeakButton text={`${current.label}. ${current.desc}`} />
+        <SpeakButton text={`${current.label}. ${current.desc}`} size="sm" />
       </div>
-      <ol className="mb-8 grid grid-cols-4 gap-2 sm:gap-4" aria-label="Case progress">
+      <ol className="mb-2 sm:mb-6 grid grid-cols-4 gap-1 sm:gap-4" aria-label="Case progress">
         {STEPS.map((step, i) => {
           const state = i < activeIndex ? "complete" : i === activeIndex ? "active" : "upcoming";
           const circleClass =
             state === "complete"
               ? "bg-[#10b981] text-white border-[#10b981]"
               : state === "active"
-                ? "bg-[#ffde59] text-[#1e293b] border-[#1e293b] ring-4 ring-[#fff4cc]"
+                ? "bg-[#ffde59] text-[#1e293b] border-[#1e293b] ring-2 sm:ring-4 ring-[#fff4cc]"
                 : "bg-white text-neutral-400 border-neutral-200";
           const labelClass =
             state === "upcoming"
@@ -48,13 +48,13 @@ export function CaseStepper({ stage }: { stage: Stage }) {
                   }`}
                 />
                 <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 text-sm font-bold transition-all ${circleClass}`}
+                  className={`flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full border-2 text-xs sm:text-sm font-bold transition-all ${circleClass}`}
                   aria-current={state === "active" ? "step" : undefined}
                 >
                   {state === "complete" ? (
                     <svg
                       viewBox="0 0 20 20"
-                      className="h-5 w-5"
+                      className="h-4 w-4 sm:h-5 sm:w-5"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="3"
@@ -75,7 +75,7 @@ export function CaseStepper({ stage }: { stage: Stage }) {
                   }`}
                 />
               </div>
-              <div className={`mt-2 text-xs sm:text-sm tracking-wide uppercase ${labelClass}`}>
+              <div className={`mt-1 sm:mt-2 text-[10px] sm:text-xs tracking-tight sm:tracking-wide uppercase font-semibold ${labelClass}`}>
                 {step.label}
               </div>
               <div

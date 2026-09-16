@@ -112,59 +112,59 @@ function PlayPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:px-10 sm:py-20">
-        <header className="mb-12 sm:mb-16">
-          <div className="flex items-start justify-between gap-4">
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-10 sm:py-16">
+        <header className="mb-8 sm:mb-16">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <Link
               to="/products"
-              className="label-eyebrow text-neutral-500 hover:text-neutral-900 transition-colors"
+              className="label-eyebrow text-neutral-500 hover:text-neutral-900 transition-colors inline-flex items-center gap-1"
             >
               ← Back to Products
             </Link>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <LockHqButton />
               <Link
                 to="/play/report"
-                className="rounded-full bg-neutral-900 px-4 py-2 text-xs font-bold tracking-wider text-white transition hover:bg-black"
+                className="rounded-full bg-neutral-900 px-4 py-2 text-xs font-bold tracking-wider text-white transition hover:bg-black inline-flex items-center gap-1.5"
               >
                 📋 VIEW DETECTIVE'S REPORT
               </Link>
             </div>
           </div>
-          <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-neutral-900 leading-[0.95]">
+          <h1 className="mt-6 text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-neutral-900 leading-[1.05] sm:leading-[0.95]">
             Fraction Factory:
             <br />
             <span className="text-neutral-700">Active Cases</span>
           </h1>
-          <p className="mt-5 max-w-xl text-base text-neutral-500">
+          <p className="mt-3 sm:mt-5 max-w-xl text-sm sm:text-base text-neutral-500 leading-relaxed">
             Choose your investigation. Take your time — there are no timers and no scores here.
           </p>
         </header>
 
         <section
           aria-label="Case files"
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
           {/* Active cases */}
           {ACTIVE_CASES.map((a) => (
             <Link
               key={a.to}
               to={a.to}
-              className="group relative flex flex-col rounded-3xl bg-white p-7 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.18)] ring-1 ring-neutral-100 transition-shadow hover:shadow-[0_12px_40px_-12px_rgba(15,23,42,0.25)] min-h-[280px] text-left"
+              className="group relative flex flex-col rounded-3xl bg-white p-5 sm:p-7 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.18)] ring-1 ring-neutral-100 transition-all hover:shadow-[0_12px_40px_-12px_rgba(15,23,42,0.25)] min-h-[220px] sm:min-h-[280px] text-left active:scale-[0.99]"
             >
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex w-fit items-center rounded-full bg-[#ffde59] px-3 py-1 text-[11px] font-bold tracking-wider text-neutral-900">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <span className="inline-flex w-fit items-center rounded-full bg-[#ffde59] px-2.5 py-1 text-[10px] sm:text-[11px] font-bold tracking-wider text-neutral-900">
                   ACTIVE CASE
                 </span>
-                <span className="inline-flex w-fit items-center rounded-full bg-neutral-900 px-3 py-1 text-[11px] font-bold tracking-wider text-white">
+                <span className="inline-flex w-fit items-center rounded-full bg-neutral-900 px-2.5 py-1 text-[10px] sm:text-[11px] font-bold tracking-wider text-white">
                   {a.topic}
                 </span>
               </div>
-              <div className="mt-6 flex-1">
-                <h2 className="text-2xl font-bold leading-snug text-neutral-900">{a.title}</h2>
-                <p className="mt-2 text-base text-neutral-500">{a.subtitle}</p>
+              <div className="mt-4 sm:mt-6 flex-1">
+                <h2 className="text-xl sm:text-2xl font-bold leading-snug text-neutral-900">{a.title}</h2>
+                <p className="mt-1.5 sm:mt-2 text-sm sm:text-base text-neutral-500">{a.subtitle}</p>
               </div>
-              <span className="mt-8 inline-flex w-fit items-center gap-2 text-sm font-bold tracking-wider text-neutral-900 transition-transform group-hover:translate-x-1">
+              <span className="mt-6 sm:mt-8 inline-flex w-fit items-center gap-2 text-xs sm:text-sm font-bold tracking-wider text-neutral-900 transition-transform group-hover:translate-x-1">
                 INVESTIGATE
                 <span aria-hidden>→</span>
               </span>

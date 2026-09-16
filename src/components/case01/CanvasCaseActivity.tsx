@@ -1147,8 +1147,13 @@ function ApplyChallenge({ complete, onComplete }: { complete: boolean; onComplet
 
 function PrimaryNext({ children, onClick }: { children: ReactNode; onClick: () => void }) {
   return (
-    <div className="flex justify-end">
-      <Button type="button" onClick={onClick} size="lg" className="font-black">
+    <div className="flex justify-end pt-3 sm:pt-4">
+      <Button
+        type="button"
+        onClick={onClick}
+        size="lg"
+        className="w-full sm:w-auto min-h-[50px] font-black text-base shadow-sm active:scale-[0.98]"
+      >
         {children}
       </Button>
     </div>
