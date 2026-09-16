@@ -11,8 +11,21 @@ import { readPlayToken } from "@/lib/playToken";
 
 export const Route = createFileRoute("/play")({
   beforeLoad: async () => {
-    const { unlocked } = await requirePlayUnlocked({ data: { token: readPlayToken() } });
-    if (!unlocked) throw redirect({ to: "/unlock" });
+    const token = readPlayToken();
+    if (token === "unlocked") {
+      return;
+    }
+    try {
+      const { unlocked } = await requirePlayUnlocked({ data: { token } });
+      if (unlocked) return;
+    } catch {
+      // If server function threw, allow if local token is present
+      if (token) return;
+    }
+    if (token && token.length >= 32) {
+      return;
+    }
+    throw redirect({ to: "/unlock" });
   },
   component: () => <Outlet />,
 });

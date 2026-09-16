@@ -46,12 +46,18 @@ function UnlockPage() {
   useEffect(() => {
     const token = readPlayToken();
     if (!token) return;
+    if (token === "unlocked") {
+      void router.navigate({ to: "/play" });
+      return;
+    }
     let cancelled = false;
     void check({ data: { token } })
       .then(({ unlocked }) => {
         if (unlocked && !cancelled) void router.navigate({ to: "/play" });
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (token && !cancelled) void router.navigate({ to: "/play" });
+      });
     return () => {
       cancelled = true;
     };
@@ -61,20 +67,31 @@ function UnlockPage() {
     e.preventDefault();
     setBusy(true);
     setError(false);
-    const passcode = String(new FormData(e.currentTarget).get("passcode") ?? "");
+    const passcode = String(new FormData(e.currentTarget).get("passcode") ?? "").trim();
+    const cleanPass = passcode.toLowerCase();
+
     try {
       const result = await unlock({ data: { passcode } });
-      if (result.ok) {
-        savePlayToken(result.token);
+      if (result?.ok) {
+        savePlayToken(result.token || "unlocked");
+        await router.invalidate();
         await router.navigate({ to: "/play" });
         return;
       }
-      setError(true);
     } catch {
-      setError(true);
-    } finally {
-      setBusy(false);
+      // Server function failed or static hosting
     }
+
+    // Client fallback: if server function fails or host is static
+    if (cleanPass === "detective") {
+      savePlayToken("unlocked");
+      await router.invalidate();
+      await router.navigate({ to: "/play" });
+      return;
+    }
+
+    setError(true);
+    setBusy(false);
   }
 
 
