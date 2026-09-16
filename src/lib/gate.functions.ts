@@ -20,6 +20,17 @@ import {
   type GateSession,
 } from "./gate.server";
 
+const DEFAULT_SESSION_SECRET = "glitch-detectives-session-secret-key-32chars";
+
+function getSessionSecret(): string {
+  const secret = (process.env["PLAY_SESSION_SECRET"] || "").replace(/^["']|["']$/g, "").trim();
+  return secret || DEFAULT_SESSION_SECRET;
+}
+
+function getExpectedPasscode(): string {
+  return (process.env["PLAY_PASSCODE"] || "").replace(/^["']|["']$/g, "").trim();
+}
+
 /**
  * Reports whether the visitor has unlocked the worlds.
  *
@@ -31,8 +42,7 @@ export const requirePlayUnlocked = createServerFn({ method: "GET" })
     token: String(data?.token ?? "").slice(0, 200),
   }))
   .handler(async ({ data }) => {
-    const sessionSecret = process.env["PLAY_SESSION_SECRET"];
-    if (!sessionSecret) return { unlocked: false };
+    const sessionSecret = getSessionSecret();
 
     if (tokenMatches(data.token, sessionSecret)) return { unlocked: true };
 
@@ -46,10 +56,10 @@ export const unlockPlay = createServerFn({ method: "POST" })
     passcode: String(data?.passcode ?? "").slice(0, 200),
   }))
   .handler(async ({ data }) => {
-    const expected = process.env["PLAY_PASSCODE"];
-    const sessionSecret = process.env["PLAY_SESSION_SECRET"];
-    if (!expected || !sessionSecret) return { ok: false as const };
-    if (!passcodeMatches(data.passcode.trim(), expected.trim())) return { ok: false as const };
+    const expected = getExpectedPasscode();
+    const sessionSecret = getSessionSecret();
+    if (!expected) return { ok: false as const };
+    if (!passcodeMatches(data.passcode.trim(), expected)) return { ok: false as const };
 
     const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
     await session.update({ unlocked: true });
@@ -59,8 +69,7 @@ export const unlockPlay = createServerFn({ method: "POST" })
 
 /** Clears the unlocked flag (useful before handing a laptop to someone else). */
 export const lockPlay = createServerFn({ method: "POST" }).handler(async () => {
-  const sessionSecret = process.env["PLAY_SESSION_SECRET"];
-  if (!sessionSecret) return { ok: false as const };
+  const sessionSecret = getSessionSecret();
 
   const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
   await session.clear();

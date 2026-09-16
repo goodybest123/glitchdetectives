@@ -19,8 +19,6 @@ import { DetectiveCallout } from "@/components/shared/DetectiveCallout";
 import { SuccessBanner } from "@/components/shared/SuccessBanner";
 import { CaptionLine } from "@/components/shared/CaptionLine";
 import { VerdictButtons } from "@/components/shared/VerdictButtons";
-import { SoundToggle } from "@/components/shared/SoundToggle";
-import { ReadPageButton } from "@/components/shared/ReadPageButton";
 import { ChatPanel } from "@/components/shared/ChatPanel";
 import {
   WorkbookActivityPrompt,
@@ -89,18 +87,13 @@ function PageShell({ title, children }: { title: string; children: React.ReactNo
           <h1 className="text-sm sm:text-base font-bold tracking-tight text-neutral-900 truncate px-2">
             {title}
           </h1>
-          <div className="flex w-[80px] sm:w-[120px] items-center justify-end">
-            <SoundToggle />
-          </div>
+          <div className="w-[80px] sm:w-[120px]" />
         </div>
       </header>
       <div
         data-readable
         className="mx-auto w-full max-w-7xl px-3 py-3 pb-28 sm:px-6 sm:py-5 sm:pb-12 lg:px-10"
       >
-        <div className="mb-3 flex justify-end">
-          <ReadPageButton />
-        </div>
         {children}
       </div>
     </main>

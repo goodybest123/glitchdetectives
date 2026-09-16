@@ -14,8 +14,6 @@ import { useState } from "react";
 import { InvestigationCase } from "@/components/investigation/InvestigationCase";
 import { LevelCasePicker } from "@/components/investigation/LevelCasePicker";
 import { SpeakButton } from "@/components/case01/SpeakButton";
-import { SoundToggle } from "@/components/shared/SoundToggle";
-import { ReadPageButton } from "@/components/shared/ReadPageButton";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { LEVEL_03_CASES, LEVEL_03_ORDER, type Level03CaseId } from "@/components/level03/cases";
 
@@ -143,15 +141,10 @@ function PageShell({ title, children }: { title: string; children: React.ReactNo
           <h1 className="truncate px-2 text-sm font-bold tracking-tight text-foreground sm:text-base">
             {title}
           </h1>
-          <div className="flex w-[80px] items-center justify-end sm:w-[120px]">
-            <SoundToggle />
-          </div>
+          <div className="w-[80px] sm:w-[120px]" />
         </div>
       </header>
       <div data-readable className="mx-auto w-full max-w-7xl px-3 py-3 pb-28 sm:px-6 sm:py-5 sm:pb-12 lg:px-10">
-        <div className="mb-3 flex justify-end">
-          <ReadPageButton />
-        </div>
         {children}
       </div>
     </main>

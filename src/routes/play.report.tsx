@@ -8,8 +8,6 @@
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { SoundToggle } from "@/components/shared/SoundToggle";
-import { ReadPageButton } from "@/components/shared/ReadPageButton";
 import {
   LEVEL_LABELS,
   clearCaseResults,
@@ -57,15 +55,11 @@ function ReportPage() {
           <h1 className="truncate px-2 text-sm font-bold text-foreground sm:text-base">
             The Detective's Report
           </h1>
-          <SoundToggle />
+          <div className="w-24" />
         </div>
       </header>
 
       <div data-readable className="mx-auto w-full max-w-5xl px-4 py-6 pb-28 sm:px-6 sm:py-10 sm:pb-12">
-        <div className="mb-4 flex justify-end print:hidden">
-          <ReadPageButton />
-        </div>
-
         <section className="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
           <p className="label-eyebrow text-primary">REASONING SNAPSHOT</p>
           <h2 className="mt-2 text-3xl font-black text-foreground sm:text-4xl">
