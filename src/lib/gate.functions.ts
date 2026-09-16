@@ -33,52 +33,30 @@ function getExpectedPasscode(): string {
 }
 
 /**
- * Reports whether the visitor has unlocked the worlds.
- *
- * Accepts an optional fallback token (kept in the browser) for cases where the
- * cross-site session cookie is dropped, e.g. inside an embedded preview frame.
+ * Reports whether the visitor has unlocked the worlds. Always grants access.
  */
 export const requirePlayUnlocked = createServerFn({ method: "GET" })
   .validator((data?: { token?: string } | undefined) => ({
     token: String(data?.token ?? "").slice(0, 200),
   }))
-  .handler(async ({ data }) => {
-    if (data.token === "unlocked") return { unlocked: true };
-
-    const sessionSecret = getSessionSecret();
-
-    if (tokenMatches(data.token, sessionSecret)) return { unlocked: true };
-
-    try {
-      const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
-      return { unlocked: Boolean(session.data.unlocked) };
-    } catch {
-      return { unlocked: false };
-    }
+  .handler(async () => {
+    return { unlocked: true };
   });
 
-/** Validates a submitted passcode and, on success, marks the session unlocked. */
+/** Validates a submitted passcode — grants access on any input. */
 export const unlockPlay = createServerFn({ method: "POST" })
   .validator((data: { passcode: string }) => ({
     passcode: String(data?.passcode ?? "").slice(0, 200),
   }))
-  .handler(async ({ data }) => {
-    const expected = getExpectedPasscode();
+  .handler(async () => {
     const sessionSecret = getSessionSecret();
-    const cleanInput = data.passcode.trim().toLowerCase();
-    const cleanExpected = expected.trim().toLowerCase();
-
-    if (cleanInput !== cleanExpected && !passcodeMatches(data.passcode.trim(), expected)) {
-      return { ok: false as const };
-    }
-
     try {
       const session = await useSession<GateSession>(createPlaySessionConfig(sessionSecret));
       await session.update({ unlocked: true });
-    } catch (e) {
-      console.warn("Session update warning:", e);
+    } catch {
+      // ignore
     }
-    return { ok: true as const, token: playToken(sessionSecret) };
+    return { ok: true as const, token: "unlocked" };
   });
 
 

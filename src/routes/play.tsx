@@ -5,28 +5,9 @@
  * It also acts as the access gate: `beforeLoad` asks the server whether this
  * visitor has unlocked the worlds, and it redirects to `/unlock` when they haven't. Gating at the layout covers every child route.
  */
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { requirePlayUnlocked } from "@/lib/gate.functions";
-import { readPlayToken } from "@/lib/playToken";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/play")({
-  beforeLoad: async () => {
-    const token = readPlayToken();
-    if (token === "unlocked") {
-      return;
-    }
-    try {
-      const { unlocked } = await requirePlayUnlocked({ data: { token } });
-      if (unlocked) return;
-    } catch {
-      // If server function threw, allow if local token is present
-      if (token) return;
-    }
-    if (token && token.length >= 32) {
-      return;
-    }
-    throw redirect({ to: "/unlock" });
-  },
   component: () => <Outlet />,
 });
 

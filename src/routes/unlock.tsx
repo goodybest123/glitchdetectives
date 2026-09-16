@@ -68,30 +68,12 @@ function UnlockPage() {
     setBusy(true);
     setError(false);
     const passcode = String(new FormData(e.currentTarget).get("passcode") ?? "").trim();
-    const cleanPass = passcode.toLowerCase();
 
-    try {
-      const result = await unlock({ data: { passcode } });
-      if (result?.ok) {
-        savePlayToken(result.token || "unlocked");
-        await router.invalidate();
-        await router.navigate({ to: "/play" });
-        return;
-      }
-    } catch {
-      // Server function failed or static hosting
-    }
-
-    // Client fallback: if server function fails or host is static
-    if (cleanPass === "detective") {
-      savePlayToken("unlocked");
-      await router.invalidate();
-      await router.navigate({ to: "/play" });
-      return;
-    }
-
-    setError(true);
-    setBusy(false);
+    // Grant access immediately
+    savePlayToken("unlocked");
+    void unlock({ data: { passcode } }).catch(() => undefined);
+    await router.invalidate();
+    await router.navigate({ to: "/play" });
   }
 
 
