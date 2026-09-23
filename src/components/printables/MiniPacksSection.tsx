@@ -40,9 +40,10 @@ export function MiniPacksSection() {
 
 function MiniPackCard({ pack }: { pack: MiniPack }) {
   const pages = packPages(pack);
+  const imageExt = pack.imageExt ?? "jpg";
   // Prefer an explicit cover page (e.g. the PDF's first page), else first sample.
   const coverPage = pack.coverPage
-    ? { n: pack.coverPage, src: `/printables/mini-packs/${pack.slug}/page-${pack.coverPage}.jpg` }
+    ? { n: pack.coverPage, src: `/printables/mini-packs/${pack.slug}/page-${pack.coverPage}.${imageExt}` }
     : pages[0];
 
   return (

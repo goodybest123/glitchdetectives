@@ -391,7 +391,10 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                     />
                   )}
                   <div className="rounded-2xl border border-border bg-secondary p-3 sm:max-w-xs">
-                    <p className="text-sm font-bold text-foreground">ZED-4 says:</p>
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-bold text-foreground">ZED-4 says:</p>
+                      <SpeakButton text={`ZED-4 says: ${definition.zedClaim.lines.join(". ")}`} size="sm" />
+                    </div>
                     <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                       {definition.zedClaim.lines.map((line) => (
                         <span key={line} className="block">
@@ -448,10 +451,18 @@ export function InvestigationCase({ definition, onSolved, onBackToPicker }: Prop
                 </div>
 
                 <div className="mt-4 rounded-xl border border-border bg-card p-3">
-                  <p className="text-sm font-black text-foreground">DETECTIVE NOTES</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Select anything you observe. Notes are not graded.
-                  </p>
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-black text-foreground">DETECTIVE NOTES</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Select anything you observe. Notes are not graded.
+                      </p>
+                    </div>
+                    <SpeakButton
+                      text={`Detective notes. Select anything you observe. Notes are not graded. ${definition.investigate.observations.join(". ")}`}
+                      size="sm"
+                    />
+                  </div>
                   <div className="mt-3 grid gap-2 sm:grid-cols-2">
                     {definition.investigate.observations.map((observation) => (
                       <Button

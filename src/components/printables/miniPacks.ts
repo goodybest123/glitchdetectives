@@ -21,6 +21,8 @@ export type MiniPack = {
   samplePages?: number[];
   /** PDF page used as the card cover; defaults to the first sample page. */
   coverPage?: number;
+  /** Image extension used for preview files. Defaults to .jpg for legacy packs. */
+  imageExt?: "jpg" | "jpeg" | "png";
   /** Long-form product copy paragraphs for the preview page. */
   description: string[];
   /** "What they will actually learn" bullets. */
@@ -34,9 +36,10 @@ export type MiniPack = {
 /** Page image paths for a pack (rendered from its PDF into /public). */
 export function packPages(pack: MiniPack) {
   const pageNumbers = pack.samplePages ?? Array.from({ length: pack.pageCount }, (_, i) => i + 1);
+  const imageExt = pack.imageExt ?? "jpg";
   return pageNumbers.map((n) => ({
     n,
-    src: `/printables/mini-packs/${pack.slug}/page-${n}.jpg`,
+    src: `/printables/mini-packs/${pack.slug}/page-${n}.${imageExt}`,
   }));
 }
 
@@ -158,6 +161,40 @@ export const MINI_PACKS: MiniPack[] = [
     ],
     downloadUrl: "https://selar.com/7-days-math-without-worksheet-challenge",
     tint: "#f8e8ee",
+  },
+  {
+    slug: "math-planner",
+    title: "The Glitch Detectives Math Planner",
+    blurb:
+      "A simple 5-page homeschool math planner for parents who want to plan less and understand more.",
+    badges: ["Planner", "5 Pages", "Printable"],
+    pageCount: 5,
+    samplePages: [1, 2, 3],
+    coverPage: 1,
+    imageExt: "png",
+    description: [
+      "Math planning doesn't have to mean filling out pages of schedules, tracking every minute, or trying to figure out what your child should be doing every single day.",
+      "The Glitch Detectives Math Planner gives you a simple place to plan your math week, organise lessons, notice your child's thinking, and keep track of the little things that matter.",
+      "Inside the 5-page printable planner, you'll get a weekly overview, a daily maths plan, a place to spot the glitch in an answer, prompts for finding maths in everyday life, and a reflective end-of-week review to help you decide what to do next.",
+      "It is designed for homeschool parents who want a flexible tool that helps them understand their child's thinking rather than just checking for the right answer.",
+      "Math isn't just about getting the right answer. It's about understanding how you got there.",
+    ],
+    learn: [
+      {
+        title: "Simple planning",
+        body: "Organise a maths week without overcomplicating it or turning planning into another full-time job.",
+      },
+      {
+        title: "Spot the glitch",
+        body: "Use mistakes as clues to understand your child's reasoning, instead of only marking answers right or wrong.",
+      },
+      {
+        title: "Real-life maths",
+        body: "Make connections between numeracy and the everyday moments that naturally happen at home, school, or out in the world.",
+      },
+    ],
+    downloadUrl: "https://selar.com/glitchdetectivesmathplanner",
+    tint: "#f5efe5",
   },
 ];
 

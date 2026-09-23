@@ -705,7 +705,13 @@ function InvestigationScene() {
       <div className="mt-4 grid items-center gap-4 sm:grid-cols-[1fr_auto]">
         <UnequalPizza />
         <div className="rounded-2xl border border-border bg-secondary p-3">
-          <p className="text-sm font-bold text-foreground">ZED-4 says:</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-bold text-foreground">ZED-4 says:</p>
+            <SpeakButton
+              text="ZED-4 says: I made 4 pieces and gave everyone 1 piece. So everyone got a fair share! Case closed!"
+              size="sm"
+            />
+          </div>
           <p className="mt-1 text-sm text-muted-foreground">
             “I made 4 pieces and gave everyone 1 piece. So everyone got a fair share!”
           </p>
@@ -868,10 +874,18 @@ function InvestigationBoard(props: BoardProps) {
         <div className="pointer-events-none absolute inset-x-6 top-1/2 border-t border-dashed border-primary/40" />
       </div>
       <div className="mt-4 rounded-xl border border-border bg-card p-3">
-        <p className="text-sm font-black text-foreground">DETECTIVE NOTES</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Noticing is part of investigating. Select anything you observe.
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="text-sm font-black text-foreground">DETECTIVE NOTES</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Noticing is part of investigating. Select anything you observe.
+            </p>
+          </div>
+          <SpeakButton
+            text={`Detective notes. Noticing is part of investigating. Select anything you observe. ${observations.join(". ")}`}
+            size="sm"
+          />
+        </div>
         <div className="mt-3 grid gap-2 sm:grid-cols-2">
           {observations.map((observation) => (
             <Button

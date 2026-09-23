@@ -778,7 +778,13 @@ function InvestigationScene() {
           </div>
         </div>
         <div className="rounded-2xl border border-border bg-secondary p-3 sm:max-w-xs">
-          <p className="text-sm font-bold text-foreground">ZED-4 says:</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-bold text-foreground">ZED-4 says:</p>
+            <SpeakButton
+              text="ZED-4 says: I made 3 pieces. There are 3 people. Everyone gets 1 piece! So it’s fair! Case closed!"
+              size="sm"
+            />
+          </div>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             “I made 3 pieces.”
             <br />
@@ -953,10 +959,18 @@ function ComparisonBoard(props: ComparisonProps) {
         </div>
       </div>
       <div className="mt-4 rounded-xl border border-border bg-card p-3">
-        <p className="text-sm font-black text-foreground">DETECTIVE NOTES</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Select anything you observe. Notes are not graded.
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="text-sm font-black text-foreground">DETECTIVE NOTES</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Select anything you observe. Notes are not graded.
+            </p>
+          </div>
+          <SpeakButton
+            text={`Detective notes. Select anything you observe. Notes are not graded. ${observationChoices.join(". ")}`}
+            size="sm"
+          />
+        </div>
         <div className="mt-3 grid gap-2 sm:grid-cols-2">
           {observationChoices.map((observation) => (
             <Button
