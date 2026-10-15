@@ -11,9 +11,11 @@ const MUTED = "color-mix(in oklab, var(--color-brand-blue) 70%, transparent)";
 
 export function PagePreviewGallery({
   pages,
+  showPageNumbers = true,
 }: {
   /** Page thumbnails to show; defaults to the fractions collection samples. */
   pages?: { n: number; src: string }[];
+  showPageNumbers?: boolean;
 }) {
   const items = pages ?? PREVIEW_PAGES;
   const [open, setOpen] = useState<number | null>(null);
@@ -56,12 +58,14 @@ export function PagePreviewGallery({
                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-contain"
                 />
-                <span
-                  className="absolute top-3 left-3 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest"
-                  style={{ background: "var(--color-brand-yellow)", color: BLUE }}
-                >
-                  Page {p.n}
-                </span>
+                {showPageNumbers && (
+                  <span
+                    className="absolute top-3 left-3 px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                    style={{ background: "var(--color-brand-yellow)", color: BLUE }}
+                  >
+                    Page {p.n}
+                  </span>
+                )}
                 <span
                   className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                   aria-hidden
@@ -110,7 +114,9 @@ export function PagePreviewGallery({
                 <ChevronLeft className="w-5 h-5" style={{ color: BLUE }} />
               </button>
               <span className="text-sm font-semibold text-white">
-                Page {items[open].n} of {items.length} samples
+                {showPageNumbers
+                  ? `Page ${items[open].n} of ${items.length} samples`
+                  : "Sample pages"}
               </span>
               <button
                 type="button"

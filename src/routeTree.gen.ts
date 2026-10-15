@@ -52,6 +52,7 @@ import { Route as ApiChatCase05CoolantRouteImport } from './routes/api/chat/case
 import { Route as ApiChatCase06BlueprintRouteImport } from './routes/api/chat/case-06-blueprint'
 import { Route as ApiChatCase06CircuitRouteImport } from './routes/api/chat/case-06-circuit'
 import { Route as ApiChatCase06PaintRouteImport } from './routes/api/chat/case-06-paint'
+import { Route as PrintablesFractionsBundlePreviewRouteImport } from './routes/printables.fractions-bundle.preview'
 import { Route as PrintablesFractionsL1IndexRouteImport } from './routes/printables.fractions-l1.index'
 import { Route as PrintablesFractionsL1PreviewRouteImport } from './routes/printables.fractions-l1.preview'
 import { Route as PrintablesMiniPacksSlugRouteImport } from './routes/printables.mini-packs.$slug'
@@ -271,6 +272,12 @@ const ApiChatCase06PaintRoute = ApiChatCase06PaintRouteImport.update({
   path: '/api/chat/case-06-paint',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrintablesFractionsBundlePreviewRoute =
+  PrintablesFractionsBundlePreviewRouteImport.update({
+    id: '/fractions-bundle/preview',
+    path: '/fractions-bundle/preview',
+    getParentRoute: () => PrintablesRoute,
+  } as any)
 const PrintablesFractionsL1IndexRoute =
   PrintablesFractionsL1IndexRouteImport.update({
     id: '/',
@@ -333,6 +340,7 @@ export interface FileRoutesByFullPath {
   '/api/chat/case-06-blueprint': typeof ApiChatCase06BlueprintRoute
   '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
+  '/printables/fractions-bundle/preview': typeof PrintablesFractionsBundlePreviewRoute
   '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
   '/printables/mini-packs/$slug': typeof PrintablesMiniPacksSlugRoute
   '/printables/fractions-l1/': typeof PrintablesFractionsL1IndexRoute
@@ -377,6 +385,7 @@ export interface FileRoutesByTo {
   '/api/chat/case-06-blueprint': typeof ApiChatCase06BlueprintRoute
   '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
+  '/printables/fractions-bundle/preview': typeof PrintablesFractionsBundlePreviewRoute
   '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
   '/printables/mini-packs/$slug': typeof PrintablesMiniPacksSlugRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1IndexRoute
@@ -426,6 +435,7 @@ export interface FileRoutesById {
   '/api/chat/case-06-blueprint': typeof ApiChatCase06BlueprintRoute
   '/api/chat/case-06-circuit': typeof ApiChatCase06CircuitRoute
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
+  '/printables/fractions-bundle/preview': typeof PrintablesFractionsBundlePreviewRoute
   '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
   '/printables/mini-packs/$slug': typeof PrintablesMiniPacksSlugRoute
   '/printables/fractions-l1/': typeof PrintablesFractionsL1IndexRoute
@@ -476,6 +486,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-blueprint'
     | '/api/chat/case-06-circuit'
     | '/api/chat/case-06-paint'
+    | '/printables/fractions-bundle/preview'
     | '/printables/fractions-l1/preview'
     | '/printables/mini-packs/$slug'
     | '/printables/fractions-l1/'
@@ -520,6 +531,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-blueprint'
     | '/api/chat/case-06-circuit'
     | '/api/chat/case-06-paint'
+    | '/printables/fractions-bundle/preview'
     | '/printables/fractions-l1/preview'
     | '/printables/mini-packs/$slug'
     | '/printables/fractions-l1'
@@ -568,6 +580,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-blueprint'
     | '/api/chat/case-06-circuit'
     | '/api/chat/case-06-paint'
+    | '/printables/fractions-bundle/preview'
     | '/printables/fractions-l1/preview'
     | '/printables/mini-packs/$slug'
     | '/printables/fractions-l1/'
@@ -910,6 +923,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatCase06PaintRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/printables/fractions-bundle/preview': {
+      id: '/printables/fractions-bundle/preview'
+      path: '/fractions-bundle/preview'
+      fullPath: '/printables/fractions-bundle/preview'
+      preLoaderRoute: typeof PrintablesFractionsBundlePreviewRouteImport
+      parentRoute: typeof PrintablesRoute
+    }
     '/printables/fractions-l1/': {
       id: '/printables/fractions-l1/'
       path: '/'
@@ -990,12 +1010,14 @@ const PrintablesFractionsL1RouteWithChildren =
 interface PrintablesRouteChildren {
   PrintablesFractionsL1Route: typeof PrintablesFractionsL1RouteWithChildren
   PrintablesIndexRoute: typeof PrintablesIndexRoute
+  PrintablesFractionsBundlePreviewRoute: typeof PrintablesFractionsBundlePreviewRoute
   PrintablesMiniPacksSlugRoute: typeof PrintablesMiniPacksSlugRoute
 }
 
 const PrintablesRouteChildren: PrintablesRouteChildren = {
   PrintablesFractionsL1Route: PrintablesFractionsL1RouteWithChildren,
   PrintablesIndexRoute: PrintablesIndexRoute,
+  PrintablesFractionsBundlePreviewRoute: PrintablesFractionsBundlePreviewRoute,
   PrintablesMiniPacksSlugRoute: PrintablesMiniPacksSlugRoute,
 }
 

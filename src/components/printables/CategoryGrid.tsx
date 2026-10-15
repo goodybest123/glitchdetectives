@@ -3,16 +3,24 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
   ArrowRight,
+  BookOpen,
   CircleDot,
   Clock,
   Layers,
   Lock,
+  Package,
   PieChart,
   Plus,
   Shapes,
   type LucideIcon,
 } from "lucide-react";
 import fractionsL1Cover from "@/assets/fractions-level-1-cover.png";
+import {
+  FRACTIONS_BUNDLE_LAUNCH_PRICE,
+  FRACTIONS_BUNDLE_ORIGINAL_PRICE,
+  FRACTIONS_BUNDLE_TITLE,
+  FRACTIONS_BUNDLE_URL,
+} from "./fractionBundle";
 import {
   COLLECTION_BADGES,
   COLLECTION_INTRO,
@@ -225,7 +233,7 @@ function CategoryCard({
 /* ---------------- Fraction Learning Path ---------------- */
 
 type FractionLevel = {
-  n: 1 | 3;
+  n: number;
   /** Short label shown on the tile and above the title. */
   badge: string;
   title: string;
@@ -235,10 +243,132 @@ type FractionLevel = {
   href?: string;
   /** Internal route with the buyer-facing page preview. */
   previewTo?: string;
+  originalPrice?: string;
+  salePrice?: string;
   cover?: string;
+  /** If true, this item is a multi-resource bundle (styled distinctly). */
+  bundle?: boolean;
+  salePrice?: string;
+  /** Sub-resources listed inside the bundle card. */
+  includes?: { label: string; detail: string; previewImages?: string[] }[];
 };
 
 const FRACTION_LEVELS: FractionLevel[] = [
+  {
+    n: 0,
+    badge: "Bundle · 133 Pages",
+    title: FRACTIONS_BUNDLE_TITLE,
+    desc: (
+      <>
+        <strong>The Fraction Parent Companion + Workbook: Volume 1</strong>
+        <br />
+        <em>Help your child understand fractions, not just memorise the rules.</em>
+        <br />
+        <br />
+        What if your child could learn fractions by investigating mistakes, exploring visual examples, and explaining
+        their thinking?
+        <br />
+        <br />
+        The Glitch Detectives Fractions Bundle combines a practical parent guide with a mission-based workbook to help
+        children in Grades 1–3 build a meaningful understanding of fractions, one concept at a time.
+        <br />
+        <br />
+        Designed with a neuroinclusive, reasoning-first approach, these resources offer a different way to explore maths,
+        whether you&apos;re homeschooling, supporting learning at home, or looking for something beyond traditional
+        worksheets.
+        <br />
+        <br />
+        <strong>What&apos;s Included?</strong>
+        <br />
+        <br />
+        <strong>📘 The Fraction Parent Companion | 53 pages</strong>
+        <br />
+        Your guide to helping your child make sense of fractions. Explore clear explanations, common misconceptions,
+        conversation prompts, and practical activities that help you support your child&apos;s thinking without simply
+        giving away the answers.
+        <br />
+        <br />
+        <strong>🕵🏽 Glitch Detectives Workbook: Volume 1 | 80 pages</strong>
+        <br />
+        A printable, mission-based workbook where children investigate fraction problems, detect mistakes, repair
+        incorrect reasoning, and explain their thinking. Along the way, they&apos;ll meet ZED-4, our slightly unreliable
+        maths robot, and help him work through his fraction glitches.
+        <br />
+        <br />
+        <strong>What Will Your Child Explore?</strong>
+        <br />
+        • The whole, equal parts, halves, and quarters
+        <br />
+        • Naming and understanding fractions
+        <br />
+        • Equivalent fractions and simplifying fractions
+        <br />
+        • Fractions on a number line
+        <br />
+        • Comparing fractions
+        <br />
+        • Finding fractions of a group
+        <br />
+        <br />
+        Concepts are introduced gradually, helping children build understanding before moving on to more complex ideas.
+        <br />
+        <br />
+        <strong>Why Glitch Detectives?</strong>
+        <br />
+        <br />
+        💙 <strong>Neuroinclusive learning:</strong> Visual explanations, guided prompts, and manageable learning steps
+        give children different ways to approach maths.
+        <br />
+        <br />
+        ✂️ <strong>Hands-on and real-world connections:</strong> Familiar situations, pictures, and practical activities
+        help make abstract fraction ideas more concrete.
+        <br />
+        <br />
+        🧠 <strong>Reasoning over memorisation:</strong> Children are encouraged to question, investigate, and explain
+        why an answer makes sense.
+        <br />
+        <br />
+        🔎 <strong>Room for different learners:</strong> The structured approach supports children who need more guidance
+        while giving curious learners opportunities to examine mistakes and challenge their own reasoning.
+        <br />
+        <br />
+        <strong>Who Is It For?</strong>
+        <br />
+        This bundle is designed for parents and homeschoolers supporting children in Grades 1–3 who are learning
+        fractions and want to build stronger mathematical understanding.
+        <br />
+        <br />
+        <strong>Your download includes:</strong>
+        <br />
+        • 1 Fraction Parent Companion PDF (53 pages)
+        <br />
+        • 1 Glitch Detectives Workbook: Volume 1 PDF (80 pages)
+        <br />
+        <br />
+        <strong>
+          Two resources. 133 pages of guided fraction learning. One goal: understanding before memorising.
+        </strong>
+        <br />
+        <br />
+        Help your child do more than find the answer. Help them understand why it works.
+        <br />
+        <br />
+        Welcome to Glitch Detectives! 🕵🏽‍♀️
+      </>
+    ),
+    meta: ["2-in-1", "133 Pages", "Printable"],
+    locked: false,
+    href: FRACTIONS_BUNDLE_URL,
+    bundle: true,
+    originalPrice: FRACTIONS_BUNDLE_ORIGINAL_PRICE,
+    salePrice: FRACTIONS_BUNDLE_LAUNCH_PRICE,
+    previewTo: "/printables/fractions-bundle/preview",
+    cover: "/printables/fractions-bundle/cover.png",
+    includes: [
+      { label: "📘 Fraction Parent Companion", detail: "53 pages", previewImages: ["/printables/fractions-bundle/page-1.png", "/printables/fractions-bundle/page-2.png"] },
+      { label: "🕵🏽 Workbook: Volume 1", detail: "80 pages", previewImages: ["/printables/fractions-bundle/page-3.png", "/printables/fractions-bundle/page-4.png"] },
+    ],
+  },
   {
     n: 1,
     badge: "Levels 1 & 2",
@@ -291,34 +421,51 @@ const FRACTION_LEVELS: FractionLevel[] = [
 ];
 
 function FractionLearningPath() {
+  const bundles = FRACTION_LEVELS.filter((l) => l.bundle);
+  const levels = FRACTION_LEVELS.filter((l) => !l.bundle);
+
   return (
-    <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-10">
-      {FRACTION_LEVELS.map((lvl) => (
-        <li key={lvl.n}>
-          <FractionLevelCard lvl={lvl} />
-        </li>
+    <div className="mt-10 space-y-8">
+      {/* Bundle card(s) — full-width */}
+      {bundles.map((lvl) => (
+        <FractionLevelCard key={lvl.n} lvl={lvl} />
       ))}
-    </ul>
+
+      {/* Individual level cards */}
+      <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {levels.map((lvl) => (
+          <li key={lvl.n}>
+            <FractionLevelCard lvl={lvl} />
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
 function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
   const locked = lvl.locked;
+  const isBundle = lvl.bundle;
 
   return (
     <div
       aria-disabled={locked || undefined}
-      className={`h-full rounded-3xl border border-black/5 bg-white overflow-hidden flex flex-col transition-transform ${
-        locked ? "cursor-default" : "hover:-translate-y-1 hover:shadow-md"
+      className={`h-full rounded-3xl border overflow-hidden flex flex-col transition-transform ${
+        locked ? "cursor-default border-black/5 bg-white" : isBundle ? "border-2 bg-white" : "border-black/5 bg-white hover:-translate-y-1 hover:shadow-md"
       }`}
+      style={isBundle && !locked ? { borderColor: YELLOW } : undefined}
     >
       {/* Illustrated tile */}
       <div
-        className={`relative aspect-[4/3] flex items-center justify-center overflow-hidden ${
+        className={`relative flex items-center justify-center overflow-hidden ${
           locked ? "grayscale opacity-70" : ""
-        }`}
+        } ${isBundle ? "aspect-[16/7] sm:aspect-[3/1]" : "aspect-[4/3]"}`}
         style={{
-          background: locked ? "#e7eaef" : "var(--color-bg-mint)",
+          background: locked
+            ? "#e7eaef"
+            : isBundle
+              ? `linear-gradient(135deg, var(--color-brand-blue) 0%, #2a3f6f 100%)`
+              : "var(--color-bg-mint)",
         }}
       >
         {lvl.cover ? (
@@ -328,6 +475,16 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
           />
+        ) : isBundle ? (
+          <div className="flex flex-col items-center gap-3">
+            <div
+              className="w-20 h-20 rounded-full flex items-center justify-center"
+              style={{ background: "rgba(255,222,89,0.15)", border: `2px dashed ${YELLOW}` }}
+            >
+              <Package className="w-10 h-10" style={{ color: YELLOW }} strokeWidth={1.8} />
+            </div>
+            <span className="text-white/60 text-xs font-semibold uppercase tracking-widest">2-in-1 Bundle</span>
+          </div>
         ) : (
           <div
             className="w-24 h-24 rounded-full flex items-center justify-center"
@@ -365,6 +522,34 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
 
       {/* Body */}
       <div className="p-7 flex flex-col flex-1">
+        {isBundle && lvl.href && lvl.salePrice && (
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-[var(--color-bg-mint)] p-4">
+            <div>
+              <div className="flex items-baseline gap-2">
+                {lvl.originalPrice && (
+                  <span className="text-sm font-semibold line-through" style={{ color: MUTED }}>
+                    {lvl.originalPrice}
+                  </span>
+                )}
+                <span className="text-2xl font-black" style={{ color: BLUE }}>
+                  {lvl.salePrice}
+                </span>
+              </div>
+              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: MUTED }}>
+                Launch price
+              </p>
+            </div>
+            <a
+              href={lvl.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
+              style={{ background: BLUE, color: "white" }}
+            >
+              GET IT NOW <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        )}
         <p className="label-eyebrow" style={{ color: locked ? "#94a3b8" : MUTED }}>
           {lvl.badge}
         </p>
@@ -374,12 +559,46 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
         >
           {lvl.title}
         </h3>
-        <p
+        <div
           className="mt-3 text-sm leading-relaxed flex-1 whitespace-pre-wrap"
           style={{ color: locked ? "#94a3b8" : MUTED }}
         >
           {lvl.desc}
-        </p>
+        </div>
+
+        {/* Bundle "includes" sub-resources */}
+        {isBundle && lvl.includes && (
+          <div className="mt-5 grid sm:grid-cols-2 gap-4">
+            {lvl.includes.map((item) => (
+              <div
+                key={item.label}
+                className="rounded-2xl p-4 border overflow-hidden"
+                style={{ borderColor: "color-mix(in oklab, var(--color-brand-blue) 12%, transparent)", background: "var(--color-bg-mint)" }}
+              >
+                <div className="flex items-start gap-3">
+                  <BookOpen className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: BLUE }} strokeWidth={2} />
+                  <div>
+                    <p className="text-sm font-bold" style={{ color: BLUE }}>{item.label}</p>
+                    <p className="text-xs mt-0.5" style={{ color: MUTED }}>{item.detail}</p>
+                  </div>
+                </div>
+                {item.previewImages && item.previewImages.length > 0 && (
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    {item.previewImages.map((src) => (
+                      <img
+                        key={src}
+                        src={src}
+                        alt={`${item.label} sample page`}
+                        loading="lazy"
+                        className="w-full rounded-lg border border-black/5 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer"
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
 
         {!locked && lvl.meta && (
           <div className="mt-5 flex flex-wrap gap-2">
@@ -394,30 +613,28 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
             ))}
           </div>
         )}
-
         <div className="mt-7 flex flex-wrap gap-3">
-          {!locked && lvl.href ? (
-            <>
-              <a
-                href={lvl.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
-                style={{ background: BLUE, color: "white" }}
-              >
-                VIEW AND DOWNLOAD CASE FILE <ArrowRight className="w-4 h-4" />
-              </a>
-              {lvl.previewTo && (
-                <Link
-                  to={lvl.previewTo}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs border hover:opacity-80 transition-opacity"
-                  style={{ borderColor: BLUE, color: BLUE }}
-                >
-                  Preview pages
-                </Link>
-              )}
-            </>
-          ) : (
+          {!locked && lvl.href && (
+            <a
+              href={lvl.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
+              style={{ background: BLUE, color: "white" }}
+            >
+              VIEW AND DOWNLOAD CASE FILE <ArrowRight className="w-4 h-4" />
+            </a>
+          )}
+          {!locked && lvl.previewTo && (
+            <Link
+              to={lvl.previewTo}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs border hover:opacity-80 transition-opacity"
+              style={{ borderColor: BLUE, color: BLUE }}
+            >
+              Preview pages
+            </Link>
+          )}
+          {locked && (
             <span
               aria-disabled="true"
               className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs cursor-not-allowed"

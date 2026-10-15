@@ -196,6 +196,38 @@ export const MINI_PACKS: MiniPack[] = [
     downloadUrl: "https://selar.com/glitchdetectivesmathplanner",
     tint: "#f5efe5",
   },
+  {
+    slug: "math-in-the-wild",
+    title: "Math In The Wild — 15 Real-World Questions",
+    blurb:
+      "A free 5-page parent guide with 15 conversation-starter questions that turn everyday moments into hands-on math investigations.",
+    badges: ["Parent Guide", "5 Pages", "Free"],
+    pageCount: 5,
+    samplePages: [2, 3],
+    coverPage: 1,
+    description: [
+      "This guide is designed to help you bring math out of the classroom and into your daily routine. Instead of staring at a worksheet, your child will learn to spot fractions in a cookie recipe, identify geometry in local architecture, and use division during family game night.",
+      "These prompts train kids to look beyond the immediate answer, ask \"why,\" and investigate the practical logic behind the numbers they see every day — building the \"Glitch Detective\" mindset one question at a time.",
+      "No extra study hours or sitting at a desk required. These low-pressure conversation starters are designed to fit perfectly into car rides, grocery store trips, or dinner prep — so you can reclaim family time while still building mathematical thinking.",
+      "By solving practical, hands-on puzzles, children realise they already possess the skills to tackle complex problems. This helps erase math anxiety and proves that math is a tool they can control, not just a subject they have to memorise.",
+    ],
+    learn: [
+      {
+        title: "Bridge the real-world gap",
+        body: "Transform abstract concepts into tangible reality through everyday scenarios like cooking, shopping, and game nights.",
+      },
+      {
+        title: "Build the detective mindset",
+        body: "Train children to look beyond the immediate answer, ask 'why,' and investigate the practical logic behind numbers.",
+      },
+      {
+        title: "Boost everyday confidence",
+        body: "By solving practical puzzles children already encounter, they realise math is a tool they can control — not just a subject to memorise.",
+      },
+    ],
+    downloadUrl: "https://selar.com/mathinthewild",
+    tint: "#e8eef9",
+  },
 ];
 
 export function getMiniPack(slug: string) {
