@@ -46,7 +46,7 @@
     "@tailwindcss/vite": "^4.2.1",
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-router": "^1.170.29",
-    "@tanstack/react-start": "^1.168.46",
+    "@tanstack/react-start": "1.168.60",
     "@tanstack/router-plugin": "^1.168.32",
     "ai": "^6.0.184",
     "canvas-confetti": "^1.9.4",
