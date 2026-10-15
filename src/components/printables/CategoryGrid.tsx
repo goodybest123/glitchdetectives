@@ -95,7 +95,7 @@ export function CategoryGrid() {
 
   const subtitle =
     active === "Fractions"
-      ? "Follow the fraction case files in order."
+      ? "Explore the Glitch Detectives Fractions Bundle."
       : active === "All"
         ? "Each topic opens into a calm collection of detective-style sheets."
         : `Browse ${active.toLowerCase()} printables.`;
@@ -243,12 +243,13 @@ type FractionLevel = {
   href?: string;
   /** Internal route with the buyer-facing page preview. */
   previewTo?: string;
+  /** Internal product detail page. */
+  detailsTo?: string;
   originalPrice?: string;
   salePrice?: string;
   cover?: string;
   /** If true, this item is a multi-resource bundle (styled distinctly). */
   bundle?: boolean;
-  salePrice?: string;
   /** Sub-resources listed inside the bundle card. */
   includes?: { label: string; detail: string; previewImages?: string[] }[];
 };
@@ -362,6 +363,7 @@ const FRACTION_LEVELS: FractionLevel[] = [
     bundle: true,
     originalPrice: FRACTIONS_BUNDLE_ORIGINAL_PRICE,
     salePrice: FRACTIONS_BUNDLE_LAUNCH_PRICE,
+    detailsTo: "/printables/fractions/bundle",
     previewTo: "/printables/fractions-bundle/preview",
     cover: "/printables/fractions-bundle/cover.png",
     includes: [
@@ -422,23 +424,12 @@ const FRACTION_LEVELS: FractionLevel[] = [
 
 function FractionLearningPath() {
   const bundles = FRACTION_LEVELS.filter((l) => l.bundle);
-  const levels = FRACTION_LEVELS.filter((l) => !l.bundle);
 
   return (
     <div className="mt-10 space-y-8">
-      {/* Bundle card(s) — full-width */}
       {bundles.map((lvl) => (
         <FractionLevelCard key={lvl.n} lvl={lvl} />
       ))}
-
-      {/* Individual level cards */}
-      <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-        {levels.map((lvl) => (
-          <li key={lvl.n}>
-            <FractionLevelCard lvl={lvl} />
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
@@ -522,32 +513,19 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
 
       {/* Body */}
       <div className="p-7 flex flex-col flex-1">
-        {isBundle && lvl.href && lvl.salePrice && (
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-[var(--color-bg-mint)] p-4">
-            <div>
-              <div className="flex items-baseline gap-2">
-                {lvl.originalPrice && (
-                  <span className="text-sm font-semibold line-through" style={{ color: MUTED }}>
-                    {lvl.originalPrice}
-                  </span>
-                )}
-                <span className="text-2xl font-black" style={{ color: BLUE }}>
-                  {lvl.salePrice}
-                </span>
-              </div>
-              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: MUTED }}>
-                Launch price
-              </p>
-            </div>
-            <a
-              href={lvl.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
-              style={{ background: BLUE, color: "white" }}
-            >
-              GET IT NOW <ArrowRight className="w-4 h-4" />
-            </a>
+        {isBundle && lvl.salePrice && (
+          <div className="mb-6 flex flex-wrap items-center gap-3 rounded-2xl bg-[var(--color-bg-mint)] p-4">
+            {lvl.originalPrice && (
+              <span className="text-sm font-semibold line-through" style={{ color: MUTED }}>
+                {lvl.originalPrice}
+              </span>
+            )}
+            <span className="text-2xl font-black" style={{ color: BLUE }}>
+              {lvl.salePrice}
+            </span>
+            <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: MUTED }}>
+              Launch price
+            </span>
           </div>
         )}
         <p className="label-eyebrow" style={{ color: locked ? "#94a3b8" : MUTED }}>
@@ -614,7 +592,7 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
           </div>
         )}
         <div className="mt-7 flex flex-wrap gap-3">
-          {!locked && lvl.href && (
+          {!locked && lvl.href && !isBundle && (
             <a
               href={lvl.href}
               target="_blank"
@@ -632,6 +610,15 @@ function FractionLevelCard({ lvl }: { lvl: FractionLevel }) {
               style={{ borderColor: BLUE, color: BLUE }}
             >
               Preview pages
+            </Link>
+          )}
+          {!locked && lvl.detailsTo && (
+            <Link
+              to={lvl.detailsTo}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-full font-bold uppercase tracking-wider text-xs hover:scale-105 transition-transform"
+              style={{ background: BLUE, color: "white" }}
+            >
+              VIEW PACK <ArrowRight className="w-4 h-4" />
             </Link>
           )}
           {locked && (

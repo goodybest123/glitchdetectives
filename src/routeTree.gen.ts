@@ -28,6 +28,7 @@ import { Route as PlayCase05RouteImport } from './routes/play.case-05'
 import { Route as PlayCase06RouteImport } from './routes/play.case-06'
 import { Route as PlayReportRouteImport } from './routes/play.report'
 import { Route as PrintablesIndexRouteImport } from './routes/printables.index'
+import { Route as PrintablesBundleRouteImport } from './routes/printables.bundle'
 import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
 import { Route as ApiChatCase01RouteImport } from './routes/api/chat/case-01'
 import { Route as ApiChatCase01CanvasRouteImport } from './routes/api/chat/case-01-canvas'
@@ -55,6 +56,7 @@ import { Route as ApiChatCase06PaintRouteImport } from './routes/api/chat/case-0
 import { Route as PrintablesFractionsBundlePreviewRouteImport } from './routes/printables.fractions-bundle.preview'
 import { Route as PrintablesFractionsL1IndexRouteImport } from './routes/printables.fractions-l1.index'
 import { Route as PrintablesFractionsL1PreviewRouteImport } from './routes/printables.fractions-l1.preview'
+import { Route as PrintablesFractionsBundleRouteImport } from './routes/printables.fractions.bundle'
 import { Route as PrintablesMiniPacksSlugRouteImport } from './routes/printables.mini-packs.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -150,6 +152,11 @@ const PlayReportRoute = PlayReportRouteImport.update({
 const PrintablesIndexRoute = PrintablesIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => PrintablesRoute,
+} as any)
+const PrintablesBundleRoute = PrintablesBundleRouteImport.update({
+  id: '/bundle',
+  path: '/bundle',
   getParentRoute: () => PrintablesRoute,
 } as any)
 const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
@@ -290,6 +297,12 @@ const PrintablesFractionsL1PreviewRoute =
     path: '/preview',
     getParentRoute: () => PrintablesFractionsL1Route,
   } as any)
+const PrintablesFractionsBundleRoute =
+  PrintablesFractionsBundleRouteImport.update({
+    id: '/fractions/bundle',
+    path: '/fractions/bundle',
+    getParentRoute: () => PrintablesRoute,
+  } as any)
 const PrintablesMiniPacksSlugRoute = PrintablesMiniPacksSlugRouteImport.update({
   id: '/mini-packs/$slug',
   path: '/mini-packs/$slug',
@@ -313,6 +326,7 @@ export interface FileRoutesByFullPath {
   '/play/case-05': typeof PlayCase05Route
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
+  '/printables/bundle': typeof PrintablesBundleRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
   '/articles/': typeof ArticlesIndexRoute
   '/play/': typeof PlayIndexRoute
@@ -342,6 +356,7 @@ export interface FileRoutesByFullPath {
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
   '/printables/fractions-bundle/preview': typeof PrintablesFractionsBundlePreviewRoute
   '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
+  '/printables/fractions/bundle': typeof PrintablesFractionsBundleRoute
   '/printables/mini-packs/$slug': typeof PrintablesMiniPacksSlugRoute
   '/printables/fractions-l1/': typeof PrintablesFractionsL1IndexRoute
 }
@@ -359,6 +374,7 @@ export interface FileRoutesByTo {
   '/play/case-05': typeof PlayCase05Route
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
+  '/printables/bundle': typeof PrintablesBundleRoute
   '/articles': typeof ArticlesIndexRoute
   '/play': typeof PlayIndexRoute
   '/printables': typeof PrintablesIndexRoute
@@ -387,6 +403,7 @@ export interface FileRoutesByTo {
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
   '/printables/fractions-bundle/preview': typeof PrintablesFractionsBundlePreviewRoute
   '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
+  '/printables/fractions/bundle': typeof PrintablesFractionsBundleRoute
   '/printables/mini-packs/$slug': typeof PrintablesMiniPacksSlugRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1IndexRoute
 }
@@ -408,6 +425,7 @@ export interface FileRoutesById {
   '/play/case-05': typeof PlayCase05Route
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
+  '/printables/bundle': typeof PrintablesBundleRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
   '/articles/': typeof ArticlesIndexRoute
   '/play/': typeof PlayIndexRoute
@@ -437,6 +455,7 @@ export interface FileRoutesById {
   '/api/chat/case-06-paint': typeof ApiChatCase06PaintRoute
   '/printables/fractions-bundle/preview': typeof PrintablesFractionsBundlePreviewRoute
   '/printables/fractions-l1/preview': typeof PrintablesFractionsL1PreviewRoute
+  '/printables/fractions/bundle': typeof PrintablesFractionsBundleRoute
   '/printables/mini-packs/$slug': typeof PrintablesMiniPacksSlugRoute
   '/printables/fractions-l1/': typeof PrintablesFractionsL1IndexRoute
 }
@@ -459,6 +478,7 @@ export interface FileRouteTypes {
     | '/play/case-05'
     | '/play/case-06'
     | '/play/report'
+    | '/printables/bundle'
     | '/printables/fractions-l1'
     | '/articles/'
     | '/play/'
@@ -488,6 +508,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-paint'
     | '/printables/fractions-bundle/preview'
     | '/printables/fractions-l1/preview'
+    | '/printables/fractions/bundle'
     | '/printables/mini-packs/$slug'
     | '/printables/fractions-l1/'
   fileRoutesByTo: FileRoutesByTo
@@ -505,6 +526,7 @@ export interface FileRouteTypes {
     | '/play/case-05'
     | '/play/case-06'
     | '/play/report'
+    | '/printables/bundle'
     | '/articles'
     | '/play'
     | '/printables'
@@ -533,6 +555,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-paint'
     | '/printables/fractions-bundle/preview'
     | '/printables/fractions-l1/preview'
+    | '/printables/fractions/bundle'
     | '/printables/mini-packs/$slug'
     | '/printables/fractions-l1'
   id:
@@ -553,6 +576,7 @@ export interface FileRouteTypes {
     | '/play/case-05'
     | '/play/case-06'
     | '/play/report'
+    | '/printables/bundle'
     | '/printables/fractions-l1'
     | '/articles/'
     | '/play/'
@@ -582,6 +606,7 @@ export interface FileRouteTypes {
     | '/api/chat/case-06-paint'
     | '/printables/fractions-bundle/preview'
     | '/printables/fractions-l1/preview'
+    | '/printables/fractions/bundle'
     | '/printables/mini-packs/$slug'
     | '/printables/fractions-l1/'
   fileRoutesById: FileRoutesById
@@ -753,6 +778,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/printables/'
       preLoaderRoute: typeof PrintablesIndexRouteImport
+      parentRoute: typeof PrintablesRoute
+    }
+    '/printables/bundle': {
+      id: '/printables/bundle'
+      path: '/bundle'
+      fullPath: '/printables/bundle'
+      preLoaderRoute: typeof PrintablesBundleRouteImport
       parentRoute: typeof PrintablesRoute
     }
     '/printables/fractions-l1': {
@@ -944,6 +976,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrintablesFractionsL1PreviewRouteImport
       parentRoute: typeof PrintablesFractionsL1Route
     }
+    '/printables/fractions/bundle': {
+      id: '/printables/fractions/bundle'
+      path: '/fractions/bundle'
+      fullPath: '/printables/fractions/bundle'
+      preLoaderRoute: typeof PrintablesFractionsBundleRouteImport
+      parentRoute: typeof PrintablesRoute
+    }
     '/printables/mini-packs/$slug': {
       id: '/printables/mini-packs/$slug'
       path: '/mini-packs/$slug'
@@ -1008,16 +1047,20 @@ const PrintablesFractionsL1RouteWithChildren =
   )
 
 interface PrintablesRouteChildren {
+  PrintablesBundleRoute: typeof PrintablesBundleRoute
   PrintablesFractionsL1Route: typeof PrintablesFractionsL1RouteWithChildren
   PrintablesIndexRoute: typeof PrintablesIndexRoute
   PrintablesFractionsBundlePreviewRoute: typeof PrintablesFractionsBundlePreviewRoute
+  PrintablesFractionsBundleRoute: typeof PrintablesFractionsBundleRoute
   PrintablesMiniPacksSlugRoute: typeof PrintablesMiniPacksSlugRoute
 }
 
 const PrintablesRouteChildren: PrintablesRouteChildren = {
+  PrintablesBundleRoute: PrintablesBundleRoute,
   PrintablesFractionsL1Route: PrintablesFractionsL1RouteWithChildren,
   PrintablesIndexRoute: PrintablesIndexRoute,
   PrintablesFractionsBundlePreviewRoute: PrintablesFractionsBundlePreviewRoute,
+  PrintablesFractionsBundleRoute: PrintablesFractionsBundleRoute,
   PrintablesMiniPacksSlugRoute: PrintablesMiniPacksSlugRoute,
 }
 
