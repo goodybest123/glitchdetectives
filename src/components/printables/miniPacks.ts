@@ -228,6 +228,39 @@ export const MINI_PACKS: MiniPack[] = [
     downloadUrl: "https://selar.com/mathinthewild",
     tint: "#e8eef9",
   },
+  {
+    slug: "my-first-money-mysteries",
+    title: "My First Money Mysteries",
+    blurb:
+      "A hands-on money and decision-making activity pack for ages 5–12 that helps children think before they spend, save, and choose.",
+    badges: ["Money", "12 Pages", "Free"],
+    pageCount: 12,
+    samplePages: [2, 3],
+    coverPage: 1,
+    imageExt: "png",
+    description: [
+      "My First Money Mysteries is a hands-on money and decision-making activity pack from Glitch Detectives for children ages 5–12.",
+      "Would your child know what to do if you gave them some money today? Would they spend it all immediately, save some, compare prices before buying, or know when something they want is not necessarily something they need?",
+      "This 12-page printable helps children build those everyday money choices through simple, practical activities. The idea is not to teach children to hold on to every penny or never buy things they enjoy. It's to help them think before they spend, understand their choices, and become more confident making decisions.",
+      "Inside, your child gets to decide what to do with their money, explore the difference between needs and wants, run a little shop on a budget, work towards a savings goal, and compare choices before making a decision.",
+    ],
+    learn: [
+      {
+        title: "Budget with confidence",
+        body: "Children practise deciding how to use a small amount of money and make choices within a limit.",
+      },
+      {
+        title: "Needs vs wants",
+        body: "They learn to tell the difference between what they need, what they want, and what a good decision looks like.",
+      },
+      {
+        title: "Saving and comparing",
+        body: "Each task encourages planning ahead, setting a goal, and comparing items before spending.",
+      },
+    ],
+    downloadUrl: "https://selar.com/money_mysteries",
+    tint: "#e8f3ea",
+  },
 ];
 
 export function getMiniPack(slug: string) {
