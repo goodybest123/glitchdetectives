@@ -7,6 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PrintablesHero } from "@/components/printables/Hero";
 import { CategoryGrid } from "@/components/printables/CategoryGrid";
 import { MiniPacksSection } from "@/components/printables/MiniPacksSection";
+import { LifeSkillsMathsSection } from "@/components/printables/LifeSkillsMathsSection";
 import { BenefitsRow } from "@/components/printables/BenefitsRow";
 
 export const Route = createFileRoute("/printables/")({
@@ -35,6 +36,7 @@ function PrintablesPage() {
       <main>
         <PrintablesHero />
         <CategoryGrid />
+        <LifeSkillsMathsSection />
         <MiniPacksSection />
 
         <BenefitsRow />

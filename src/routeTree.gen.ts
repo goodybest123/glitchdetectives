@@ -30,6 +30,7 @@ import { Route as PlayReportRouteImport } from './routes/play.report'
 import { Route as PrintablesIndexRouteImport } from './routes/printables.index'
 import { Route as PrintablesBundleRouteImport } from './routes/printables.bundle'
 import { Route as PrintablesFractionsL1RouteImport } from './routes/printables.fractions-l1'
+import { Route as PrintablesLifeSkillsMathsRouteImport } from './routes/printables.life-skills-maths'
 import { Route as ApiChatCase01RouteImport } from './routes/api/chat/case-01'
 import { Route as ApiChatCase01CanvasRouteImport } from './routes/api/chat/case-01-canvas'
 import { Route as ApiChatCase01ChocolateRouteImport } from './routes/api/chat/case-01-chocolate'
@@ -164,6 +165,12 @@ const PrintablesFractionsL1Route = PrintablesFractionsL1RouteImport.update({
   path: '/fractions-l1',
   getParentRoute: () => PrintablesRoute,
 } as any)
+const PrintablesLifeSkillsMathsRoute =
+  PrintablesLifeSkillsMathsRouteImport.update({
+    id: '/life-skills-maths',
+    path: '/life-skills-maths',
+    getParentRoute: () => PrintablesRoute,
+  } as any)
 const ApiChatCase01Route = ApiChatCase01RouteImport.update({
   id: '/api/chat/case-01',
   path: '/api/chat/case-01',
@@ -328,6 +335,7 @@ export interface FileRoutesByFullPath {
   '/play/report': typeof PlayReportRoute
   '/printables/bundle': typeof PrintablesBundleRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
+  '/printables/life-skills-maths': typeof PrintablesLifeSkillsMathsRoute
   '/articles/': typeof ArticlesIndexRoute
   '/play/': typeof PlayIndexRoute
   '/printables/': typeof PrintablesIndexRoute
@@ -375,6 +383,7 @@ export interface FileRoutesByTo {
   '/play/case-06': typeof PlayCase06Route
   '/play/report': typeof PlayReportRoute
   '/printables/bundle': typeof PrintablesBundleRoute
+  '/printables/life-skills-maths': typeof PrintablesLifeSkillsMathsRoute
   '/articles': typeof ArticlesIndexRoute
   '/play': typeof PlayIndexRoute
   '/printables': typeof PrintablesIndexRoute
@@ -427,6 +436,7 @@ export interface FileRoutesById {
   '/play/report': typeof PlayReportRoute
   '/printables/bundle': typeof PrintablesBundleRoute
   '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
+  '/printables/life-skills-maths': typeof PrintablesLifeSkillsMathsRoute
   '/articles/': typeof ArticlesIndexRoute
   '/play/': typeof PlayIndexRoute
   '/printables/': typeof PrintablesIndexRoute
@@ -480,6 +490,7 @@ export interface FileRouteTypes {
     | '/play/report'
     | '/printables/bundle'
     | '/printables/fractions-l1'
+    | '/printables/life-skills-maths'
     | '/articles/'
     | '/play/'
     | '/printables/'
@@ -527,6 +538,7 @@ export interface FileRouteTypes {
     | '/play/case-06'
     | '/play/report'
     | '/printables/bundle'
+    | '/printables/life-skills-maths'
     | '/articles'
     | '/play'
     | '/printables'
@@ -578,6 +590,7 @@ export interface FileRouteTypes {
     | '/play/report'
     | '/printables/bundle'
     | '/printables/fractions-l1'
+    | '/printables/life-skills-maths'
     | '/articles/'
     | '/play/'
     | '/printables/'
@@ -792,6 +805,13 @@ declare module '@tanstack/react-router' {
       path: '/fractions-l1'
       fullPath: '/printables/fractions-l1'
       preLoaderRoute: typeof PrintablesFractionsL1RouteImport
+      parentRoute: typeof PrintablesRoute
+    }
+    '/printables/life-skills-maths': {
+      id: '/printables/life-skills-maths'
+      path: '/life-skills-maths'
+      fullPath: '/printables/life-skills-maths'
+      preLoaderRoute: typeof PrintablesLifeSkillsMathsRouteImport
       parentRoute: typeof PrintablesRoute
     }
     '/api/chat/case-01': {
@@ -1049,6 +1069,7 @@ const PrintablesFractionsL1RouteWithChildren =
 interface PrintablesRouteChildren {
   PrintablesBundleRoute: typeof PrintablesBundleRoute
   PrintablesFractionsL1Route: typeof PrintablesFractionsL1RouteWithChildren
+  PrintablesLifeSkillsMathsRoute: typeof PrintablesLifeSkillsMathsRoute
   PrintablesIndexRoute: typeof PrintablesIndexRoute
   PrintablesFractionsBundlePreviewRoute: typeof PrintablesFractionsBundlePreviewRoute
   PrintablesFractionsBundleRoute: typeof PrintablesFractionsBundleRoute
@@ -1058,6 +1079,7 @@ interface PrintablesRouteChildren {
 const PrintablesRouteChildren: PrintablesRouteChildren = {
   PrintablesBundleRoute: PrintablesBundleRoute,
   PrintablesFractionsL1Route: PrintablesFractionsL1RouteWithChildren,
+  PrintablesLifeSkillsMathsRoute: PrintablesLifeSkillsMathsRoute,
   PrintablesIndexRoute: PrintablesIndexRoute,
   PrintablesFractionsBundlePreviewRoute: PrintablesFractionsBundlePreviewRoute,
   PrintablesFractionsBundleRoute: PrintablesFractionsBundleRoute,
