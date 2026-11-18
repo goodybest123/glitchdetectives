@@ -5,6 +5,7 @@
  */
 import type { ComponentType } from "react";
 import { AntiAiOrNot } from "./articles/anti-ai-or-not";
+import { NewMathsOldMaths } from "./articles/new-maths-old-maths";
 
 export type Article = {
   slug: string;
@@ -17,6 +18,15 @@ export type Article = {
 };
 
 export const ARTICLES: Article[] = [
+  {
+    slug: "new-maths-old-maths",
+    title: "The New Maths and Old Maths. Pick One.",
+    date: "2026-11-18",
+    readingTime: "8 min read",
+    excerpt:
+      "Old Maths builds procedures and fluency. New Maths asks children to understand, explore, question, and explain. In a changing world, which approach do children need?",
+    Body: NewMathsOldMaths,
+  },
   {
     slug: "anti-ai-or-not",
     title:
