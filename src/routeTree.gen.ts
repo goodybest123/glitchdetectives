@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ArticlesRouteImport } from './routes/articles'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as PrintablesRouteImport } from './routes/printables'
@@ -19,6 +20,8 @@ import { Route as ProductsRouteImport } from './routes/products'
 import { Route as UnlockRouteImport } from './routes/unlock'
 import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
 import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as PlayIndexRouteImport } from './routes/play.index'
 import { Route as PlayCase01RouteImport } from './routes/play.case-01'
 import { Route as PlayCase02RouteImport } from './routes/play.case-02'
@@ -75,6 +78,11 @@ const ArticlesRoute = ArticlesRouteImport.update({
   path: '/articles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -109,6 +117,16 @@ const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => ArticlesRoute,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
 } as any)
 const PlayIndexRoute = PlayIndexRouteImport.update({
   id: '/',
@@ -320,12 +338,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/articles': typeof ArticlesRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/play': typeof PlayRouteWithChildren
   '/printables': typeof PrintablesRouteWithChildren
   '/products': typeof ProductsRoute
   '/unlock': typeof UnlockRoute
   '/articles/$slug': typeof ArticlesSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -337,6 +357,7 @@ export interface FileRoutesByFullPath {
   '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
   '/printables/life-skills-maths': typeof PrintablesLifeSkillsMathsRoute
   '/articles/': typeof ArticlesIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/play/': typeof PlayIndexRoute
   '/printables/': typeof PrintablesIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -375,6 +396,7 @@ export interface FileRoutesByTo {
   '/products': typeof ProductsRoute
   '/unlock': typeof UnlockRoute
   '/articles/$slug': typeof ArticlesSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -385,6 +407,7 @@ export interface FileRoutesByTo {
   '/printables/bundle': typeof PrintablesBundleRoute
   '/printables/life-skills-maths': typeof PrintablesLifeSkillsMathsRoute
   '/articles': typeof ArticlesIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/play': typeof PlayIndexRoute
   '/printables': typeof PrintablesIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -421,12 +444,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/articles': typeof ArticlesRouteWithChildren
+  '/blog': typeof BlogRouteWithChildren
   '/contact': typeof ContactRoute
   '/play': typeof PlayRouteWithChildren
   '/printables': typeof PrintablesRouteWithChildren
   '/products': typeof ProductsRoute
   '/unlock': typeof UnlockRoute
   '/articles/$slug': typeof ArticlesSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/play/case-01': typeof PlayCase01Route
   '/play/case-02': typeof PlayCase02Route
   '/play/case-03': typeof PlayCase03Route
@@ -438,6 +463,7 @@ export interface FileRoutesById {
   '/printables/fractions-l1': typeof PrintablesFractionsL1RouteWithChildren
   '/printables/life-skills-maths': typeof PrintablesLifeSkillsMathsRoute
   '/articles/': typeof ArticlesIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/play/': typeof PlayIndexRoute
   '/printables/': typeof PrintablesIndexRoute
   '/api/chat/case-01': typeof ApiChatCase01Route
@@ -475,12 +501,14 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/articles'
+    | '/blog'
     | '/contact'
     | '/play'
     | '/printables'
     | '/products'
     | '/unlock'
     | '/articles/$slug'
+    | '/blog/$slug'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -492,6 +520,7 @@ export interface FileRouteTypes {
     | '/printables/fractions-l1'
     | '/printables/life-skills-maths'
     | '/articles/'
+    | '/blog/'
     | '/play/'
     | '/printables/'
     | '/api/chat/case-01'
@@ -530,6 +559,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/unlock'
     | '/articles/$slug'
+    | '/blog/$slug'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -540,6 +570,7 @@ export interface FileRouteTypes {
     | '/printables/bundle'
     | '/printables/life-skills-maths'
     | '/articles'
+    | '/blog'
     | '/play'
     | '/printables'
     | '/api/chat/case-01'
@@ -575,12 +606,14 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/articles'
+    | '/blog'
     | '/contact'
     | '/play'
     | '/printables'
     | '/products'
     | '/unlock'
     | '/articles/$slug'
+    | '/blog/$slug'
     | '/play/case-01'
     | '/play/case-02'
     | '/play/case-03'
@@ -592,6 +625,7 @@ export interface FileRouteTypes {
     | '/printables/fractions-l1'
     | '/printables/life-skills-maths'
     | '/articles/'
+    | '/blog/'
     | '/play/'
     | '/printables/'
     | '/api/chat/case-01'
@@ -628,6 +662,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ArticlesRoute: typeof ArticlesRouteWithChildren
+  BlogRoute: typeof BlogRouteWithChildren
   ContactRoute: typeof ContactRoute
   PlayRoute: typeof PlayRouteWithChildren
   PrintablesRoute: typeof PrintablesRouteWithChildren
@@ -681,6 +716,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -729,6 +771,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/articles/$slug'
       preLoaderRoute: typeof ArticlesSlugRouteImport
       parentRoute: typeof ArticlesRoute
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/play/': {
       id: '/play/'
@@ -1027,6 +1083,18 @@ const ArticlesRouteWithChildren = ArticlesRoute._addFileChildren(
   ArticlesRouteChildren,
 )
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 interface PlayRouteChildren {
   PlayCase01Route: typeof PlayCase01Route
   PlayCase02Route: typeof PlayCase02Route
@@ -1094,6 +1162,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ArticlesRoute: ArticlesRouteWithChildren,
+  BlogRoute: BlogRouteWithChildren,
   ContactRoute: ContactRoute,
   PlayRoute: PlayRouteWithChildren,
   PrintablesRoute: PrintablesRouteWithChildren,

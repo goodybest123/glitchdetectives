@@ -776,8 +776,8 @@ export function Footer() {
             </Link>
           </li>
           <li>
-            <Link to="/articles" className="hover:text-white">
-              Articles
+            <Link to="/blog" className="hover:text-white">
+              Blog
             </Link>
           </li>
         </ul>

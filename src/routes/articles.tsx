@@ -1,6 +1,5 @@
 /**
- * `/articles` layout route. Renders nothing of its own — the index listing and
- * individual article pages mount into this outlet.
+ * Legacy route layout kept to redirect existing article links to the blog.
  */
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
