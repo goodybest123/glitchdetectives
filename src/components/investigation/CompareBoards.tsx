@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button";
 import { SpeakButton } from "@/components/case01/SpeakButton";
 import { FractionModel } from "./FractionModel";
 import type { CompareConfig, CompareModel } from "./types";
+import { shapeFromPath } from "canvas-confetti";
+import { threadCpuUsage } from "process";
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 

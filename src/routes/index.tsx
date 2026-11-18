@@ -1,20 +1,64 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
-  CheckCircle2,
-  Play,
-  FileText,
   Brain,
+  CheckCircle2,
+  FileText,
+  Lightbulb,
+  Search,
   Shield,
-  MessageCircle,
   Sparkles,
-  Bot,
 } from "lucide-react";
-import heroRobot from "@/assets/landing/hero-robot.png";
+import heroImage from "@/assets/landing/print-realworld.jpg";
 
-const BLUE = "var(--color-brand-blue)";
-const YELLOW = "var(--color-brand-yellow)";
-const MINT = "var(--color-brand-mint)";
+const principles = [
+  {
+    title: "Look closely",
+    description: "Start with what you notice. Small details can be important clues.",
+    icon: Search,
+  },
+  {
+    title: "Question the answer",
+    description: "A confident answer still deserves a careful check.",
+    icon: Shield,
+  },
+  {
+    title: "Explain your thinking",
+    description: "Show how you know, not only what you think the answer is.",
+    icon: Brain,
+  },
+];
+
+const learningSteps = [
+  {
+    number: "01",
+    title: "Investigate",
+    description: "Look carefully at the problem, model, or answer.",
+    icon: Search,
+  },
+  {
+    number: "02",
+    title: "Detect",
+    description: "Find the part that doesn’t fit and ask what might be wrong.",
+    icon: Shield,
+  },
+  {
+    number: "03",
+    title: "Repair",
+    description: "Try a correction and see whether it resolves the glitch.",
+    icon: Lightbulb,
+  },
+  {
+    number: "04",
+    title: "Explain",
+    description: "Share your reasoning so someone else can follow your thinking.",
+    icon: Sparkles,
+  },
+];
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return <span className="home-label">{children}</span>;
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,13 +67,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Glitch Detectives is a neuroinclusive, reasoning-first K-6 maths platform. Children hunt errors in AI answers, explain why they are wrong, and build confidence in a world where not every answer can be trusted.",
+          "A playful, reasoning-first maths experience that helps children investigate mistakes, question answers, and explain their thinking.",
       },
       { property: "og:title", content: "Glitch Detectives — Reasoning-First Maths for K-6" },
       {
         property: "og:description",
         content:
-          "Don't solve. Investigate. Detect. Repair. A calm, neuroinclusive maths platform that teaches children to question answers — especially AI-generated ones.",
+          "Don't just solve. Investigate. Help children question answers, spot mistakes, and explain their thinking.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -40,251 +84,251 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-white">
-      <main>
-        {/* Hero */}
-        <section
-          className="relative overflow-hidden dots-bg"
-          style={{ backgroundColor: BLUE, color: "white" }}
-        >
-          <div
-            className="pointer-events-none absolute -top-32 -left-24 w-[480px] h-[480px] rounded-full blur-3xl opacity-30"
-            style={{ background: MINT }}
-          />
-          <div
-            className="pointer-events-none absolute bottom-0 right-0 w-[420px] h-[420px] rounded-full blur-3xl opacity-25"
-            style={{ background: YELLOW }}
-          />
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28 grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="flex flex-wrap gap-2 mb-8">
-                <span
-                  className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest"
-                  style={{ background: MINT, color: BLUE }}
-                >
-                  K-6 Ecosystem
-                </span>
-                <span
-                  className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest border"
-                  style={{ color: YELLOW, borderColor: "rgba(255,222,89,0.4)" }}
-                >
-                  Reasoning-First Maths Platform
-                </span>
-              </div>
-
-              <h1 className="heading-black text-5xl sm:text-6xl lg:text-7xl uppercase">
-                Don't Solve.
-                <br />
-                <span style={{ color: YELLOW }}>Investigate.</span>
-                <br />
-                Detect. Repair.
-              </h1>
-
-              <div className="relative mt-10 rounded-3xl p-6 sm:p-7 border border-white/15 bg-white/5 backdrop-blur-md overflow-hidden">
-                <div
-                  className="absolute -top-px left-8 right-8 h-px"
-                  style={{ background: YELLOW, boxShadow: `0 0 24px ${YELLOW}` }}
-                />
-              <p className="text-base sm:text-lg text-white/90 leading-relaxed">
-                  <strong className="font-bold block mb-3 text-white">
-                    Raise a child who questions answers — not just finds them.
-                  </strong>
-                  In a world where AI generates answers instantly, the most valuable skill is
-                  knowing how to evaluate, verify, and reason. Glitch Detectives builds that skill
-                  one mission at a time, with calm, neuroinclusive experiences designed for children
-                  who think in different ways and at different speeds.
-                </p>
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  to="/play"
-                  className="px-6 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
-                  style={{ background: MINT, color: BLUE }}
-                >
-                  Explore Worlds <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  to="/printables"
-                  className="px-6 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
-                  style={{ background: YELLOW, color: BLUE }}
-                >
-                  <FileText className="w-4 h-4" /> Explore Printables
-                </Link>
-              </div>
-
-              <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80">
-                {["Reasoning First", "Built for Curious Minds", "AI-Era Learning"].map((t) => (
-                  <li key={t} className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" style={{ color: MINT }} /> {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="relative flex items-center justify-center">
-              <div
-                className="absolute w-[420px] h-[420px] rounded-full blur-3xl opacity-50"
-                style={{ background: MINT }}
-              />
-              <div
-                className="absolute w-[320px] h-[320px] rounded-full blur-3xl opacity-50 translate-x-20 translate-y-12"
-                style={{ background: YELLOW }}
-              />
-              <img
-                src={heroRobot}
-                alt="Detective robot mascot inspecting math glitches with a magnifying glass"
-                width={520}
-                height={520}
-                className="relative w-[320px] sm:w-[440px] lg:w-[520px] drop-shadow-2xl"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Proof points */}
-        <section className="bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
-            <div className="text-center max-w-2xl mx-auto mb-14">
-              <span className="label-eyebrow text-lg">What We Build</span>
-              <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
-                Tools for the AI era
-              </h2>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                {
-                  t: "AI Role-Reversal",
-                  d: "Kids teach the robot, not the other way around.",
-                  icon: Bot,
-                },
-                {
-                  t: "Reasoning-First",
-                  d: "Explain why, not just what. Understanding beats speed.",
-                  icon: Brain,
-                },
-                {
-                  t: "AI Error Hunting",
-                  d: "AI sounds sure of itself, but it isn't always right. Kids learn to fact-check and spot the glitch.",
-                  icon: Shield,
-                },
-                {
-                  t: "Neuroinclusive",
-                  d: "No timers, no pressure. Thinking takes the time it takes.",
-                  icon: MessageCircle,
-                },
-              ].map((c) => (
-                <div
-                  key={c.t}
-                  className="rounded-3xl p-6 border border-black/5 bg-[var(--color-bg-light)] hover:scale-105 transition-transform"
-                >
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4"
-                    style={{ background: MINT }}
-                  >
-                    <c.icon className="w-5 h-5 text-[var(--color-brand-blue)]" />
-                  </div>
-                  <h3 className="font-black text-lg uppercase text-[var(--color-brand-blue)]">
-                    {c.t}
-                  </h3>
-                  <p className="mt-2 text-sm text-[var(--color-brand-blue)]/70 leading-relaxed">
-                    {c.d}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Products preview */}
-        <section style={{ backgroundColor: "var(--color-bg-mint)" }}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <span className="label-eyebrow text-lg">Our Platform</span>
-                <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
-                  Detective Worlds and printables that teach the same thinking
-                </h2>
-                <p className="mt-5 text-[var(--color-brand-blue)]/80 text-lg leading-relaxed">
-                  The same reasoning loop — investigate, detect, repair, explain — across
-                  interactive Detective Worlds and screen-free printable workbooks.
-                </p>
-                <ul className="mt-6 space-y-3">
-                  {[
-                    "Six Detective Worlds, one active fractions curriculum",
-                    "Voice or text explanations, TTS on every line",
-                    "No timers, no punishments, no sign-up required",
-                    "Cognitive Insights report for adults",
-                  ].map((s) => (
-                    <li
-                      key={s}
-                      className="flex items-start gap-2 text-[var(--color-brand-blue)]/80"
-                    >
-                      <Sparkles className="w-4 h-4 mt-0.5 text-amber-500 shrink-0" />{" "}
-                      <span>{s}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Link
-                    to="/products"
-                    className="px-6 py-3 rounded-full bg-[var(--color-brand-blue)] text-white font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
-                  >
-                    See Products <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <Link
-                    to="/printables"
-                    className="px-6 py-3 rounded-full bg-white text-[var(--color-brand-blue)] font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 border border-black/5 hover:scale-105 transition-transform"
-                  >
-                    <FileText className="w-4 h-4" /> Printables
-                  </Link>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="aspect-[4/3] rounded-3xl bg-[var(--color-brand-blue)]/10 flex items-center justify-center">
-                  <Play className="w-16 h-16 text-[var(--color-brand-blue)]/40" />
-                </div>
-                <div className="aspect-[4/3] rounded-3xl bg-[var(--color-brand-yellow)]/40 flex items-center justify-center">
-                  <FileText className="w-16 h-16 text-[var(--color-brand-blue)]/40" />
-                </div>
-                <div className="aspect-[4/3] rounded-3xl bg-[var(--color-brand-yellow)]/40 flex items-center justify-center">
-                  <Brain className="w-16 h-16 text-[var(--color-brand-blue)]/40" />
-                </div>
-                <div className="aspect-[4/3] rounded-3xl bg-[var(--color-brand-blue)]/10 flex items-center justify-center">
-                  <Shield className="w-16 h-16 text-[var(--color-brand-blue)]/40" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Final CTA */}
-        <section style={{ backgroundColor: YELLOW }}>
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20 lg:py-28 text-center">
-            <h2 className="heading-black uppercase text-4xl sm:text-6xl text-[var(--color-brand-blue)]">
-              The future of reasoning-first learning
-            </h2>
-            <p className="mt-5 text-[var(--color-brand-blue)]/80 text-lg max-w-2xl mx-auto">
-              Step into a world where children investigate, repair, and teach their way to
-              mathematical mastery.
+    <main className="home-page">
+      <section className="home-dark brand-blue-dots home-hero">
+        <div className="home-container home-hero-grid">
+          <div className="home-hero-copy">
+            <SectionLabel>Maths for curious minds</SectionLabel>
+            <h1 className="home-display">
+              Don’t just accept the answer.
+              <span>Investigate it.</span>
+            </h1>
+            <p className="home-lead">
+              Glitch Detectives helps children look closely, spot mistakes, and explain their
+              thinking. Because learning maths is about more than getting to an answer—it’s about
+              understanding why it makes sense.
             </p>
-            <div className="mt-10 flex flex-wrap justify-center gap-3">
-              <Link
-                to="/play"
-                className="px-7 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 bg-[var(--color-brand-blue)] text-white hover:scale-105 transition-transform"
-              >
-                Enter Detective Worlds <ArrowRight className="w-4 h-4" />
+            <div className="home-actions">
+              <Link to="/play" className="home-button home-button-yellow">
+                Explore Missions <ArrowRight aria-hidden="true" />
               </Link>
-              <Link
-                to="/contact"
-                className="px-7 py-4 rounded-full font-bold uppercase tracking-wider text-sm inline-flex items-center gap-2 bg-white text-[var(--color-brand-blue)] hover:scale-105 transition-transform"
-              >
-                Contact Us <ArrowRight className="w-4 h-4" />
+              <Link to="/printables" className="home-button home-button-outline">
+                <FileText aria-hidden="true" /> Explore Printables
+              </Link>
+            </div>
+            <ul className="home-trust-list">
+              {["Reasoning before speed", "Mistakes are clues", "Made for curious learners"].map(
+                (item) => (
+                  <li key={item}>
+                    <CheckCircle2 aria-hidden="true" /> {item}
+                  </li>
+                ),
+              )}
+            </ul>
+          </div>
+
+          <div className="home-hero-visual">
+            <div className="home-image-frame">
+              <img
+                src={heroImage}
+                alt="A child investigating a hands-on activity at a kitchen table"
+                width={768}
+                height={768}
+                fetchPriority="high"
+              />
+              <div className="home-image-caption">
+                <span className="home-caption-icon">
+                  <Search aria-hidden="true" />
+                </span>
+                <span>
+                  <strong>Every answer has a story.</strong>
+                  <small>Let’s investigate.</small>
+                </span>
+              </div>
+            </div>
+            <span className="home-image-note">Curiosity is the first clue</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="home-cream home-intro">
+        <div className="home-container home-narrow home-centered">
+          <SectionLabel>The answer is only the beginning</SectionLabel>
+          <h2 className="home-heading">
+            Instant answers are not learning.
+            <br />
+            <span>Understanding is.</span>
+          </h2>
+          <p className="home-body">
+            Children deserve more than a right-or-wrong tick. They need space to notice, ask
+            questions, test an idea, and explain why it works. Glitch Detectives turns maths into a
+            series of small investigations—with a clear place to start and a reason to keep
+            thinking.
+          </p>
+
+          <div className="home-example">
+            <div className="home-example-top">
+              <span className="home-example-mark">GD</span>
+              <span className="home-example-title">A better question to ask</span>
+              <span className="home-example-tag">Think it through</span>
+            </div>
+            <p>“How could we check whether this answer makes sense?”</p>
+            <div className="home-example-bottom">
+              <span>Notice</span>
+              <ArrowRight aria-hidden="true" />
+              <span>Question</span>
+              <ArrowRight aria-hidden="true" />
+              <span>Explain</span>
+            </div>
+          </div>
+
+          <div className="home-principle-grid">
+            {principles.map(({ title, description, icon: Icon }) => (
+              <article className="home-principle-card" key={title}>
+                <span className="home-card-icon">
+                  <Icon aria-hidden="true" />
+                </span>
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="home-dark brand-blue-dots home-loop">
+        <div className="home-container">
+          <div className="home-callout">
+            <SectionLabel>Our approach</SectionLabel>
+            <h2 className="home-heading">
+              Maths is more than
+              <br />
+              finding the answer.
+            </h2>
+            <p>
+              Children build confidence when they can see where to begin, make sense of an idea, and
+              share how they reached it. Every investigation gives their thinking a chance to grow.
+            </p>
+            <Link to="/about" className="home-text-link">
+              Learn about our approach <ArrowRight aria-hidden="true" />
+            </Link>
+          </div>
+
+          <div className="home-section-heading home-centered">
+            <SectionLabel>A simple learning loop</SectionLabel>
+            <h2 className="home-heading">Every glitch has a story. Let’s investigate.</h2>
+            <p className="home-body">
+              Four clear steps help turn a mistake into a moment for thinking.
+            </p>
+          </div>
+
+          <div className="home-step-grid">
+            {learningSteps.map(({ number, title, description, icon: Icon }) => (
+              <article className="home-step-card" key={number}>
+                <div className="home-step-top">
+                  <span className="home-card-icon">
+                    <Icon aria-hidden="true" />
+                  </span>
+                  <span className="home-step-number">{number}</span>
+                </div>
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </article>
+            ))}
+          </div>
+          <p className="home-loop-footnote">
+            <Sparkles aria-hidden="true" /> The goal isn’t speed. It’s understanding.
+          </p>
+        </div>
+      </section>
+
+      <section className="home-cream home-printables">
+        <div className="home-container home-printables-grid">
+          <div>
+            <SectionLabel>Learning beyond the screen</SectionLabel>
+            <h2 className="home-heading">Curiosity doesn’t stop at the classroom.</h2>
+            <p className="home-body">
+              Glitch Detectives includes a Printables area for screen-free learning. It’s another
+              way to bring investigation, careful observation, and explanation into a child’s day.
+            </p>
+            <Link to="/printables" className="home-button home-button-dark">
+              Explore Printables <ArrowRight aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="home-printables-card">
+            <img src={heroImage} alt="" width={768} height={768} loading="lazy" />
+            <div>
+              <span className="home-card-icon">
+                <FileText aria-hidden="true" />
+              </span>
+              <h3>Screen-free ways to keep thinking</h3>
+              <p>Discover the Printables collection.</p>
+              <Link to="/printables" className="home-inline-link">
+                Visit Printables <ArrowRight aria-hidden="true" />
               </Link>
             </div>
           </div>
-        </section>
-      </main>
-    </div>
+        </div>
+      </section>
+
+      <section className="home-cream home-audiences">
+        <div className="home-container">
+          <div className="home-section-heading home-centered">
+            <SectionLabel>For families and educators</SectionLabel>
+            <h2 className="home-heading">What matters is how children think.</h2>
+          </div>
+          <div className="home-audience-grid">
+            <article className="home-audience-card">
+              <h3>For families</h3>
+              <p>
+                Make room for curiosity, conversation, and working through an idea together. The
+                focus is on how your child thinks—not how quickly they finish.
+              </p>
+              <Link to="/play" className="home-inline-link">
+                Explore Missions <ArrowRight aria-hidden="true" />
+              </Link>
+            </article>
+            <article className="home-audience-card">
+              <h3>For educators</h3>
+              <p>
+                Invite learners to notice, discuss, and explain mathematical ideas. We’d be glad to
+                hear what would help in your classroom or school.
+              </p>
+              <Link to="/contact" className="home-inline-link">
+                Talk to us <ArrowRight aria-hidden="true" />
+              </Link>
+            </article>
+            <article className="home-audience-card">
+              <h3>For curious learners</h3>
+              <p>
+                You don’t have to know everything straight away. Start with what you notice, follow
+                the clues, and see where your thinking takes you.
+              </p>
+              <Link to="/about" className="home-inline-link">
+                Discover our approach <ArrowRight aria-hidden="true" />
+              </Link>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="home-cream home-final">
+        <div className="home-container">
+          <div className="home-final-card">
+            <span className="home-final-icon">
+              <Search aria-hidden="true" />
+            </span>
+            <SectionLabel>Ready when you are</SectionLabel>
+            <h2 className="home-heading">
+              Let’s help children become
+              <br />
+              confident mathematical thinkers.
+            </h2>
+            <p>
+              Start with an investigation, explore screen-free learning, or get in touch to learn
+              more about Glitch Detectives.
+            </p>
+            <div className="home-actions home-actions-centered">
+              <Link to="/play" className="home-button home-button-yellow">
+                Explore Missions <ArrowRight aria-hidden="true" />
+              </Link>
+              <Link to="/contact" className="home-button home-button-light">
+                Contact Us
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

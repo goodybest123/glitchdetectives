@@ -16,7 +16,10 @@ export const Route = createFileRoute("/articles/$slug")({
     const article = getArticle(params.slug);
     if (!article) {
       return {
-        meta: [{ title: "Article not found — Glitch Detectives" }, { name: "robots", content: "noindex" }],
+        meta: [
+          { title: "Article not found — Glitch Detectives" },
+          { name: "robots", content: "noindex" },
+        ],
       };
     }
     const url = `${SITE}/articles/${article.slug}`;
@@ -79,10 +82,7 @@ function ArticlePage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <section
-        className="relative overflow-hidden dots-bg"
-        style={{ backgroundColor: BLUE, color: "white" }}
-      >
+      <section className="brand-blue-dots relative overflow-hidden">
         <div
           className="pointer-events-none absolute -bottom-24 -left-16 w-[380px] h-[380px] rounded-full blur-3xl opacity-25"
           style={{ background: MINT }}

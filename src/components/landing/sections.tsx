@@ -35,17 +35,13 @@ import {
   Youtube,
 } from "lucide-react";
 import heroRobot from "@/assets/landing/hero-robot.png";
-import footerLogoUrl from "@/assets/GOODNESS GLITCH (1).png";
 import imgFractions from "@/assets/landing/world-fractions.jpg";
 import imgDecimals from "@/assets/landing/world-decimals.jpg";
 import imgPlaceValue from "@/assets/landing/world-placevalue.jpg";
 import imgGeometry from "@/assets/landing/world-geometry.jpg";
 import imgAlgebra from "@/assets/landing/world-algebra.jpg";
 import imgAiLogic from "@/assets/landing/world-ailogic.jpg";
-import imgWorksheets from "@/assets/landing/print-worksheets.jpg";
-import imgTactile from "@/assets/landing/print-tactile.jpg";
-
-import imgRealworld from "@/assets/landing/print-realworld.jpg";
+import { PrintableCollections } from "@/components/printables/PrintableCollections";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
@@ -56,11 +52,7 @@ const BG_MINT = "var(--color-bg-mint)";
 /* -------------------- HERO -------------------- */
 export function Hero() {
   return (
-    <section
-      id="home"
-      className="relative overflow-hidden dots-bg"
-      style={{ backgroundColor: BLUE, color: "white" }}
-    >
+    <section id="home" className="brand-blue-dots relative overflow-hidden">
       {/* glow blobs */}
       <div
         className="pointer-events-none absolute -top-32 -left-24 w-[480px] h-[480px] rounded-full blur-3xl opacity-30"
@@ -487,76 +479,21 @@ export function RoleReversal() {
 
 /* -------------------- PRINTABLES -------------------- */
 export function Printables() {
-  const items = [
-    {
-      t: "Glitch Detective Worksheets",
-      d: "Find hidden errors in mathematical equations.",
-      img: imgWorksheets,
-      href: "/printables" as const,
-    },
-    {
-      t: "Tactile Activities",
-      d: "Hands-on learning through cutting and gluing.",
-      img: imgTactile,
-    },
-    {
-      t: "Real-World Challenges",
-      d: "Applying math reasoning in real world scenarios.",
-      img: imgRealworld,
-    },
-  ];
   return (
     <section id="printables" style={{ backgroundColor: BG_MINT }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="label-eyebrow text-lg">Off-Screen</span>
+          <span className="label-eyebrow text-lg">Printable Library</span>
           <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
-            No screen? No problem.
+            No screen? No problem. No blank page.
           </h2>
           <p className="mt-5 text-[var(--color-brand-blue)]/80 text-base sm:text-lg leading-relaxed">
-            Children can still experience the full Glitch Detectives reasoning journey through calm,
-            hands-on printable activities designed for families who prefer low-screen or screen-free
-            learning.
-          </p>
-          <p className="mt-3 text-[var(--color-brand-blue)]/60 text-sm">
-            Calm, tactile activities that extend the detective loop beyond the screen.
+            Browse printable detective worksheets, hands-on activities, and real-world maths
+            challenges. Each resource gives children a clear place to begin as they investigate,
+            repair, and explain their thinking at their own pace.
           </p>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {items.map((it) => {
-            const inner = (
-              <>
-                <img
-                  src={it.img}
-                  alt={it.t}
-                  width={768}
-                  height={768}
-                  loading="lazy"
-                  className="w-full aspect-square object-cover"
-                />
-                <div className="p-5">
-                  <h3 className="font-black uppercase text-[var(--color-brand-blue)] text-sm tracking-wide">
-                    {it.t}
-                  </h3>
-                  <p className="mt-2 text-[var(--color-brand-blue)]/70 text-sm leading-relaxed">
-                    {it.d}
-                  </p>
-                </div>
-              </>
-            );
-            const className =
-              "block bg-white rounded-3xl overflow-hidden border border-black/5 hover:scale-105 transition-transform shadow-sm";
-            return it.href ? (
-              <Link key={it.t} to={it.href} className={className}>
-                {inner}
-              </Link>
-            ) : (
-              <div key={it.t} className={className}>
-                {inner}
-              </div>
-            );
-          })}
-        </div>
+        <PrintableCollections />
       </div>
     </section>
   );
@@ -597,7 +534,7 @@ export function Neurodivergent() {
     },
   ];
   return (
-    <section className="dots-bg" style={{ backgroundColor: BLUE, color: "white" }}>
+    <section className="brand-blue-dots">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
         <div className="text-center max-w-2xl mx-auto mb-14">
           <span className="label-eyebrow" style={{ color: YELLOW }}>
@@ -816,17 +753,7 @@ export function FinalCTA() {
 export function Footer() {
   return (
     <footer style={{ backgroundColor: BLUE, color: "white" }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 flex flex-col sm:flex-row gap-8 items-start sm:items-center justify-between">
-        <Link to="/" className="group flex items-center" aria-label="Glitch Detectives home">
-          <img
-            src={footerLogoUrl}
-            alt="Glitch Detectives"
-            width={810}
-            height={680}
-            loading="lazy"
-            className="h-20 sm:h-24 w-auto object-contain transition-transform group-hover:scale-[1.03]"
-          />
-        </Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 flex flex-col sm:flex-row gap-8 items-center justify-center">
         <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm uppercase tracking-wider font-semibold text-white/80">
           <li>
             <Link to="/about" className="hover:text-white">

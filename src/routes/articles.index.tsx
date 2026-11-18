@@ -32,10 +32,7 @@ export const Route = createFileRoute("/articles/")({
 function ArticlesIndex() {
   return (
     <main className="min-h-screen bg-white">
-      <section
-        className="relative overflow-hidden dots-bg"
-        style={{ backgroundColor: BLUE, color: "white" }}
-      >
+      <section className="brand-blue-dots relative overflow-hidden">
         <div
           className="pointer-events-none absolute -top-24 -right-16 w-[380px] h-[380px] rounded-full blur-3xl opacity-30"
           style={{ background: MINT }}

@@ -7,9 +7,7 @@ import imgPlaceValue from "@/assets/landing/world-placevalue.jpg";
 import imgGeometry from "@/assets/landing/world-geometry.jpg";
 import imgAlgebra from "@/assets/landing/world-algebra.jpg";
 import imgAiLogic from "@/assets/landing/world-ailogic.jpg";
-import imgWorksheets from "@/assets/landing/print-worksheets.jpg";
-import imgTactile from "@/assets/landing/print-tactile.jpg";
-import imgRealworld from "@/assets/landing/print-realworld.jpg";
+import { PrintableCollections } from "@/components/printables/PrintableCollections";
 
 const BLUE = "var(--color-brand-blue)";
 const YELLOW = "var(--color-brand-yellow)";
@@ -44,10 +42,7 @@ function ProductsPage() {
     <div className="min-h-screen bg-white">
       <main>
         {/* Hero */}
-        <section
-          className="relative overflow-hidden dots-bg"
-          style={{ backgroundColor: BLUE, color: "white" }}
-        >
+        <section className="brand-blue-dots relative overflow-hidden">
           <div
             className="pointer-events-none absolute -top-32 -left-24 w-[480px] h-[480px] rounded-full blur-3xl opacity-30"
             style={{ background: MINT }}
@@ -221,69 +216,17 @@ function ProductsPage() {
         <section style={{ backgroundColor: BG_MINT }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 lg:py-28">
             <div className="text-center max-w-2xl mx-auto mb-14">
-              <span className="label-eyebrow text-lg">Off-Screen</span>
+              <span className="label-eyebrow text-lg">Printable Library</span>
               <h2 className="heading-black uppercase text-3xl sm:text-5xl text-[var(--color-brand-blue)] mt-3">
                 No screen? No problem. No blank page.
               </h2>
               <p className="mt-5 text-[var(--color-brand-blue)]/80 text-base sm:text-lg leading-relaxed">
-                Children can still experience the full Glitch Detectives reasoning journey through
-                calm, hands-on printable activities. Every page begins with a clear starting point, so
-                learners never face the blank-page anxiety that blocks many children from beginning
-                their work.
+                Browse printable detective worksheets, hands-on activities, and real-world maths
+                challenges. Each resource gives children a clear place to begin as they investigate,
+                repair, and explain their thinking at their own pace.
               </p>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              {[
-                {
-                  t: "Glitch Detective Worksheets",
-                  d: "Find hidden errors in mathematical equations.",
-                  img: imgWorksheets,
-                  href: "/printables" as const,
-                },
-                {
-                  t: "Tactile Activities",
-                  d: "Hands-on learning through cutting and gluing.",
-                  img: imgTactile,
-                },
-                {
-                  t: "Real-World Challenges",
-                  d: "Applying math reasoning in real world scenarios.",
-                  img: imgRealworld,
-                },
-              ].map((it) => {
-                const inner = (
-                  <>
-                    <img
-                      src={it.img}
-                      alt={it.t}
-                      width={768}
-                      height={768}
-                      loading="lazy"
-                      className="w-full aspect-square object-cover"
-                    />
-                    <div className="p-5">
-                      <h3 className="font-black uppercase text-[var(--color-brand-blue)] text-sm tracking-wide">
-                        {it.t}
-                      </h3>
-                      <p className="mt-2 text-[var(--color-brand-blue)]/70 text-sm leading-relaxed">
-                        {it.d}
-                      </p>
-                    </div>
-                  </>
-                );
-                const className =
-                  "block bg-white rounded-3xl overflow-hidden border border-black/5 hover:scale-105 transition-transform shadow-sm";
-                return it.href ? (
-                  <Link key={it.t} to={it.href} className={className}>
-                    {inner}
-                  </Link>
-                ) : (
-                  <div key={it.t} className={className}>
-                    {inner}
-                  </div>
-                );
-              })}
-            </div>
+            <PrintableCollections />
           </div>
         </section>
 
@@ -309,19 +252,23 @@ function ProductsPage() {
                 </h3>
                 <p className="mt-3 text-[var(--color-brand-blue)]/70 leading-relaxed">
                   Turn homework friction into curiosity. Children explain their thinking, spot AI
-                  errors, and build confidence without pressure, timers, or the anxiety of a blank page.
+                  errors, and build confidence without pressure, timers, or the anxiety of a blank
+                  page.
                 </p>
                 <ul className="mt-5 space-y-2">
-                  {["No sign-up required", "Progress saved locally", "Voice or text input", "Calm, neuroinclusive design"].map(
-                    (s) => (
-                      <li
-                        key={s}
-                        className="flex items-center gap-2 text-sm text-[var(--color-brand-blue)]/80"
-                      >
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500" /> {s}
-                      </li>
-                    ),
-                  )}
+                  {[
+                    "No sign-up required",
+                    "Progress saved locally",
+                    "Voice or text input",
+                    "Calm, neuroinclusive design",
+                  ].map((s) => (
+                    <li
+                      key={s}
+                      className="flex items-center gap-2 text-sm text-[var(--color-brand-blue)]/80"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500" /> {s}
+                    </li>
+                  ))}
                 </ul>
                 <Link
                   to="/play"
@@ -343,20 +290,23 @@ function ProductsPage() {
                 </h3>
                 <p className="mt-3 text-[var(--color-brand-blue)]/70 leading-relaxed">
                   Get qualitative insights into how students think. The Cognitive Insights report
-                  surfaces reasoning patterns, vocabulary, and misconceptions — and the activities are
-                  designed to remove blank-page anxiety so every learner can start.
+                  surfaces reasoning patterns, vocabulary, and misconceptions — and the activities
+                  are designed to remove blank-page anxiety so every learner can start.
                 </p>
                 <ul className="mt-5 space-y-2">
-                  {["Classroom-safe content", "Printable extensions", "AI-literacy aligned", "Neuroinclusive structure"].map(
-                    (s) => (
-                      <li
-                        key={s}
-                        className="flex items-center gap-2 text-sm text-[var(--color-brand-blue)]/80"
-                      >
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500" /> {s}
-                      </li>
-                    ),
-                  )}
+                  {[
+                    "Classroom-safe content",
+                    "Printable extensions",
+                    "AI-literacy aligned",
+                    "Neuroinclusive structure",
+                  ].map((s) => (
+                    <li
+                      key={s}
+                      className="flex items-center gap-2 text-sm text-[var(--color-brand-blue)]/80"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500" /> {s}
+                    </li>
+                  ))}
                 </ul>
                 <Link
                   to="/contact"

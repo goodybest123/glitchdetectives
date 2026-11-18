@@ -44,10 +44,7 @@ function ContactPage() {
     <div className="min-h-screen bg-white">
       <main>
         {/* Hero */}
-        <section
-          className="relative overflow-hidden dots-bg"
-          style={{ backgroundColor: BLUE, color: "white" }}
-        >
+        <section className="brand-blue-dots relative overflow-hidden">
           <div
             className="pointer-events-none absolute -top-32 -left-24 w-[480px] h-[480px] rounded-full blur-3xl opacity-30"
             style={{ background: MINT }}

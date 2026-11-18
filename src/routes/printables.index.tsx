@@ -4,11 +4,7 @@
  * such as `/printables/fractions-l1`.
  */
 import { createFileRoute } from "@tanstack/react-router";
-import { PrintablesHero } from "@/components/printables/Hero";
-import { CategoryGrid } from "@/components/printables/CategoryGrid";
-import { MiniPacksSection } from "@/components/printables/MiniPacksSection";
-import { LifeSkillsMathsSection } from "@/components/printables/LifeSkillsMathsSection";
-import { BenefitsRow } from "@/components/printables/BenefitsRow";
+import { PrintablesLibrary } from "@/components/printables/Library";
 
 export const Route = createFileRoute("/printables/")({
   head: () => ({
@@ -33,14 +29,7 @@ export const Route = createFileRoute("/printables/")({
 function PrintablesPage() {
   return (
     <div className="min-h-screen bg-white">
-      <main>
-        <PrintablesHero />
-        <CategoryGrid />
-        <LifeSkillsMathsSection />
-        <MiniPacksSection />
-
-        <BenefitsRow />
-      </main>
+      <PrintablesLibrary />
     </div>
   );
 }
