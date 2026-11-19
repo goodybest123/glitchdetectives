@@ -2,7 +2,7 @@
  * `/play/case-05` — Combining Matches (Add/Subtract, Like Denominators).
  * Same loop as case-01; see `play.case-01.tsx` for the full walkthrough.
  */
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
@@ -29,9 +29,13 @@ import { useSfx } from "@/hooks/useSfx";
 import { useCaseProgress } from "@/hooks/useProgress";
 import { useReportRecorder } from "@/hooks/useReportRecorder";
 import { celebrate } from "@/lib/celebrate";
+import { isPubliclyAvailableCase } from "@/lib/publicCaseAccess";
 import { SUB_CASES, SUB_CASE_ORDER, type SubCaseId } from "@/components/case05/cases";
 
 export const Route = createFileRoute("/play/case-05")({
+  beforeLoad: () => {
+    if (!isPubliclyAvailableCase(5)) throw redirect({ to: "/play" });
+  },
   head: () => ({
     meta: [
       { title: "Case 05: Combining Matches — Glitch Detectives" },

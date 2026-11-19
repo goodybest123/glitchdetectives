@@ -117,10 +117,10 @@ function LevelClosed() {
           VIEW DETECTIVE'S REPORT
         </Link>
         <Link
-          to="/play/case-04"
+          to="/play"
           className="rounded-xl border-2 border-border px-5 py-3 text-sm font-black text-foreground"
         >
-          CONTINUE TO NEXT LEVEL
+          VIEW ALL CASES
         </Link>
       </div>
     </section>
@@ -144,7 +144,10 @@ function PageShell({ title, children }: { title: string; children: React.ReactNo
           <div className="w-[80px] sm:w-[120px]" />
         </div>
       </header>
-      <div data-readable className="mx-auto w-full max-w-7xl px-3 py-3 pb-28 sm:px-6 sm:py-5 sm:pb-12 lg:px-10">
+      <div
+        data-readable
+        className="mx-auto w-full max-w-7xl px-3 py-3 pb-28 sm:px-6 sm:py-5 sm:pb-12 lg:px-10"
+      >
         {children}
       </div>
     </main>

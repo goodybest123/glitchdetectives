@@ -1,14 +1,10 @@
 /**
  * `/play` — Active Cases dashboard.
  *
- * Grid of six playable case files (case-01 .. case-06). `ACTIVE_CASES` is the
- * source of truth for which cases exist; `PENDING_CASES` is a stub array for
- * future "locked / coming soon" cards. A revealed pending card shows a small
- * "coming soon" pill via `revealedId` state.
+ * Cases 01–03 are public. Cases 04–06 are shown as locked.
  */
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
 import { Lock } from "lucide-react";
 import { lockPlay } from "@/lib/gate.functions";
 import { clearPlayToken } from "@/lib/playToken";
@@ -30,7 +26,6 @@ function LockHqButton() {
       }}
       className="rounded-full border border-neutral-200 px-4 py-2 text-xs font-bold tracking-wider text-neutral-500 transition hover:text-neutral-900"
     >
-
       🔒 LOCK HQ
     </button>
   );
@@ -50,21 +45,32 @@ export const Route = createFileRoute("/play/")({
   component: PlayPage,
 });
 
-type PendingCase = {
-  id: string;
+type LockedCase = {
+  number: number;
   title: string;
+  topic: string;
 };
 
-const PENDING_CASES: PendingCase[] = [];
+const LOCKED_CASES: LockedCase[] = [
+  {
+    number: 4,
+    title: "Case 04: The Scale Weigh-In",
+    topic: "Comparing Fractions",
+  },
+  {
+    number: 5,
+    title: "Case 05: Combining Matches",
+    topic: "Adding & Subtracting — Like Denominators",
+  },
+  {
+    number: 6,
+    title: "Case 06: The Mismatched Puzzle",
+    topic: "Adding & Subtracting — Unlike Denominators",
+  },
+];
 
 const ACTIVE_CASES: {
-  to:
-    | "/play/case-01"
-    | "/play/case-02"
-    | "/play/case-03"
-    | "/play/case-04"
-    | "/play/case-05"
-    | "/play/case-06";
+  to: "/play/case-01" | "/play/case-02" | "/play/case-03";
   title: string;
   subtitle: string;
   topic: string;
@@ -87,29 +93,9 @@ const ACTIVE_CASES: {
     subtitle: "When different fractions mean the same amount.",
     topic: "Equivalent Fractions",
   },
-  {
-    to: "/play/case-04",
-    title: "Case 04: The Scale Weigh-In",
-    subtitle: "Bigger bottom number means smaller pieces.",
-    topic: "Comparing Fractions",
-  },
-  {
-    to: "/play/case-05",
-    title: "Case 05: Combining Matches",
-    subtitle: "Add the tops — the bottom stays the same.",
-    topic: "Adding & Subtracting — Like Denominators",
-  },
-  {
-    to: "/play/case-06",
-    title: "Case 06: The Mismatched Puzzle",
-    subtitle: "When pieces don't match, slice before you add.",
-    topic: "Adding & Subtracting — Unlike Denominators",
-  },
 ];
 
 function PlayPage() {
-  const [revealedId, setRevealedId] = useState<string | null>(null);
-
   return (
     <main className="min-h-screen bg-white">
       <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-10 sm:py-16">
@@ -137,7 +123,8 @@ function PlayPage() {
             <span className="text-neutral-700">Active Cases</span>
           </h1>
           <p className="mt-3 sm:mt-5 max-w-xl text-sm sm:text-base text-neutral-500 leading-relaxed">
-            Choose your investigation. Take your time — there are no timers and no scores here.
+            Cases 01–03 are open to everyone. More investigations are locked for now. Take your time
+            — there are no timers and no scores here.
           </p>
         </header>
 
@@ -161,7 +148,9 @@ function PlayPage() {
                 </span>
               </div>
               <div className="mt-4 sm:mt-6 flex-1">
-                <h2 className="text-xl sm:text-2xl font-bold leading-snug text-neutral-900">{a.title}</h2>
+                <h2 className="text-xl sm:text-2xl font-bold leading-snug text-neutral-900">
+                  {a.title}
+                </h2>
                 <p className="mt-1.5 sm:mt-2 text-sm sm:text-base text-neutral-500">{a.subtitle}</p>
               </div>
               <span className="mt-6 sm:mt-8 inline-flex w-fit items-center gap-2 text-xs sm:text-sm font-bold tracking-wider text-neutral-900 transition-transform group-hover:translate-x-1">
@@ -171,38 +160,33 @@ function PlayPage() {
             </Link>
           ))}
 
-          {/* Pending cases */}
-          {PENDING_CASES.map((c) => {
-            const isRevealed = revealedId === c.id;
-            return (
-              <article
-                key={c.id}
-                className="relative flex flex-col rounded-3xl bg-neutral-100 p-7 min-h-[280px]"
-              >
-                <span className="inline-flex w-fit items-center rounded-full bg-neutral-400 px-3 py-1 text-[11px] font-bold tracking-wider text-white">
-                  CASE PENDING
+          {LOCKED_CASES.map((lockedCase) => (
+            <article
+              key={lockedCase.number}
+              aria-label={`${lockedCase.title}, locked`}
+              className="relative flex min-h-[220px] flex-col rounded-3xl bg-neutral-100 p-5 text-left sm:min-h-[280px] sm:p-7"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex w-fit items-center rounded-full bg-neutral-400 px-2.5 py-1 text-[10px] font-bold tracking-wider text-white sm:text-[11px]">
+                  LOCKED
                 </span>
-
-                <div className="flex flex-1 items-center justify-center py-6">
-                  <button
-                    type="button"
-                    onClick={() => setRevealedId(isRevealed ? null : c.id)}
-                    aria-label={`${c.title} — locked. Coming soon.`}
-                    className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-sm transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
-                  >
-                    <Lock className="h-8 w-8 text-neutral-400" strokeWidth={1.75} />
-                    {isRevealed && (
-                      <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-neutral-900 px-3 py-1 text-[11px] font-semibold tracking-wider text-white">
-                        COMING SOON
-                      </span>
-                    )}
-                  </button>
-                </div>
-
-                <h2 className="text-lg font-bold leading-snug text-neutral-700">{c.title}</h2>
-              </article>
-            );
-          })}
+                <span className="inline-flex w-fit items-center rounded-full bg-neutral-200 px-2.5 py-1 text-[10px] font-bold tracking-wider text-neutral-600 sm:text-[11px]">
+                  {lockedCase.topic}
+                </span>
+              </div>
+              <div className="flex flex-1 items-center justify-center py-5">
+                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm sm:h-20 sm:w-20">
+                  <Lock className="h-7 w-7 text-neutral-400 sm:h-8 sm:w-8" strokeWidth={1.75} />
+                </span>
+              </div>
+              <h2 className="text-lg font-bold leading-snug text-neutral-700">
+                {lockedCase.title}
+              </h2>
+              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                Not available to the public yet
+              </p>
+            </article>
+          ))}
         </section>
       </div>
     </main>

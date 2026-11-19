@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { getAiApiKey, getAiModel } from "@/lib/ai-gateway";
 import { formatChatStreamError, readAndValidateChatMessages } from "@/lib/chat-validation";
+import { isPubliclyAvailableCase } from "@/lib/publicCaseAccess";
 
 const SYSTEM_PROMPT = `You are ZED-4 — a warm, curious robot helper for a Grade 1 child (age 6).
 
@@ -41,8 +42,14 @@ export const Route = createFileRoute("/api/chat/case-04-beams")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        if (!isPubliclyAvailableCase(4)) {
+          return new Response("This case is not available to the public yet.", { status: 404 });
+        }
         const key = getAiApiKey();
-        if (!key) return new Response("Missing AI API key. Please set HUGGINGFACE_API_KEY in .env", { status: 500 });
+        if (!key)
+          return new Response("Missing AI API key. Please set HUGGINGFACE_API_KEY in .env", {
+            status: 500,
+          });
         const messages = await readAndValidateChatMessages(request);
         if (messages instanceof Response) return messages;
 
